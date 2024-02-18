@@ -8,11 +8,11 @@ const ProductsSection = () => {
           <div className="text-center ">
             <div className="relative flex flex-col items-center">
               <div className="absolute hidden md:block -top-14 left-0 text-[120px] text-gray-400 font-bold opacity-10">
-                FEATURES
+                PRODUCTS
               </div>
               <h1 className="text-5xl font-bold dark:text-white">
                 {" "}
-                Our <span className="  text-primary"> Features</span>{" "}
+                Our <span className="  text-primary"> Products</span>{" "}
               </h1>
               <div className="flex w-24 mt-1 mb-10 overflow-hidden rounded">
                 <div className="flex-1 h-2 bg-blue-200"></div>
