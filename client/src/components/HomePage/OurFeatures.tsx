@@ -44,12 +44,11 @@ const OurFeatures = () => {
             </div>
             <h3 className="mb-4 text-2xl font-semibold dark:text-white">
               {" "}
-              Self Fixing Cogs{" "}
+              DUAL FUNCTIONALITY{" "}
             </h3>
             <p className="text-base text-gray-500 dark:text-gray-400">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-              cupiditate similique, iure minus sed fugit obcaecati minima quam
-              reiciendis dicta!
+              Click edit button to change this text. Lorem ipsum dolor sit amet
+              consectetur adipiscing elit dolor
             </p>
           </div>
           <div className="w-full p-8 mb-5 text-center transition-all bg-primary rounded shadow hover:shadow-lg">
@@ -70,12 +69,11 @@ const OurFeatures = () => {
             </div>
             <h3 className="mb-4 text-2xl font-semibold text-white">
               {" "}
-              Automatic Power Shields
+              YOUR PROFILE. TOTAL CONTROL
             </h3>
             <p className="text-base text-white">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-              cupiditate similique, iure minus sed fugit obcaecati minima quam
-              reiciendis dicta!
+              Click edit button to change this text. Lorem ipsum dolor sit amet
+              consectetur adipiscing elit dolor
             </p>
           </div>
           <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
@@ -94,12 +92,57 @@ const OurFeatures = () => {
             </div>
             <h3 className="mb-4 text-2xl font-semibold dark:text-white">
               {" "}
-              Auto Mail Correction{" "}
+              CONNECT YOUR WAY{" "}
             </h3>
             <p className="text-base text-gray-500 dark:text-gray-400">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-              cupiditate similique, iure minus sed fugit obcaecati minima quam
-              reiciendis dicta!
+              Click edit button to change this text. Lorem ipsum dolor sit amet
+              consectetur adipiscing elit dolor
+            </p>
+          </div>
+          <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+            <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                fill="currentColor"
+                className="text-white"
+                viewBox="0 0 16 16"
+              >
+                <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
+                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
+              </svg>
+            </div>
+            <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+              {" "}
+              GPS LOCATION SHARING MADE EASY{" "}
+            </h3>
+            <p className="text-base text-gray-500 dark:text-gray-400">
+              Click edit button to change this text. Lorem ipsum dolor sit amet
+              consectetur adipiscing elit dolor
+            </p>
+          </div>
+          <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+            <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                fill="currentColor"
+                className="text-white"
+                viewBox="0 0 16 16"
+              >
+                <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
+                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
+              </svg>
+            </div>
+            <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+              {" "}
+              PRIVACY FIRST{" "}
+            </h3>
+            <p className="text-base text-gray-500 dark:text-gray-400">
+              Click edit button to change this text. Lorem ipsum dolor sit amet
+              consectetur adipiscing elit dolor
             </p>
           </div>
         </div>
