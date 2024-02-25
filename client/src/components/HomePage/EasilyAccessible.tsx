@@ -26,7 +26,7 @@ const EasilyAccessible = () => {
             <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg text-center">
               Our tags feature both a highly visible QR code and a unique,
               easy-to-remember URL. No app downloads are needed - anyone with a
-              smartphone can access your pet's profile instantly, bringing them
+              smartphone can access your pets profile instantly, bringing them
               home faster and reducing your worry.
             </p>
             <a
