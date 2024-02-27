@@ -1,9 +1,10 @@
+import About from "@/components/AboutUsPage/About";
 import React from "react";
 
 const AboutUsPage = () => {
   return (
     <div>
-      <h2>this is about us page</h2>
+      <About />
     </div>
   );
 };

@@ -12,7 +12,7 @@ const SearchModalDrawer = ({ searchOpen, setSearchOpen }: any) => {
     >
       <Drawer.Body>
         <div className="flex justify-center items-center pt-20">
-          <div className="items-center pl-2 w-[60%]">
+          <div className="items-center pl-2 md:w-[60%]">
             <div className="flex px-6 py-2 border border-gray-700 rounded-full ">
               <input
                 type="text"

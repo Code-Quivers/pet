@@ -22,7 +22,7 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   <Link
                     onClick={() => setOpen(false)}
                     className="text-xl text-gray-900 transition hover:text-gray-900/75"
-                    href="#"
+                    href="/"
                   >
                     {" "}
                     Home{" "}
@@ -30,7 +30,7 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   <Link
                     onClick={() => setOpen(false)}
                     className="text-xl text-gray-900 transition hover:text-gray-900/75"
-                    href="#"
+                    href="/about-us"
                   >
                     {" "}
                     About Us{" "}
@@ -84,7 +84,7 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   <Link
                     onClick={() => setOpen(false)}
                     className="text-xl text-gray-900 transition hover:text-gray-900/75"
-                    href="#"
+                    href="/reviews"
                   >
                     {" "}
                     Reviews{" "}
@@ -96,6 +96,11 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   >
                     {" "}
                     Support{" "}
+                    <Accordion.Panel>
+                      <div>
+                        <h2>help</h2>
+                      </div>
+                    </Accordion.Panel>
                   </Link>
                 </div>
               </Accordion.Panel>
