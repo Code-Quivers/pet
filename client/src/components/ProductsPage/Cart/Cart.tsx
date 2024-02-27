@@ -88,10 +88,19 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">
               Shipping calculated at checkout period.
             </p>
-            <div className="flex items-center justify-center mt-6">
-              <button className="w-full py-3 text-lg font-medium bg-primary rounded-md text-gray-50 hover:bg-secondary">
+            <div className="flex items-center justify-center mt-6 gap-4">
+              <Link
+                href="/shop/cart"
+                className="w-full py-3 text-lg font-medium bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
+              >
+                View Cart
+              </Link>
+              <Link
+                href="/shop/checkout"
+                className="w-full py-3 text-lg font-medium bg-black hover:bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
+              >
                 Checkout
-              </button>
+              </Link>
             </div>
             <div className="flex items-center justify-center mt-6">
               <p>
