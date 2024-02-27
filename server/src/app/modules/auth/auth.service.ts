@@ -7,6 +7,8 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 import { ILoginUserResponse, IRefreshTokenResponse, IUserCreate, IUserLogin } from './auth.interface';
 import { UserRoles } from '@prisma/client';
+import nodemailer from 'nodemailer';
+import { generatePassword } from './auth.utils';
 
 const createNewUser = async (data: IUserCreate) => {
   const { password, email } = data;
@@ -20,12 +22,12 @@ const createNewUser = async (data: IUserCreate) => {
     });
 
     if (isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already in use');
-    
 
     const profileData = {
-      fullName:data?.fullName,
-      phoneNumber:data?.phoneNumber,
+      fullName: data?.fullName,
+      phoneNumber: data?.phoneNumber,
       role: data.role || UserRoles.USER,
+      companyName: data?.companyName,
     };
 
     const createdProfile = await transactionClient.profile.create({
@@ -38,7 +40,6 @@ const createNewUser = async (data: IUserCreate) => {
     });
 
     if (!createdProfile) throw new ApiError(httpStatus.BAD_REQUEST, 'Profile creation failed');
-    
 
     const createdUser = await transactionClient.user.create({
       data: {
@@ -59,45 +60,36 @@ const createNewUser = async (data: IUserCreate) => {
     });
 
     if (!createdUser) throw new ApiError(httpStatus.BAD_REQUEST, 'User creation failed');
-    
-    
 
     const accessToken = jwtHelpers.createToken(
       {
-        userId : createdUser?.userId,
+        userId: createdUser?.userId,
         role: createdUser?.profile?.role,
         profileId: createdUser?.profile?.profileId,
         email: createdUser?.email,
+        fullName: createdUser?.profile?.fullName,
       },
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     );
-  
+
     const refreshToken = jwtHelpers.createToken(
       {
-        userId : createdUser?.userId,
+        userId: createdUser?.userId,
         role: createdUser?.profile?.role,
         profileId: createdUser?.profile?.profileId,
         email: createdUser?.email,
+        fullName: createdUser?.profile?.fullName,
       },
       config.jwt.refresh_secret as Secret,
       config.jwt.refresh_expires_in as string
     );
-  
+
     return {
       accessToken,
       refreshToken,
     };
-    
-     
   });
-  
-  
-  
-  
-  
-  
-  
 
   return newUser;
 };
@@ -105,7 +97,6 @@ const createNewUser = async (data: IUserCreate) => {
 //login
 const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => {
   const { email, password } = loginData;
-
 
   const isUserExist = await prisma.user.findUnique({
     where: {
@@ -116,14 +107,13 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
         select: {
           profileId: true,
           role: true,
+          fullName: true,
         },
       },
     },
   });
 
-  if (!isUserExist) 
-    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
-  
+  if (!isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
 
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
@@ -140,7 +130,7 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
       role: profile?.role,
       profileId: profile?.profileId,
       email: loggedInEmail,
-      
+      fullName: profile?.fullName,
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -152,7 +142,7 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
       role: profile?.role,
       profileId: profile?.profileId,
       email: loggedInEmail,
-      
+      fullName: profile?.fullName,
     },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
@@ -164,12 +154,10 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
   };
 };
 
-
 //! admin login
 
 const dashboardLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => {
   const { email, password } = loginData;
-
 
   const isUserExist = await prisma.user.findUnique({
     where: {
@@ -185,14 +173,11 @@ const dashboardLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse
     },
   });
 
-  if (!isUserExist) 
-    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
-  
-  if (isUserExist && isUserExist?.profile?.role === UserRoles.USER ){
+  if (!isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
+
+  if (isUserExist && isUserExist?.profile?.role === UserRoles.USER) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You don`t have permission to Login. ask to Admin !!');
-    
-  } 
-  
+  }
 
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
@@ -209,7 +194,6 @@ const dashboardLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse
       role: profile?.role,
       profileId: profile?.profileId,
       email: loggedInEmail,
-      
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -221,7 +205,6 @@ const dashboardLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse
       role: profile?.role,
       profileId: profile?.profileId,
       email: loggedInEmail,
-      
     },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
@@ -256,7 +239,6 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
         select: {
           role: true,
           profileId: true,
-         
         },
       },
     },
@@ -271,7 +253,6 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
       role: isUserExist?.profile?.role,
       profileId: isUserExist?.profile?.profileId,
       email: isUserExist?.email,
-      
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -282,8 +263,92 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 
+const forgetPassword = async (data: { email: string }): Promise<any> => {
+  if (!data.email) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email is required');
+  }
+
+  const isExistUser = await prisma.user.findUnique({
+    where: {
+      email: data.email,
+    },
+  });
+
+  if (!isExistUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // console.log('user.....', isExistUser);
+
+  console.log('node mailer', config.nodemailer.email, config.nodemailer.password);
+
+  // Generate a random password reset token here
+
+  const temporaryPassword = await generatePassword();
+
+  const hashedPassword = await bcrypt.hash(temporaryPassword, Number(config.bcrypt_salt_rounds));
+
+  // Update the user's record in the database with the password reset token
+  const updatePassword = await prisma.user.update({
+    where: {
+      email: isExistUser.email,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  if (!updatePassword) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Temporary password update failed');
+  }
+
+  // send email
+  const transporter = nodemailer.createTransport({
+    // Provide your email configuration here
+    // service: 'gmail',
+    host: 'smtp.strato.de',
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'kontakt@party-couture.com',
+      pass: '4oF3jaPVwpfayBF',
+    },
+  });
+
+  // Send email
+  const mailOptions = {
+    from: 'kontakt@party-couture.com',
+    to: isExistUser.email,
+    subject: 'Password Reset Request',
+    html: `
+    <html>
+    <body style="font-family: monospace, sans-serif; padding: 20px; font-weight: 600; background-color: #f4f4f4;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #007BFF;">Password Reset Request</h2>
+        <p>Hello ${isExistUser.email},</p>
+        <p>Your temporary password for logging in is: <strong style="color: #28A745; border: 1px solid green; padding:5px 15px; border-radius: 6px;">${temporaryPassword}</strong></p>
+        <p>Please change your password after logging in.</p>
+       
+        <p style="font-size: larger; font-family: monospace;">Thank you....</p>
+      </div>
+    </body>
+  </html>
+  `,
+  };
+
+  const result = await transporter.sendMail(mailOptions);
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email sending failed');
+  }
+
+  return result;
+};
+
 export const AuthService = {
   createNewUser,
   userLogin,
-  refreshToken,dashboardLogin
+  refreshToken,
+  dashboardLogin,
+  forgetPassword,
 };
