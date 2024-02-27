@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Part
+
+model User {
+  userId        String          @id @default(uuid())
+  email         String          @unique
+  fullName      String?
+  password      String
+  createdAt     DateTime        @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime        @updatedAt @db.Timestamptz(0)
+  profile       Profile?
+  productReview ProductReview[]
+}
+
+model Profile {
+  profileId              String    @id @default(uuid())
+  mobileNumber           String?
+  address                String?
+  mother                 String?
+  motherPhoneNumber      String?
+  father                 String?
+  fatherPhoneNumber      String?
+  aunt                   String?
+  auntPhoneNumber        String?
+  uncle                  String?
+  unclePhoneNumber       String?
+  friend                 String?
+  friendPhoneNumber      String?
+  grandFather            String?
+  grandFatherPhoneNumber String?
+  grandMother            String?
+  grandMotherPhoneNumber String?
+  role                   UserRoles @default(USER)
+  userId                 String    @unique
+  user                   User      @relation(fields: [userId], references: [userId])
+  createdAt              DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
+}
+
+enum UserRoles {
+  SUPERADMIN
+  ADMIN
+  USER
+}
+
+// Product Part 
+
+model Category {
+  categoryId    String    @id @default(uuid())
+  categoryName  String
+  description   String
+  categoryImage String
+  createdAt     DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
+  product       product[]
+}
+
+model product {
+  productId          String          @id @default(uuid())
+  productName        String
+  productImage       String
+  productPrice       Float
+  prductColor        String
+  productSize        String
+  productStock       Int
+  productDescription String
+  categoryId         String
+  category           Category        @relation(fields: [categoryId], references: [categoryId])
+  createdAt          DateTime        @default(now()) @db.Timestamptz(0)
+  updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
+  productQA          ProductQA[]
+  productReview      ProductReview[]
+}
+
+model ProductQA {
+  productQaId String   @id @default(uuid())
+  question    String
+  answer      String
+  productId   String
+  product     product  @relation(fields: [productId], references: [productId])
+  createdAt   DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(0)
+}
+
+model ProductReview {
+  productReviewId String   @id @default(uuid())
+  review          String
+  rating          Int
+  reviewImage     String
+  productId       String
+  product         product  @relation(fields: [productId], references: [productId])
+  userId          String
+  user            User     @relation(fields: [userId], references: [userId])
+  createdAt       DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt       DateTime @updatedAt @db.Timestamptz(0)
+}
