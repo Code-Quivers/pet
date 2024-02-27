@@ -15,7 +15,7 @@ datasource db {
 model User {
   userId        String          @id @default(uuid())
   email         String          @unique
-  name          String?
+  fullName      String?
   password      String
   createdAt     DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime        @updatedAt @db.Timestamptz(0)
@@ -24,15 +24,28 @@ model User {
 }
 
 model Profile {
-  profileId    String    @id @default(uuid())
-  fullName     String
-  mobileNumber String
-  address      String
-  userRole     UserRoles @default(USER)
-  userId       String    @unique
-  user         User      @relation(fields: [userId], references: [userId])
-  createdAt    DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
+  profileId              String    @id @default(uuid())
+  mobileNumber           String?
+  address                String?
+  mother                 String?
+  motherPhoneNumber      String?
+  father                 String?
+  fatherPhoneNumber      String?
+  aunt                   String?
+  auntPhoneNumber        String?
+  uncle                  String?
+  unclePhoneNumber       String?
+  friend                 String?
+  friendPhoneNumber      String?
+  grandFather            String?
+  grandFatherPhoneNumber String?
+  grandMother            String?
+  grandMotherPhoneNumber String?
+  role                   UserRoles @default(USER)
+  userId                 String    @unique
+  user                   User      @relation(fields: [userId], references: [userId])
+  createdAt              DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
 }
 
 enum UserRoles {

@@ -2,17 +2,15 @@ import { UserRoles } from '@prisma/client';
 
 export type IUserCreate = {
   fullName: string;
-  phoneNumber:string;
-  companyName:string;
   email: string;
   password: string;
-  role: UserRoles | null;
+  role: UserRoles;
 };
 
 export type IUserProfileResponse = {
   profileId: string;
-  firstName: string;
-  lastName: string;
+  mobileNumber: string;
+  address: string;
   role: UserRoles | null;
   createdAt: Date;
   updatedAt: Date;
