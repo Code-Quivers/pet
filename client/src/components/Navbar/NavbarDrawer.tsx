@@ -96,6 +96,11 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   >
                     {" "}
                     Support{" "}
+                    <Accordion.Panel>
+                      <div>
+                        <h2>help</h2>
+                      </div>
+                    </Accordion.Panel>
                   </Link>
                 </div>
               </Accordion.Panel>
