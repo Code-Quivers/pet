@@ -5,12 +5,13 @@ export type ICategoryFilterRequest = {
 export type ICategoryRequest = {
   categoryName: string;
   description: string;
-  categoryImg: string;
+  categoryImage: string;
 };
 
 export type ICategoryUpdateRequest = {
   categoryName?: string;
+  description?: string;
   categoryHref?: string;
-  categoryImg?: string;
+  categoryImage?: string;
   oldFilePath?: string;
 };

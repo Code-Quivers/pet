@@ -30,7 +30,7 @@ const addCategory = async (req: Request): Promise<Category> => {
   const newCategory = {
     categoryName: data?.categoryName,
     description: data?.description,
-    categoryImg: filePath,
+    categoryImage: filePath,
     categoryHref: categoryNameWithDashes,
   };
 
@@ -114,15 +114,7 @@ const getCategory = async (filters: ICategoryFilterRequest, options: IPagination
   // Retrieve Courier with filtering and pagination
   const result = await prisma.category.findMany({
     include: {
-      subCategory: {
-        include: {
-          _count: {
-            select: {
-              Product: true,
-            },
-          },
-        },
-      },
+      product: true,
       _count: true,
     },
     where: whereConditions,
@@ -157,15 +149,7 @@ const getSingleCategory = async (categoryHref: string): Promise<Category | null>
       categoryHref: categoryHref,
     },
     include: {
-      subCategory: {
-        include: {
-          _count: {
-            select: {
-              Product: true,
-            },
-          },
-        },
-      },
+      product: true,
       _count: true,
     },
   });
@@ -179,7 +163,7 @@ const getSingleCategory = async (categoryHref: string): Promise<Category | null>
 const updateCategory = async (categoryId: string, req: Request): Promise<Category> => {
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
-  const { categoryName, oldFilePath } = req.body as ICategoryUpdateRequest;
+  const { categoryName, description, oldFilePath } = req.body as ICategoryUpdateRequest;
   const oldFilePaths = 'uploads/' + oldFilePath;
 
   // Deleting old style Image
@@ -194,7 +178,8 @@ const updateCategory = async (categoryId: string, req: Request): Promise<Categor
 
   const updatedDetails: Partial<ICategoryUpdateRequest> = {
     categoryName,
-    categoryImg: filePath,
+    description,
+    categoryImage: filePath,
   };
 
   if (categoryName) updatedDetails['categoryHref'] = categoryName.replace(/[,\s&]+/g, '-').toLowerCase();
