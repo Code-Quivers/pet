@@ -14,7 +14,7 @@ const SignUpPage = () => {
         <div className="flex items-center p-6 h-full w-full">
           <form className="max-w-lg w-full mx-auto">
             <div className="mb-12">
-              <h3 className="text-blue-500 md:text-3xl text-2xl font-extrabold max-md:text-center">
+              <h3 className="text-black md:text-3xl text-2xl font-extrabold max-md:text-center">
                 Create an account
               </h3>
             </div>
@@ -128,14 +128,14 @@ const SignUpPage = () => {
             <div className="mt-12">
               <button
                 type="button"
-                className="w-full py-2.5 px-8 text-sm font-semibold rounded bg-blue-500 hover:bg-blue-600 text-white border focus:outline-none"
+                className="w-full py-2.5 px-8 text-sm font-semibold rounded bg-primary hover:bg-blue-600 text-white border focus:outline-none"
               >
-                Creat an account
+                Create an account
               </button>
               <p className="text-sm mt-8">
                 Already have an account?{" "}
                 <a
-                  href="javascript:void(0);"
+                  href="/sign-in"
                   className="text-blue-500 font-semibold hover:underline ml-1"
                 >
                   Login here
