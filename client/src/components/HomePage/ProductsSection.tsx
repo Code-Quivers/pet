@@ -2,7 +2,7 @@ import React from "react";
 
 const ProductsSection = () => {
   return (
-    <section className="flex items-center bg-gray-100 dark:bg-gray-800 py-10">
+    <section className="flex items-center bg-gray-100 py-10">
       <div className="p-4 mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto">
           <div className="text-center ">
@@ -10,7 +10,7 @@ const ProductsSection = () => {
               <div className="absolute hidden md:block -top-14 left-0 text-[120px] text-gray-400 font-bold opacity-10">
                 PRODUCTS
               </div>
-              <h1 className="text-5xl font-bold dark:text-white">
+              <h1 className="text-5xl font-bold ">
                 {" "}
                 Our <span className="  text-primary"> Products</span>{" "}
               </h1>
@@ -28,7 +28,7 @@ const ProductsSection = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3">
-          <div className="mt-56 bg-white rounded shadow dark:bg-gray-700">
+          <div className="mt-56 bg-white rounded shadow ">
             <div className="relative z-20 p-6 group">
               <div className="relative block h-64 mb-4 -mt-56 overflow-hidden rounded -top-full ">
                 {/* <img
@@ -51,7 +51,7 @@ const ProductsSection = () => {
                 </div>
                 <div className="absolute flex flex-col top-4 right-4">
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded   group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -65,7 +65,10 @@ const ProductsSection = () => {
                     </div>
                   </a>
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div
+                      className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded 
+                       group-hover:translate-x-0 wishlist hover:bg-blue-200    group"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -81,11 +84,11 @@ const ProductsSection = () => {
                 </div>
               </div>
               <a href="#">
-                <h2 className="mb-2 text-xl font-bold text-black dark:text-white">
+                <h2 className="mb-2 text-xl font-bold text-black  ">
                   1800X Zoom Level Nikon Lense
                 </h2>
               </a>
-              <p className="mb-3 text-lg font-bold   text-primary dark:text-blue-300 ">
+              <p className="mb-3 text-lg font-bold   text-primary  ">
                 <span>$150.00</span>
                 <span className="text-xs font-semibold text-gray-400 line-through ">
                   $200.00
@@ -145,7 +148,7 @@ const ProductsSection = () => {
               </div>
             </div>
           </div>
-          <div className="mt-56 bg-white rounded shadow dark:bg-gray-700">
+          <div className="mt-56 bg-white rounded shadow ">
             <div className="relative z-20 p-6 group">
               <div className="relative block h-64 mb-4 -mt-56 overflow-hidden rounded -top-full ">
                 {/* <img
@@ -168,7 +171,7 @@ const ProductsSection = () => {
                 </div>
                 <div className="absolute flex flex-col top-4 right-4">
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded   group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -182,7 +185,7 @@ const ProductsSection = () => {
                     </div>
                   </a>
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded   group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -198,11 +201,11 @@ const ProductsSection = () => {
                 </div>
               </div>
               <a href="#">
-                <h2 className="mb-2 text-xl font-bold text-black dark:text-white">
+                <h2 className="mb-2 text-xl font-bold text-black ">
                   1800X Zoom Level Nikon Lense
                 </h2>
               </a>
-              <p className="mb-3 text-lg font-bold   text-primary dark:text-blue-300 ">
+              <p className="mb-3 text-lg font-bold   text-primary  ">
                 <span>$150.00</span>
                 <span className="text-xs font-semibold text-gray-400 line-through ">
                   $200.00
@@ -262,7 +265,7 @@ const ProductsSection = () => {
               </div>
             </div>
           </div>
-          <div className="mt-56 bg-white rounded shadow dark:bg-gray-700">
+          <div className="mt-56 bg-white rounded shadow ">
             <div className="relative z-20 p-6 group">
               <div className="relative block h-64 mb-4 -mt-56 overflow-hidden rounded -top-full ">
                 {/* <img
@@ -285,7 +288,7 @@ const ProductsSection = () => {
                 </div>
                 <div className="absolute flex flex-col top-4 right-4">
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded   group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -299,7 +302,7 @@ const ProductsSection = () => {
                     </div>
                   </a>
                   <a href="#" className="flex items-center">
-                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded dark:bg-gray-700 dark:text-white group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
+                    <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded    group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -315,11 +318,11 @@ const ProductsSection = () => {
                 </div>
               </div>
               <a href="#">
-                <h2 className="mb-2 text-xl font-bold text-black dark:text-white">
+                <h2 className="mb-2 text-xl font-bold text-black ">
                   1800X Zoom Level Nikon Lense
                 </h2>
               </a>
-              <p className="mb-3 text-lg font-bold   text-primary dark:text-blue-300 ">
+              <p className="mb-3 text-lg font-bold   text-primary  ">
                 <span>$150.00</span>
                 <span className="text-xs font-semibold text-gray-400 line-through ">
                   $200.00

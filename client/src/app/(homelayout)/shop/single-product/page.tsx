@@ -18,7 +18,7 @@ const SingleProductPage = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row -mx-4 gap-10">
           <div className="md:flex-1 px-4">
-            <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
+            <div className="h-[460px] rounded-lg bg-gray-300   mb-4">
               <img
                 className="w-full h-full object-cover"
                 src="https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg"
@@ -60,17 +60,15 @@ const SingleProductPage = () => {
             <div>
               {/* Title and Price  */}
               <div className="pb-6">
-                <h2 className="text-3xl md:text-5xl text-gray-900 dark:text-white mb-4 md:mb-6">
+                <h2 className="text-3xl md:text-5xl text-gray-900   mb-4 md:mb-6">
                   ByteTag Slide
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-xl">
-                  $29.99
-                </p>
+                <p className="text-gray-600   text-xl">$29.99</p>
               </div>
 
               {/* product colors */}
               <div className="py-2 md:py-6">
-                <p className=" text-gray-700 dark:text-gray-300">
+                <p className=" text-gray-700  ">
                   <span className="">Color</span>:{" "}
                   <span className="text-bold">White</span>
                 </p>
@@ -91,7 +89,7 @@ const SingleProductPage = () => {
                     trigger="hover"
                     speaker={tooltipBlack}
                   >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-black dark:bg-black mr-2"></button>
+                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-black   mr-2"></button>
                   </Whisper>
                   {/* pink */}
                   <Whisper
@@ -170,7 +168,7 @@ const SingleProductPage = () => {
 
               {/* select quantity */}
               <div className="py-2 md:py-6">
-                <p className=" text-gray-700 dark:text-gray-300">
+                <p className=" text-gray-700  ">
                   <span className="">Quantity:</span>{" "}
                 </p>
                 <div className="flex items-center mt-2">
@@ -217,12 +215,8 @@ const SingleProductPage = () => {
 
             {/* Stock */}
             <div className="flex justify-start items-center gap-2 py-6">
-              <p className="font-bold text-gray-700 dark:text-gray-300 text-lg">
-                Availability:
-              </p>
-              <p className="text-gray-600 dark:text-gray-300 text-xl">
-                In Stock
-              </p>
+              <p className="font-bold text-gray-700   text-lg">Availability:</p>
+              <p className="text-gray-600   text-xl">In Stock</p>
             </div>
 
             {/* Add to cart */}
@@ -243,10 +237,10 @@ const SingleProductPage = () => {
       </div>
       {/* Product description */}
       <div className="pt-10 md:pt-20">
-        <span className="text-xl md:text-4xl  font-bold text-gray-700 dark:text-gray-300">
+        <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
           Product Description:
         </span>
-        <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
+        <p className="text-gray-600   text-sm mt-2">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante
           justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus
           commodo nulla ut lorem rhoncus aliquet. Duis dapibus augue vel ipsum

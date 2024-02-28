@@ -16,28 +16,28 @@ const SingleProduct = () => {
           alt=""
           className="py-10 w-2/7"
         />
-        <span className="inline-block mb-4 text-sm md:text-3xl font-semibold leading-none text-primary capitalize dark:text-red-200">
+        <span className="inline-block mb-4 text-sm md:text-3xl font-semibold leading-none text-primary capitalize  ">
           Access
         </span>
-        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-7xl">
+        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-7xl">
           Lose your knack <br /> for losing things.
         </h2>
       </div>
       <div className="text-center px-4 py-24">
-        <p className="mb-6 text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-300 max-w-3xl leading-9 mx-auto">
+        <p className="mb-6 text-2xl font-semibold tracking-tight text-gray-900   max-w-3xl leading-9 mx-auto">
           AirTag is a supereasy way to keep track of your stuff. <br /> Attach
           one to your keys, slip another in your backpack. And just like that,
           they’re on your radar in the Find My app, where you can also track
           down your Apple devices and keep up with friends and family.
         </p>
-        <h2 className="mb-6 text-gray-500 text-2xl font-semibold leading-tight tracking-tight  dark:text-gray-300">
+        <h2 className="mb-6 text-gray-500 text-2xl font-semibold leading-tight tracking-tight   ">
           Starting at $29
         </h2>
         <button className="bg-primary px-4 py-1 rounded-full text-white font-semibold hover:shadow-lg">
           Buy
         </button>
       </div>
-      <div className="pb-20 dark:bg-gray-700">
+      <div className="pb-20  ">
         <div className="flex flex-col-reverse md:flex-row gap-4">
           <div className="w-full md:w-1/2 md:mb-0 mb-8">
             <div className="relative  md:mr-0 w-full">
@@ -64,13 +64,13 @@ const SingleProduct = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center px-4  py-20">
-        <span className="inline-block mb-4 text-sm leading-none text-primary capitalize dark:text-red-200 border p-2 rounded-full border-primary">
+        <span className="inline-block mb-4 text-sm leading-none text-primary capitalize   border p-2 rounded-full border-primary">
           Access
         </span>
-        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-6xl pt-6">
+        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-6xl pt-6">
           Let the search party begin.
         </h2>
-        <p className="mb-6 text-xl font-semibold tracking-tight text-gray-500 dark:text-gray-300 max-w-4xl leading-8 mx-auto pt-4 pb-20 text-center">
+        <p className="mb-6 text-xl font-semibold tracking-tight text-gray-500   max-w-4xl leading-8 mx-auto pt-4 pb-20 text-center">
           iOS 17 lets you share AirTag with up to five people. So items that
           everyone uses — like an umbrella, a bike, or the family car keys — can
           be tracked by friends and family.
@@ -82,13 +82,13 @@ const SingleProduct = () => {
       </div>
       <EasilyAccessible />
       <div className="flex flex-col justify-center items-center px-4  py-20">
-        <span className="inline-block mb-4 text-sm leading-none text-primary capitalize dark:text-red-200 border p-2 rounded-full border-primary">
+        <span className="inline-block mb-4 text-sm leading-none text-primary capitalize   border p-2 rounded-full border-primary">
           Access
         </span>
-        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-6xl pt-6">
+        <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-6xl pt-6">
           More color. More fun. More you.
         </h2>
-        <p className="mb-6 text-xl font-semibold tracking-tight text-gray-500 dark:text-gray-300 max-w-4xl leading-8 mx-auto pt-4 text-center">
+        <p className="mb-6 text-xl font-semibold tracking-tight text-gray-500   max-w-4xl leading-8 mx-auto pt-4 text-center">
           It’s easy to attach AirTag to just about anything with colorful key
           rings and loops from Apple. AirTag comes individually or in a 4 pack.
           Happy tagging.

@@ -2,16 +2,16 @@ import React from "react";
 
 const HeroSection = () => {
   return (
-    <div className="py-10 md:py-20 dark:bg-gray-700">
+    <div className="py-10 md:py-20  ">
       <div className="flex flex-col-reverse md:flex-row items-center ">
         <div className="w-full  md:w-1/2">
-          <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize dark:text-red-200">
+          <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
             Connection you can tap into
           </span>
-          <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-5xl">
+          <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl">
             Anytime, Anywhere
           </h2>
-          <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+          <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
             The smartest and easiest safety wearable on the market So simple a
             toddler can use it
           </p>

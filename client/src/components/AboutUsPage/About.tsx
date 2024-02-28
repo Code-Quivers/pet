@@ -19,38 +19,22 @@ const About = () => {
         <div className="w-full flex flex-col justify-center items-center py-12">
           <div className="flex flex-col justify-center items-center">
             <div className="text-center">
-              <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize dark:text-red-200">
+              <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
                 Inspiration
               </span>
-              <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-5xl">
+              <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl">
                 THE TECHLESS MANIFESTO
               </h2>
             </div>
             <div className="grid grid-cols-2 justify-between items-start gap-5">
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
                 lesson. ByteTag is our promise to keep every adventure
                 worry-free, for pet parents and pups alike.
               </p>
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
-                We all know that feeling: the panic when your furry friend
-                disappears. Our Australian Shepherd, Maple, taught us that
-                lesson well. We were inspired to do something thanks to that
-                lesson. ByteTag is our promise to keep every adventure
-                worry-free, for pet parents and pups alike.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 justify-between items-start gap-5">
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
-                We all know that feeling: the panic when your furry friend
-                disappears. Our Australian Shepherd, Maple, taught us that
-                lesson well. We were inspired to do something thanks to that
-                lesson. ByteTag is our promise to keep every adventure
-                worry-free, for pet parents and pups alike.
-              </p>
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
@@ -59,14 +43,14 @@ const About = () => {
               </p>
             </div>
             <div className="grid grid-cols-2 justify-between items-start gap-5">
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
                 lesson. ByteTag is our promise to keep every adventure
                 worry-free, for pet parents and pups alike.
               </p>
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
@@ -75,14 +59,30 @@ const About = () => {
               </p>
             </div>
             <div className="grid grid-cols-2 justify-between items-start gap-5">
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
                 lesson. ByteTag is our promise to keep every adventure
                 worry-free, for pet parents and pups alike.
               </p>
-              <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
+                We all know that feeling: the panic when your furry friend
+                disappears. Our Australian Shepherd, Maple, taught us that
+                lesson well. We were inspired to do something thanks to that
+                lesson. ByteTag is our promise to keep every adventure
+                worry-free, for pet parents and pups alike.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 justify-between items-start gap-5">
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
+                We all know that feeling: the panic when your furry friend
+                disappears. Our Australian Shepherd, Maple, taught us that
+                lesson well. We were inspired to do something thanks to that
+                lesson. ByteTag is our promise to keep every adventure
+                worry-free, for pet parents and pups alike.
+              </p>
+              <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg">
                 We all know that feeling: the panic when your furry friend
                 disappears. Our Australian Shepherd, Maple, taught us that
                 lesson well. We were inspired to do something thanks to that
