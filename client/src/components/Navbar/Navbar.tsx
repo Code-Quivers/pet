@@ -26,7 +26,7 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex-1 md:flex md:items-center md:gap-12">
             <Image
-              className="w-60 object-fill"
+              className="w-60 object-cover"
               src={logo}
               width={100}
               height={100}

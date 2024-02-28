@@ -2,8 +2,8 @@ import Image from "next/image";
 import React from "react";
 import productImage from "../../../public/images/shop/SIngleProudct/Pink_Grey_2048x_c8757b05-6f3c-49eb-8eba-ce8b94695ac3.webp";
 import productImage2 from "../../../public/images/shop/SIngleProudct/Screenshot_130.png";
-import EasilyAccessible from "../HomePage/EasilyAccessible";
-import OurInspiration from "../HomePage/OurInspiration";
+import EasilyAccessible from "../HomePage/TotalControl";
+import ConnectYourWay from "../HomePage/ConnectYourWay";
 
 const SingleProduct = () => {
   return (
@@ -102,7 +102,7 @@ const SingleProduct = () => {
           className="w-full"
         />
       </div>
-      <OurInspiration />
+      <ConnectYourWay />
     </>
   );
 };
