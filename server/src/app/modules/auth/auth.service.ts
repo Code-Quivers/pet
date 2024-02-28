@@ -25,9 +25,7 @@ const createNewUser = async (data: IUserCreate) => {
 
     const profileData = {
       fullName: data?.fullName,
-      phoneNumber: data?.phoneNumber,
       role: data.role || UserRoles.USER,
-      companyName: data?.companyName,
     };
 
     const createdProfile = await transactionClient.profile.create({
@@ -305,19 +303,19 @@ const forgetPassword = async (data: { email: string }): Promise<any> => {
   // send email
   const transporter = nodemailer.createTransport({
     // Provide your email configuration here
-    // service: 'gmail',
-    host: 'smtp.strato.de',
+    service: 'gmail',
+    host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-      user: 'kontakt@party-couture.com',
-      pass: '4oF3jaPVwpfayBF',
+      user: 'accsalimalsazu@gmail.com',
+      pass: 'qjlikalhzqdirtrx',
     },
   });
 
   // Send email
   const mailOptions = {
-    from: 'kontakt@party-couture.com',
+    from: 'accsalimalsazu@gmail.com',
     to: isExistUser.email,
     subject: 'Password Reset Request',
     html: `
