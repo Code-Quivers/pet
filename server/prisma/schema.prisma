@@ -15,16 +15,17 @@ datasource db {
 model User {
   userId        String          @id @default(uuid())
   email         String          @unique
-  fullName      String?
   password      String
   createdAt     DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime        @updatedAt @db.Timestamptz(0)
-  profile       Profile?
+  profileId     String?         @unique
+  profile       Profile?        @relation(fields: [profileId], references: [profileId])
   productReview ProductReview[]
 }
 
 model Profile {
   profileId              String    @id @default(uuid())
+  fullName               String
   mobileNumber           String?
   address                String?
   mother                 String?
@@ -42,10 +43,9 @@ model Profile {
   grandMother            String?
   grandMotherPhoneNumber String?
   role                   UserRoles @default(USER)
-  userId                 String    @unique
-  user                   User      @relation(fields: [userId], references: [userId])
   createdAt              DateTime  @default(now()) @db.Timestamptz(0)
   updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
+  user                   User?
 }
 
 enum UserRoles {
@@ -58,29 +58,48 @@ enum UserRoles {
 
 model Category {
   categoryId    String    @id @default(uuid())
-  categoryName  String
+  categoryName  String    @unique
+  categoryHref  String    @unique
   description   String
   categoryImage String
   createdAt     DateTime  @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
-  product       product[]
+  product       Product[]
 }
 
-model product {
+model Product {
   productId          String          @id @default(uuid())
-  productName        String
+  productName        String          @unique
   productImage       String
   productPrice       Float
-  prductColor        String
-  productSize        String
   productStock       Int
   productDescription String
   categoryId         String
   category           Category        @relation(fields: [categoryId], references: [categoryId])
+  colorVarientId     String
+  colorVarient       ColorVarient    @relation(fields: [colorVarientId], references: [colorVarientId])
+  sizeVarientId      String
+  sizeVarient        SizeVarient     @relation(fields: [sizeVarientId], references: [sizeVarientId])
   createdAt          DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
+}
+
+model ColorVarient {
+  colorVarientId String    @id @default(uuid())
+  productColor   String
+  createdAt      DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime  @updatedAt @db.Timestamptz(0)
+  product        Product[]
+}
+
+model SizeVarient {
+  sizeVarientId String    @id @default(uuid())
+  productSize   String
+  createdAt     DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
+  product       Product[]
 }
 
 model ProductQA {
@@ -88,7 +107,7 @@ model ProductQA {
   question    String
   answer      String
   productId   String
-  product     product  @relation(fields: [productId], references: [productId])
+  product     Product  @relation(fields: [productId], references: [productId])
   createdAt   DateTime @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
 }
@@ -99,9 +118,11 @@ model ProductReview {
   rating          Int
   reviewImage     String
   productId       String
-  product         product  @relation(fields: [productId], references: [productId])
+  product         Product  @relation(fields: [productId], references: [productId])
   userId          String
   user            User     @relation(fields: [userId], references: [userId])
   createdAt       DateTime @default(now()) @db.Timestamptz(0)
   updatedAt       DateTime @updatedAt @db.Timestamptz(0)
 }
+
+

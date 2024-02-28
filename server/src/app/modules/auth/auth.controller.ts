@@ -15,7 +15,7 @@ const createNewUser = catchAsync(async (req: Request, res: Response) => {
   // set refresh token into cookie
 
   const cookieOptions = {
-    secure: config.env === 'production',
+    secure: config.env === 'development',
     httpOnly: true,
   };
   res.cookie('refreshToken', refreshToken, cookieOptions);
