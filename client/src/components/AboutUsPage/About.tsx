@@ -1,5 +1,5 @@
 import React from "react";
-import OurInspiration from "../HomePage/OurInspiration";
+import ConnectYourWay from "../HomePage/ConnectYourWay";
 
 const About = () => {
   return (
@@ -92,7 +92,7 @@ const About = () => {
             </div>
           </div>
         </div>
-        <OurInspiration />
+        <ConnectYourWay />
       </div>
     </div>
   );

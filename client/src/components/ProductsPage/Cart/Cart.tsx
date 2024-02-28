@@ -81,21 +81,23 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
               </div>
             </div>
 
-            <div className="flex justify-between text-base dark:text-gray-400">
+            <div className="flex justify-between text-base ">
               <p>Subtotal</p>
               <p>$400.00</p>
             </div>
-            <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">
+            <p className="mt-4 text-sm text-gray-500 ">
               Shipping calculated at checkout period.
             </p>
             <div className="flex items-center justify-center mt-6 gap-4">
               <Link
+                onClick={() => setCartOpen(false)}
                 href="/shop/cart"
                 className="w-full py-3 text-lg font-medium bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
               >
                 View Cart
               </Link>
               <Link
+                onClick={() => setCartOpen(false)}
                 href="/shop/checkout"
                 className="w-full py-3 text-lg font-medium bg-black hover:bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
               >
@@ -104,10 +106,10 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
             </div>
             <div className="flex items-center justify-center mt-6">
               <p>
-                <span className="dark:text-gray-400">or,</span>
+                <span>or,</span>
                 <button
                   onClick={() => setCartOpen(false)}
-                  className="pl-1 text-primary-600 hover:underline dark:text-gray-300"
+                  className="pl-1 text-primary-600 hover:underline"
                 >
                   Continue Shopping
                 </button>
