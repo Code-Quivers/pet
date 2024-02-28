@@ -2,17 +2,23 @@ import React from "react";
 
 const OurInspiration = () => {
   return (
-    <div className="py-10 md:pt-16 dark:bg-gray-700">
+    <div className="py-10 md:pt-16">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
           <div className="flex flex-col justify-center items-center px-4">
-            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize dark:text-red-200">
+            <span
+              className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize 
+            "
+            >
               Dual
             </span>
-            <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-5xl text-center">
+            <h2
+              className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 
+             md:text-5xl text-center"
+            >
               Dual Functionality Convenience{" "}
             </h2>
-            <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg text-center">
+            <p className="mb-6 font-medium tracking-wide text-gray-600  md:text-lg text-center">
               Activate your E.T. Phone Home Band with an easy tap or scan. Using
               Both NFC and QR code technology. Compatible with any smart phone.
             </p>

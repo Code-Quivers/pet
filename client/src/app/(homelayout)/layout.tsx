@@ -10,9 +10,7 @@ const layout = ({ children }: any) => {
         <PromoBanner />
         <Navbar />
       </div>
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        {children}
-      </div>
+      <div>{children}</div>
       <div className="bg-primary">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <Footer />

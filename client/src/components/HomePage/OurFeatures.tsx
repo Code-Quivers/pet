@@ -189,7 +189,7 @@ const OurFeatures = () => {
         </div>
       </div>
     </section>
-    // <section className="flex items-center justify-center dark:bg-gray-800">
+    // <section className="flex items-center justify-center  ">
     //   <div className="py-20 mx-auto max-w-7xl">
     //     <div className="max-w-xl mx-auto">
     //       <div className="text-center ">
@@ -197,7 +197,7 @@ const OurFeatures = () => {
     //           <div className="absolute hidden md:block -top-14 left-0 text-[120px] text-gray-400 font-bold opacity-10">
     //             FEATURES
     //           </div>
-    //           <h1 className="text-5xl font-bold dark:text-white">
+    //           <h1 className="text-5xl font-bold  ">
     //             {" "}
     //             Our <span className="text-blue-500"> Features</span>{" "}
     //           </h1>
@@ -215,7 +215,7 @@ const OurFeatures = () => {
     //       </div>
     //     </div>
     //     <div className="grid grid-cols-1 gap-x-4 gap-y-6 lg:gap-x-8 lg:gap-y-8 md:grid-cols-2 lg:grid-cols-3">
-    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow   hover:shadow-lg">
     //         <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
     //           <svg
     //             xmlns="http://www.w3.org/2000/svg"
@@ -229,11 +229,11 @@ const OurFeatures = () => {
     //             <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
     //           </svg>
     //         </div>
-    //         <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+    //         <h3 className="mb-4 text-2xl font-semibold  ">
     //           {" "}
     //           DUAL FUNCTIONALITY{" "}
     //         </h3>
-    //         <p className="text-base text-gray-500 dark:text-gray-400">
+    //         <p className="text-base text-gray-500  ">
     //           Click edit button to change this text. Lorem ipsum dolor sit amet
     //           consectetur adipiscing elit dolor
     //         </p>
@@ -263,7 +263,7 @@ const OurFeatures = () => {
     //           consectetur adipiscing elit dolor
     //         </p>
     //       </div>
-    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow   hover:shadow-lg">
     //         <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
     //           <svg
     //             xmlns="http://www.w3.org/2000/svg"
@@ -277,16 +277,16 @@ const OurFeatures = () => {
     //             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
     //           </svg>
     //         </div>
-    //         <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+    //         <h3 className="mb-4 text-2xl font-semibold  ">
     //           {" "}
     //           CONNECT YOUR WAY{" "}
     //         </h3>
-    //         <p className="text-base text-gray-500 dark:text-gray-400">
+    //         <p className="text-base text-gray-500  ">
     //           Click edit button to change this text. Lorem ipsum dolor sit amet
     //           consectetur adipiscing elit dolor
     //         </p>
     //       </div>
-    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow   hover:shadow-lg">
     //         <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
     //           <svg
     //             xmlns="http://www.w3.org/2000/svg"
@@ -300,16 +300,16 @@ const OurFeatures = () => {
     //             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
     //           </svg>
     //         </div>
-    //         <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+    //         <h3 className="mb-4 text-2xl font-semibold  ">
     //           {" "}
     //           GPS LOCATION SHARING MADE EASY{" "}
     //         </h3>
-    //         <p className="text-base text-gray-500 dark:text-gray-400">
+    //         <p className="text-base text-gray-500  ">
     //           Click edit button to change this text. Lorem ipsum dolor sit amet
     //           consectetur adipiscing elit dolor
     //         </p>
     //       </div>
-    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow dark:bg-gray-700 hover:shadow-lg">
+    //       <div className="w-full p-8 mb-5 text-center transition-all bg-white rounded shadow   hover:shadow-lg">
     //         <div className="inline-block p-4 mb-6 -mt-16 bg-primary rounded-full">
     //           <svg
     //             xmlns="http://www.w3.org/2000/svg"
@@ -323,11 +323,11 @@ const OurFeatures = () => {
     //             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
     //           </svg>
     //         </div>
-    //         <h3 className="mb-4 text-2xl font-semibold dark:text-white">
+    //         <h3 className="mb-4 text-2xl font-semibold  ">
     //           {" "}
     //           PRIVACY FIRST{" "}
     //         </h3>
-    //         <p className="text-base text-gray-500 dark:text-gray-400">
+    //         <p className="text-base text-gray-500  ">
     //           Click edit button to change this text. Lorem ipsum dolor sit amet
     //           consectetur adipiscing elit dolor
     //         </p>

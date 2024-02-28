@@ -2,17 +2,17 @@ import React from "react";
 
 const ConnectYourWay = () => {
   return (
-    <div className="py-10 md:py-20 dark:bg-gray-700">
+    <div className="py-10 md:py-20  ">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
           <div className="flex flex-col justify-center items-center px-4">
-            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize dark:text-red-200">
+            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
               Connect
             </span>
-            <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-5xl text-center">
+            <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl text-center">
               Connect Your Way
             </h2>
-            <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg text-center">
+            <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg text-center">
               Activate the E.T. Phone Home Band with a tap or scan—compatible
               with any smartphone. Stay connected through calls, messages, video
               chats, and GPS sharing effortlessly. Elevate your connectivity

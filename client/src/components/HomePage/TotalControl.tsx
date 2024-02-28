@@ -2,7 +2,7 @@ import React from "react";
 
 const TotalControl = () => {
   return (
-    <div className="pt-10 md:pb-20 dark:bg-gray-700">
+    <div className="pt-10 md:pb-20  ">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:mb-0 mb-8">
           <div className="relative  md:mr-0 w-full">
@@ -17,13 +17,13 @@ const TotalControl = () => {
         </div>
         <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
           <div className="flex flex-col justify-center items-center px-4">
-            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize dark:text-red-200">
+            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
               Your Profile
             </span>
-            <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-300 md:text-5xl text-center">
+            <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl text-center">
               Total Control. Total Convenience.
             </h2>
-            <p className="mb-6 font-medium tracking-wide text-gray-600 dark:text-gray-400 md:text-lg text-center">
+            <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg text-center">
               Contains all the information necessary to connect you when needed
               with unlimited contacts. You decide what information goes on your
               ET Phone Home profile. Update from anywhere in the world in

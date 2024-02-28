@@ -10,14 +10,14 @@ const RadioLabel = ({ children }: any) => (
 const ReviewsSlider = () => {
   const [shape] = useState("bar");
   return (
-    <div className="pt-10 mb-14 bg-gray-50">
+    <div className="pt-10 mb-14 ">
       <div className="max-w-xl mx-auto -mb-4">
         <div className="text-center ">
           <div className="relative flex flex-col items-center">
             <div className="absolute hidden md:block -top-14 left-0 text-[120px] text-gray-400 font-bold opacity-10">
               Testimonial
             </div>
-            <h1 className="text-5xl font-bold dark:text-white">
+            <h1 className="text-5xl font-bold  ">
               {" "}
               Our <span className="text-blue-500"> Testimonial</span>{" "}
             </h1>

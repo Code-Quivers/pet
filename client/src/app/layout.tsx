@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 import "rsuite/dist/rsuite-no-reset.min.css";
 
-const poppins = Poppins({
+const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "600", "700", "900"],
 });
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={nunito.className}>{children}</body>
     </html>
   );
 }
