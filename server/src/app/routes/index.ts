@@ -4,6 +4,7 @@ import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { ColorVarientRoutes } from '../modules/colorVarient/colorVarient.routes';
 import { SizeVarientRoutes } from '../modules/sizeVarient/sizeVarient.routes';
+import { ProductRoutes } from '../modules/product/product.routes';
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: '/size-varient',
     route: SizeVarientRoutes,
+  },
+  {
+    path: '/product',
+    route: ProductRoutes,
   },
 ];
 
