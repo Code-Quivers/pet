@@ -278,7 +278,7 @@ const forgetPassword = async (data: { email: string }): Promise<any> => {
 
   // console.log('user.....', isExistUser);
 
-  console.log('node mailer', config.nodemailer.email, config.nodemailer.password);
+  // console.log('node mailer', config.nodemailer.email, config.nodemailer.password);
 
   // Generate a random password reset token here
 

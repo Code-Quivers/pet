@@ -1,4 +1,4 @@
-export const ProductFilterableFields: string[] = ['searchTerm', 'productColor', 'productSize'];
+export const ProductFilterableFields: string[] = ['searchTerm', 'productColor', 'productSize' , 'categoryName'];
 export const ProductSearchableFields: string[] = ['productName'];
 
 export const ProductRelationalFields: string[] = ['productName'];

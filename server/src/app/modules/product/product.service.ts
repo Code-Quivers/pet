@@ -60,7 +60,7 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productColor, productSize, ...filterData } = filters;
+  const { searchTerm, productColor, productSize, categoryName, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductWhereInput[] = [];
@@ -123,12 +123,28 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     });
   }
 
+  //Filter By Category
+  if (categoryName) {
+    andConditions.push({
+      category: {
+        categoryName: {
+          equals: categoryName,
+        },
+      },
+    });
+  }
+
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
   // Retrieve Courier with filtering and pagination
   const result = await prisma.product.findMany({
     where: whereConditions,
+    include: {
+      category: true,
+      colorVarient: true,
+      sizeVarient: true,
+    },
     // select: {
     //   productId: true,
     //   productImage: true,
@@ -265,7 +281,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       sizeVarientId,
       productImage: filePath,
     };
-    
+
     const updatedProduct = await transactionClient.product.update({
       where: {
         productId,
