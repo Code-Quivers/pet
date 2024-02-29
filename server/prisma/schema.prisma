@@ -69,7 +69,7 @@ model Category {
 
 model Product {
   productId          String          @id @default(uuid())
-  productName        String          @unique
+  productName        String         
   productImage       String
   productPrice       Float
   productStock       Int

@@ -28,18 +28,18 @@ const addProduct = async (req: Request): Promise<Product> => {
   //@ts-ignore
   const data = req.body as IProductRequest;
 
-
   await ProductValidation(data);
 
   const result = await prisma.$transaction(async transactionClient => {
     const newProduct = {
       productName: data.productName,
-      price: data.price,
-      description: data.description,
-      shortSummery: data.shortSummery,
-      packType: data.packType,
+      productPrice: data.productPrice,
+      productStock: data.productStock,
+      productDescription: data.productDescription,
       productImage: filePath,
-      subCategoryId: data.subCategoryId,
+      categoryId: data.categoryId,
+      colorVarientId: data.colorVarientId,
+      sizeVarientId: data.sizeVarientId,
     };
 
     const createProduct = await transactionClient.product.create({
@@ -54,13 +54,13 @@ const addProduct = async (req: Request): Promise<Product> => {
   return result;
 };
 
-// !----------------------------------get all Category---------------------------------------->>>
+// !----------------------------------get all Product---------------------------------------->>>
 const getProduct = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, productColor, productSize, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductWhereInput[] = [];
@@ -99,6 +99,30 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     });
   }
 
+  /// Filter By Color
+
+  if (productColor) {
+    andConditions.push({
+      colorVarient: {
+        productColor: {
+          equals: productColor,
+        },
+      },
+    });
+  }
+
+  // Filter By Size
+
+  if (productSize) {
+    andConditions.push({
+      sizeVarient: {
+        productSize: {
+          equals: productSize,
+        },
+      },
+    });
+  }
+
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
@@ -106,8 +130,33 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
   const result = await prisma.product.findMany({
     where: whereConditions,
     include: {
-      subCategory: true,
+      category: true,
+      colorVarient: true,
+      sizeVarient: true,
     },
+    // select: {
+    //   productId: true,
+    //   productImage: true,
+    //   productName: true,
+    //   productDescription: true,
+    //   productPrice: true,
+    //   productStock: true,
+    //   category: {
+    //     select: {
+    //       categoryName: true,
+    //     },
+    //   },
+    //   colorVarient: {
+    //     select: {
+    //       productColor: true,
+    //     },
+    //   },
+    //   sizeVarient: {
+    //     select: {
+    //       productSize: true,
+    //     },
+    //   },
+    // },
     skip,
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
@@ -156,7 +205,8 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
 
-  const { productName, description, shortSummery, subCategoryId, oldFilePath, price, productVat, packType } = req.body as IProductUpdateRequest;
+  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId } =
+    req.body as IProductUpdateRequest;
 
   // deleting old style Image
   const oldFilePaths = 'uploads/' + oldFilePath;
@@ -180,28 +230,46 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
     }
 
-    if (subCategoryId) {
-      const isSubCategoryExist = await transactionClient.subCategory.findUnique({
+    if (categoryId) {
+      const isCategoryExist = await transactionClient.category.findUnique({
         where: {
-          subCategoryId,
+          categoryId,
         },
       });
 
-      if (!isSubCategoryExist) throw new ApiError(httpStatus.NOT_FOUND, 'Sub Category Not Found!!');
+      if (!isCategoryExist) throw new ApiError(httpStatus.NOT_FOUND, ' Category Not Found!!');
+    }
+
+    if (colorVarientId) {
+      const isColorExist = await transactionClient.colorVarient.findUnique({
+        where: {
+          colorVarientId,
+        },
+      });
+
+      if (!isColorExist) throw new ApiError(httpStatus.NOT_FOUND, ' Color Not Found!!');
+    }
+
+    if (sizeVarientId) {
+      const isSizeExist = await transactionClient.sizeVarient.findUnique({
+        where: {
+          sizeVarientId: sizeVarientId,
+        },
+      });
+
+      if (!isSizeExist) throw new ApiError(httpStatus.NOT_FOUND, ' Size Not Found!!');
     }
 
     const updatedDetails = {
       productName,
-      description,
-      shortSummery,
-      price,
-      productVat,
-      packType,
-      subCategoryId,
+      productDescription,
+      productPrice,
+      productStock,
+      categoryId,
+      colorVarientId,
+      sizeVarientId,
       productImage: filePath,
     };
-
-    console.log('updatedDetails', updatedDetails);
 
     const updatedProduct = await transactionClient.product.update({
       where: {

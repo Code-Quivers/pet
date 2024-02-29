@@ -113,10 +113,6 @@ const getCategory = async (filters: ICategoryFilterRequest, options: IPagination
 
   // Retrieve Courier with filtering and pagination
   const result = await prisma.category.findMany({
-    include: {
-      product: true,
-      _count: true,
-    },
     where: whereConditions,
     skip,
     take: limit,
