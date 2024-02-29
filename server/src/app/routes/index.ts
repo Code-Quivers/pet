@@ -5,6 +5,7 @@ import { CategoryRoutes } from '../modules/category/category.routes';
 import { ColorVarientRoutes } from '../modules/colorVarient/colorVarient.routes';
 import { SizeVarientRoutes } from '../modules/sizeVarient/sizeVarient.routes';
 import { ProductRoutes } from '../modules/product/product.routes';
+import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 
 const router = express.Router();
 
@@ -16,6 +17,10 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/dashboard',
+    route: DashboardRoutes,
   },
   {
     path: '/category',

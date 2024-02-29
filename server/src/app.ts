@@ -29,8 +29,8 @@ if (!fs.existsSync('./uploads/productImg')) {
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    credentials: true,
     // methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   })
 );
@@ -56,9 +56,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     errorMessages: [
       {
         path: req.originalUrl,
-        message: 'API Not Found'
-      }
-    ]
+        message: 'API Not Found',
+      },
+    ],
   });
   next();
 });

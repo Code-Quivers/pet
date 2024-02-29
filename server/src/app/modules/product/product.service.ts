@@ -129,6 +129,11 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
   // Retrieve Courier with filtering and pagination
   const result = await prisma.product.findMany({
     where: whereConditions,
+    include: {
+      category: true,
+      colorVarient: true,
+      sizeVarient: true,
+    },
     // select: {
     //   productId: true,
     //   productImage: true,
@@ -265,7 +270,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       sizeVarientId,
       productImage: filePath,
     };
-    
+
     const updatedProduct = await transactionClient.product.update({
       where: {
         productId,
