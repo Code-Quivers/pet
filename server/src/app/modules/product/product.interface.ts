@@ -2,6 +2,7 @@ export type IProductFilterRequest = {
   searchTerm?: string | undefined;
   productColor?: string | undefined;
   productSize?: string | undefined;
+  categoryName?: string | undefined;
 };
 
 export type IProductRequest = {

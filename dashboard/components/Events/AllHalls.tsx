@@ -3,7 +3,7 @@ import { Table, Pagination } from "rsuite";
 import { useState } from "react";
 import { Tooltip, Whisper, ButtonToolbar } from "rsuite";
 import { CiEdit } from "react-icons/ci";
-import { useGetAllHallsQuery } from "@/redux/features/hallApi";
+import { useGetAllHallsQuery } from "@/redux/features/productColorApi";
 import moment from "moment";
 const tooltip = <Tooltip>Edit</Tooltip>;
 

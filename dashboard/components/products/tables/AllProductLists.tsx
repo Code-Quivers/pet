@@ -10,6 +10,7 @@ import {
   InputGroup,
   Pagination,
   Popover,
+  SelectPicker,
   Table,
   Whisper,
 } from "rsuite";
@@ -22,12 +23,17 @@ const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
+
+  query["categoryName"] = categoryFilter;
+
   const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
@@ -53,6 +59,15 @@ const AllProductList = () => {
     setEditData(null);
   };
 
+  const { data: allCategories } = useGetCategoryQuery({});
+
+  const categoryFilterForProduct = allCategories?.data?.map(
+    (category: any) => ({
+      label: category.categoryName,
+      value: category.categoryName,
+    })
+  );
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -64,6 +79,21 @@ const AllProductList = () => {
           </div>
 
           <div className="flex max-md:justify-between gap-10 items-center">
+            <div>
+              <SelectPicker
+                placeholder="Product Filter By Category"
+                data={categoryFilterForProduct}
+                className="w-60"
+                searchable={false}
+                onChange={(value: any) => {
+                  setCategoryFilter(value);
+                }}
+                style={{
+                  width: 300,
+                }}
+              />
+            </div>
+
             <div>
               <InputGroup
                 inside
@@ -168,29 +198,63 @@ const AllProductList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="description"
+                dataKey="productDescription"
+              />
+            </Column>
+
+            {/* category */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Category Name</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="category.categoryName"
               />
             </Column>
             {/* product short summary */}
             <Column flexGrow={1} minWidth={105}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Short Summary
+                ProductColor
               </HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="shortSummery"
+                dataKey="colorVarient.productColor"
               />
             </Column>
 
             {/* sub category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Sub Category</HeaderCell>
+              <HeaderCell style={headerCss}>Product Size</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="subCategory.subCategoryName"
+                dataKey="sizeVarient.productSize"
               />
+            </Column>
+            {/* Price */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Product Price</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => `$ ${rowData.productPrice}`}
+              </Cell>
+            </Column>
+
+            {/* Stock */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Product Stock</HeaderCell>
+
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => `${rowData.productStock} pcs`}
+              </Cell>
             </Column>
 
             {/* Action */}

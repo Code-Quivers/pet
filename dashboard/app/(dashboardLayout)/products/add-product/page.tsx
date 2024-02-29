@@ -12,8 +12,6 @@ const AddProductPage = () => {
   return (
     <div className="pb-20 ">
       <AddProductForm />
-      <AddProductBatchForm />
-      <AddOptionalItemForm />
     </div>
   );
 };

@@ -17,7 +17,7 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import { useGetBatchProductsQuery } from "@/redux/features/batchProductApi";
+import { useGetBatchProductsQuery } from "@/redux/features/productSizeApi";
 import { FaRegEye } from "react-icons/fa";
 import OptionalItemsModalTable from "../modal/OptionalItemModalTable";
 import BathProductEditModal from "../modal/BathProductEditModal";

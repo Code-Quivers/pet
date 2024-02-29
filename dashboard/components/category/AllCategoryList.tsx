@@ -76,7 +76,7 @@ const AllCategoryList = () => {
                     width: 300,
                   }}
                   onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
+                  placeholder="Search by Category name..."
                 />
                 <InputGroup.Addon>
                   <BiSearch />
@@ -120,7 +120,7 @@ const AllCategoryList = () => {
                             width={200}
                             height={200}
                             alt=""
-                            src={`${fileUrlKey()}/${rowData?.categoryImg}`}
+                            src={`${fileUrlKey()}/${rowData?.categoryImage}`}
                             className="!h-[300px] !w-[300px]  object-cover"
                           />
                         </div>
@@ -132,7 +132,7 @@ const AllCategoryList = () => {
                         width={120}
                         height={120}
                         alt=""
-                        src={`${fileUrlKey()}/${rowData?.categoryImg}`}
+                        src={`${fileUrlKey()}/${rowData?.categoryImage}`}
                         className="object-center  object-cover"
                       />
                     </div>
@@ -140,7 +140,8 @@ const AllCategoryList = () => {
                 )}
               </Cell>
             </Column>
-            {/* product name */}
+
+            {/* Category name */}
             <Column flexGrow={2}>
               <HeaderCell style={headerCss}>Category Name</HeaderCell>
               <Cell
@@ -150,52 +151,15 @@ const AllCategoryList = () => {
               />
             </Column>
 
-            {/* product short summary */}
-            <Column flexGrow={1} align="center" minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Total Sub Category
-              </HeaderCell>
+            {/* Category Description */}
+
+            <Column flexGrow={2}>
+              <HeaderCell style={headerCss}>Category Description</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                align="center"
-                dataKey="_count.subCategory"
+                dataKey="description"
               />
-            </Column>
-            <Column width={150}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Sub Category Table
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                align="center"
-                dataKey="shortSummery"
-              >
-                {(rowData: any) => (
-                  <Whisper
-                    placement="topEnd"
-                    speaker={
-                      <Popover
-                        className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
-                        arrow={false}
-                      >
-                        View Sub Categories
-                      </Popover>
-                    }
-                  >
-                    <button
-                      className="border px-5 py-1.5 hover:bg-[#cfdce5] border-[#cfdce5] rounded-md font-semibold "
-                      onClick={() => {
-                        setIsOpenSubModal(true);
-                        setSubCategories(rowData?.subCategory);
-                      }}
-                    >
-                      View
-                    </button>
-                  </Whisper>
-                )}
-              </Cell>
             </Column>
 
             {/* Action */}
@@ -251,14 +215,9 @@ const AllCategoryList = () => {
         </div>
       </div>
 
-      {/* modal */}
-      <SubCategoryModalTable
-        handleCloseSubCategoryModal={handleCloseSubCategoryModal}
-        isOpenSubModal={isOpenSubModal}
-        subCategories={subCategories}
-      />
       {/* add category */}
       <AddCategoryModalForm open={open} handleClose={handleClose} />
+
       {/* edit category */}
       <EditCategoryModal
         isOpenEdit={isOpenEdit}

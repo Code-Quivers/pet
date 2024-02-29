@@ -12,6 +12,9 @@ import { useAddProductMutation } from "@/redux/features/productsApi";
 import { useGetSubCategoryQuery } from "@/redux/features/subCategoryApi";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import { useGetProductSizeQuery } from "@/redux/features/productSizeApi";
+import { useGetProductColorQuery } from "@/redux/features/productColorApi";
 
 const AddProductForm = () => {
   const toaster = useToaster();
@@ -19,16 +22,39 @@ const AddProductForm = () => {
   const [subCategorySearch, setSubCategorySearch] = useState("");
   subCategoryQuery["limit"] = 100;
   subCategoryQuery["searchTerm"] = subCategorySearch;
+
+  //Get All Category
   const {
-    data: subCategoryResponse,
+    data: categoryResponse,
     isLoading: subCategoryLoading,
     isFetching: subCategoryFetching,
-  } = useGetSubCategoryQuery({ ...subCategoryQuery });
+  } = useGetCategoryQuery({ ...subCategoryQuery });
 
-  const subCategoryEnums = subCategoryResponse?.data?.map((single: any) => {
+  const categoryEnums = categoryResponse?.data?.map((single: any) => {
     return {
-      label: single?.subCategoryName,
-      value: single?.subCategoryId,
+      label: single?.categoryName,
+      value: single?.categoryId,
+    };
+  });
+
+  //Get All Product Size
+  const { data: productSizeResponse } = useGetProductSizeQuery({});
+
+  const productSize = productSizeResponse?.data?.map((size: any) => {
+    return {
+      label: size?.productSize,
+      value: size?.sizeVarientId,
+    };
+  });
+
+  //Get All Product Color
+
+  const { data: productColorResponse } = useGetProductColorQuery({});
+
+  const productColor = productColorResponse?.data?.map((color: any) => {
+    return {
+      label: color?.productColor,
+      value: color?.colorVarientId,
     };
   });
 
@@ -49,11 +75,16 @@ const AddProductForm = () => {
     }
     const obj = {
       productName: newData?.productName,
-      description: newData?.productDescription,
-      price: newData?.productPrice ? parseInt(newData?.productPrice) : "",
-      shortSummery: newData?.shortSummery,
-      subCategoryId: newData?.subCategoryId,
-      packType: newData?.packTypeId,
+      productDescription: newData?.productDescription,
+      productPrice: newData?.productPrice
+        ? parseInt(newData?.productPrice)
+        : "",
+      productStock: newData?.productStock
+        ? parseInt(newData?.productStock)
+        : "",
+      categoryId: newData?.categoryId,
+      colorVarientId: newData?.colorVarientId,
+      sizeVarientId: newData?.sizeVarientId,
     };
 
     const productData = JSON.stringify(obj);
@@ -128,11 +159,26 @@ const AddProductForm = () => {
               {/* Product Price (optional) */}
               <div className="space-y-1">
                 <ProductCreateController
-                  label="Product Price (optional)"
+                  label="Product Price"
                   placeholder="Enter Product Price..."
                   control={control}
                   errors={errors}
                   name="productPrice"
+                  type="number"
+                  icon={
+                    <HiMiniCurrencyEuro className="text-[#ababab]" size={20} />
+                  }
+                />
+              </div>
+
+              {/* Product Price (optional) */}
+              <div className="space-y-1">
+                <ProductCreateController
+                  label="Product Quantity"
+                  placeholder="Enter Product Quantity..."
+                  control={control}
+                  errors={errors}
+                  name="productStock"
                   type="number"
                   icon={
                     <HiMiniCurrencyEuro className="text-[#ababab]" size={20} />
@@ -176,7 +222,7 @@ const AddProductForm = () => {
               {/* Product Image */}
               <div className="space-y-1">
                 <label className="block font-medium text-black  ">
-                  Product Image (optional)
+                  Product Image
                 </label>
                 <Controller
                   name="productImage"
@@ -204,23 +250,20 @@ const AddProductForm = () => {
             {/* right */}
 
             <div className="col-span-2 space-y-2">
-              {/* select sub category */}
+              {/* select category */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Sub Category
+                  Category
                 </label>
                 <Controller
-                  name="subCategoryId"
+                  name="categoryId"
                   control={control}
-                  rules={{ required: "Sub Category is required" }}
+                  rules={{ required: "Category is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
                       <SelectPicker
-                        onSearch={(e) => {
-                          setSubCategorySearch(e);
-                        }}
                         size="lg"
-                        data={subCategoryEnums || []}
+                        data={categoryEnums || []}
                         value={field.value}
                         onChange={(value: string | null) =>
                           field.onChange(value)
@@ -228,7 +271,8 @@ const AddProductForm = () => {
                         style={{
                           width: "100%",
                         }}
-                        placeholder="Select Item"
+                        placeholder="Select Category"
+                        searchable={false}
                         renderMenu={(menu) =>
                           renderLoading(
                             menu,
@@ -238,34 +282,35 @@ const AddProductForm = () => {
                       />
                       <Form.ErrorMessage
                         show={
-                          (!!errors?.subCategoryId &&
-                            !!errors?.subCategoryId?.message) ||
+                          (!!errors?.categoryId &&
+                            !!errors?.categoryId?.message) ||
                           false
                         }
                         placement="topEnd"
                       >
                         <span className="font-semibold">
-                          {errors?.subCategoryId?.message}
+                          {errors?.categoryId?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>
                   )}
                 />
               </div>
-              {/* select pack type (optional) */}
+
+              {/* select Size */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Pack Type (optional)
+                  Product Size
                 </label>
                 <Controller
-                  name="packTypeId"
+                  name="sizeVarientId"
                   control={control}
+                  rules={{ required: "Product Size is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
                       <SelectPicker
-                        searchable={false}
                         size="lg"
-                        data={packTypeEnums}
+                        data={productSize || []}
                         value={field.value}
                         onChange={(value: string | null) =>
                           field.onChange(value)
@@ -273,52 +318,72 @@ const AddProductForm = () => {
                         style={{
                           width: "100%",
                         }}
-                        placeholder="Select Pack Type"
+                        placeholder="Select Product Size"
+                        searchable={false}
+                        renderMenu={(menu) =>
+                          renderLoading(
+                            menu,
+                            subCategoryLoading || subCategoryFetching
+                          )
+                        }
                       />
                       <Form.ErrorMessage
                         show={
-                          (!!errors?.packTypeId &&
-                            !!errors?.packTypeId?.message) ||
+                          (!!errors?.categoryId &&
+                            !!errors?.categoryId?.message) ||
                           false
                         }
                         placement="topEnd"
                       >
-                        {" "}
                         <span className="font-semibold">
-                          {errors?.packTypeId?.message}
+                          {errors?.categoryId?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>
                   )}
                 />
               </div>
-              {/* short summary */}
+
+              {/* select Color */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Short Summary
+                  Product Color
                 </label>
                 <Controller
-                  name="shortSummery"
+                  name="colorVarientId"
                   control={control}
+                  rules={{ required: "Product Color is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
-                      <Input
-                        as="textarea"
-                        rows={3}
-                        {...field}
-                        placeholder="Write a summary about the product..."
-                        className="!w-full"
+                      <SelectPicker
+                        size="lg"
+                        data={productColor || []}
+                        value={field.value}
+                        onChange={(value: string | null) =>
+                          field.onChange(value)
+                        }
+                        style={{
+                          width: "100%",
+                        }}
+                        searchable={false}
+                        placeholder="Select Product Color"
+                        renderMenu={(menu) =>
+                          renderLoading(
+                            menu,
+                            subCategoryLoading || subCategoryFetching
+                          )
+                        }
                       />
                       <Form.ErrorMessage
                         show={
-                          (!!errors?.shortSummery &&
-                            !!errors?.shortSummery?.message) ||
+                          (!!errors?.categoryId &&
+                            !!errors?.categoryId?.message) ||
                           false
                         }
                         placement="topEnd"
                       >
                         <span className="font-semibold">
-                          {errors?.shortSummery?.message}
+                          {errors?.categoryId?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>
