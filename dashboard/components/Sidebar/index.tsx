@@ -218,6 +218,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               All Products
                             </Link>
                           </li>
+
+                          <li>
+                            <Link
+                              href="/products/products-barcode"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
+                                pathname === "/products/products-barcode" &&
+                                "text-white"
+                              } `}
+                            >
+                              Products & Barcode
+                            </Link>
+                          </li>
                           <li>
                             <Link
                               href="/products/add-product"
