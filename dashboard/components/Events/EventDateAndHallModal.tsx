@@ -1,4 +1,4 @@
-import { useGetAllHallsQuery } from "@/redux/features/hallApi";
+import { useGetAllHallsQuery } from "@/redux/features/productColorApi";
 import { DatePicker, InlineEdit, Modal, SelectPicker, TagPicker } from "rsuite";
 
 const EventDateAndHallModal = ({

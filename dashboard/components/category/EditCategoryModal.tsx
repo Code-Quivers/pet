@@ -131,6 +131,44 @@ const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
                     />
                   </div>
                 </div>
+
+                {/* category Description */}
+
+                <div>
+                  <div className="space-y-1">
+                    <label className="block font-medium text-black ">
+                      Category Description
+                    </label>
+                    <Controller
+                      name="description"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <Input
+                            as={"textarea"}
+                            defaultValue={editData?.description}
+                            {...field}
+                            placeholder="Description..."
+                            className="!w-full !h-60"
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              (!!errors?.categoryName &&
+                                !!errors?.description?.message) ||
+                              false
+                            }
+                            placement="topEnd"
+                          >
+                            <span className="font-semibold">
+                              {errors?.description?.message}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+
                 {/* category Image */}
                 <div>
                   {/* Product Image */}
@@ -144,7 +182,7 @@ const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <UpdateCategoryImageUpload
-                            defaultImage={editData?.categoryImg}
+                            defaultImage={editData.categoryImg}
                             field={field as any}
                           />
                           <Form.ErrorMessage

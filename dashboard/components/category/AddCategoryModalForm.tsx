@@ -26,6 +26,7 @@ const AddCategoryModalForm = ({ open, handleClose }: any) => {
     }
     const obj = {
       categoryName: newData.categoryName,
+      description: newData.description,
     };
 
     const categoryData = JSON.stringify(obj);
@@ -125,6 +126,45 @@ const AddCategoryModalForm = ({ open, handleClose }: any) => {
                     />
                   </div>
                 </div>
+
+                {/* category Description */}
+                <div>
+                  <div className="space-y-1">
+                    <label className="block font-medium text-black ">
+                      Category Description
+                    </label>
+                    <Controller
+                      name="description"
+                      control={control}
+                      rules={{
+                        required: "Description is Required",
+                      }}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <Input
+                            as={"textarea"}
+                            {...field}
+                            placeholder="Description..."
+                            className="!w-full !h-60"
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              (!!errors?.categoryName &&
+                                !!errors?.description?.message) ||
+                              false
+                            }
+                            placement="topEnd"
+                          >
+                            <span className="font-semibold">
+                              {errors?.description?.message}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+
                 {/* category Image */}
                 <div>
                   {/* Product Image */}

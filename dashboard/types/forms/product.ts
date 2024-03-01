@@ -2,23 +2,24 @@ import { FileType } from "rsuite/esm/Uploader";
 
 export type ICreateProduct = {
   productName: string;
-  subCategoryId: string;
-  packTypeId?: string;
-  shortSummery?: string;
-  productDescription?: string;
+  productDescription: string;
   productPrice: string;
-  productVat: string;
-  productImage?: FileType;
+  productStock: string;
+  categoryId: string;
+  colorVarientId: string;
+  sizeVarientId: string;
+  productImage: FileType;
 };
+
 // ! edit product details
 export type IUpdateProduct = {
   productName?: string;
-  subCategoryId?: string;
-  packTypeId?: string;
-  shortSummary?: string;
   productDescription?: string;
   productPrice?: string;
-  productVat?: string;
+  productStock?: string;
+  categoryId?: string;
+  colorVarientId?: string;
+  sizeVarientId?: string;
   productImage?: FileType;
 };
 export type ICreateBatchProduct = {

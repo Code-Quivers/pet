@@ -14,7 +14,7 @@ import {
   useToaster,
 } from "rsuite";
 
-import { useAddBatchProductMutation } from "@/redux/features/batchProductApi";
+import { useAddBatchProductMutation } from "@/redux/features/productSizeApi";
 import {
   useGetCategoryQuery,
   useGetSingleCategoryQuery,

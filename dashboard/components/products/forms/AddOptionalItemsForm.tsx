@@ -20,7 +20,7 @@ import {
 import { useGetSingleSubCategoryQuery } from "@/redux/features/subCategoryApi";
 import { useAddOptionalProductsMutation } from "@/redux/features/optionalItemsApi";
 import { useEffect } from "react";
-import { useGetBatchProductsQuery } from "@/redux/features/batchProductApi";
+import { useGetBatchProductsQuery } from "@/redux/features/productSizeApi";
 import { fileUrlKey } from "@/helpers/envConfig";
 import noImage from "@/public/images/no-image.png";
 const AddOptionalItemForm = () => {

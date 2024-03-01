@@ -60,7 +60,7 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productColor, productSize, ...filterData } = filters;
+  const { searchTerm, productColor, productSize, categoryName, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductWhereInput[] = [];
@@ -118,6 +118,17 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
       sizeVarient: {
         productSize: {
           equals: productSize,
+        },
+      },
+    });
+  }
+
+  //Filter By Category
+  if (categoryName) {
+    andConditions.push({
+      category: {
+        categoryName: {
+          equals: categoryName,
         },
       },
     });

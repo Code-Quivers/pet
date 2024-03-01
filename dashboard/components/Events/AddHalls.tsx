@@ -3,7 +3,7 @@
 import { Controller, useForm } from "react-hook-form";
 import AllHalls from "./AllHalls";
 import { Button, Form, Input, Message, useToaster } from "rsuite";
-import { useCreateHallMutation } from "@/redux/features/hallApi";
+import { useCreateHallMutation } from "@/redux/features/productColorApi";
 import { useEffect } from "react";
 
 type ICreateHall = {

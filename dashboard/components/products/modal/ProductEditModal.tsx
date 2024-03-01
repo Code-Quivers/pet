@@ -17,17 +17,48 @@ import { useUpdateProductMutation } from "@/redux/features/productsApi";
 import { useGetSubCategoryQuery } from "@/redux/features/subCategoryApi";
 import UpdateProductImageUpload from "../forms/UpdateProductImageUpload";
 import { useEffect } from "react";
+import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import { useGetProductColorQuery } from "@/redux/features/productColorApi";
+import { useGetProductSizeQuery } from "@/redux/features/productSizeApi";
 
 const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
-  const { data: subCategoryResponse, isLoading: subCategoryLoading } =
-    useGetSubCategoryQuery({});
+  //Category
 
-  const subCategoryEnums = subCategoryResponse?.data?.map((single: any) => {
+  const { data: categoryResponse, isLoading: categoryLoading } =
+    useGetCategoryQuery({});
+
+  const categoryEnums = categoryResponse?.data?.map((single: any) => {
     return {
-      label: single?.subCategoryName,
-      value: single?.subCategoryId,
+      label: single?.categoryName,
+      value: single?.categoryId,
     };
   });
+
+  //Product Color
+
+  const { data: colorResponse, isLoading: colorLoading } =
+    useGetProductColorQuery({});
+
+  const colorEnums = colorResponse?.data?.map((color: any) => {
+    return {
+      label: color?.productColor,
+      value: color?.colorVarientId,
+    };
+  });
+
+  //Product Size
+
+  const { data: sizeResponse, isLoading: sizeLoading } = useGetProductSizeQuery(
+    { subCategoryType: "Size" }
+  );
+
+  const sizeEnums = sizeResponse?.data?.map((size: any) => {
+    return {
+      label: size?.productSize,
+      value: size?.sizeVarientId,
+    };
+  });
+
   const {
     control,
     handleSubmit,
@@ -48,17 +79,17 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
     }
 
     const obj = {
-      packTypeId: updatedData?.packTypeId,
-      description: updatedData?.productDescription,
       productName: updatedData?.productName,
-      price: updatedData?.productPrice
+      productDescription: updatedData?.productDescription,
+      productPrice: updatedData?.productPrice
         ? parseInt(updatedData?.productPrice)
         : undefined,
-      productVat: updatedData?.productVat
-        ? parseInt(updatedData?.productVat)
+      productStock: updatedData?.productStock
+        ? parseInt(updatedData?.productStock)
         : undefined,
-      shortSummery: updatedData?.shortSummary,
-      subCategoryId: updatedData?.subCategoryId,
+      categoryId: updatedData?.categoryId,
+      colorVarientId: updatedData?.colorVarientId,
+      sizeVarientId: updatedData?.sizeVarientId,
     };
     const productData = JSON.stringify(obj);
     formData.append("data", productData);
@@ -110,7 +141,12 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
 
   return (
     <div>
-      <Modal size="lg" open={isOpenEdit} onClose={handleCloseEdit}>
+      <Modal
+        size="lg"
+        open={isOpenEdit}
+        onClose={handleCloseEdit}
+        backdrop={"static"}
+      >
         <Modal.Header>
           <Modal.Title>
             <span className="text-sm font-semibold ">
@@ -159,7 +195,7 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                     />
                   </div>
 
-                  {/* Product Price (optional) */}
+                  {/* Product Price */}
 
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
@@ -173,7 +209,7 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                           <Input
                             size="lg"
                             {...field}
-                            defaultValue={editData?.price}
+                            defaultValue={editData?.productPrice}
                             placeholder="Enter Product Price.."
                             className="!w-full"
                           />
@@ -194,41 +230,6 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                     />
                   </div>
 
-                  {/* Product Vat */}
-
-                  <div className="space-y-1">
-                    <label className="block font-medium text-black ">
-                      Vat on Product
-                    </label>
-                    <Controller
-                      name="productVat"
-                      control={control}
-                      render={({ field }) => (
-                        <div className="rs-form-control-wrapper">
-                          <Input
-                            size="lg"
-                            {...field}
-                            defaultValue={editData?.productVat}
-                            placeholder="Enter Product Vat.."
-                            className="!w-full"
-                          />
-                          <Form.ErrorMessage
-                            show={
-                              (!!errors?.productVat &&
-                                !!errors?.productVat?.message) ||
-                              false
-                            }
-                            placement="topEnd"
-                          >
-                            <span className="font-semibold">
-                              {errors?.productVat?.message}
-                            </span>
-                          </Form.ErrorMessage>
-                        </div>
-                      )}
-                    />
-                  </div>
-
                   {/* Product Description(optional) */}
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
@@ -241,7 +242,7 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                         <div className="rs-form-control-wrapper">
                           <Input
                             as="textarea"
-                            defaultValue={editData?.description}
+                            defaultValue={editData?.productDescription}
                             rows={3}
                             {...field}
                             placeholder="Write product Description..."
@@ -296,19 +297,54 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                 </div>
                 {/* right */}
                 <div className="col-span-2 space-y-2">
+                  {/* Product Stock */}
+
+                  <div className="space-y-1">
+                    <label className="block font-medium text-black ">
+                      Product Stock
+                    </label>
+                    <Controller
+                      name="productStock"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <Input
+                            size="lg"
+                            {...field}
+                            defaultValue={editData?.productStock}
+                            placeholder="Enter Product Stock.."
+                            className="!w-full"
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              (!!errors?.productStock &&
+                                !!errors?.productStock?.message) ||
+                              false
+                            }
+                            placement="topEnd"
+                          >
+                            <span className="font-semibold">
+                              {errors?.productStock?.message}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+
                   {/* select sub category */}
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Sub Category
+                      Category
                     </label>
                     <Controller
-                      name="subCategoryId"
+                      name="categoryId"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <SelectPicker
                             size="lg"
-                            data={subCategoryEnums || []}
+                            data={categoryEnums || []}
                             value={field.value}
                             onChange={(value: string | null) =>
                               field.onChange(value)
@@ -318,95 +354,109 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                               width: "100%",
                             }}
                             placeholder="Select Item"
+                            searchable={false}
                             renderMenu={(menu) =>
-                              renderLoading(menu, subCategoryLoading)
+                              renderLoading(menu, categoryLoading)
                             }
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.subCategoryId &&
-                                !!errors?.subCategoryId?.message) ||
+                              (!!errors?.categoryId &&
+                                !!errors?.categoryId?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.subCategoryId?.message}
+                              {errors?.categoryId?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
                       )}
                     />
                   </div>
-                  {/* select pack type (optional) */}
+
+                  {/* select Product Color */}
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Pack Type
+                      Product Color
                     </label>
                     <Controller
-                      name="packTypeId"
+                      name="colorVarientId"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <SelectPicker
-                            searchable={false}
                             size="lg"
-                            data={packTypeEnums}
+                            data={colorEnums || []}
                             value={field.value}
-                            defaultValue={editData?.packType}
                             onChange={(value: string | null) =>
                               field.onChange(value)
                             }
+                            defaultValue={editData?.colorVarient?.productColor}
                             style={{
                               width: "100%",
                             }}
-                            placeholder="Select Item"
+                            placeholder="Select Product Color"
+                            searchable={false}
+                            renderMenu={(menu) =>
+                              renderLoading(menu, colorLoading)
+                            }
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.packTypeId &&
-                                !!errors?.packTypeId?.message) ||
+                              (!!errors?.categoryId &&
+                                !!errors?.colorVarientId?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
-                            {" "}
                             <span className="font-semibold">
-                              {errors?.packTypeId?.message}
+                              {errors?.colorVarientId?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
                       )}
                     />
                   </div>
-                  {/* short summary */}
+
+                  {/* select Product Size */}
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Short Summary
+                      Product Size
                     </label>
                     <Controller
-                      name="shortSummary"
+                      name="sizeVarientId"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
-                          <Input
-                            as="textarea"
-                            rows={3}
-                            defaultValue={editData?.shortSummery}
-                            {...field}
-                            placeholder="Write a summary about the product..."
-                            className="!w-full"
+                          <SelectPicker
+                            size="lg"
+                            data={sizeEnums || []}
+                            value={field.value}
+                            onChange={(value: string | null) =>
+                              field.onChange(value)
+                            }
+                            defaultValue={editData?.sizeVarient?.productSize}
+                            style={{
+                              width: "100%",
+                            }}
+                            placeholder="Select Product Size"
+                            searchable={false}
+                            renderMenu={(menu) =>
+                              renderLoading(menu, sizeLoading)
+                            }
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.shortSummary &&
-                                !!errors?.shortSummary?.message) ||
+                              (!!errors?.categoryId &&
+                                !!errors?.sizeVarientId?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.shortSummary?.message}
+                              {errors?.sizeVarientId?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>

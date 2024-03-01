@@ -1,5 +1,5 @@
 "use client";
-import { useGetAllHallsQuery } from "@/redux/features/hallApi";
+import { useGetAllHallsQuery } from "@/redux/features/productColorApi";
 import { ICreateEvent } from "@/types/forms/event.types";
 import { useEffect, useState } from "react";
 import {
