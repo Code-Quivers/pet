@@ -4,29 +4,29 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { ProductService } from './pet.service';
-import { ProductFilterableFields } from './pet.constants';
+import { PetService } from './pet.service';
+import { IRequestUser } from './pet.interface';
 
 // !----------------------------------Create New Category---------------------------------------->>>
-const addProductController = catchAsync(async (req: Request, res: Response) => {
+const addPetController = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  const result = await ProductService.addProduct(req);
+  const result = await PetService.addPet(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Added Successfully',
+    message: 'Pet Added Successfully',
     data: result,
   });
 });
 
 // !----------------------------------get all Category---------------------------------------->>>
-const getProductController = catchAsync(async (req: Request, res: Response) => {
+const getPetController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await ProductService.getProduct(filters, options);
+  const result = await PetService.getPet(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -38,24 +38,24 @@ const getProductController = catchAsync(async (req: Request, res: Response) => {
 });
 
 // !----------------------------------get Single Category---------------------------------------->>>
-const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
+const getSinglePet = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;
-  const result = await ProductService.getSingleProduct(productId);
+  const result = await PetService.getSinglePet(productId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product retrieved successfully',
+    message: 'Pet retrieved successfully',
     data: result,
   });
 });
 
 // !----------------------------------Update Category---------------------------------------->>>
-const updateProduct = catchAsync(async (req: Request, res: Response) => {
+const updatePet = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;
   // console.log('productId', productId);
   // @ts-ignore
-  const result = await ProductService.updateProduct(productId, req);
+  const result = await PetService.updatePet(productId, req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -65,9 +65,9 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteProduct = catchAsync(async (req: Request, res: Response) => {
+const deletePet = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;
-  const result = await ProductService.deleteProduct(productId);
+  const result = await PetService.deletePet(productId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -77,10 +77,10 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ProductController = {
-  addProductController,
-  getProductController,
-  getSingleProduct,
-  updateProduct,
-  deleteProduct,
+export const PetController = {
+  addPetController,
+  getPetController,
+  getSinglePet,
+  updatePet,
+  deletePet,
 };

@@ -45,3 +45,11 @@ export type IPetUpdateRequest = {
   grandMotherPhoneNumber?: string;
   oldFilePath?: string;
 };
+
+export type IRequestUser = {
+  email: string;
+  userId: string;
+  profileId: string;
+  iat: number;
+  exp: number;
+};

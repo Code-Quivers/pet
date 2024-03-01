@@ -30,10 +30,10 @@ model Profile {
   mobileNumber           String?
   address                String?
   role                   UserRoles @default(USER)
-  mother                 String
-  motherPhoneNumber      String
-  father                 String
-  fatherPhoneNumber      String
+  mother                 String?
+  motherPhoneNumber      String?
+  father                 String?
+  fatherPhoneNumber      String?
   aunt                   String?
   auntPhoneNumber        String?
   uncle                  String?
@@ -132,7 +132,7 @@ model Pet {
   petName        String
   petImage       String
   petDescription String
-  petGendar      String
+  petGender      String
   petAge         String
   petWeight      String
   petAddress     String

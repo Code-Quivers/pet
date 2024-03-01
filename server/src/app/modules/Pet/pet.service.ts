@@ -12,8 +12,8 @@ import { IUploadFile } from '../../../interfaces/file';
 
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { IPetRequest, IProductFilterRequest } from './pet.interface';
-import { PetValidation, ProductValidation } from './pet.utils';
+import { IPetRequest, IProductFilterRequest, IRequestUser } from './pet.interface';
+import { PetValidation } from './pet.utils';
 
 // modules
 
@@ -27,7 +27,9 @@ const addPet = async (req: Request): Promise<Pet> => {
   //@ts-ignore
   const data = req.body as IPetRequest;
 
-  await PetValidation(data);
+  const userId = (req.user as IRequestUser).userId;
+
+  await PetValidation(data, userId);
 
   const result = await prisma.$transaction(async transactionClient => {
     const newPet = {
@@ -42,7 +44,7 @@ const addPet = async (req: Request): Promise<Pet> => {
       petHealth: data.petHealth,
       petVaccination: data.petVaccination,
       petProvider: data.petProvider,
-      userId: req.user?.userId,
+      userId: userId,
       productId: data.productId,
     };
 
@@ -197,19 +199,19 @@ const getPet = async (filters: IProductFilterRequest, options: IPaginationOption
 };
 
 // !----------------------------------get Single Courier---------------------------------------->>>
-const getSinglePet = async (productId: string): Promise<Product | null> => {
+const getSinglePet = async (productId: string): Promise<Pet | null> => {
   if (!productId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'product Id is required');
   }
 
-  const result = await prisma.product.findUnique({
+  const result = await prisma.pet.findUnique({
     where: {
       productId,
     },
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Pet Not Found!!');
   }
 
   return result;
@@ -317,7 +319,7 @@ const deletePet = async (productId: string): Promise<Product> => {
   return result;
 };
 
-export const ProductService = {
+export const PetService = {
   addPet,
   getPet,
   getSinglePet,
