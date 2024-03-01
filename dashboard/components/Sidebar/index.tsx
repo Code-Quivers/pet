@@ -67,7 +67,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <Link href="/">
-          <h2 className="text-white text-2xl uppercase font-bold">Catering</h2>
+          <h2 className="text-white text-2xl uppercase font-bold">E.T.</h2>
         </Link>
 
         <button
