@@ -1,30 +1,18 @@
 import Link from "next/link";
 import React from "react";
 
-const SignUpPage = () => {
+const ForgotPasswordPage = () => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center md:py-0 py-5">
       <div className="w-full md:w-1/2 px-4 md:p-0">
         <form className="max-w-lg w-full mx-auto">
           <div className="mb-12 text-center">
             <h3 className="text-black md:text-3xl text-2xl font-extrabold text-center">
-              Register
+              Reset Passwords
             </h3>
             <p className="text-slate-500 pt-2">
-              Create you E.T Phone Home Account
+              Use that email when you registered
             </p>
-          </div>
-          <div className="mt-10">
-            <label className="text-xs block mb-2">Full Name</label>
-            <div className="relative flex items-center">
-              <input
-                name="fullName"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm border border-gray-300 focus:border-blue-500 px-2 py-3 outline-none"
-                placeholder="Enter email"
-              />
-            </div>
           </div>
           <div className="mt-10">
             <label className="text-xs block mb-2">Email</label>
@@ -38,25 +26,13 @@ const SignUpPage = () => {
               />
             </div>
           </div>
-          <div className="mt-10">
-            <label className="text-xs block mb-2">Password</label>
-            <div className="relative flex items-center">
-              <input
-                name="password"
-                type="password"
-                required
-                className="w-full bg-transparent text-sm border border-gray-300 focus:border-blue-500 px-2 py-3 outline-none"
-                placeholder="Enter password"
-              />
-            </div>
-          </div>
 
           <div className="mt-12 text-center">
             <button
               type="button"
               className="w-full py-2.5 px-8 text-sm font-semibold rounded bg-primary hover:bg-blue-600 text-white border focus:outline-none"
             >
-              Sign In
+              Reset Password
             </button>
             <p className="text-sm md:text-xl my-8 md:hidden block">
               Have an account already?{" "}
@@ -90,7 +66,7 @@ const SignUpPage = () => {
         </div>
         <div className="pt-12">
           <p className="text-xl mt-8 text-white">
-            Have an account yet?{" "}
+            Have an account already?{" "}
             <Link
               href="/sign-in"
               className="hover:underline ml-1 w-full py-2.5 px-8 text-sm font-semibold rounded-full bg-transparent hover:bg-primary text-white border focus:outline-none"
@@ -104,4 +80,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default ForgotPasswordPage;
