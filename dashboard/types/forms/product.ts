@@ -14,12 +14,12 @@ export type ICreateProduct = {
 // ! edit product details
 export type IUpdateProduct = {
   productName?: string;
-  subCategoryId?: string;
-  packTypeId?: string;
-  shortSummary?: string;
   productDescription?: string;
   productPrice?: string;
-  productVat?: string;
+  productStock?: string;
+  categoryId?: string;
+  colorVarientId?: string;
+  sizeVarientId?: string;
   productImage?: FileType;
 };
 export type ICreateBatchProduct = {

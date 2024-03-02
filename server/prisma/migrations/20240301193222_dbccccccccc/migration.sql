@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Profile" ALTER COLUMN "mother" DROP NOT NULL,
+ALTER COLUMN "motherPhoneNumber" DROP NOT NULL,
+ALTER COLUMN "father" DROP NOT NULL,
+ALTER COLUMN "fatherPhoneNumber" DROP NOT NULL;

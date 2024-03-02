@@ -21,6 +21,7 @@ model User {
   profileId     String?         @unique
   profile       Profile?        @relation(fields: [profileId], references: [profileId])
   productReview ProductReview[]
+  pet           Pet[]
 }
 
 model Profile {
@@ -28,6 +29,7 @@ model Profile {
   fullName               String
   mobileNumber           String?
   address                String?
+  role                   UserRoles @default(USER)
   mother                 String?
   motherPhoneNumber      String?
   father                 String?
@@ -42,7 +44,6 @@ model Profile {
   grandFatherPhoneNumber String?
   grandMother            String?
   grandMotherPhoneNumber String?
-  role                   UserRoles @default(USER)
   createdAt              DateTime  @default(now()) @db.Timestamptz(0)
   updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
   user                   User?
@@ -69,7 +70,7 @@ model Category {
 
 model Product {
   productId          String          @id @default(uuid())
-  productName        String         
+  productName        String
   productImage       String
   productPrice       Float
   productStock       Int
@@ -84,6 +85,7 @@ model Product {
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
+  Pet                Pet?
 }
 
 model ColorVarient {
@@ -125,4 +127,23 @@ model ProductReview {
   updatedAt       DateTime @updatedAt @db.Timestamptz(0)
 }
 
-
+model Pet {
+  petId          String   @id @default(uuid())
+  petName        String
+  petImage       String
+  petDescription String
+  petGender      String
+  petAge         String
+  petWeight      String
+  petAddress     String
+  petBehavior    String
+  petHealth      String
+  petVaccination String
+  petProvider    String
+  userId         String
+  user           User     @relation(fields: [userId], references: [userId])
+  productId      String?  @unique
+  product        Product? @relation(fields: [productId], references: [productId])
+  createdAt      DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
+}
