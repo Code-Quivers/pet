@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { AiOutlineDelete } from "react-icons/ai";
 import { Accordion, Drawer, Placeholder } from "rsuite";
 import { Tooltip, Whisper, Button, ButtonToolbar } from "rsuite";
 
@@ -12,10 +13,10 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
       <Drawer open={cartOpen} onClose={() => setCartOpen(false)} size={"xs"}>
         <Drawer.Body style={{ paddingLeft: 0, paddingRight: 0 }}>
           <div className="p-6 bg-white  ">
-            <div className="flex justify-between items-center py-10">
-              <div className="flex items-center">
-                <h2 className="text-xl font-bold  ">Shopping Cart</h2>
-                <span className="inline-flex items-center justify-center w-8 h-8 ml-4 text-base font-bold bg-secondary rounded-full   text-gray-50">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center mt-3 mb-7">
+                <h2 className="text-xl font-bold">Cart</h2>
+                <span className="inline-flex items-center justify-center w-6 h-6 ml-3 text-sm font-bold bg-secondary rounded-full text-gray-50">
                   6
                 </span>
               </div>
@@ -30,91 +31,75 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                 </Whisper>
               </div>
             </div>
-            <div className="block pb-6 mb-6 -mx-4 border-b border-gray-200  md:flex">
-              <div className="flex justify-between it w-full px-4 md:2/3">
-                <div className="flex justify-start items-start gap-4">
-                  <div>
-                    <img
-                      src="https://i.postimg.cc/hj6h6Vwv/pexels-artem-beliaikin-2292919.jpg"
-                      alt=""
-                      className="object-cover w-16 h-16 object-cover rounded-md"
-                    />
+            <div>
+              <div className="flex  gap-2">
+                <div className="w-1/5">
+                  <img
+                    src="https://i.postimg.cc/hj6h6Vwv/pexels-artem-beliaikin-2292919.jpg"
+                    alt=""
+                    className="object-cover w-20 h-20 object-cover rounded-md"
+                  />
+                </div>
+                <div className="w-4/5 flex flex-col gap-6">
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold">Clara French Press</p>
+                    <span>
+                      <AiOutlineDelete size={20} />
+                    </span>
                   </div>
                   <div>
-                    <h2 className="text-base font-semibold">
-                      Clara French Press
-                    </h2>
-                    <div className="flex justify-start items-center gap-2">
-                      <p className="text-sm font-medium text-gray-600  ">4 X</p>
-                      <p className="text-lg font-bold text-primary ">$299.00</p>
+                    <div className="flex justify-between">
+                      <p className="font-semibold text-gray-700">$299.00</p>
+                      <div className="flex items-center">
+                        <button className="w-7 h-7 flex items-center justify-center border border-gray-300 shadow rounded-full text-xl font-semibold">
+                          -
+                        </button>
+                        <p className="px-2.5">5</p>
+                        <button className="w-7 h-7 flex items-center justify-center border border-gray-300 shadow rounded-full text-xl font-semibold">
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltip2}
-                  >
-                    <button className="text-gray-700 ">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-x-lg"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
-                        />
-                        <path
-                          fill-rule="evenodd"
-                          d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
-                        />
-                      </svg>
-                    </button>
-                  </Whisper>
-                </div>
+                {/* price with quantity update */}
               </div>
             </div>
-
-            <div className="flex justify-between text-base ">
-              <p>Subtotal</p>
-              <p>$400.00</p>
-            </div>
-            <p className="mt-4 text-sm text-gray-500 ">
-              Shipping calculated at checkout period.
+          </div>
+          <hr />
+          <div className="flex justify-between text-base ">
+            <p>Subtotal</p>
+            <p>$400.00</p>
+          </div>
+          <p className="mt-4 text-sm text-gray-500 ">
+            Shipping calculated at checkout period.
+          </p>
+          <div className="flex items-center justify-center mt-6 gap-4">
+            <Link
+              onClick={() => setCartOpen(false)}
+              href="/shop/cart"
+              className="w-full py-3 text-lg font-medium bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
+            >
+              View Cart
+            </Link>
+            <Link
+              onClick={() => setCartOpen(false)}
+              href="/shop/checkout"
+              className="w-full py-3 text-lg font-medium bg-black hover:bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
+            >
+              Checkout
+            </Link>
+          </div>
+          <div className="flex items-center justify-center mt-6">
+            <p>
+              <span>or,</span>
+              <button
+                onClick={() => setCartOpen(false)}
+                className="pl-1 text-primary-600 hover:underline"
+              >
+                Continue Shopping
+              </button>
             </p>
-            <div className="flex items-center justify-center mt-6 gap-4">
-              <Link
-                onClick={() => setCartOpen(false)}
-                href="/shop/cart"
-                className="w-full py-3 text-lg font-medium bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
-              >
-                View Cart
-              </Link>
-              <Link
-                onClick={() => setCartOpen(false)}
-                href="/shop/checkout"
-                className="w-full py-3 text-lg font-medium bg-black hover:bg-primary rounded-md text-gray-50 hover:bg-secondary text-center"
-              >
-                Checkout
-              </Link>
-            </div>
-            <div className="flex items-center justify-center mt-6">
-              <p>
-                <span>or,</span>
-                <button
-                  onClick={() => setCartOpen(false)}
-                  className="pl-1 text-primary-600 hover:underline"
-                >
-                  Continue Shopping
-                </button>
-              </p>
-            </div>
           </div>
         </Drawer.Body>
       </Drawer>
