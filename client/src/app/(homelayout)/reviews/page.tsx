@@ -2,7 +2,7 @@ import React from "react";
 
 const ReviewsPage = () => {
   return (
-    <section className="">
+    <section className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div className="py-12 lg:py-16">
         <div className="md:flex md:items-center md:justify-center">
           <div className="max-w-2xl">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import "rsuite/dist/rsuite-no-reset.min.css";
+import Providers from "@/utils/provider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -20,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={nunito.className}>{children}</body>
+      <body className={nunito.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

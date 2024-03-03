@@ -10,7 +10,7 @@ const store = configureStore({
 });
 
 // Dispatch action to retrieve data from local storage and populate the Redux state
-store.dispatch(setDeliveryFromLocalStorage(null));
+// store.dispatch(setDeliveryFromLocalStorage(null));
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
