@@ -10,12 +10,12 @@ import { AuthService } from './auth.service';
 
 const createNewUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.createNewUser(req.body);
-   
+
   const { accessToken, refreshToken } = result;
   // set refresh token into cookie
 
   const cookieOptions = {
-    secure: config.env === 'production',
+    secure: config.env === 'development',
     httpOnly: true,
   };
   res.cookie('refreshToken', refreshToken, cookieOptions);
@@ -23,7 +23,7 @@ const createNewUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User Created & Logged in successfully!',
+    message: 'Successfully Registered!',
     data: {
       accessToken,
     },
@@ -35,7 +35,6 @@ const createNewUser = catchAsync(async (req: Request, res: Response) => {
 const userLogin = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.userLogin(req.body);
 
-  
   const { accessToken, refreshToken } = result;
   // set refresh token into cookie
 
@@ -56,9 +55,8 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
 });
 // ! admin login
 const dashboardLogin = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.userLogin(req.body);
+  const result = await AuthService.dashboardLogin(req.body);
 
-  
   const { accessToken, refreshToken } = result;
   // set refresh token into cookie
 
@@ -101,9 +99,21 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.forgetPassword(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Email sent successfully!',
+    data: result,
+  });
+});
+
 export const AuthController = {
   createNewUser,
   userLogin,
   refreshToken,
-  dashboardLogin
+  dashboardLogin,
+  forgetPassword,
 };

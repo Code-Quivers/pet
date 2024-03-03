@@ -2,44 +2,11 @@ import { UserRoles } from '@prisma/client';
 import { z } from 'zod';
 import { ZodUserRoles } from './users.constants';
 
-// const createUser = z.object({
-//   body: z.object({
-//     firstName: z.string({
-//       required_error: 'First name is required',
-//       invalid_type_error: 'First Name must be in string',
-//     }),
-//     lastName: z.string({
-//       required_error: 'Last name is required',
-//       invalid_type_error: 'Last Name must be in string',
-//     }),
-//     email: z.string({
-//       required_error: 'Email is required',
-//       invalid_type_error: 'email must be in string',
-//     }),
-//     password: z.string({
-//       required_error: 'password is required',
-//       invalid_type_error: 'password must be in string',
-//     }),
-//     profileImage: z.string({
-//       required_error: 'Profile Image is required',
-//       invalid_type_error: 'Profile Image must be in string',
-//     }),
-//     role: z
-//       .enum([...ZodUserRoles] as [string, ...string[]], {
-//         required_error: 'Role is Required',
-//         invalid_type_error: 'role must be in string',
-//       })
-//       .default(UserRoles.USER),
-//   }),
-// });
+ 
 const createUser = z.object({
-  firstName: z.string({
+  fullName: z.string({
     required_error: 'First name is required',
     invalid_type_error: 'First Name must be in string',
-  }),
-  lastName: z.string({
-    required_error: 'Last name is required',
-    invalid_type_error: 'Last Name must be in string',
   }),
   email: z.string({
     required_error: 'Email is required',
@@ -57,16 +24,10 @@ const createUser = z.object({
     .default(UserRoles.USER),
 });
 
-const updateUser = z.object({
+const updateMyProfile = z.object({
   body: z.object({
-    firstName: z
-      .string({ invalid_type_error: 'First Name must be in string' })
-      .optional(),
-    lastName: z
-      .string({ invalid_type_error: 'Last Name must be in string' })
-      .optional(),
-    profileImage: z
-      .string({ invalid_type_error: 'profileImage must be in string' })
+    fullName: z
+      .string({ invalid_type_error: 'Full Name must be in string' })
       .optional(),
     email: z
       .string({
@@ -78,20 +39,51 @@ const updateUser = z.object({
         invalid_type_error: 'password must be in string',
       })
       .optional(),
-    profileId: z
+      phoneNumber: z
       .string({
-        invalid_type_error: 'Profile Id must be in string',
+        invalid_type_error: 'phoneNumber must be in string',
       })
       .optional(),
-    role: z
-      .enum([...ZodUserRoles] as [string, ...string[]], {
-        invalid_type_error: 'role must be in string',
+      companyName: z
+      .string({
+        invalid_type_error: 'companyName must be in string',
       })
       .optional(),
+      addressLine1: z
+      .string({
+        invalid_type_error: 'addressLine1 must be in string',
+      })
+      .optional(),
+      addressLine2: z
+      .string({
+        invalid_type_error: 'addressLine2 must be in string',
+      })
+      .optional(),
+      city: z
+      .string({
+        invalid_type_error: 'city must be in string',
+      })
+      .optional(),
+      state: z
+      .string({
+        invalid_type_error: 'state must be in string',
+      })
+      .optional(),
+      country: z
+      .string({
+        invalid_type_error: 'country must be in string',
+      })
+      .optional(),
+      postalCode: z
+      .string({
+        invalid_type_error: 'postalCode must be in string',
+      })
+      .optional(),
+      
   }),
 });
 
 export const UserValidation = {
   createUser,
-  updateUser,
+  updateMyProfile,
 };

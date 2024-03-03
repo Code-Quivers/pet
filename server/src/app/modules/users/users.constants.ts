@@ -1,27 +1,21 @@
-export const studentFilterableFields: string[] = [
-  'searchTerm',
-  'studentId',
-  'email',
+export const userFilterableFields: string[] = [
+  'searchTerm', 
 ];
 
-export const studentSearchableFields: string[] = [
-  'firstName',
-  'lastName',
-  'middleName',
-  'email',
-  'contactNo',
-  'studentId',
+export const userSearchableFields: string[] = [
+  'email',  
+  'fullName',  
+  'phoneNumber',  
+  'companyName',    
 ];
 
-export const studentRelationalFields: string[] = [
-  'academicFacultyId',
-  'academicDepartmentId',
-  'academicSemesterId',
+export const userRelationalFields: string[] = [
+  'fullName', "role" 
 ];
-export const studentRelationalFieldsMapper: { [key: string]: string } = {
-  academicFacultyId: 'academicFaculty',
-  academicDepartmentId: 'academicDepartment',
-  academicSemesterId: 'academicSemester',
+export const userRelationalFieldsMapper: { [key: string]: string } = {
+ 
+  role: "role",
+ 
 };
 
 export const ZodUserRoles = ['SUPERADMIN', 'ADMIN', 'USER'];
