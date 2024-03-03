@@ -25,13 +25,15 @@ const Navbar = () => {
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-1 md:flex md:items-center md:gap-12">
-            <Image
-              className="object-cover"
-              src={logo}
-              width={220}
-              height={220}
-              alt=""
-            />
+            <Link href="/">
+              <Image
+                className="object-cover"
+                src={logo}
+                width={220}
+                height={220}
+                alt=""
+              />
+            </Link>
           </div>
           <div className="md:flex md:items-center md:gap-12">
             <div className="flex items-center gap-4">

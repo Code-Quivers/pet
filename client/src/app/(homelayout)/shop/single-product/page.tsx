@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 import { Tooltip, Whisper } from "rsuite";
 
@@ -56,12 +57,19 @@ const SingleProductPage = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row -mx-4 gap-10">
           <div className="md:flex-1 px-4">
-            <div className="h-[460px] rounded-lg bg-gray-300   mb-4 feature-image">
+            <div className="h-[380px] rounded-lg bg-gray-300   mb-4 feature-image">
               <img
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 src={mainImage?.url}
                 alt={mainImage?.alt}
               />
+              {/* <Image
+                src={mainImage?.url}
+                className="object-cover"
+                width={480}
+                height={120}
+                alt={mainImage?.alt}
+              /> */}
             </div>
             <div className="gallery grid grid-cols-4 justify-center gap-6 mx-auto">
               {productImages.map((image) => (
