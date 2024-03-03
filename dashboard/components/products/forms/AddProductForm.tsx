@@ -4,7 +4,15 @@ import { renderLoading } from "@/components/animation/form/SelectPicker/renderLo
 import ProductCreateController from "@/components/products/forms/ProductCreateController";
 import { ICreateProduct, packTypeEnums } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Form, Input, Message, SelectPicker, useToaster } from "rsuite";
+import {
+  Button,
+  Form,
+  Input,
+  InputPicker,
+  Message,
+  SelectPicker,
+  useToaster,
+} from "rsuite";
 import { HiMiniCurrencyEuro, HiOutlineCurrencyDollar } from "react-icons/hi2";
 import ProductImageUpload from "@/components/products/forms/ProductImageUpload";
 import { FiFileText } from "react-icons/fi";
@@ -308,10 +316,14 @@ const AddProductForm = () => {
                   rules={{ required: "Product Size is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
-                      <SelectPicker
+                      <InputPicker
+                        creatable
                         size="lg"
                         data={productSize || []}
-                        value={field.value}
+                        // value={field.value}
+                        onCreate={(value, item) => {
+                          console.log(value, item);
+                        }}
                         onChange={(value: string | null) =>
                           field.onChange(value)
                         }
@@ -319,7 +331,6 @@ const AddProductForm = () => {
                           width: "100%",
                         }}
                         placeholder="Select Product Size"
-                        searchable={false}
                         renderMenu={(menu) =>
                           renderLoading(
                             menu,
