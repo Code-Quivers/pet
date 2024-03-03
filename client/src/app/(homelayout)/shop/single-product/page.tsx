@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Tooltip, Whisper } from "rsuite";
 
 const tooltipWhite = <Tooltip>White</Tooltip>;
@@ -12,20 +13,67 @@ const tooltipSilicone = <Tooltip>Silicone</Tooltip>;
 const tooltipGreen = <Tooltip>Green</Tooltip>;
 const tooltipBlue = <Tooltip>Blue</Tooltip>;
 
+const productImages = [
+  {
+    id: 1,
+    url: "https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg",
+    alt: "Feature Image 1",
+    caption: "A stunning view of the product.",
+  },
+  {
+    id: 2,
+    url: "https://readymadeui.com/images/laptop2.webp",
+    alt: "Product Image 2",
+    caption: "Another perspective of the product.",
+  },
+  {
+    id: 3,
+    url: "https://readymadeui.com/images/laptop3.webp",
+    alt: "Product Image 3",
+    caption: "Close-up shot highlighting key features.",
+  },
+  {
+    id: 4,
+    url: "https://readymadeui.com/images/laptop4.webp",
+    alt: "Product Image 4",
+    caption: "Different color variant of the product.",
+  },
+  {
+    id: 5,
+    url: "https://readymadeui.com/images/laptop5.webp",
+    alt: "Product Image 5",
+    caption: "Product in action - showcasing its usage.",
+  },
+];
+
+console.log(productImages);
+
 const SingleProductPage = () => {
+  const [mainImage, setMainImage] = useState(productImages[0]);
+
   return (
     <div className="py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row -mx-4 gap-10">
           <div className="md:flex-1 px-4">
-            <div className="h-[460px] rounded-lg bg-gray-300   mb-4">
+            <div className="h-[460px] rounded-lg bg-gray-300   mb-4 feature-image">
               <img
                 className="w-full h-full object-cover"
-                src="https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg"
-                alt="Product Image"
+                src={mainImage?.url}
+                alt={mainImage?.alt}
               />
             </div>
-            <div className="mt-6 grid grid-cols-4 justify-center gap-6 mx-auto">
+            <div className="gallery grid grid-cols-4 justify-center gap-6 mx-auto">
+              {productImages.map((image) => (
+                <img
+                  key={image.id}
+                  src={image?.url}
+                  alt={image?.alt}
+                  onClick={() => setMainImage(image)}
+                />
+              ))}
+            </div>
+            {/* <div className="mt-6 grid grid-cols-4 justify-center gap-6 mx-auto">
               <div className="rounded-xl p-4 shadow-md hover:scale-105 transition-all ease-in-out">
                 <img
                   src="https://readymadeui.com/images/laptop2.webp"
@@ -54,7 +102,7 @@ const SingleProductPage = () => {
                   className="w-24 cursor-pointer"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="md:flex-1 px-4">
             <div>
@@ -236,7 +284,7 @@ const SingleProductPage = () => {
         </div>
       </div>
       {/* Product description */}
-      <div className="pt-10 md:pt-20">
+      <div className="pt-10 md:pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
           Product Description:
         </span>
