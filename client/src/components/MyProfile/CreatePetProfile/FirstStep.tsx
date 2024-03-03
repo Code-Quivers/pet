@@ -11,7 +11,7 @@ const FirstStep = () => {
       </p>
       <form action="#">
         <div className="mt-10">
-          <label className="text-base block mb-2">E.T.Phone home code</label>
+          <label className="text-base block mb-2">Type product code</label>
           <div className="relative flex items-center w-1/2 mx-auto">
             <input
               name="email"
