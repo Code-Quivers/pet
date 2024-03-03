@@ -15,7 +15,7 @@ export type IPetRequest = {
   petVaccination: string;
   petProvider: string;
   userId: string;
-  productCode: string;
+  productId: string;
 };
 
 export type IPetUpdateRequest = {

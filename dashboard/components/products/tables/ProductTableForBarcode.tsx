@@ -229,7 +229,7 @@ const ProductBarcode = () => {
                 verticalAlign="middle"
                 dataKey="sizeVarient.productSize"
               >
-                {(rowData) => `http:localhost:3000/tag/${rowData.productId}`}
+                {(rowData) => `http:localhost:3000/tag/${rowData.productCode}`}
               </Cell>
             </Column>
 

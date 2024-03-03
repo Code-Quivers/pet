@@ -8,6 +8,7 @@ import { ProductRoutes } from '../modules/product/product.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
 import { PetRoutes } from '../modules/Pet/pet.routes';
+import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 
 const router = express.Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/pet',
     route: PetRoutes,
+  },
+  {
+    path: '/tag',
+    route: BarcodeRoutes,
   },
 ];
 

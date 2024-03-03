@@ -13,12 +13,10 @@ const router = express.Router();
 
 router.post(
   '/',
-
   auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
   FileUploadHelper.uploadProductImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = PetValidation.addPet.parse(JSON.parse(req.body.data));
-
     return PetController.addPetController(req, res, next);
   }
 );
@@ -26,18 +24,16 @@ router.post(
 // ! Get all List----------------------------------->>>
 router.get('/', PetController.getPetController);
 
-router.get('/tag/:productId', PetController.getSinglePet);
-
-router.patch(
-  '/:productId',
-  auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  FileUploadHelper.uploadProductImage.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = ProductZodValidation.editProduct.parse(JSON.parse(req.body.data));
-    console.log(req.body.data, 'body.....');
-    return PetController.updatePet(req, res, next);
-  }
-);
+// router.patch(
+//   '/:productId',
+//   auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
+//   FileUploadHelper.uploadProductImage.single('file'),
+//   (req: Request, res: Response, next: NextFunction) => {
+//     req.body = PetValidation.editProduct.parse(JSON.parse(req.body.data));
+//     console.log(req.body.data, 'body.....');
+//     return PetController.updatePet(req, res, next);
+//   }
+// );
 
 router.delete(
   '/:productId',

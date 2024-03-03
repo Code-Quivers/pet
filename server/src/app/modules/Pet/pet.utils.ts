@@ -1,18 +1,18 @@
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 
-import { IPetRequest, IRequestUser } from './pet.interface';
+import { IPetRequest } from './pet.interface';
 import prisma from '../../../shared/prisma';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const PetValidation = async (data: IPetRequest, userId: IRequestUser) => {
-  if (!data.productId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Pet name is required');
+export const PetValidation = async (data: IPetRequest, userId: string) => {
+  if (!data.productCode) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Product Code is required');
   }
 
   const isProductExist = await prisma.product.findUnique({
     where: {
-      productId: data.productId,
+      productCode: data.productCode,
     },
   });
 
@@ -26,8 +26,8 @@ export const PetValidation = async (data: IPetRequest, userId: IRequestUser) => 
 
   const petAssign = await prisma.pet.findFirst({
     where: {
-      userId: userId.userId,
-      productId: data.productId,
+      userId: userId,
+      productId: isProductExist.productId,
     },
   });
 
@@ -38,14 +38,13 @@ export const PetValidation = async (data: IPetRequest, userId: IRequestUser) => 
   const petAssignToOtherUser = await prisma.pet.findFirst({
     where: {
       NOT: {
-        userId: userId.userId,
+        userId: userId,
       },
-      productId: data.productId,
+      productId: isProductExist.productId,
     },
   });
 
   if (petAssignToOtherUser) {
     throw new ApiError(httpStatus.CONFLICT, 'Pet Already Assigned to a different user');
   }
-
 };

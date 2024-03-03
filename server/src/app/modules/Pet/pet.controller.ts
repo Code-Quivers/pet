@@ -37,18 +37,7 @@ const getPetController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// !----------------------------------get Single Category---------------------------------------->>>
-const getSinglePet = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
-  const result = await PetService.getSinglePet(productId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Pet retrieved successfully',
-    data: result,
-  });
-});
 
 // !----------------------------------Update Category---------------------------------------->>>
 const updatePet = catchAsync(async (req: Request, res: Response) => {
@@ -80,7 +69,6 @@ const deletePet = catchAsync(async (req: Request, res: Response) => {
 export const PetController = {
   addPetController,
   getPetController,
-  getSinglePet,
   updatePet,
   deletePet,
 };
