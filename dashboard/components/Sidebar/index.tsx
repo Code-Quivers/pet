@@ -67,7 +67,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <Link href="/">
-          <h2 className="text-white text-2xl uppercase font-bold">Catering</h2>
+          <h2 className="text-white text-2xl uppercase font-bold">E.T.</h2>
         </Link>
 
         <button
@@ -216,6 +216,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               } `}
                             >
                               All Products
+                            </Link>
+                          </li>
+
+                          <li>
+                            <Link
+                              href="/products/products-barcode"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
+                                pathname === "/products/products-barcode" &&
+                                "text-white"
+                              } `}
+                            >
+                              Products & Barcode
                             </Link>
                           </li>
                           <li>
