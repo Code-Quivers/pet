@@ -11,7 +11,7 @@ const addPet = z.object({
   petHealth: z.string().nonempty({ message: 'Pet Health is required' }),
   petVaccination: z.string().nonempty({ message: 'Pet Vaccination is required' }),
   petProvider: z.string().nonempty({ message: 'Pet Provider is required' }),
-  productId: z.string().nonempty({ message: 'Product Id is required' }),
+  productCode: z.string().nonempty({ message: 'Product Code is required' }),
 });
 
 // const editPet = z.object({

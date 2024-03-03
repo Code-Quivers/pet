@@ -70,6 +70,7 @@ model Category {
 
 model Product {
   productId          String          @id @default(uuid())
+  productCode        String         @unique
   productName        String
   productImage       String
   productPrice       Float

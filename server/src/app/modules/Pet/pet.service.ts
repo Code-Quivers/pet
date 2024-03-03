@@ -31,6 +31,16 @@ const addPet = async (req: Request): Promise<Pet> => {
 
   await PetValidation(data, userId);
 
+  const isProductExist = await prisma.product.findUnique({
+    where: {
+      productCode: data.productCode,
+    },
+  });
+
+  if (!isProductExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
+  }
+
   const result = await prisma.$transaction(async transactionClient => {
     const newPet = {
       petName: data.petName,
@@ -45,7 +55,7 @@ const addPet = async (req: Request): Promise<Pet> => {
       petVaccination: data.petVaccination,
       petProvider: data.petProvider,
       userId: userId,
-      productId: data.productId,
+      productId: isProductExist.productId,
     };
 
     const createNewPet = await transactionClient.pet.create({
@@ -198,25 +208,6 @@ const getPet = async (filters: IProductFilterRequest, options: IPaginationOption
   };
 };
 
-// !----------------------------------get Single Courier---------------------------------------->>>
-const getSinglePet = async (productId: string): Promise<Pet | null> => {
-  if (!productId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'product Id is required');
-  }
-
-  const result = await prisma.pet.findUnique({
-    where: {
-      productId,
-    },
-  });
-
-  if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Pet Not Found!!');
-  }
-
-  return result;
-};
-
 // !----------------------------------Update Courier---------------------------------------->>>
 const updatePet = async (productId: string, req: Request): Promise<Product> => {
   const file = req.file as IUploadFile;
@@ -322,7 +313,6 @@ const deletePet = async (productId: string): Promise<Product> => {
 export const PetService = {
   addPet,
   getPet,
-  getSinglePet,
   updatePet,
   deletePet,
 };

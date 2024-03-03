@@ -13,7 +13,7 @@ import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
 import { IProductFilterRequest, IProductRequest, IProductUpdateRequest } from './product.interface';
-import { ProductValidation } from './product.utils';
+import { ProductValidation, productCodeGenerator } from './product.utils';
 import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './prroduct.constants';
 
 // modules
@@ -32,6 +32,7 @@ const addProduct = async (req: Request): Promise<Product> => {
 
   const result = await prisma.$transaction(async transactionClient => {
     const newProduct = {
+      productCode: productCodeGenerator,
       productName: data.productName,
       productPrice: data.productPrice,
       productStock: data.productStock,
