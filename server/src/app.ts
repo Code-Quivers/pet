@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('uploads'));
+app.use('/backend/api/v1', express.static('uploads'));
 
 app.use('/backend/api/v1', routes);
 
