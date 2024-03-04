@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/slice/cartSlice";
 import { CartIcon } from "./SvgIcons";
+import { useGetCategoryQuery } from "@/redux/api/features/categoryApi";
+import { useGetProductQuery } from "@/redux/api/features/productApi";
+import { fileUrlKey } from "@/helpers/config/envConfig";
+import Link from "next/link";
 
 const productList = [
   {
@@ -34,7 +38,10 @@ const productList = [
 ];
 
 const ProductsSection = () => {
+  const { data } = useGetProductQuery({});
+  const products = data?.data;
   const dispatch = useDispatch();
+  console.log(products, "productList");
   return (
     <section className="flex items-center bg-gray-100 py-10">
       <div className="p-4 mx-auto max-w-7xl">
@@ -62,23 +69,27 @@ const ProductsSection = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3">
-          {productList?.map((product: any) => (
-            <div key={product.id} className="mt-56 bg-white rounded shadow ">
+          {products?.map((product: any) => (
+            <div
+              key={product.id}
+              className="mt-56 bg-white rounded shadow"
+            >
               <div className="relative z-20 p-6 group">
                 <div className="relative block h-64 mb-4 -mt-56 overflow-hidden rounded -top-full ">
                   <div className="relative w-full h-full">
                     <Image
                       width={200}
                       height={200}
-                      src={product.img1}
-                      alt={product.name}
+                      src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80"
+                      // src={`${fileUrlKey()}/${product?.productImage}`}
+                      alt={product.productName}
                       className="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110"
                     />
                     <Image
                       width={200}
                       height={200}
-                      src={product.img2}
-                      alt={product.name}
+                      src={`${fileUrlKey()}/${product?.productImage}`}
+                      alt={product.productName}
                       className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110"
                     />
                   </div>
@@ -110,11 +121,11 @@ const ProductsSection = () => {
                     </button>
                   </div>
                 </div>
-                <a href="#">
+                <Link href="#">
                   <h2 className="mb-2 text-xl font-bold text-black  ">
-                    1800X Zoom Level Nikon Lense
+                    {product?.productName}
                   </h2>
-                </a>
+                </Link>
                 <p className="mb-3 text-lg font-bold text-primary">
                   <span>$150.00</span>
                   <span className="text-xs font-semibold text-gray-400 line-through ">
