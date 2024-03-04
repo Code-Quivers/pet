@@ -176,10 +176,10 @@ const ProductsSection = () => {
                   </h2>
                 </Link>
                 <p className="mb-3 text-lg font-bold text-primary">
-                  <span>$150.00</span>
-                  <span className="text-xs font-semibold text-gray-400 line-through ">
+                  <span>${product?.productPrice?.toFixed(2)}</span>
+                  {/* <span className="text-xs font-semibold text-gray-400 line-through ">
                     $200.00
-                  </span>
+                  </span> */}
                 </p>
                 <div className="flex gap-1 text-orange-400">
                   <svg
