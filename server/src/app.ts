@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('uploads'));
 
-app.use('/api/v1', routes);
+app.use('/backend/api/v1', routes);
 
 //global error handler
 app.use(globalErrorHandler);
