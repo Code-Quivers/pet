@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 // import { CartIcon } from "./svgIcons";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
@@ -9,6 +9,8 @@ import { useGetCategoryQuery } from "@/redux/api/features/categoryApi";
 import { useGetProductQuery } from "@/redux/api/features/productApi";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import Link from "next/link";
+import { set } from "rsuite/esm/utils/dateUtils";
+import { Loader, Message, useToaster } from "rsuite";
 
 const productList = [
   {
@@ -41,7 +43,34 @@ const ProductsSection = () => {
   const { data } = useGetProductQuery({});
   const products = data?.data;
   const dispatch = useDispatch();
+  const toaster = useToaster();
+  const [start, setStart] = useState(false);
+  const [productId, setProductId] = useState(null);
   console.log(products, "productList");
+  const message = (
+    <Message
+      showIcon
+      type="success"
+      closable
+      as="div"
+      className="bg-white"
+      style={{ backgroundColor: "white" }}
+    >
+      <strong>Success!</strong> Product added to cart.
+    </Message>
+  );
+  const addToCartHandler = (product: any) => {
+    setProductId(product.productId);
+    setStart(true);
+    dispatch(addToCart(product) as any);
+    setTimeout(() => {
+      setStart(false);
+      toaster.push(message, {
+        placement: "bottomEnd",
+        duration: 3000,
+      });
+    }, 1000);
+  };
   return (
     <section className="flex items-center bg-gray-100 py-10">
       <div className="p-4 mx-auto max-w-7xl">
@@ -72,7 +101,7 @@ const ProductsSection = () => {
           {products?.map((product: any) => (
             <div
               key={product.id}
-              className="mt-56 bg-white rounded shadow"
+              className="mt-56 bg-white rounded shadow md:w-72"
             >
               <div className="relative z-20 p-6 group">
                 <div className="relative block h-64 mb-4 -mt-56 overflow-hidden rounded -top-full ">
@@ -80,8 +109,7 @@ const ProductsSection = () => {
                     <Image
                       width={200}
                       height={200}
-                      src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80"
-                      // src={`${fileUrlKey()}/${product?.productImage}`}
+                      src={`${fileUrlKey()}/${product?.productImage}`}
                       alt={product.productName}
                       className="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110"
                     />
@@ -108,17 +136,38 @@ const ProductsSection = () => {
                         </svg>
                       </div>
                     </a>
-                    <button
-                      className="flex items-center"
-                      onClick={() => dispatch(addToCart(product) as any)}
-                    >
-                      <div
-                        className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded 
-                       group-hover:translate-x-0 wishlist hover:bg-blue-200 group"
+                    {start && productId === product.productId ? (
+                      <button
+                        className="flex items-center"
+
+                        // onClick={() => dispatch(addToCart(product) as any)}
                       >
-                        <CartIcon />
-                      </div>
-                    </button>
+                        <div
+                          className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded 
+                           group-hover:translate-x-0 wishlist hover:bg-blue-200 group"
+                        >
+                          <Loader size="sm" />
+                        </div>
+                      </button>
+                    ) : (
+                      <button
+                        className="flex items-center"
+                        onClick={() => addToCartHandler(product)}
+                        // onClick={() => dispatch(addToCart(product) as any)}
+                      >
+                        <div
+                          className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded 
+                       group-hover:translate-x-0 wishlist hover:bg-blue-200 group"
+                        >
+                          <CartIcon />
+                          {/* {start && productId === product.productId ? (
+                          <Loader size="sm" />
+                        ) : (
+                          <CartIcon />
+                        )} */}
+                        </div>
+                      </button>
+                    )}
                   </div>
                 </div>
                 <Link href="#">
