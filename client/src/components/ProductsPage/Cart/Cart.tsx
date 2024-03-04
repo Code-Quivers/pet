@@ -8,15 +8,18 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import CountUp from "react-countup";
 import { useDispatch, useSelector } from "react-redux";
 import { Accordion, Drawer, Placeholder } from "rsuite";
 import { Tooltip, Whisper, Button, ButtonToolbar } from "rsuite";
+import useMediaQuery from "@/hooks/useMediaQuiry";
 
 const tooltip = <Tooltip>Remove All</Tooltip>;
 const tooltip2 = <Tooltip>Remove</Tooltip>;
 
 const Cart = ({ cartOpen, setCartOpen }: any) => {
+  const isLarge = useMediaQuery("(min-width: 640px)");
+
+  console.log(isLarge);
   const cart = useSelector((state: any) => state.cart.cart);
   const dispatch = useDispatch();
 
@@ -31,7 +34,11 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
   };
   return (
     <div>
-      <Drawer open={cartOpen} onClose={() => setCartOpen(false)} size={"xs"}>
+      <Drawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        size={isLarge ? "xs" : "full"}
+      >
         <Drawer.Body
           style={{ paddingLeft: 0, paddingRight: 0 }}
           // className="relative"
@@ -121,13 +128,12 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                 ))}
             </div>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 mb-8">
+          <div className="fixed bottom-0 left-0 right-0 mb-2">
             <hr />
             <div className="px-6">
               <div className="flex justify-between text-lg font-bold mt-2">
                 <p>Total</p>
-                {/* <p>{`$${getTotal().totalPrice}`}</p> */}
-                <CountUp end={getTotal().totalPrice} duration={.4}/>
+                <p>{`$${getTotal().totalPrice}`}</p>
               </div>
               <p className="my-2 text-sm text-gray-500 ">
                 Shipping calculated at checkout period.
