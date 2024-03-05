@@ -73,3 +73,14 @@ body {
     text-wrap: balance;
   }
 } */
+
+.bg-gradient {
+  background-image: linear-gradient(
+    to right top,
+    #c2f9ff,
+    #9ee2ea,
+    #79cbd5,
+    #50b4c1,
+    #089eae
+  );
+}
