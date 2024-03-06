@@ -1,9 +1,10 @@
+import BlogGrid from "@/components/Blog/BlogGrid";
 import React from "react";
 
 const BlogPage = () => {
   return (
-    <div>
-      <h2>Blog page content</h2>
+    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <BlogGrid />
     </div>
   );
 };
