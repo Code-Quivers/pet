@@ -1,16 +1,25 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import productImage from "../../../public/images/shop/SIngleProudct/Pink_Grey_2048x_c8757b05-6f3c-49eb-8eba-ce8b94695ac3.webp";
 import productImage2 from "../../../public/images/shop/SIngleProudct/Screenshot_130.png";
 import EasilyAccessible from "../HomePage/TotalControl";
 import ConnectYourWay from "../HomePage/ConnectYourWay";
+import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
+import { fileUrlKey } from "@/helpers/config/envConfig";
 
-const SingleProduct = () => {
+const SingleProduct = ({ params }: any) => {
+  console.log(params, "params");
+  const { data, isLoading } = useGetSingleProductQuery(params, {
+    skip: !params.id,
+  });
+  const singleProduct = data?.data;
+  console.log(singleProduct, "singleProduct");
   return (
     <>
       <div className="flex flex-col justify-center items-center px-4 bg-[#F5F5F7] py-20">
         <Image
-          src={productImage}
+          src={`${fileUrlKey()}/${singleProduct?.productImage}`}
           width={100}
           height={100}
           alt=""

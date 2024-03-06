@@ -149,7 +149,7 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                 <Link
                   onClick={() => setCartOpen(false)}
                   href="/shop/checkout"
-                  className="w-full rounded-full py-3 text-lg font-bold bg-black text-gray-50 hover:bg-slate-900 focus:ring-2 ring-offset-2 ring-black  text-center"
+                  className="w-full rounded-full py-3 text-lg font-bold bg-black text-gray-50 hover:bg-slate-900 focus:ring-2 ring-offset-2 ring-black text-center"
                 >
                   Checkout
                 </Link>

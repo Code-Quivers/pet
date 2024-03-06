@@ -12,7 +12,15 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.product],
     }),
+
+    getSingleProduct: builder.query({
+      query: (arg: Record<string, any>) => ({
+        url: `${PRODUCT_API}/${arg.id}`,
+        method: "GET",
+      }),
+      providesTags: [tagTypes.product],
+    }),
   }),
 });
 
-export const { useGetProductQuery } = productApi;
+export const { useGetProductQuery, useGetSingleProductQuery } = productApi;

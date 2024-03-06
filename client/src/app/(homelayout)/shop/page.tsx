@@ -47,7 +47,8 @@ const ProductPage = () => {
         <h2 className="py-5 text-3xl text-gray-800 font-bold">Our products</h2>
         <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3">
           {products?.map((product: any) => (
-            <div
+            <Link
+              href={`/shop/${product.productId}`}
               key={product.id}
               className="mt-56 bg-white border border-gray-200 rounded shadow-sm md:w-80"
             >
@@ -118,7 +119,7 @@ const ProductPage = () => {
                     )}
                   </div>
                 </div>
-                <Link href="#">
+                <Link href={`/shop/${product.productId}`}>
                   <h2 className="mb-2 text-xl font-bold text-black  ">
                     {product?.productName}
                   </h2>
@@ -182,7 +183,7 @@ const ProductPage = () => {
                   </svg> */}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

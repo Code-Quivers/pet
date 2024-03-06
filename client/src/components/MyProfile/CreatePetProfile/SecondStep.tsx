@@ -10,7 +10,7 @@ const SecondStep = () => {
       <p className="pt-2 text-lg text-gray-500 w-3/4 md:w-3/6 mx-auto">
         Step two: Enter information about your pet.
       </p>
-      <form action="#" className="mt-10 max-w-4xl mx-auto px-4">
+      <form action="#" className="mt-10 max-w-4xl mx-auto px-5">
         {/* pet name and pet age */}
         <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
           {/* pet name */}
@@ -21,7 +21,7 @@ const SecondStep = () => {
                 name="email"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Enter pet name"
               />
             </div>
@@ -35,9 +35,22 @@ const SecondStep = () => {
                 name="age"
                 type="date"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
-                placeholder=""
+                className="w-full removeDownIcon bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
+                placeholder="Date of birth"
               />
+              <div className="absolute inset-y-0 sm:hidden right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                  className="h-5 w-5 text-gray-400 transform rotate-90"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M9 5l7 7-7 7"></path>
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -53,7 +66,7 @@ const SecondStep = () => {
                 name="breed"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Write breed"
               />
             </div>
@@ -69,7 +82,7 @@ const SecondStep = () => {
                 name="owner"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Write owner name"
               />
             </div>
@@ -85,7 +98,7 @@ const SecondStep = () => {
                 name="number"
                 type="tel"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Write phone number"
               />
             </div>
@@ -101,7 +114,7 @@ const SecondStep = () => {
                 name="altNumber"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Write alt. phone number"
               />
             </div>
@@ -116,7 +129,7 @@ const SecondStep = () => {
                 name="weight"
                 type="tel"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
                 placeholder="Write as Ibs"
               />
             </div>
@@ -128,7 +141,7 @@ const SecondStep = () => {
             <div className="relative flex items-center mx-auto ">
               <select
                 name="kids"
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               >
                 <option value="volvo">Boy</option>
                 <option value="saab">Girl</option>
@@ -153,7 +166,7 @@ const SecondStep = () => {
                 name="streetAddress"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -166,7 +179,7 @@ const SecondStep = () => {
                 name="city"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -175,12 +188,12 @@ const SecondStep = () => {
           {/* pet Address */}
           <div className="w-full text-start">
             <label className="text-base block mb-2">Postcode</label>
-            <div className="relative flex items-center mx-auto ">
+            <div className="relative flex items-center mx-auto">
               <input
                 name="postcode"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -193,7 +206,7 @@ const SecondStep = () => {
                 name="country"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -210,7 +223,7 @@ const SecondStep = () => {
             <div className="relative flex items-center mx-auto ">
               <select
                 name="kids"
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               >
                 <option value="volvo">Yes</option>
                 <option value="saab">No</option>
@@ -222,7 +235,7 @@ const SecondStep = () => {
             <div className="relative flex items-center mx-auto ">
               <select
                 name="dogs"
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               >
                 <option value="volvo">Yes</option>
                 <option value="saab">No</option>
@@ -234,7 +247,7 @@ const SecondStep = () => {
             <div className="relative flex items-center mx-auto ">
               <select
                 name="cats"
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               >
                 <option value="volvo">Yes</option>
                 <option value="saab">No</option>
@@ -256,7 +269,7 @@ const SecondStep = () => {
                 name="allergies"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -267,7 +280,7 @@ const SecondStep = () => {
                 name="medicine"
                 type="text"
                 required
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
@@ -276,7 +289,7 @@ const SecondStep = () => {
             <div className="relative flex items-center mx-auto ">
               <select
                 name="cats"
-                className="w-full bg-transparent text-sm border border-primary focus:border-blue-500 px-2 py-3 outline-none rounded-full"
+                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               >
                 <option value="volvo">Yes</option>
                 <option value="saab">No</option>

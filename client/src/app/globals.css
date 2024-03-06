@@ -84,3 +84,9 @@ body {
     #089eae
   );
 }
+
+.removeDownIcon {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
