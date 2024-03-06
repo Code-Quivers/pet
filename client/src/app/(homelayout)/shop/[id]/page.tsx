@@ -1,10 +1,10 @@
 import SingleProduct from "@/components/ProductPage/SingleProduct";
 import React from "react";
 
-const SingleProductPage = () => {
+const SingleProductPage = ({ params }: any) => {
   return (
     <div>
-      <SingleProduct />
+      <SingleProduct params={params} />
     </div>
   );
 };
