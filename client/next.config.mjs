@@ -6,6 +6,7 @@ const nextConfig = {
       "images.unsplash.com",
       "cdn.pixabay.com",
       "readymadeui.com",
+      "tailwindcss.com",
     ],
   },
 };
