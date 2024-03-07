@@ -20,6 +20,8 @@ import { MdModeEdit } from "react-icons/md";
 import SubCategoryModalTable from "./SubCategoryTableModal";
 import EditCategoryModal from "./EditCategoryModal";
 import { FaPlus } from "react-icons/fa";
+import { RiDeleteBinFill } from "react-icons/ri";
+import CategoryDeleteConfirmationModal from "./CategoryDeleteConfirmationModal";
 const { Cell, Column, HeaderCell } = Table;
 // !
 const AllCategoryList = () => {
@@ -53,6 +55,11 @@ const AllCategoryList = () => {
     isLoading,
     isFetching,
   } = useGetCategoryQuery({ ...query });
+
+  const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const [deleteData, setDeleteData] = useState<any | null>(null);
+  const handleCloseDelete = () => setIsOpenDelete(false);
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -112,6 +119,7 @@ const AllCategoryList = () => {
               <Cell style={cellCss} verticalAlign="middle">
                 {(rowData) => (
                   <Whisper
+                    enterable
                     placement="auto"
                     speaker={
                       <Popover>
@@ -120,7 +128,7 @@ const AllCategoryList = () => {
                             width={200}
                             height={200}
                             alt=""
-                            src={`${fileUrlKey()}/${rowData?.categoryImage}`}
+                            src={`${fileUrlKey()}/${rowData.categoryImage}`}
                             className="!h-[300px] !w-[300px]  object-cover"
                           />
                         </div>
@@ -132,7 +140,7 @@ const AllCategoryList = () => {
                         width={120}
                         height={120}
                         alt=""
-                        src={`${fileUrlKey()}/${rowData?.categoryImage}`}
+                        src={`${fileUrlKey()}/${rowData.categoryImage}`}
                         className="object-center  object-cover"
                       />
                     </div>
@@ -168,30 +176,61 @@ const AllCategoryList = () => {
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
-                  <Whisper
-                    placement="topEnd"
-                    speaker={
-                      <Popover
-                        className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
-                        arrow={false}
+                  <div className="flex gap-3">
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
+                          arrow={false}
+                        >
+                          Edit
+                        </Popover>
+                      }
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setIsOpenEdit(true);
+                          setEditData(rowData);
+                        }}
+                        circle
+                        icon={<MdModeEdit size={20} />}
+                      />
+                    </Whisper>
+                    {/* Delete */}
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className=" font-semibold rounded-full !py-1.5 "
+                          arrow={false}
+                        >
+                          Delete
+                        </Popover>
+                      }
+                    >
+                      <button
+                        className="  hover:text-[#eb0712db] "
+                        onClick={() => {
+                          setIsOpenDelete(true);
+                          setDeleteData(rowData);
+                        }}
                       >
-                        Edit
-                      </Popover>
-                    }
-                  >
-                    <IconButton
-                      onClick={() => {
-                        setIsOpenEdit(true);
-                        setEditData(rowData);
-                      }}
-                      circle
-                      icon={<MdModeEdit size={20} />}
-                    />
-                  </Whisper>
+                        <RiDeleteBinFill size={20} />
+                      </button>
+                    </Whisper>
+                  </div>
                 )}
               </Cell>
             </Column>
           </Table>
+
+          {/* delete confirmation */}
+          <CategoryDeleteConfirmationModal
+            isOpenDelete={isOpenDelete}
+            handleCloseDelete={handleCloseDelete}
+            deleteData={deleteData}
+          />
 
           <div style={{ padding: 20 }}>
             <Pagination
