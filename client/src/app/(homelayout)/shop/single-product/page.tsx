@@ -1,5 +1,7 @@
 "use client";
+import SingleProductSlider from "@/components/ProductPage/ProductSlider/SingleProductSlider";
 import Image from "next/image";
+import { EmblaOptionsType } from "embla-carousel";
 import React, { useState } from "react";
 import { Tooltip, Whisper } from "rsuite";
 
@@ -51,79 +53,29 @@ console.log(productImages);
 
 const SingleProductPage = () => {
   const [mainImage, setMainImage] = useState(productImages[0]);
-
+  const OPTIONS: EmblaOptionsType = {};
+  const SLIDE_COUNT = 10;
+  // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
     <div className="py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row -mx-4 gap-10">
-          <div className="md:flex-1 px-4">
-            <div className="h-[380px] rounded-lg bg-gray-300   mb-4 feature-image">
-              <img
-                className="w-full h-full object-contain"
-                src={mainImage?.url}
-                alt={mainImage?.alt}
-              />
-              {/* <Image
-                src={mainImage?.url}
-                className="object-cover"
-                width={480}
-                height={120}
-                alt={mainImage?.alt}
-              /> */}
-            </div>
-            <div className="gallery grid grid-cols-4 justify-center gap-6 mx-auto">
-              {productImages.map((image) => (
-                <img
-                  key={image.id}
-                  src={image?.url}
-                  alt={image?.alt}
-                  onClick={() => setMainImage(image)}
-                />
-              ))}
-            </div>
-            {/* <div className="mt-6 grid grid-cols-4 justify-center gap-6 mx-auto">
-              <div className="rounded-xl p-4 shadow-md hover:scale-105 transition-all ease-in-out">
-                <img
-                  src="https://readymadeui.com/images/laptop2.webp"
-                  alt="Product2"
-                  className="w-24 cursor-pointer"
-                />
-              </div>
-              <div className="rounded-xl p-4 shadow-md hover:scale-105 transition-all ease-in-out">
-                <img
-                  src="https://readymadeui.com/images/laptop3.webp"
-                  alt="Product2"
-                  className="w-24 cursor-pointer"
-                />
-              </div>
-              <div className="rounded-xl p-4 shadow-md hover:scale-105 transition-all ease-in-out">
-                <img
-                  src="https://readymadeui.com/images/laptop4.webp"
-                  alt="Product2"
-                  className="w-24 cursor-pointer"
-                />
-              </div>
-              <div className="rounded-xl p-4 shadow-md hover:scale-105 transition-all ease-in-out">
-                <img
-                  src="https://readymadeui.com/images/laptop5.webp"
-                  alt="Product2"
-                  className="w-24 cursor-pointer"
-                />
-              </div>
-            </div> */}
+      <div className="max-w-7xl mx-auto">
+        <div className="flex gap-5">
+          <div className="max-w-[50%]">
+            <SingleProductSlider slides={productImages} options={OPTIONS} />
           </div>
-          <div className="md:flex-1 px-4">
+          {/* product variant */}
+          <div className="md:flex-1 px-4 max-w-[50%]">
             <div>
               {/* Title and Price  */}
-              <div className="pb-6">
-                <h2 className="text-3xl md:text-5xl text-gray-900   mb-4 md:mb-6">
+              <div className="">
+                <h2 className="text-3xl md:text-5xl text-gray-900 mb-4">
                   ByteTag Slide
                 </h2>
-                <p className="text-gray-600   text-xl">$29.99</p>
+                <p className="text-gray-600 text-xl">$29.99</p>
               </div>
 
               {/* product colors */}
-              <div className="py-2 md:py-6">
+              <div className="my-4">
                 <p className=" text-gray-700  ">
                   <span className="">Color</span>:{" "}
                   <span className="text-bold">White</span>
@@ -219,6 +171,22 @@ const SingleProductPage = () => {
                   >
                     <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-blue-500  mr-2"></button>
                   </Whisper>
+                </div>
+              </div>
+
+              {/* product size */}
+              <div>
+                <h1>Size: </h1>
+                <div className="flex gap-2">
+                  <button className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center">
+                    Small
+                  </button>
+                  <button className="w-20 h-10 border rounded-md flex justify-center items-center">
+                    Medium
+                  </button>
+                  <button className="w-20 h-10 border rounded-md flex justify-center items-center">
+                    Large
+                  </button>
                 </div>
               </div>
 
@@ -456,6 +424,9 @@ const SingleProductPage = () => {
           </div>
         </div>
       </div>
+      {/* <div className="max-w-xl mx-auto">
+        <SingleProductSlider />
+      </div> */}
     </div>
   );
 };
