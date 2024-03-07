@@ -1,3 +1,5 @@
+import { ProductStatus } from '@prisma/client';
+
 export type IProductFilterRequest = {
   searchTerm?: string | undefined;
   productColor?: string | undefined;
@@ -13,7 +15,7 @@ export type IProductRequest = {
   productStock: number;
   categoryId: string;
   colorVarientId: string;
-  sizeVarientId: string;
+  sizeVarientId?: string;
 };
 
 export type IProductUpdateRequest = {
@@ -22,6 +24,7 @@ export type IProductUpdateRequest = {
   productPrice?: number;
   productStock?: number;
   categoryId?: string;
+  productStatus?: ProductStatus;
   colorVarientId?: string;
   sizeVarientId?: string;
   oldFilePath?: string;

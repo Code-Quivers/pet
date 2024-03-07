@@ -7,7 +7,7 @@ const addProduct = z.object({
   productStock: z.number().min(0, { message: 'Product Stock must be a positive number' }),
   categoryId: z.string().nonempty({ message: 'Category is required' }),
   colorVarientId: z.string().nonempty({ message: 'Color Varient is required' }),
-  sizeVarientId: z.string().nonempty({ message: 'Size Varient is required' }),
+  sizeVarientId: z.string().optional(),
 });
 
 const editProduct = z.object({
@@ -18,6 +18,7 @@ const editProduct = z.object({
   categoryId: z.string().optional(),
   colorVarientId: z.string().optional(),
   sizeVarientId: z.string().optional(),
+  productStatus: z.string().optional(),
 });
 
 export const ProductZodValidation = {

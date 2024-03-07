@@ -40,7 +40,7 @@ const addProduct = async (req: Request): Promise<Product> => {
       productImage: filePath,
       categoryId: data.categoryId,
       colorVarientId: data.colorVarientId,
-      sizeVarientId: data.sizeVarientId,
+      sizeVarientId: data?.sizeVarientId,
     };
 
     const createProduct = await transactionClient.product.create({
@@ -217,8 +217,10 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
 
-  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId } =
+  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId, productStatus } =
     req.body as IProductUpdateRequest;
+
+  console.log('productStatus', productStatus);
 
   // deleting old style Image
   const oldFilePaths = 'uploads/' + oldFilePath;
@@ -280,6 +282,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       categoryId,
       colorVarientId,
       sizeVarientId,
+      productStatus,
       productImage: filePath,
     };
 

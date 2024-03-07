@@ -76,17 +76,23 @@ model Product {
   productPrice       Float
   productStock       Int
   productDescription String
+  productStatus      ProductStatus   @default(AVAILABLE)
   categoryId         String
   category           Category        @relation(fields: [categoryId], references: [categoryId])
   colorVarientId     String
   colorVarient       ColorVarient    @relation(fields: [colorVarientId], references: [colorVarientId])
-  sizeVarientId      String
-  sizeVarient        SizeVarient     @relation(fields: [sizeVarientId], references: [sizeVarientId])
+  sizeVarientId      String?
+  sizeVarient        SizeVarient?     @relation(fields: [sizeVarientId], references: [sizeVarientId])
   createdAt          DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
   Pet                Pet?
+}
+
+enum ProductStatus { 
+  AVAILABLE
+  UNAVAILABLE
 }
 
 model ColorVarient {

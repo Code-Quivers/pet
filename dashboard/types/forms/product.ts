@@ -7,7 +7,7 @@ export type ICreateProduct = {
   productStock: string;
   categoryId: string;
   colorVarientId: string;
-  sizeVarientId: string;
+  sizeVarientId?: string;
   productImage: FileType;
 };
 
@@ -18,6 +18,7 @@ export type IUpdateProduct = {
   productPrice?: string;
   productStock?: string;
   categoryId?: string;
+  productStatus?: string;
   colorVarientId?: string;
   sizeVarientId?: string;
   productImage?: FileType;
