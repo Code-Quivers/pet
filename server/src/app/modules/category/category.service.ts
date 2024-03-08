@@ -157,6 +157,8 @@ const getSingleCategory = async (categoryHref: string): Promise<Category | null>
     },
   });
 
+  console.log(result);
+
   if (!result) throw new ApiError(httpStatus.NOT_FOUND, 'Category Not Found!!');
 
   return result;

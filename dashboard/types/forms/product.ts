@@ -46,68 +46,9 @@ export type IAddOptionalItems = {
   subCategoryHref: string;
 };
 
-export const batchPackTypeEnums = [
-  {
-    label: "Case",
-    value: "Case",
-  },
-  {
-    label: "Box",
-    value: "Box",
-  },
-  {
-    label: "Bag",
-    value: "Bag",
-  },
-  {
-    label: "Unit",
-    value: "Unit",
-  },
-  {
-    label: "Portion",
-    value: "Portion",
-  },
-  {
-    label: "Tetrapack",
-    value: "Tetrapack",
-  },
-  {
-    label: "Set",
-    value: "Set",
-  },
-  {
-    label: "Packung",
-    value: "Packung",
-  },
-  {
-    label: "Stuck",
-    value: "Stuck",
-  },
-  {
-    label: "PerDay",
-    value: "PerDay",
-  },
-];
-
-export const packTypeEnums = [
-  {
-    label: "Bottle",
-    value: "Bottle",
-  },
-  {
-    label: "Barrel",
-    value: "Barrel",
-  },
-  {
-    label: "FI",
-    value: "Fi",
-  },
-  {
-    label: "Tin",
-    value: "Tin",
-  },
-  {
-    label: "Person",
-    value: "Person",
-  },
-];
+export type ICreateProductQA = {
+  productId: string;
+  question: string;
+  answer: string;
+  categoryHref: string;
+};
