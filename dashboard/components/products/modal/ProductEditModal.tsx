@@ -90,7 +90,11 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
       categoryId: updatedData?.categoryId,
       colorVarientId: updatedData?.colorVarientId,
       sizeVarientId: updatedData?.sizeVarientId,
+      productStatus: updatedData?.productStatus,
     };
+
+    console.log(obj, "obj");
+
     const productData = JSON.stringify(obj);
     formData.append("data", productData);
 
@@ -349,7 +353,12 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                             onChange={(value: string | null) =>
                               field.onChange(value)
                             }
-                            defaultValue={editData?.subCategory?.subCategoryId}
+                            defaultValue={
+                              editData && editData.category
+                                ? editData.category.categoryId
+                                : ""
+                            }
+                            cleanable={false}
                             style={{
                               width: "100%",
                             }}
@@ -393,7 +402,12 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                             onChange={(value: string | null) =>
                               field.onChange(value)
                             }
-                            defaultValue={editData?.colorVarient?.productColor}
+                            defaultValue={
+                              editData && editData.colorVarient
+                                ? editData.colorVarient.colorVarientId
+                                : ""
+                            }
+                            cleanable={false}
                             style={{
                               width: "100%",
                             }}
@@ -437,11 +451,66 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                             onChange={(value: string | null) =>
                               field.onChange(value)
                             }
-                            defaultValue={editData?.sizeVarient?.productSize}
+                            defaultValue={
+                              editData && editData.sizeVarient
+                                ? editData.sizeVarient.sizeVarientId
+                                : ""
+                            }
+                            cleanable={false}
                             style={{
                               width: "100%",
                             }}
                             placeholder="Select Product Size"
+                            searchable={false}
+                            renderMenu={(menu) =>
+                              renderLoading(menu, sizeLoading)
+                            }
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              (!!errors?.categoryId &&
+                                !!errors?.sizeVarientId?.message) ||
+                              false
+                            }
+                            placement="topEnd"
+                          >
+                            <span className="font-semibold">
+                              {errors?.sizeVarientId?.message}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  {/* Product Status*/}
+                  <div className="space-y-1">
+                    <label className="block font-medium text-black ">
+                      Product Status
+                    </label>
+                    <Controller
+                      name="productStatus"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <SelectPicker
+                            size="lg"
+                            data={["AVAILABLE", "UNAVAILABLE"].map((item) => {
+                              return {
+                                label: item,
+                                value: item,
+                              };
+                            })}
+                            value={field.value}
+                            onChange={(value: string | null) =>
+                              field.onChange(value)
+                            }
+                            defaultValue={editData && editData.productStatus}
+                            cleanable={false}
+                            style={{
+                              width: "100%",
+                            }}
+                            placeholder="Select Product Status"
                             searchable={false}
                             renderMenu={(menu) =>
                               renderLoading(menu, sizeLoading)

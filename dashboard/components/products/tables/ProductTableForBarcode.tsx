@@ -5,6 +5,11 @@ import { useGetProductQuery } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
+  Button,
+  ButtonToolbar,
+  Checkbox,
+  DateRangePicker,
+  Dropdown,
   IconButton,
   Input,
   InputGroup,
@@ -24,6 +29,10 @@ import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import DocPassIcon from "@rsuite/icons/DocPass";
+import Excel from "exceljs";
+import { saveAs } from "file-saver";
+import { predefinedRanges } from "@/helpers/constant";
 
 const ProductBarcode = () => {
   const query: Record<string, any> = {};
@@ -31,6 +40,18 @@ const ProductBarcode = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [checkedKeys, setCheckedKeys] = useState<any>([]);
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  console.log("checkedKeys", checkedKeys);
+
+  query["startDate"] = selectedDate.startDate;
+  query["endDate"] = selectedDate.endDate;
+
+  // console.log("selectedDate", selectedDate);
 
   query["categoryName"] = categoryFilter;
 
@@ -68,32 +89,221 @@ const ProductBarcode = () => {
     })
   );
 
+  const handleFilterDate = (date: Date[] | null) => {
+    if (!date?.length) {
+      setSelectedDate({
+        startDate: "",
+        endDate: "",
+      });
+    }
+
+    if (date) {
+      const startDate = new Date(date[0]);
+      const endDate = new Date(date[1]);
+
+      // Set the start time to 00:00:00 (12:00 AM)
+      startDate.setHours(0, 0, 0, 0);
+
+      // Set the end time to 23:59:59 (11:59 PM)
+      endDate.setHours(23, 59, 59, 999);
+
+      const formattedStartDate = startDate.toISOString();
+      const formattedEndDate = endDate.toISOString();
+
+      if (startDate !== null && endDate !== null) {
+        setSelectedDate({
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+        });
+      }
+    }
+  };
+
+  const renderMenu = ({ onClose, left, top, className }: any, ref: any) => {
+    const handleSelect = () => {
+      onClose();
+    };
+    return (
+      <Popover ref={ref} className={className} style={{ left, top }} full>
+        <Dropdown.Menu onSelect={handleSelect}>
+          <Dropdown.Item
+            disabled={!isLoading && !allProductsList?.data?.length}
+            onClick={saveExcel}
+            eventKey={4}
+          >
+            Export to Excel
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Popover>
+    );
+  };
+
+  //Checkbox for Export
+
+  // const checkedBoxData = allProductsList?.data?.map(
+  //   (item: any) =>
+  //     item.productId === checkedKeys.map((item: any) => item.productId)
+  // );
+
+  const checkedBoxData = allProductsList?.data?.filter((obj: any) =>
+    checkedKeys.includes(obj.productId)
+  );
+
+  // ! export to excel
+
+  const columns = [
+    { header: "Product Name", key: "productName" },
+    { header: "Category Name", key: "categoryName" },
+    { header: "Product Color", key: "productColor" },
+    { header: "Product Size", key: "productSize" },
+    { header: "Barcode Link", key: "productCode" },
+  ];
+
+  const workbook = new Excel.Workbook();
+
+  const saveExcel = async () => {
+    try {
+      const fileName = "Product File";
+
+      // creating one worksheet in workbook
+      const worksheet = workbook.addWorksheet("workSheetName");
+
+      // each columns contains header and its mapping key from data
+      worksheet.columns = columns;
+
+      // loop through all of the columns and set the alignment with width.
+      worksheet.columns?.forEach((column: any) => {
+        column.width = column?.header?.length + 5;
+        column.alignment = { horizontal: "center" };
+      });
+
+      // const rowIndexStart = 2;
+
+      // let rowIndex = rowIndexStart;
+
+      checkedBoxData?.length > 0
+        ? checkedBoxData?.forEach((singleData: any) => {
+            const customRows = {
+              productName: singleData.productName,
+              categoryName: singleData.category.categoryName,
+              productColor: singleData.colorVarient.productColor,
+              productSize: singleData.sizeVarient
+                ? singleData.sizeVarient.productSize
+                : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+            };
+            worksheet.addRow(customRows);
+          })
+        : allProductsList?.data?.forEach((singleData: any) => {
+            const customRows = {
+              productName: singleData.productName,
+              categoryName: singleData.category.categoryName,
+              productColor: singleData.colorVarient.productColor,
+              productSize: singleData.sizeVarient
+                ? singleData.sizeVarient.productSize
+                : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+            };
+            worksheet.addRow(customRows);
+          });
+
+      // Add style
+      const headerRow = worksheet.getRow(1);
+      headerRow.font = { bold: true }; // Font styling
+      headerRow.height = 30;
+      headerRow.alignment = { vertical: "middle", horizontal: "center" };
+      // loop through all of the rows and set the outline style.
+      worksheet.eachRow({ includeEmpty: false }, (row) => {
+        // store each cell to currentCell
+        // @ts-ignore
+        const currentCell = row?._cells;
+
+        // loop through currentCell to apply border only for the non-empty cell of excel
+        currentCell.forEach((singleCell: any) => {
+          // store the cell address i.e. A1, A2, A3, B1, B2, B3, ...
+          const cellAddress = singleCell._address;
+
+          // apply border
+          worksheet.getCell(cellAddress).border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+        });
+      });
+
+      // write the content using writeBuffer
+      const buf = await workbook.xlsx.writeBuffer();
+
+      // download the processed file
+      saveAs(new Blob([buf]), `${fileName}.xlsx`);
+    } catch (error) {
+      console.error("<<<ERROR>>>", error);
+    } finally {
+      // removing worksheet's instance to create new one
+      workbook.removeWorksheet("workSheetName");
+    }
+  };
+
+  /// Table Check Box
+  let checked = false;
+  let indeterminate = false;
+
+  if (checkedKeys.length === allProductsList?.data?.length) {
+    checked = true;
+  } else if (checkedKeys.length === 0) {
+    checked = false;
+  } else if (
+    checkedKeys.length > 0 &&
+    checkedKeys.length < allProductsList?.data?.length
+  ) {
+    indeterminate = true;
+  }
+
+  const handleCheckAll = (value: any, checked: any) => {
+    const keys = checked
+      ? allProductsList?.data?.map((item: any) => item.productId)
+      : [];
+    setCheckedKeys(keys);
+  };
+
+  const handleCheck = (value: any, check: any) => {
+    const keys = check
+      ? [...checkedKeys, value]
+      : checkedKeys.filter((item: any) => item !== value);
+    setCheckedKeys(keys);
+  };
+
+  const CheckCell = ({
+    rowData,
+    onChange,
+    checkedKeys,
+    dataKey,
+    ...props
+  }: any) => {
+    return (
+      <div style={{ lineHeight: "46px" }}>
+        <Checkbox
+          value={rowData[dataKey]}
+          inline
+          onChange={onChange}
+          checked={checkedKeys.some((item: any) => item === rowData[dataKey])}
+        />
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          <div>
-            <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
-            </h2>
-          </div>
-
-          <div className="flex max-md:justify-between gap-10 items-center">
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex justify-center items-center gap-3">
             <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
-              />
+              <h2 className="text-lg font-semibold ">
+                All Products | {allProductsList?.meta?.total}
+              </h2>
             </div>
-
             <div>
               <InputGroup
                 inside
@@ -114,6 +324,60 @@ const ProductBarcode = () => {
               </InputGroup>
             </div>
 
+            <div>
+              <SelectPicker
+                placeholder="Product Filter By Category"
+                data={categoryFilterForProduct}
+                className="w-60"
+                searchable={false}
+                onChange={(value: any) => {
+                  setCategoryFilter(value);
+                }}
+                style={{
+                  width: 300,
+                }}
+              />
+            </div>
+
+            <div>
+              <DateRangePicker
+                // @ts-ignore
+                ranges={predefinedRanges}
+                placement="bottomEnd"
+                onChange={(value: Date[] | null): void => {
+                  handleFilterDate(value);
+                }}
+                onClean={() =>
+                  setSelectedDate({
+                    startDate: "",
+                    endDate: "",
+                  })
+                }
+                size="md"
+                // style={{ width: "30%" }}
+                placeholder="Filter By Product Created Date"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-center items-center gap-3">
+            <ButtonToolbar>
+              <Whisper
+                placement="bottomEnd"
+                speaker={renderMenu}
+                trigger={["click"]}
+              >
+                <Button
+                  appearance="default"
+                  className=" !border-gray text-white hover:text-white/80 focus-within:text-white focus-within:bg-[#0284c7] font-semibold
+                    "
+                  color="blue"
+                  startIcon={<DocPassIcon className="text-xl" />}
+                >
+                  Generate File
+                </Button>
+              </Whisper>
+            </ButtonToolbar>
             <button
               onClick={() => {
                 router.push("/products/add-product");
@@ -138,6 +402,32 @@ const ProductBarcode = () => {
             autoHeight={true}
             data={allProductsList?.data}
           >
+            <Column width={50} align="center">
+              <HeaderCell style={{ padding: 0 }}>
+                <div style={{ lineHeight: "40px" }}>
+                  <Checkbox
+                    inline
+                    checked={checked}
+                    indeterminate={indeterminate}
+                    onChange={handleCheckAll}
+                  />
+                </div>
+              </HeaderCell>
+
+              <Cell>
+                {(rowData) => (
+                  <div>
+                    <CheckCell
+                      dataKey="productId"
+                      rowData={rowData}
+                      checkedKeys={checkedKeys}
+                      onChange={handleCheck}
+                    />
+                  </div>
+                )}
+              </Cell>
+            </Column>
+
             {/*img*/}
             <Column width={70}>
               <HeaderCell style={headerCss}>Image</HeaderCell>
@@ -221,7 +511,7 @@ const ProductBarcode = () => {
               />
             </Column>
 
-            {/* Size */}
+            {/* Barcode */}
             <Column flexGrow={3}>
               <HeaderCell style={headerCss}>Barcode Link</HeaderCell>
               <Cell
@@ -230,6 +520,18 @@ const ProductBarcode = () => {
                 dataKey="sizeVarient.productSize"
               >
                 {(rowData) => `http:localhost:3000/tag/${rowData.productCode}`}
+              </Cell>
+            </Column>
+
+            {/* Crated At */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Created</HeaderCell>
+              <Cell
+                // style={cellCss}
+                verticalAlign="middle"
+                dataKey="sizeVarient.productSize"
+              >
+                {(rowData) => ` ${new Date(rowData.createdAt).toDateString()}`}
               </Cell>
             </Column>
 

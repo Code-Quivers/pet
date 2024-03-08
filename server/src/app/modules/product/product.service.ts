@@ -40,7 +40,7 @@ const addProduct = async (req: Request): Promise<Product> => {
       productImage: filePath,
       categoryId: data.categoryId,
       colorVarientId: data.colorVarientId,
-      sizeVarientId: data.sizeVarientId,
+      sizeVarientId: data?.sizeVarientId,
     };
 
     const createProduct = await transactionClient.product.create({
@@ -61,7 +61,7 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productColor, productSize, categoryName, ...filterData } = filters;
+  const { searchTerm, productColor, productSize, categoryName, startDate, endDate, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductWhereInput[] = [];
@@ -100,6 +100,16 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     });
   }
 
+  //Filter By CreatedAt
+  if (startDate && endDate) {
+    andConditions.push({
+      createdAt: {
+        gte: startDate, // Greater than or equal to startDate
+        lte: endDate, // Less than or equal to endDate
+      },
+    });
+  }
+
   /// Filter By Color
 
   if (productColor) {
@@ -134,6 +144,8 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
       },
     });
   }
+
+  console.log('startDate', startDate, 'endDate', endDate);
 
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
@@ -217,8 +229,10 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
 
-  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId } =
+  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId, productStatus } =
     req.body as IProductUpdateRequest;
+
+  console.log('productStatus', productStatus);
 
   // deleting old style Image
   const oldFilePaths = 'uploads/' + oldFilePath;
@@ -280,6 +294,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       categoryId,
       colorVarientId,
       sizeVarientId,
+      productStatus,
       productImage: filePath,
     };
 

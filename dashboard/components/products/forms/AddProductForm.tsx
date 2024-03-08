@@ -21,8 +21,14 @@ import { useGetSubCategoryQuery } from "@/redux/features/subCategoryApi";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
-import { useGetProductSizeQuery } from "@/redux/features/productSizeApi";
-import { useGetProductColorQuery } from "@/redux/features/productColorApi";
+import {
+  useAddProductSizeMutation,
+  useGetProductSizeQuery,
+} from "@/redux/features/productSizeApi";
+import {
+  useAddProductColorMutation,
+  useGetProductColorQuery,
+} from "@/redux/features/productColorApi";
 
 const AddProductForm = () => {
   const toaster = useToaster();
@@ -46,7 +52,11 @@ const AddProductForm = () => {
   });
 
   //Get All Product Size
-  const { data: productSizeResponse } = useGetProductSizeQuery({});
+  const {
+    data: productSizeResponse,
+    isLoading: sizeLoading,
+    isFetching: sizeFetching,
+  } = useGetProductSizeQuery({});
 
   const productSize = productSizeResponse?.data?.map((size: any) => {
     return {
@@ -55,9 +65,22 @@ const AddProductForm = () => {
     };
   });
 
+  //Create Product Size
+
+  const [addProductSize, { data: productSizeData }] =
+    useAddProductSizeMutation();
+
+  const handleAddProductSize = async (newData: any) => {
+    await addProductSize(newData);
+  };
+
   //Get All Product Color
 
-  const { data: productColorResponse } = useGetProductColorQuery({});
+  const {
+    data: productColorResponse,
+    isLoading: colorLoading,
+    isFetching: colorFetching,
+  } = useGetProductColorQuery({});
 
   const productColor = productColorResponse?.data?.map((color: any) => {
     return {
@@ -65,6 +88,15 @@ const AddProductForm = () => {
       value: color?.colorVarientId,
     };
   });
+
+  //Create Product Color
+
+  const [addProductColor, { data: productColorData }] =
+    useAddProductColorMutation();
+
+  const handleAddProductColor = async (newData: any) => {
+    await addProductColor(newData);
+  };
 
   const [addProduct, { data, isLoading, isSuccess, isError, error, reset }] =
     useAddProductMutation();
@@ -308,12 +340,11 @@ const AddProductForm = () => {
               {/* select Size */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Product Size
+                  Product Size (Optional)
                 </label>
                 <Controller
                   name="sizeVarientId"
                   control={control}
-                  rules={{ required: "Product Size is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
                       <InputPicker
@@ -322,7 +353,8 @@ const AddProductForm = () => {
                         data={productSize || []}
                         // value={field.value}
                         onCreate={(value, item) => {
-                          console.log(value, item);
+                          handleAddProductSize({ productSize: value });
+                          // console.log(value, item);
                         }}
                         onChange={(value: string | null) =>
                           field.onChange(value)
@@ -332,22 +364,19 @@ const AddProductForm = () => {
                         }}
                         placeholder="Select Product Size"
                         renderMenu={(menu) =>
-                          renderLoading(
-                            menu,
-                            subCategoryLoading || subCategoryFetching
-                          )
+                          renderLoading(menu, sizeLoading || sizeFetching)
                         }
                       />
                       <Form.ErrorMessage
                         show={
-                          (!!errors?.categoryId &&
-                            !!errors?.categoryId?.message) ||
+                          (!!errors?.sizeVarientId &&
+                            !!errors?.sizeVarientId?.message) ||
                           false
                         }
                         placement="topEnd"
                       >
                         <span className="font-semibold">
-                          {errors?.categoryId?.message}
+                          {errors?.sizeVarientId?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>
@@ -366,35 +395,35 @@ const AddProductForm = () => {
                   rules={{ required: "Product Color is required" }}
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
-                      <SelectPicker
+                      <InputPicker
                         size="lg"
                         data={productColor || []}
                         value={field.value}
+                        creatable
+                        onCreate={(value, item) => {
+                          handleAddProductColor({ productColor: value });
+                        }}
                         onChange={(value: string | null) =>
                           field.onChange(value)
                         }
                         style={{
                           width: "100%",
                         }}
-                        searchable={false}
                         placeholder="Select Product Color"
                         renderMenu={(menu) =>
-                          renderLoading(
-                            menu,
-                            subCategoryLoading || subCategoryFetching
-                          )
+                          renderLoading(menu, colorLoading || colorFetching)
                         }
                       />
                       <Form.ErrorMessage
                         show={
-                          (!!errors?.categoryId &&
-                            !!errors?.categoryId?.message) ||
+                          (!!errors?.colorVarientId &&
+                            !!errors?.colorVarientId?.message) ||
                           false
                         }
                         placement="topEnd"
                       >
                         <span className="font-semibold">
-                          {errors?.categoryId?.message}
+                          {errors?.colorVarientId?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>

@@ -230,7 +230,9 @@ const AllProductList = () => {
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="sizeVarient.productSize"
-              />
+              >
+                {(rowData) => rowData.sizeVarient?.productSize || "N/A"}
+              </Cell>
             </Column>
             {/* Price */}
             <Column flexGrow={1}>
@@ -254,6 +256,19 @@ const AllProductList = () => {
                 dataKey="productPrice"
               >
                 {(rowData) => `${rowData.productStock} pcs`}
+              </Cell>
+            </Column>
+
+            {/* Product Status */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Product Status</HeaderCell>
+
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => `${rowData.productStatus} `}
               </Cell>
             </Column>
 

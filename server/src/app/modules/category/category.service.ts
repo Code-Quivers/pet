@@ -113,6 +113,13 @@ const getCategory = async (filters: ICategoryFilterRequest, options: IPagination
 
   // Retrieve Courier with filtering and pagination
   const result = await prisma.category.findMany({
+    include: {
+      product: {
+        where: {
+          productStatus: 'AVAILABLE',
+        },
+      },
+    },
     where: whereConditions,
     skip,
     take: limit,
@@ -149,6 +156,8 @@ const getSingleCategory = async (categoryHref: string): Promise<Category | null>
       _count: true,
     },
   });
+
+  console.log(result);
 
   if (!result) throw new ApiError(httpStatus.NOT_FOUND, 'Category Not Found!!');
 
