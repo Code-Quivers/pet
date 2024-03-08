@@ -70,7 +70,7 @@ model Category {
 
 model Product {
   productId          String          @id @default(uuid())
-  productCode        String         @unique
+  productCode        String          @unique
   productName        String
   productImage       String
   productPrice       Float
@@ -82,17 +82,31 @@ model Product {
   colorVarientId     String
   colorVarient       ColorVarient    @relation(fields: [colorVarientId], references: [colorVarientId])
   sizeVarientId      String?
-  sizeVarient        SizeVarient?     @relation(fields: [sizeVarientId], references: [sizeVarientId])
+  sizeVarient        SizeVarient?    @relation(fields: [sizeVarientId], references: [sizeVarientId])
   createdAt          DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
   Pet                Pet?
+  promoCode          PromoCode?
+  Order              Order[]
 }
 
-enum ProductStatus { 
+enum ProductStatus {
   AVAILABLE
   UNAVAILABLE
+}
+
+model PromoCode {
+  promoCodeId String   @id @default(uuid())
+  promoCode   String   @unique
+  discount    Float
+  expiryDate  DateTime
+  productId   String?  @unique
+  product     Product? @relation(fields: [productId], references: [productId])
+  createdAt   DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(0)
+  order       Order[]
 }
 
 model ColorVarient {
@@ -132,6 +146,32 @@ model ProductReview {
   user            User     @relation(fields: [userId], references: [userId])
   createdAt       DateTime @default(now()) @db.Timestamptz(0)
   updatedAt       DateTime @updatedAt @db.Timestamptz(0)
+}
+
+model Order {
+  orderId         String      @id @default(uuid())
+  orderDate       DateTime
+  orderStatus     OrderStatus @default(PENDING)
+  customerName    String
+  customerPhone   String
+  customerEmail   String
+  customerAddress String
+  city            String
+  postalCode      String
+  productId       String
+  product         Product     @relation(fields: [productId], references: [productId])
+  promoCodeId     String?
+  promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
+  createdAt       DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt       DateTime    @updatedAt @db.Timestamptz(0)
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+  REJECTED
 }
 
 model Pet {

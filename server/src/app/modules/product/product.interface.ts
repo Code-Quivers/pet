@@ -5,6 +5,8 @@ export type IProductFilterRequest = {
   productColor?: string | undefined;
   productSize?: string | undefined;
   categoryName?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
 };
 
 export type IProductRequest = {
