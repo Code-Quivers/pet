@@ -7,6 +7,7 @@ import { useDebounced } from "@/redux/hook";
 import {
   Button,
   ButtonToolbar,
+  Checkbox,
   DateRangePicker,
   Dropdown,
   IconButton,
@@ -39,16 +40,18 @@ const ProductBarcode = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-
+  const [checkedKeys, setCheckedKeys] = useState<any>([]);
   const [selectedDate, setSelectedDate] = useState({
     startDate: "",
     endDate: "",
   });
 
+  console.log("checkedKeys", checkedKeys);
+
   query["startDate"] = selectedDate.startDate;
   query["endDate"] = selectedDate.endDate;
 
-  console.log("selectedDate", selectedDate);
+  // console.log("selectedDate", selectedDate);
 
   query["categoryName"] = categoryFilter;
 
@@ -135,6 +138,17 @@ const ProductBarcode = () => {
     );
   };
 
+  //Checkbox for Export
+
+  // const checkedBoxData = allProductsList?.data?.map(
+  //   (item: any) =>
+  //     item.productId === checkedKeys.map((item: any) => item.productId)
+  // );
+
+  const checkedBoxData = allProductsList?.data?.filter((obj: any) =>
+    checkedKeys.includes(obj.productId)
+  );
+
   // ! export to excel
 
   const columns = [
@@ -167,18 +181,31 @@ const ProductBarcode = () => {
 
       // let rowIndex = rowIndexStart;
 
-      allProductsList?.data?.forEach((singleData: any) => {
-        const customRows = {
-          productName: singleData.productName,
-          categoryName: singleData.category.categoryName,
-          productColor: singleData.colorVarient.productColor,
-          productSize: singleData.sizeVarient
-            ? singleData.sizeVarient.productSize
-            : "No Size",
-          productCode: `http://localhost:3000/tag/${singleData.productCode}`,
-        };
-        worksheet.addRow(customRows);
-      });
+      checkedBoxData?.length > 0
+        ? checkedBoxData?.forEach((singleData: any) => {
+            const customRows = {
+              productName: singleData.productName,
+              categoryName: singleData.category.categoryName,
+              productColor: singleData.colorVarient.productColor,
+              productSize: singleData.sizeVarient
+                ? singleData.sizeVarient.productSize
+                : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+            };
+            worksheet.addRow(customRows);
+          })
+        : allProductsList?.data?.forEach((singleData: any) => {
+            const customRows = {
+              productName: singleData.productName,
+              categoryName: singleData.category.categoryName,
+              productColor: singleData.colorVarient.productColor,
+              productSize: singleData.sizeVarient
+                ? singleData.sizeVarient.productSize
+                : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+            };
+            worksheet.addRow(customRows);
+          });
 
       // Add style
       const headerRow = worksheet.getRow(1);
@@ -219,6 +246,54 @@ const ProductBarcode = () => {
     }
   };
 
+  /// Table Check Box
+  let checked = false;
+  let indeterminate = false;
+
+  if (checkedKeys.length === allProductsList?.data?.length) {
+    checked = true;
+  } else if (checkedKeys.length === 0) {
+    checked = false;
+  } else if (
+    checkedKeys.length > 0 &&
+    checkedKeys.length < allProductsList?.data?.length
+  ) {
+    indeterminate = true;
+  }
+
+  const handleCheckAll = (value: any, checked: any) => {
+    const keys = checked
+      ? allProductsList?.data?.map((item: any) => item.productId)
+      : [];
+    setCheckedKeys(keys);
+  };
+
+  const handleCheck = (value: any, check: any) => {
+    const keys = check
+      ? [...checkedKeys, value]
+      : checkedKeys.filter((item: any) => item !== value);
+    setCheckedKeys(keys);
+  };
+
+  const CheckCell = ({
+    rowData,
+    onChange,
+    checkedKeys,
+    dataKey,
+    ...props
+  }: any) => {
+    return (
+      <div style={{ lineHeight: "46px" }}>
+        <Checkbox
+          value={rowData[dataKey]}
+          inline
+          onChange={onChange}
+          checked={checkedKeys.some((item: any) => item === rowData[dataKey])}
+        />
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -229,22 +304,6 @@ const ProductBarcode = () => {
                 All Products | {allProductsList?.meta?.total}
               </h2>
             </div>
-
-            <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
-              />
-            </div>
-
             <div>
               <InputGroup
                 inside
@@ -263,6 +322,21 @@ const ProductBarcode = () => {
                   <BiSearch />
                 </InputGroup.Addon>
               </InputGroup>
+            </div>
+
+            <div>
+              <SelectPicker
+                placeholder="Product Filter By Category"
+                data={categoryFilterForProduct}
+                className="w-60"
+                searchable={false}
+                onChange={(value: any) => {
+                  setCategoryFilter(value);
+                }}
+                style={{
+                  width: 300,
+                }}
+              />
             </div>
 
             <div>
@@ -328,6 +402,32 @@ const ProductBarcode = () => {
             autoHeight={true}
             data={allProductsList?.data}
           >
+            <Column width={50} align="center">
+              <HeaderCell style={{ padding: 0 }}>
+                <div style={{ lineHeight: "40px" }}>
+                  <Checkbox
+                    inline
+                    checked={checked}
+                    indeterminate={indeterminate}
+                    onChange={handleCheckAll}
+                  />
+                </div>
+              </HeaderCell>
+
+              <Cell>
+                {(rowData) => (
+                  <div>
+                    <CheckCell
+                      dataKey="productId"
+                      rowData={rowData}
+                      checkedKeys={checkedKeys}
+                      onChange={handleCheck}
+                    />
+                  </div>
+                )}
+              </Cell>
+            </Column>
+
             {/*img*/}
             <Column width={70}>
               <HeaderCell style={headerCss}>Image</HeaderCell>
