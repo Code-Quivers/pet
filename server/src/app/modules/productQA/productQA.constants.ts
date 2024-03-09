@@ -1,5 +1,5 @@
-export const QAFilterableFields: string[] = ['searchTerm'];
-export const QASearchableFields: string[] = ['productColor'];
+export const QAFilterableFields: string[] = ['searchTerm', 'productName'];
+export const QASearchableFields: string[] = [];
 
 export const QARelationalFields: string[] = ['productColor'];
 

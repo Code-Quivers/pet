@@ -39,7 +39,7 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, productName, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductQAWhereInput[] = [];
@@ -48,12 +48,22 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
 
   if (searchTerm) {
     andConditions.push({
-      OR: QASearchableFields.map((field: any) => ({
-        [field]: {
-          contains: searchTerm,
-          mode: 'insensitive',
+      OR: [
+        ...QASearchableFields.map((field: any) => ({
+          [field]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
+        {
+          product: {
+            productName: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
         },
-      })),
+      ],
     });
   }
 
@@ -75,6 +85,16 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
           };
         }
       }),
+    });
+  }
+
+  if (productName) {
+    andConditions.push({
+      product: {
+        productName: {
+          equals: productName,
+        },
+      },
     });
   }
 
