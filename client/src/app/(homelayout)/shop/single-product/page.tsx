@@ -191,60 +191,69 @@ const SingleProductPage = () => {
               </div>
 
               {/* select quantity */}
-              <div className="py-2 md:py-6">
-                <p className=" text-gray-700  ">
-                  <span className="">Quantity:</span>{" "}
-                </p>
-                <div className="flex items-center mt-2">
-                  <div className="inline-flex items-center mt-2">
-                    <button className="bg-white rounded-l border text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center px-2 py-1 border-r border-gray-200">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M20 12H4"
-                        />
-                      </svg>
-                    </button>
-                    <div className="bg-gray-100 border-t border-b border-gray-100 text-gray-600 hover:bg-gray-100 inline-flex items-center px-4 py-1 select-none">
-                      2
+              <div className="flex items-end mt-2 gap-7">
+                <div className="flex items-end">
+                  <div>
+                    <p className="text-gray-700">
+                      <span className="">Quantity:</span>
+                    </p>
+                    <div className="flex items-center">
+                      <div className="inline-flex items-center mt-2 border text-gray-600 rounded-full">
+                        <button className="   disabled:opacity-50 inline-flex items-center px-3 py-2 ">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M20 12H4"
+                            />
+                          </svg>
+                        </button>
+                        <div className="bg-gray-100 text-gray-600 hover:bg-gray-100 inline-flex items-center px-4 py-2 select-none">
+                          2
+                        </div>
+                        <button className=" disabled:opacity-50 inline-flex items-center px-3 py-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <button className="bg-white rounded-r border text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center px-2 py-1 border-r border-gray-200">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </button>
                   </div>
+                </div>
+                <div className="w-full px-2">
+                  <button className="w-full bg-primary  text-white py-2 md:px-4 rounded-full font-bold hover:bg-gray-800 text-base md:text-lg">
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Stock */}
-            <div className="flex justify-start items-center gap-2 py-6">
+            {/* <div className="flex justify-start items-center gap-2 py-6">
               <p className="font-bold text-gray-700   text-lg">Availability:</p>
               <p className="text-gray-600   text-xl">In Stock</p>
-            </div>
+            </div> */}
 
             {/* Add to cart */}
-            <div className="flex -mx-2 mb-4">
+            {/* <div className="flex -mx-2 mb-4">
               <div className="w-1/2 px-2">
                 <button className="w-full bg-primary  text-white py-2 md:px-4 rounded-full font-bold hover:bg-gray-800 text-base md:text-lg">
                   Add to Cart
@@ -255,7 +264,7 @@ const SingleProductPage = () => {
                   Add to Wishlist
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
