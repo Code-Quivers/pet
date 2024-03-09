@@ -94,7 +94,6 @@ const AddProductQAForm = () => {
       );
       reset();
       formReset();
-      redirect("/products");
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
@@ -301,7 +300,7 @@ const AddProductQAForm = () => {
               className="!bg-[#3c50e0] !px-6 !text-white  !font-semibold"
               size="lg"
             >
-              Add Product
+              Add Product QA
             </Button>
           </div>
         </form>

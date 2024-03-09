@@ -83,6 +83,9 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
 
   // Retrieve Courier with filtering and pagination
   const result = await prisma.productQA.findMany({
+    include: {
+      product: true,
+    },
     where: whereConditions,
     skip,
     take: limit,

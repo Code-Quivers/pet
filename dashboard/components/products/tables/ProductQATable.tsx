@@ -24,15 +24,16 @@ import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import { useGetProductQAQuery } from "@/redux/features/productQAApi";
 
 const ProductQATable = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [productFilter, setProductFilter] = useState<string>("");
 
-  query["categoryName"] = categoryFilter;
+  query["productName"] = productFilter;
 
   const router = useRouter();
   query["limit"] = size;
@@ -45,6 +46,8 @@ const ProductQATable = () => {
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
+
+  //Filter By Product
 
   const {
     data: allProductsList,
@@ -59,6 +62,11 @@ const ProductQATable = () => {
     setEditData(null);
   };
 
+  const productEnum = allProductsList?.data?.map((product: any) => ({
+    label: product.productName,
+    value: product.productName,
+  }));
+
   const { data: allCategories } = useGetCategoryQuery({});
 
   const categoryFilterForProduct = allCategories?.data?.map(
@@ -68,25 +76,29 @@ const ProductQATable = () => {
     })
   );
 
+  //Fetching all products QA
+
+  const { data: allProductsQA } = useGetProductQAQuery({});
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
+              All Products | {allProductsQA?.meta?.total}
             </h2>
           </div>
 
           <div className="flex max-md:justify-between gap-10 items-center">
             <div>
               <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
+                placeholder="Filter By Product"
+                data={productEnum}
                 className="w-60"
                 searchable={false}
                 onChange={(value: any) => {
-                  setCategoryFilter(value);
+                  setProductFilter(value);
                 }}
                 style={{
                   width: 300,
@@ -113,15 +125,6 @@ const ProductQATable = () => {
                 </InputGroup.Addon>
               </InputGroup>
             </div>
-
-            <button
-              onClick={() => {
-                router.push("/products/add-product");
-              }}
-              className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
-            >
-              <FaPlus /> Add Product
-            </button>
           </div>
         </div>
 
@@ -136,7 +139,7 @@ const ProductQATable = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allProductsList?.data}
+            data={allProductsQA?.data}
           >
             {/*img*/}
             <Column width={70}>
@@ -153,8 +156,10 @@ const ProductQATable = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.productImage
-                                ? `${fileUrlKey()}/${rowData?.productImage}`
+                              rowData?.product?.productImage
+                                ? `${fileUrlKey()}/${
+                                    rowData?.product?.productImage
+                                  }`
                                 : noImage
                             }
                             className="object-cover"
@@ -169,8 +174,10 @@ const ProductQATable = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.productImage
-                            ? `${fileUrlKey()}/${rowData?.productImage}`
+                          rowData?.product?.productImage
+                            ? `${fileUrlKey()}/${
+                                rowData?.product?.productImage
+                              }`
                             : noImage
                         }
                         className="object-center  object-cover"
@@ -186,90 +193,22 @@ const ProductQATable = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="productName"
+                dataKey="product.productName"
               />
             </Column>
 
             {/* Item Description */}
             <Column flexGrow={1} minWidth={105}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Description
+                Product Question
               </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="question" />
             </Column>
 
             {/* category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="category.categoryName"
-              />
-            </Column>
-            {/* product short summary */}
-            <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                ProductColor
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="colorVarient.productColor"
-              />
-            </Column>
-
-            {/* sub category */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Size</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="sizeVarient.productSize"
-              >
-                {(rowData) => rowData.sizeVarient?.productSize || "N/A"}
-              </Cell>
-            </Column>
-            {/* Price */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Price</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `$ ${rowData.productPrice}`}
-              </Cell>
-            </Column>
-
-            {/* Stock */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Stock</HeaderCell>
-
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.productStock} pcs`}
-              </Cell>
-            </Column>
-
-            {/* Product Status */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Status</HeaderCell>
-
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.productStatus} `}
-              </Cell>
+              <HeaderCell style={headerCss}>Product Answer</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="answer" />
             </Column>
 
             {/* Action */}
@@ -304,7 +243,7 @@ const ProductQATable = () => {
           </Table>
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allProductsList?.meta?.total}
+              total={allProductsQA?.meta?.total}
               prev
               next
               first
@@ -314,7 +253,7 @@ const ProductQATable = () => {
               maxButtons={5}
               size="md"
               layout={["total", "-", "limit", "|", "pager", "skip"]}
-              limitOptions={[10, 20, 30, 50, 100, 150, 200]}
+              limitOptions={[5, 20, 30, 50, 100, 150, 200]}
               limit={size}
               onChangeLimit={(limitChange) => setSize(limitChange)}
               activePage={page}
