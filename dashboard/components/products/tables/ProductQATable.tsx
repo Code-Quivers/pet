@@ -35,7 +35,7 @@ const ProductQATable = () => {
 
   query["productName"] = productFilter;
 
-  const router = useRouter();
+  //   const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -53,7 +53,7 @@ const ProductQATable = () => {
     data: allProductsList,
     isLoading,
     isFetching,
-  } = useGetProductQuery({ ...query });
+  } = useGetProductQuery({});
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   // close modal
@@ -78,7 +78,7 @@ const ProductQATable = () => {
 
   //Fetching all products QA
 
-  const { data: allProductsQA } = useGetProductQAQuery({});
+  const { data: allProductsQA } = useGetProductQAQuery({ ...query });
 
   return (
     <>

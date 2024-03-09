@@ -1,5 +1,6 @@
 export type IQAFilterRequest = {
   searchTerm?: string | undefined;
+  productName?: string | undefined;
 };
 
 export type IQARequest = {
