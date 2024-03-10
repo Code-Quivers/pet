@@ -14,7 +14,6 @@ import {
 
 import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
 import { useUpdateProductMutation } from "@/redux/features/productsApi";
-import { useGetSubCategoryQuery } from "@/redux/features/subCategoryApi";
 import UpdateProductImageUpload from "../forms/UpdateProductImageUpload";
 import { useEffect } from "react";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";

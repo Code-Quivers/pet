@@ -87,7 +87,7 @@ const getAllUserService = async (filters: IUserFilterRequest, options: IPaginati
     });
   }
 
-  console.log(JSON.stringify(andConditions));
+
 
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
@@ -370,7 +370,7 @@ const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReqAnd
   };
   const updatedDetails: IUpdateProfileReqAndResponse = updateMyProfileDataValue(updatedDetailsReq);
 
-  console.log('updatedDetails', updatedDetails);
+
 
   const result = await prisma.profile.update({
     where: {

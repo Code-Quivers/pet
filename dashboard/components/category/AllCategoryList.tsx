@@ -17,7 +17,6 @@ import Image from "next/image";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { MdModeEdit } from "react-icons/md";
-import SubCategoryModalTable from "./SubCategoryTableModal";
 import EditCategoryModal from "./EditCategoryModal";
 import { FaPlus } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";

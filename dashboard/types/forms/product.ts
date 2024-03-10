@@ -52,3 +52,9 @@ export type ICreateProductQA = {
   answer: string;
   categoryHref: string;
 };
+
+export type IUpdateProductQA = {
+  productId?: string;
+  question?: string;
+  answer?: string;
+};

@@ -15,8 +15,6 @@ router.post(
   FileUploadHelper.uploadCategoryImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = CategoryValidation.addCategory.parse(JSON.parse(req.body.data));
-
-    console.log(req.body.data, 'req.body');
     return CategoryController.addCategoryController(req, res, next);
   }
 );
