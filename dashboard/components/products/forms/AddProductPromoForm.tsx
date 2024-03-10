@@ -263,7 +263,7 @@ const AddProductPromoForm = () => {
                 />
               </div>
 
-              {/* Product Answer */}
+              {/* Promo Code Description*/}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
                   Promo Code Description
@@ -277,7 +277,7 @@ const AddProductPromoForm = () => {
                         as="textarea"
                         rows={3}
                         {...field}
-                        placeholder="Write product Answer..."
+                        placeholder="Write Promo Code Description..."
                         className="!w-full"
                       />
                       <Form.ErrorMessage
@@ -304,7 +304,7 @@ const AddProductPromoForm = () => {
               className="!bg-[#3c50e0] !px-6 !text-white  !font-semibold"
               size="lg"
             >
-              Add Product QA
+              Add Promo Code
             </Button>
           </div>
         </form>
