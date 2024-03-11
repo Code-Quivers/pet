@@ -10,7 +10,6 @@ import { QAFilterableFields } from './productQA.constants';
 // !----------------------------------Create New Hall---------------------------------------->>>
 const addQAController = catchAsync(async (req: Request, res: Response) => {
   const result = await QAService.addQA(req.body);
-  console.log('result', result);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -46,7 +45,7 @@ const updateQA = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'QA Updated successfully !',
+    message: 'Product QA Updated successfully !',
     data: result,
   });
 });
@@ -68,5 +67,4 @@ export const QAController = {
   getQAController,
   updateQA,
   deleteQA,
-
 };

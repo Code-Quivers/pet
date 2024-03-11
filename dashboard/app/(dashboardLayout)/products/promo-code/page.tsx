@@ -1,10 +1,10 @@
-import AddPromoCodeForm from "@/components/products/forms/AddPromoCodeForm";
+import AddProductPromoForm from "@/components/products/forms/AddProductPromoForm";
 import PromoCodeTableList from "@/components/products/tables/PromoCodeTableList";
 
 const PromoCodePage = () => {
   return (
     <div>
-      <AddPromoCodeForm />
+      <AddProductPromoForm />
       <PromoCodeTableList />
     </div>
   );

@@ -29,7 +29,6 @@ router.patch(
   FileUploadHelper.uploadProductImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = ProductZodValidation.editProduct.parse(JSON.parse(req.body.data));
-    console.log(req.body.data, 'body.....');
     return ProductController.updateProduct(req, res, next);
   }
 );

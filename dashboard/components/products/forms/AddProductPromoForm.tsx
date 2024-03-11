@@ -21,7 +21,7 @@ import {
 } from "@/redux/features/categoryApi";
 import { useAddProductQAMutation } from "@/redux/features/productQAApi";
 
-const AddProductQAForm = () => {
+const AddProductPromoForm = () => {
   const toaster = useToaster();
   let subCategoryQuery: any = {};
   const [subCategorySearch, setSubCategorySearch] = useState("");
@@ -129,7 +129,7 @@ const AddProductQAForm = () => {
     <div className="rounded-sm border border-stroke bg-white  shadow-default dark:border-strokedark dark:bg-boxdark ">
       {/* heading */}
       <div className="border-b p-5">
-        <h2 className="text-2xl font-semibold">Add Product Q&A</h2>
+        <h2 className="text-2xl font-semibold">Add Promo Code</h2>
       </div>
       {/* content */}
       <div className="p-5 ">
@@ -235,7 +235,7 @@ const AddProductQAForm = () => {
               {/* Question */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Product Question
+                  Promo Code
                 </label>
                 <Controller
                   name="question"
@@ -243,10 +243,8 @@ const AddProductQAForm = () => {
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
                       <Input
-                        as="textarea"
-                        rows={3}
                         {...field}
-                        placeholder="Write product Question..."
+                        placeholder="Write promo Code..."
                         className="!w-full"
                       />
                       <Form.ErrorMessage
@@ -265,10 +263,10 @@ const AddProductQAForm = () => {
                 />
               </div>
 
-              {/* Product Answer */}
+              {/* Promo Code Description*/}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Product Answer
+                  Promo Code Description
                 </label>
                 <Controller
                   name="answer"
@@ -279,7 +277,7 @@ const AddProductQAForm = () => {
                         as="textarea"
                         rows={3}
                         {...field}
-                        placeholder="Write product Answer..."
+                        placeholder="Write Promo Code Description..."
                         className="!w-full"
                       />
                       <Form.ErrorMessage
@@ -306,7 +304,7 @@ const AddProductQAForm = () => {
               className="!bg-[#3c50e0] !px-6 !text-white  !font-semibold"
               size="lg"
             >
-              Add Product QA
+              Add Promo Code
             </Button>
           </div>
         </form>
@@ -315,4 +313,4 @@ const AddProductQAForm = () => {
   );
 };
 
-export default AddProductQAForm;
+export default AddProductPromoForm;

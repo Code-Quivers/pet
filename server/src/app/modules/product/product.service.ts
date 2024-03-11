@@ -145,7 +145,7 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     });
   }
 
-  console.log('startDate', startDate, 'endDate', endDate);
+
 
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
@@ -232,7 +232,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
   const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId, productStatus } =
     req.body as IProductUpdateRequest;
 
-  console.log('productStatus', productStatus);
+
 
   // deleting old style Image
   const oldFilePaths = 'uploads/' + oldFilePath;
