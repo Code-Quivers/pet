@@ -5,6 +5,7 @@ import { ICreateProduct, ICreateProductQA } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
   InputPicker,
@@ -228,11 +229,8 @@ const AddProductPromoForm = () => {
                   )}
                 />
               </div>
-            </div>
 
-            {/* right */}
-            <div className="col-span-2 space-y-2">
-              {/* Question */}
+              {/* Promo Code */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
                   Promo Code
@@ -245,7 +243,7 @@ const AddProductPromoForm = () => {
                       <Input
                         {...field}
                         placeholder="Write promo Code..."
-                        className="!w-full"
+                        className="!w-full !text-capitalize"
                       />
                       <Form.ErrorMessage
                         show={
@@ -256,6 +254,41 @@ const AddProductPromoForm = () => {
                       >
                         <span className="font-semibold">
                           {errors?.question?.message}
+                        </span>
+                      </Form.ErrorMessage>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* right */}
+            <div className="col-span-2 space-y-2">
+              {/* Promo Code */}
+              <div className="space-y-1">
+                <label className="block font-medium text-black ">
+                  Promo Code Expire Date
+                </label>
+                <Controller
+                  name="expireDate"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="rs-form-control-wrapper">
+                      <DatePicker
+                        {...field}
+                        placeholder="Write promo Code Expire Date..."
+                        className="!w-full"
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.expireDate &&
+                            !!errors?.expireDate?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.expireDate?.message}
                         </span>
                       </Form.ErrorMessage>
                     </div>
