@@ -1,7 +1,7 @@
 "use client";
 
 import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
-import { ICreateProduct, ICreateProductQA } from "@/types/forms/product";
+import { ICreateProduct, ICreateProductPromo, ICreateProductQA } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -35,7 +35,7 @@ const AddProductPromoForm = () => {
     formState: { errors },
     reset: formReset,
     watch,
-  } = useForm<ICreateProductQA>();
+  } = useForm<ICreateProductPromo>();
 
   const { categoryHref } = watch();
 
@@ -242,7 +242,7 @@ const AddProductPromoForm = () => {
                     <div className="rs-form-control-wrapper">
                       <Input
                         {...field}
-                        placeholder="Write promo Code..."
+                        placeholder="Write promo Code like ET2024"
                         className="!w-full !text-capitalize"
                       />
                       <Form.ErrorMessage
@@ -264,10 +264,41 @@ const AddProductPromoForm = () => {
 
             {/* right */}
             <div className="col-span-2 space-y-2">
-              {/* Promo Code */}
+              {/* Discount */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Promo Code Expire Date
+                  Discount %
+                </label>
+                <Controller
+                  name="discount"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="rs-form-control-wrapper">
+                      <Input
+                        {...field}
+                        placeholder="Write discount as % "
+                        className="!w-full"
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.discount && !!errors?.discount?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.discount?.message}
+                        </span>
+                      </Form.ErrorMessage>
+                    </div>
+                  )}
+                />
+              </div>
+
+              {/* Expire Date */}
+              <div className="space-y-1">
+                <label className="block font-medium text-black ">
+                  Expire Date
                 </label>
                 <Controller
                   name="expireDate"
@@ -276,7 +307,7 @@ const AddProductPromoForm = () => {
                     <div className="rs-form-control-wrapper">
                       <DatePicker
                         {...field}
-                        placeholder="Write promo Code Expire Date..."
+                        placeholder="Write Expire Date"
                         className="!w-full"
                       />
                       <Form.ErrorMessage
