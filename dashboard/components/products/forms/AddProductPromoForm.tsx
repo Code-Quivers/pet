@@ -1,10 +1,11 @@
 "use client";
 
 import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
-import { ICreateProduct, ICreateProductQA } from "@/types/forms/product";
+import { ICreateProduct, ICreateProductPromo, ICreateProductQA } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
   InputPicker,
@@ -21,7 +22,7 @@ import {
 } from "@/redux/features/categoryApi";
 import { useAddProductQAMutation } from "@/redux/features/productQAApi";
 
-const AddProductQAForm = () => {
+const AddProductPromoForm = () => {
   const toaster = useToaster();
   let subCategoryQuery: any = {};
   const [subCategorySearch, setSubCategorySearch] = useState("");
@@ -34,7 +35,7 @@ const AddProductQAForm = () => {
     formState: { errors },
     reset: formReset,
     watch,
-  } = useForm<ICreateProductQA>();
+  } = useForm<ICreateProductPromo>();
 
   const { categoryHref } = watch();
 
@@ -129,7 +130,7 @@ const AddProductQAForm = () => {
     <div className="rounded-sm border border-stroke bg-white  shadow-default dark:border-strokedark dark:bg-boxdark ">
       {/* heading */}
       <div className="border-b p-5">
-        <h2 className="text-2xl font-semibold">Add Product Q&A</h2>
+        <h2 className="text-2xl font-semibold">Add Promo Code</h2>
       </div>
       {/* content */}
       <div className="p-5 ">
@@ -228,14 +229,11 @@ const AddProductQAForm = () => {
                   )}
                 />
               </div>
-            </div>
 
-            {/* right */}
-            <div className="col-span-2 space-y-2">
-              {/* Question */}
+              {/* Promo Code */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Product Question
+                  Promo Code
                 </label>
                 <Controller
                   name="question"
@@ -243,11 +241,9 @@ const AddProductQAForm = () => {
                   render={({ field }) => (
                     <div className="rs-form-control-wrapper">
                       <Input
-                        as="textarea"
-                        rows={3}
                         {...field}
-                        placeholder="Write product Question..."
-                        className="!w-full"
+                        placeholder="Write promo Code like ET2024"
+                        className="!w-full !text-capitalize"
                       />
                       <Form.ErrorMessage
                         show={
@@ -264,11 +260,77 @@ const AddProductQAForm = () => {
                   )}
                 />
               </div>
+            </div>
 
-              {/* Product Answer */}
+            {/* right */}
+            <div className="col-span-2 space-y-2">
+              {/* Discount */}
               <div className="space-y-1">
                 <label className="block font-medium text-black ">
-                  Product Answer
+                  Discount %
+                </label>
+                <Controller
+                  name="discount"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="rs-form-control-wrapper">
+                      <Input
+                        {...field}
+                        placeholder="Write discount as % "
+                        className="!w-full"
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.discount && !!errors?.discount?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.discount?.message}
+                        </span>
+                      </Form.ErrorMessage>
+                    </div>
+                  )}
+                />
+              </div>
+
+              {/* Expire Date */}
+              <div className="space-y-1">
+                <label className="block font-medium text-black ">
+                  Expire Date
+                </label>
+                <Controller
+                  name="expireDate"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="rs-form-control-wrapper">
+                      <DatePicker
+                        {...field}
+                        placeholder="Write Expire Date"
+                        className="!w-full"
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.expireDate &&
+                            !!errors?.expireDate?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.expireDate?.message}
+                        </span>
+                      </Form.ErrorMessage>
+                    </div>
+                  )}
+                />
+              </div>
+
+              {/* Promo Code Description*/}
+              <div className="space-y-1">
+                <label className="block font-medium text-black ">
+                  Promo Code Description
                 </label>
                 <Controller
                   name="answer"
@@ -279,7 +341,7 @@ const AddProductQAForm = () => {
                         as="textarea"
                         rows={3}
                         {...field}
-                        placeholder="Write product Answer..."
+                        placeholder="Write Promo Code Description..."
                         className="!w-full"
                       />
                       <Form.ErrorMessage
@@ -306,7 +368,7 @@ const AddProductQAForm = () => {
               className="!bg-[#3c50e0] !px-6 !text-white  !font-semibold"
               size="lg"
             >
-              Add Product QA
+              Add Promo Code
             </Button>
           </div>
         </form>
@@ -315,4 +377,4 @@ const AddProductQAForm = () => {
   );
 };
 
-export default AddProductQAForm;
+export default AddProductPromoForm;

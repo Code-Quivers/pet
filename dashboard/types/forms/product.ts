@@ -52,3 +52,17 @@ export type ICreateProductQA = {
   answer: string;
   categoryHref: string;
 };
+
+export type IUpdateProductQA = {
+  productId?: string;
+  question?: string;
+  answer?: string;
+};
+
+export type ICreateProductPromo = {
+  promoCode: string;
+  discount: number;
+  expiryDate: string;
+  description: string;
+  productId: string;
+};

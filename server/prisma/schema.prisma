@@ -102,6 +102,7 @@ model PromoCode {
   promoCode   String   @unique
   discount    Float
   expiryDate  DateTime
+  description String
   productId   String?  @unique
   product     Product? @relation(fields: [productId], references: [productId])
   createdAt   DateTime @default(now()) @db.Timestamptz(0)

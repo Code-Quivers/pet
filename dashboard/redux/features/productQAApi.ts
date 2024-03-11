@@ -21,7 +21,29 @@ export const productQAApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.qa],
     }),
+
+    updateProductQA: build.mutation({
+      query: ({ data, productQaId }) => ({
+        url: `${PRODUCT_QA_API}/${productQaId}`,
+        method: "PATCH",
+        data: data,
+      }),
+      invalidatesTags: [tagTypes.qa],
+    }),
+
+    deleteProductQA: build.mutation({
+      query: ({ productQaId }) => ({
+        url: `${PRODUCT_QA_API}/${productQaId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [tagTypes.qa],
+    }),
   }),
 });
 
-export const { useAddProductQAMutation, useGetProductQAQuery } = productQAApi;
+export const {
+  useAddProductQAMutation,
+  useGetProductQAQuery,
+  useUpdateProductQAMutation,
+  useDeleteProductQAMutation,
+} = productQAApi;

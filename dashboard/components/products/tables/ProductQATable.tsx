@@ -25,6 +25,9 @@ import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import { useGetProductQAQuery } from "@/redux/features/productQAApi";
+import ProductQAModal from "../modal/ProductQAModal";
+import { RiDeleteBinFill } from "react-icons/ri";
+import ProductQADeleteConfirmationModal from "../modal/ProductQADeleteConfirmationModal";
 
 const ProductQATable = () => {
   const query: Record<string, any> = {};
@@ -79,6 +82,10 @@ const ProductQATable = () => {
   //Fetching all products QA
 
   const { data: allProductsQA } = useGetProductQAQuery({ ...query });
+
+  const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const [deleteData, setDeleteData] = useState<any | null>(null);
+  const handleCloseDelete = () => setIsOpenDelete(false);
 
   return (
     <>
@@ -217,30 +224,62 @@ const ProductQATable = () => {
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
-                  <Whisper
-                    placement="topEnd"
-                    speaker={
-                      <Popover
-                        className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
-                        arrow={false}
+                  <div className="flex items-center gap-1">
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
+                          arrow={false}
+                        >
+                          Edit
+                        </Popover>
+                      }
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setIsOpenEdit(true);
+                          setEditData(rowData);
+                        }}
+                        circle
+                        icon={<MdModeEdit size={20} />}
+                      />
+                    </Whisper>
+                    {/* Delete */}
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className=" font-semibold rounded-full !py-1.5 "
+                          arrow={false}
+                        >
+                          Delete
+                        </Popover>
+                      }
+                    >
+                      <button
+                        className="  hover:text-[#eb0712db] "
+                        onClick={() => {
+                          setIsOpenDelete(true);
+                          setDeleteData(rowData);
+                        }}
                       >
-                        Edit
-                      </Popover>
-                    }
-                  >
-                    <IconButton
-                      onClick={() => {
-                        setIsOpenEdit(true);
-                        setEditData(rowData);
-                      }}
-                      circle
-                      icon={<MdModeEdit size={20} />}
-                    />
-                  </Whisper>
+                        <RiDeleteBinFill size={20} />
+                      </button>
+                    </Whisper>
+                  </div>
                 )}
               </Cell>
             </Column>
           </Table>
+
+          {/* delete confirmation */}
+          <ProductQADeleteConfirmationModal
+            isOpenDelete={isOpenDelete}
+            handleCloseDelete={handleCloseDelete}
+            deleteData={deleteData}
+          />
+
           <div style={{ padding: 20 }}>
             <Pagination
               total={allProductsQA?.meta?.total}
@@ -263,7 +302,7 @@ const ProductQATable = () => {
         </div>
       </div>
 
-      <ProductEditModal
+      <ProductQAModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
         editData={editData}

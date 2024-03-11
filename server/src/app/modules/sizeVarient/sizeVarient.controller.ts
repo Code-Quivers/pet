@@ -10,7 +10,7 @@ import { SizeVarientFilterableFields } from './sizeVarient.constants';
 // !----------------------------------Create New Hall---------------------------------------->>>
 const addSizeVarientController = catchAsync(async (req: Request, res: Response) => {
   const result = await SizeVarientService.addSizeVarient(req.body);
-  console.log('result', result);
+
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
