@@ -88,6 +88,9 @@ model Product {
 
   // a many-to-many relationship between products and variations
   productVariations ProductVariation[]
+
+  // a many-to-many relationship between products and promotions
+  promotions Promotion[]
 }
 
 // the model for product variations
@@ -186,4 +189,47 @@ model Pet {
   product        Product? @relation(fields: [productId], references: [productId])
   createdAt      DateTime @default(now()) @db.Timestamptz(0)
   updatedAt      DateTime @updatedAt @db.Timestamptz(0)
+}
+
+// The model for promotions
+model Promotion {
+  promotionId String        @id @default(uuid())
+  name        String
+  type        PromotionType
+
+  // many-to-many relationship between promotions and products
+  products Product[]
+
+  // one-to-many relationship between promotion and rules
+  rules PromotionRule[]
+}
+
+// model for promotion rules
+model PromotionRule {
+  id          String    @id @default(uuid())
+  promotion   Promotion @relation(fields: [promotionId], references: [promotionId])
+  promotionId String
+
+  // type of rule, e.g., BuyOneGetOne, DiscountBasedOnAmount
+  type RuleType
+
+  // For BuyOneGetOne
+  buy Int?
+  get Int?
+
+  // For DiscountBasedOnAmount
+  threshold Float?
+  discount  Float?
+}
+
+// enum for promotion types
+enum PromotionType {
+  BUY_ONE_GET_ONE
+  DISCOUNT_BASED_ON_AMOUNT
+}
+
+// enum for rule types
+enum RuleType {
+  BUY_ONE_GET_ONE
+  DISCOUNT_BASED_ON_AMOUNT
 }
