@@ -74,15 +74,10 @@ model Product {
   productName        String
   productImage       String
   productPrice       Float
-  productStock       Int
   productDescription String
   productStatus      ProductStatus   @default(AVAILABLE)
   categoryId         String
   category           Category        @relation(fields: [categoryId], references: [categoryId])
-  colorVarientId     String
-  colorVarient       ColorVarient    @relation(fields: [colorVarientId], references: [colorVarientId])
-  sizeVarientId      String?
-  sizeVarient        SizeVarient?    @relation(fields: [sizeVarientId], references: [sizeVarientId])
   createdAt          DateTime        @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
@@ -90,6 +85,19 @@ model Product {
   Pet                Pet?
   promoCode          PromoCode?
   Order              Order[]
+
+  // a many-to-many relationship between products and variations
+  productVariations ProductVariation[]
+}
+
+// the model for product variations
+model ProductVariation {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [productId])
+  color     String
+  size      String
+  stock     Int     @default(0)
 }
 
 enum ProductStatus {
@@ -108,22 +116,6 @@ model PromoCode {
   createdAt   DateTime @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
   order       Order[]
-}
-
-model ColorVarient {
-  colorVarientId String    @id @default(uuid())
-  productColor   String
-  createdAt      DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt      DateTime  @updatedAt @db.Timestamptz(0)
-  product        Product[]
-}
-
-model SizeVarient {
-  sizeVarientId String    @id @default(uuid())
-  productSize   String
-  createdAt     DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
-  product       Product[]
 }
 
 model ProductQA {
