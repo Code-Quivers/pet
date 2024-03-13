@@ -23,7 +23,7 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import ProductEditModal from "../modal/ProductEditModal";
+
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
@@ -33,6 +33,7 @@ import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
+import { useGetBarcodeQuery } from "@/redux/features/barcodeApi";
 
 const ProductBarcode = () => {
   const query: Record<string, any> = {};
@@ -71,7 +72,10 @@ const ProductBarcode = () => {
     data: allProductsList,
     isLoading,
     isFetching,
-  } = useGetProductQuery({ ...query });
+  } = useGetBarcodeQuery({});
+
+  console.log("allProductsList", allProductsList?.data);
+
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   // close modal
@@ -418,7 +422,7 @@ const ProductBarcode = () => {
                 {(rowData) => (
                   <div>
                     <CheckCell
-                      dataKey="productId"
+                      dataKey="variantId"
                       rowData={rowData}
                       checkedKeys={checkedKeys}
                       onChange={handleCheck}
@@ -443,8 +447,10 @@ const ProductBarcode = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.productImage
-                                ? `${fileUrlKey()}/${rowData?.productImage}`
+                              rowData?.product?.productImage
+                                ? `${fileUrlKey()}/${
+                                    rowData?.product?.productImage
+                                  }`
                                 : noImage
                             }
                             className="object-cover"
@@ -459,8 +465,10 @@ const ProductBarcode = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.productImage
-                            ? `${fileUrlKey()}/${rowData?.productImage}`
+                          rowData?.product?.productImage
+                            ? `${fileUrlKey()}/${
+                                rowData?.product?.productImage
+                              }`
                             : noImage
                         }
                         className="object-center  object-cover"
@@ -476,7 +484,7 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="productName"
+                dataKey="product.productName"
               />
             </Column>
 
@@ -486,7 +494,7 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="category.categoryName"
+                dataKey="product.category.categoryName"
               />
             </Column>
             {/* product short summary */}
@@ -494,21 +502,13 @@ const ProductBarcode = () => {
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 ProductColor
               </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="colorVarient.productColor"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="color" />
             </Column>
 
             {/* Size */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Size</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="sizeVarient.productSize"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="size" />
             </Column>
 
             {/* Barcode */}
@@ -519,7 +519,7 @@ const ProductBarcode = () => {
                 verticalAlign="middle"
                 dataKey="sizeVarient.productSize"
               >
-                {(rowData) => `http:localhost:3000/tag/${rowData.productCode}`}
+                {(rowData) => `http:localhost:3000/tag/${rowData.barcodeCode}`}
               </Cell>
             </Column>
 
@@ -586,13 +586,13 @@ const ProductBarcode = () => {
           </div>
         </div>
       </div>
-
+      {/* 
       <ProductEditModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
         editData={editData}
         handleCloseEdit={handleCloseEdit}
-      />
+      /> */}
     </>
   );
 };

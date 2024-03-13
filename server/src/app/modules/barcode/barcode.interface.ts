@@ -53,3 +53,8 @@ export type IRequestUser = {
   iat: number;
   exp: number;
 };
+
+
+export type IBarCodeFilterRequest = {
+  searchTerm?: string | undefined;
+};

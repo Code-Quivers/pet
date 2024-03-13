@@ -13,7 +13,7 @@ import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
 import { IProductFilterRequest, IProductRequest, IProductUpdateRequest } from './products.interface';
-import { ProductValidation, generateBarCode, productCodeGenerator } from './products.utils';
+import { generateBarCode } from './products.utils';
 import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './prroduct.constants';
 
 // modules
@@ -76,105 +76,6 @@ const addProducts = async (req: Request): Promise<Product> => {
 
 // !----------------------------------get all Product---------------------------------------->>>
 const getProducts = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
-  // Calculate pagination options
-  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
-
-  // Destructure filter properties
-  const { searchTerm, categoryName, startDate, endDate, ...filterData } = filters;
-
-  // Define an array to hold filter conditions
-  const andConditions: Prisma.ProductWhereInput[] = [];
-
-  // Add search term condition if provided
-
-  if (searchTerm) {
-    andConditions.push({
-      OR: ProductSearchableFields.map((field: any) => ({
-        [field]: {
-          contains: searchTerm,
-          mode: 'insensitive',
-        },
-      })),
-    });
-  }
-
-  // Add filterData conditions if filterData is provided
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map(key => {
-        if (ProductRelationalFields.includes(key)) {
-          return {
-            [ProductRelationalFieldsMapper[key]]: {
-              subCategoryName: (filterData as any)[key],
-            },
-          };
-        } else {
-          return {
-            [key]: {
-              equals: (filterData as any)[key],
-            },
-          };
-        }
-      }),
-    });
-  }
-
-  //Filter By CreatedAt
-  if (startDate && endDate) {
-    andConditions.push({
-      createdAt: {
-        gte: startDate, // Greater than or equal to startDate
-        lte: endDate, // Less than or equal to endDate
-      },
-    });
-  }
-
-  //Filter By Category
-  if (categoryName) {
-    andConditions.push({
-      category: {
-        categoryName: {
-          equals: categoryName,
-        },
-      },
-    });
-  }
-
-  // Create a whereConditions object with AND conditions
-  const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
-
-  // Retrieve Courier with filtering and pagination
-  const result = await prisma.product.findMany({
-    where: whereConditions,
-    include: {
-      category: true,
-      productVariations: true,
-    },
-    skip,
-    take: limit,
-    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
-  });
-
-  // Count total matching orders for pagination
-  const total = await prisma.product.count({
-    where: whereConditions,
-  });
-
-  // Calculate total pages
-  const totalPage = limit > 0 ? Math.ceil(total / limit) : 0;
-
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-      totalPage,
-    },
-    data: result,
-  };
-};
-
-const getProductBarcode = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
@@ -401,5 +302,4 @@ export const ProductService = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
-  getProductBarcode,
 };
