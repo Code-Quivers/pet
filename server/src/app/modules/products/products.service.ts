@@ -13,13 +13,13 @@ import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
 import { IProductFilterRequest, IProductRequest, IProductUpdateRequest } from './products.interface';
-import { ProductValidation, productCodeGenerator } from './products.utils';
+import { ProductValidation, generateBarCode, productCodeGenerator } from './products.utils';
 import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './prroduct.constants';
 
 // modules
 
 // !----------------------------------Create New Category--------------------------------------->>>
-const addProduct = async (req: Request): Promise<Product> => {
+const addProducts = async (req: Request): Promise<Product> => {
   //@ts-ignore
   const file = req.file as IUploadFile;
 
@@ -28,7 +28,7 @@ const addProduct = async (req: Request): Promise<Product> => {
   //@ts-ignore
   const data = req.body as IProductRequest;
 
-  await ProductValidation(data);
+  // await ProductValidation(data);
 
   const result = await prisma.$transaction(async transactionClient => {
     const newProduct = {
@@ -47,17 +47,19 @@ const addProduct = async (req: Request): Promise<Product> => {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
     }
 
-    const productVariation = {
+    const productVariations = data?.productVariations?.map((variant: any) => ({
       productId: createProduct.productId,
-      barcodeCode: productCodeGenerator,
-      variantPrice: data.variantPrice,
-      color: data.color,
-      size: data.size,
-      stock: data.stock,
-    };
+      barcodeCode: generateBarCode(),
+      variantPrice: variant.variantPrice,
+      color: variant.color,
+      size: variant.size,
+      stock: variant.stock,
+    }));
+
+    console.log('productVariations', productVariations);
 
     const createProductVariation = await transactionClient.productVariation.createMany({
-      data: productVariation,
+      data: productVariations,
     });
 
     if (!createProductVariation) {
@@ -67,18 +69,18 @@ const addProduct = async (req: Request): Promise<Product> => {
     return createProduct;
   });
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to create Product, result error');
   }
   return result;
 };
 
 // !----------------------------------get all Product---------------------------------------->>>
-const getProduct = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
+const getProducts = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productColor, productSize, categoryName, startDate, endDate, ...filterData } = filters;
+  const { searchTerm, categoryName, startDate, endDate, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductWhereInput[] = [];
@@ -127,26 +129,101 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     });
   }
 
-  /// Filter By Color
-
-  if (productColor) {
+  //Filter By Category
+  if (categoryName) {
     andConditions.push({
-      colorVarient: {
-        productColor: {
-          equals: productColor,
+      category: {
+        categoryName: {
+          equals: categoryName,
         },
       },
     });
   }
 
-  // Filter By Size
+  // Create a whereConditions object with AND conditions
+  const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  if (productSize) {
+  // Retrieve Courier with filtering and pagination
+  const result = await prisma.product.findMany({
+    where: whereConditions,
+    include: {
+      category: true,
+      productVariations: true,
+    },
+    skip,
+    take: limit,
+    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+  });
+
+  // Count total matching orders for pagination
+  const total = await prisma.product.count({
+    where: whereConditions,
+  });
+
+  // Calculate total pages
+  const totalPage = limit > 0 ? Math.ceil(total / limit) : 0;
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage,
+    },
+    data: result,
+  };
+};
+
+const getProductBarcode = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
+  // Calculate pagination options
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+
+  // Destructure filter properties
+  const { searchTerm, categoryName, startDate, endDate, ...filterData } = filters;
+
+  // Define an array to hold filter conditions
+  const andConditions: Prisma.ProductWhereInput[] = [];
+
+  // Add search term condition if provided
+
+  if (searchTerm) {
     andConditions.push({
-      sizeVarient: {
-        productSize: {
-          equals: productSize,
+      OR: ProductSearchableFields.map((field: any) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
         },
+      })),
+    });
+  }
+
+  // Add filterData conditions if filterData is provided
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => {
+        if (ProductRelationalFields.includes(key)) {
+          return {
+            [ProductRelationalFieldsMapper[key]]: {
+              subCategoryName: (filterData as any)[key],
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: (filterData as any)[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  //Filter By CreatedAt
+  if (startDate && endDate) {
+    andConditions.push({
+      createdAt: {
+        gte: startDate, // Greater than or equal to startDate
+        lte: endDate, // Less than or equal to endDate
       },
     });
   }
@@ -170,32 +247,8 @@ const getProduct = async (filters: IProductFilterRequest, options: IPaginationOp
     where: whereConditions,
     include: {
       category: true,
-      colorVarient: true,
-      sizeVarient: true,
+      productVariations: true,
     },
-    // select: {
-    //   productId: true,
-    //   productImage: true,
-    //   productName: true,
-    //   productDescription: true,
-    //   productPrice: true,
-    //   productStock: true,
-    //   category: {
-    //     select: {
-    //       categoryName: true,
-    //     },
-    //   },
-    //   colorVarient: {
-    //     select: {
-    //       productColor: true,
-    //     },
-    //   },
-    //   sizeVarient: {
-    //     select: {
-    //       productSize: true,
-    //     },
-    //   },
-    // },
     skip,
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
@@ -343,9 +396,10 @@ const deleteProduct = async (productId: string): Promise<Product> => {
 };
 
 export const ProductService = {
-  addProduct,
-  getProduct,
+  addProducts,
+  getProducts,
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  getProductBarcode,
 };

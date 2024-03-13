@@ -9,17 +9,14 @@ import { ProductZodValidation } from './products.validation';
 const router = express.Router();
 
 // ! Create New List ------------------------------->>>
- 
-router.post('/', 
-  FileUploadHelper.uploadProductImage.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = ProductZodValidation.addProduct.parse(JSON.parse(req.body.data));
-    return ProductController.addProductController(req, res, next);
-  }
-);
+
+router.post('/', FileUploadHelper.uploadProductImage.single('file'), (req: Request, res: Response, next: NextFunction) => {
+  req.body = ProductZodValidation.addProducts.parse(JSON.parse(req.body.data));
+  return ProductController.addProductsController(req, res, next);
+});
 
 // ! Get all List----------------------------------->>>
-router.get('/', ProductController.getProductController);
+router.get('/', ProductController.getProductsController);
 
 router.get('/:productId', ProductController.getSingleProduct);
 

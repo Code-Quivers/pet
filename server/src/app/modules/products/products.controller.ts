@@ -8,25 +8,37 @@ import { ProductService } from './products.service';
 import { ProductFilterableFields } from './prroduct.constants';
 
 // !----------------------------------Create New Category---------------------------------------->>>
-const addProductController = catchAsync(async (req: Request, res: Response) => {
+// const addProductController = catchAsync(async (req: Request, res: Response) => {
+//   // @ts-ignore
+//   const result = await ProductService.addProduct(req);
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Product Added Successfully',
+//     data: result,
+//   });
+// });
+// !----------------------------------Create New Category---------------------------------------->>>
+const addProductsController = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  const result = await ProductService.addProduct(req);
+  const result = await ProductService.addProducts(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Added Successfully',
+    message: 'Products Added Successfully',
     data: result,
   });
 });
 
 // !----------------------------------get all Category---------------------------------------->>>
-const getProductController = catchAsync(async (req: Request, res: Response) => {
+const getProductsController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await ProductService.getProduct(filters, options);
+  const result = await ProductService.getProducts(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -78,8 +90,8 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const ProductController = {
-  addProductController,
-  getProductController,
+  addProductsController,
+  getProductsController,
   getSingleProduct,
   updateProduct,
   deleteProduct,

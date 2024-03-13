@@ -4,11 +4,11 @@ import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { ColorVarientRoutes } from '../modules/colorVarient/colorVarient.routes';
 import { SizeVarientRoutes } from '../modules/sizeVarient/sizeVarient.routes';
-import { ProductRoutes } from '../modules/product/product.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
 import { PetRoutes } from '../modules/Pet/pet.routes';
 import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
+import { ProductRoutes } from '../modules/products/products.routes';
 
 const router = express.Router();
 
