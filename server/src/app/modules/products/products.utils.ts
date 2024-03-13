@@ -30,25 +30,7 @@ export const ProductValidation = async (data: IProductRequest) => {
   if (!data.productDescription) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Product Description is required');
   }
-
-  if (!data.variantPrice) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Variant Price is required');
-  }
-
-  if (!data.color) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Color is required');
-  }
-
-  if (!data.size) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Size is required');
-  }
-
-  if (!data.stock) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Stock is required');
-  }
 };
-
-// Product Code Generator
 
 // const existingCodes: number[] = []; // Array to store existing codes
 
@@ -62,14 +44,17 @@ export const ProductValidation = async (data: IProductRequest) => {
 //   } while (existingCodes.includes(code)); // Check if the code already exists
 
 //   existingCodes.push(code); // Add the new code to the array of existing codes
-//   return 'et' + code.toString(); // Prepend "et" before the code and convert it to string
+
+//   const timestamp = Date.now(); // Get current timestamp in milliseconds
+//   const truncatedCode = code.toString().slice(-8); // Extract last 8 digits of the code
+//   return 'et' + truncatedCode + timestamp.toString(); // Prepend "et" and append timestamp
 // };
 
 // export const productCodeGenerator: string = generateRandomCode();
 
 const existingCodes: number[] = []; // Array to store existing codes
 
-const generateRandomCode = (): string => {
+export const generateBarCode = (): string => {
   const min = 100000;
   const max = 999999;
   let code: number;
@@ -81,8 +66,6 @@ const generateRandomCode = (): string => {
   existingCodes.push(code); // Add the new code to the array of existing codes
 
   const timestamp = Date.now(); // Get current timestamp in milliseconds
-  const truncatedCode = code.toString().slice(-8); // Extract last 8 digits of the code
+  const truncatedCode = code.toString().slice(-6); // Extract last 8 digits of the code
   return 'et' + truncatedCode + timestamp.toString(); // Prepend "et" and append timestamp
 };
-
-export const productCodeGenerator: string = generateRandomCode();
