@@ -19,7 +19,7 @@ import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchab
 // modules
 
 // !----------------------------------Create New Category--------------------------------------->>>
-const addProduct = async (req: Request): Promise<Product> => {
+const addProducts = async (req: Request): Promise<Product> => {
   //@ts-ignore
   const file = req.file as IUploadFile;
 
@@ -67,7 +67,7 @@ const addProduct = async (req: Request): Promise<Product> => {
     return createProduct;
   });
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to create Product, result error');
   }
   return result;
 };
@@ -343,7 +343,7 @@ const deleteProduct = async (productId: string): Promise<Product> => {
 };
 
 export const ProductService = {
-  addProduct,
+  addProducts,
   getProduct,
   getSingleProduct,
   updateProduct,

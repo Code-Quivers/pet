@@ -8,14 +8,26 @@ import { ProductService } from './products.service';
 import { ProductFilterableFields } from './prroduct.constants';
 
 // !----------------------------------Create New Category---------------------------------------->>>
-const addProductController = catchAsync(async (req: Request, res: Response) => {
+// const addProductController = catchAsync(async (req: Request, res: Response) => {
+//   // @ts-ignore
+//   const result = await ProductService.addProduct(req);
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Product Added Successfully',
+//     data: result,
+//   });
+// });
+// !----------------------------------Create New Category---------------------------------------->>>
+const addProductsController = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  const result = await ProductService.addProduct(req);
+  const result = await ProductService.addProducts(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Added Successfully',
+    message: 'Products Added Successfully',
     data: result,
   });
 });
@@ -78,7 +90,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const ProductController = {
-  addProductController,
+  addProductsController,
   getProductController,
   getSingleProduct,
   updateProduct,

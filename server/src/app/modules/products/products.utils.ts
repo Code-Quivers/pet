@@ -46,13 +46,6 @@ export const ProductValidation = async (data: IProductRequest) => {
   if (!data.stock) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Stock is required');
   }
-
-  // const colorAndSizeExist = await prisma.productVariation.findFirst({
-  //   where: {
-  //     color: data.color,
-  //     size: data.size,
-  //   },
-  // });
 };
 
 // Product Code Generator
