@@ -72,7 +72,7 @@ const ProductBarcode = () => {
     data: allProductsList,
     isLoading,
     isFetching,
-  } = useGetBarcodeQuery({});
+  } = useGetBarcodeQuery({ ...query });
 
   console.log("allProductsList", allProductsList?.data);
 
@@ -142,15 +142,8 @@ const ProductBarcode = () => {
     );
   };
 
-  //Checkbox for Export
-
-  // const checkedBoxData = allProductsList?.data?.map(
-  //   (item: any) =>
-  //     item.productId === checkedKeys.map((item: any) => item.productId)
-  // );
-
   const checkedBoxData = allProductsList?.data?.filter((obj: any) =>
-    checkedKeys.includes(obj.productId)
+    checkedKeys.includes(obj.variantId)
   );
 
   // ! export to excel
@@ -188,25 +181,21 @@ const ProductBarcode = () => {
       checkedBoxData?.length > 0
         ? checkedBoxData?.forEach((singleData: any) => {
             const customRows = {
-              productName: singleData.productName,
-              categoryName: singleData.category.categoryName,
-              productColor: singleData.colorVarient.productColor,
-              productSize: singleData.sizeVarient
-                ? singleData.sizeVarient.productSize
-                : "No Size",
-              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+              productName: singleData.product.productName,
+              categoryName: singleData.product.category.categoryName,
+              productColor: singleData.color,
+              productSize: singleData.size ? singleData.size : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.barcodeCode}`,
             };
             worksheet.addRow(customRows);
           })
         : allProductsList?.data?.forEach((singleData: any) => {
             const customRows = {
-              productName: singleData.productName,
-              categoryName: singleData.category.categoryName,
-              productColor: singleData.colorVarient.productColor,
-              productSize: singleData.sizeVarient
-                ? singleData.sizeVarient.productSize
-                : "No Size",
-              productCode: `http://localhost:3000/tag/${singleData.productCode}`,
+              productName: singleData.product.productName,
+              categoryName: singleData.product.category.categoryName,
+              productColor: singleData.color,
+              productSize: singleData.size ? singleData.size : "No Size",
+              productCode: `http://localhost:3000/tag/${singleData.barcodeCode}`,
             };
             worksheet.addRow(customRows);
           });
@@ -267,7 +256,7 @@ const ProductBarcode = () => {
 
   const handleCheckAll = (value: any, checked: any) => {
     const keys = checked
-      ? allProductsList?.data?.map((item: any) => item.productId)
+      ? allProductsList?.data?.map((item: any) => item.variantId)
       : [];
     setCheckedKeys(keys);
   };

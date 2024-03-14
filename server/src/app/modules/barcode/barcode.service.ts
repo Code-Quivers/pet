@@ -19,7 +19,7 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, categoryName, startDate, endDate, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductVariationWhereInput[] = [];
@@ -28,12 +28,22 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
 
   if (searchTerm) {
     andConditions.push({
-      OR: BarcodeSearchableFields.map((field: any) => ({
-        [field]: {
-          contains: searchTerm,
-          mode: 'insensitive',
+      OR: [
+        ...BarcodeSearchableFields.map((field: any) => ({
+          [field]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
+        {
+          product: {
+            productName: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
         },
-      })),
+      ],
     });
   }
 
@@ -55,6 +65,27 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
           };
         }
       }),
+    });
+  }
+
+  if (categoryName) {
+    andConditions.push({
+      product: {
+        category: {
+          categoryName: {
+            equals: categoryName,
+          },
+        },
+      },
+    });
+  }
+
+  if (startDate && endDate) {
+    andConditions.push({
+      createdAt: {
+        gte: startDate, // Greater than or equal to startDate
+        lte: endDate, // Less than or equal to endDate
+      },
     });
   }
 

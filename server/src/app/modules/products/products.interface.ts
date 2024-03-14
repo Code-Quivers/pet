@@ -32,7 +32,3 @@ export type IProductUpdateRequest = {
   productStatus?: ProductStatus;
   oldFilePath?: string;
 };
-
-export type IBarCodeFilterRequest = {
-  searchTerm?: string | undefined;
-};
