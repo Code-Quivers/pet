@@ -54,7 +54,9 @@ export type IRequestUser = {
   exp: number;
 };
 
-
 export type IBarCodeFilterRequest = {
   searchTerm?: string | undefined;
+  categoryName?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
 };

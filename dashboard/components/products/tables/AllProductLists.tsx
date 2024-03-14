@@ -18,7 +18,6 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import ProductEditModal from "../modal/ProductEditModal";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
@@ -323,13 +322,13 @@ const AllProductList = () => {
           </div>
         </div>
       </div>
-
+      {/* 
       <ProductEditModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
         editData={editData}
         handleCloseEdit={handleCloseEdit}
-      />
+      /> */}
     </>
   );
 };
