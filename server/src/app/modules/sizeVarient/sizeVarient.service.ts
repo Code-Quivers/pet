@@ -20,6 +20,7 @@ const addSizeVarient = async (data: ISizeVarientRequest): Promise<SizeVarient> =
     throw new ApiError(httpStatus.BAD_REQUEST, 'Size is required');
   }
 
+  //object File 
   const dataObj = {
     productSize: data.productSize,
   };
