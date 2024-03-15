@@ -3,6 +3,8 @@ import { BarcodeController } from './barcode.controller';
 
 const router = express.Router();
 
-router.get('/:productCode', BarcodeController.getSingleBarCode);
+router.get('/', BarcodeController.getBarcodeController);
+
+router.get('/:barcodeCode', BarcodeController.getSingleBarCode);
 
 export const BarcodeRoutes = router;

@@ -33,12 +33,12 @@ const addProductsController = catchAsync(async (req: Request, res: Response) => 
 });
 
 // !----------------------------------get all Category---------------------------------------->>>
-const getProductController = catchAsync(async (req: Request, res: Response) => {
+const getProductsController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await ProductService.getProduct(filters, options);
+  const result = await ProductService.getProducts(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -91,7 +91,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 
 export const ProductController = {
   addProductsController,
-  getProductController,
+  getProductsController,
   getSingleProduct,
   updateProduct,
   deleteProduct,

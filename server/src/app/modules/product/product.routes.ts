@@ -9,14 +9,11 @@ import { ProductZodValidation } from './product.validation';
 const router = express.Router();
 
 // ! Create New List ------------------------------->>>
- 
-router.post('/', 
-  FileUploadHelper.uploadProductImage.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = ProductZodValidation.addProduct.parse(JSON.parse(req.body.data));
-    return ProductController.addProductController(req, res, next);
-  }
-);
+
+router.post('/', FileUploadHelper.uploadProductImage.single('file'), (req: Request, res: Response, next: NextFunction) => {
+  req.body = ProductZodValidation.addProduct.parse(JSON.parse(req.body.data));
+  return ProductController.addProductController(req, res, next);
+});
 
 // ! Get all List----------------------------------->>>
 router.get('/', ProductController.getProductController);
@@ -39,4 +36,4 @@ router.delete(
   ProductController.deleteProduct
 );
 
-export const ProductRoutes = router;
+export const Product = router;
