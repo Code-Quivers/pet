@@ -29,6 +29,7 @@ const addSizeVarient = async (data: ISizeVarientRequest): Promise<SizeVarient> =
     data: dataObj,
   });
 
+// Error 
   if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to add Size Varient');
 
   return result;
