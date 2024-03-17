@@ -20,14 +20,17 @@ const addSizeVarient = async (data: ISizeVarientRequest): Promise<SizeVarient> =
     throw new ApiError(httpStatus.BAD_REQUEST, 'Size is required');
   }
 
+  //object File
   const dataObj = {
     productSize: data.productSize,
   };
 
+  /// result
   const result = await prisma.sizeVarient.create({
     data: dataObj,
   });
 
+  // Error
   if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to add Size Varient');
 
   return result;
