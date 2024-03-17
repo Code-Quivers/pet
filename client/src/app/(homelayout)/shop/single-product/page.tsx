@@ -57,26 +57,27 @@ const SingleProductPage = () => {
   const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
-    <div className="py-8">
+    <div className="pb-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex gap-5">
-          <div className="max-w-[50%]">
+        <div className="md:flex gap-5">
+          {/* product slider */}
+          <div className="md:max-w-[50%]">
             <SingleProductSlider slides={productImages} options={OPTIONS} />
           </div>
-          {/* product variant */}
-          <div className="md:flex-1 px-4 max-w-[50%]">
+          {/* product variant and title */}
+          <div className="md:flex-1 px-4 md:max-w-[50%] mt-5 md:mt-0">
             <div>
               {/* Title and Price  */}
               <div className="">
-                <h2 className="text-3xl md:text-5xl text-gray-900 mb-4">
+                <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 mb-2">
                   ByteTag Slide
                 </h2>
                 <p className="text-gray-600 text-xl">$29.99</p>
               </div>
 
               {/* product colors */}
-              <div className="my-4">
-                <p className=" text-gray-700  ">
+              <div className="my-3">
+                <p className=" text-gray-700">
                   <span className="">Color</span>:{" "}
                   <span className="text-bold">White</span>
                 </p>
@@ -175,7 +176,7 @@ const SingleProductPage = () => {
               </div>
 
               {/* product size */}
-              <div>
+              <div className="my-3">
                 <h1>Size: </h1>
                 <div className="flex gap-2">
                   <button className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center">
@@ -191,15 +192,15 @@ const SingleProductPage = () => {
               </div>
 
               {/* select quantity */}
-              <div className="flex items-end mt-2 gap-7">
-                <div className="flex items-end">
+              <div className="md:flex items-end mt-2 gap-7">
+                <div className="flex items-end mb-3 md:mb-0">
                   <div>
                     <p className="text-gray-700">
                       <span className="">Quantity:</span>
                     </p>
                     <div className="flex items-center">
                       <div className="inline-flex items-center mt-2 border text-gray-600 rounded-full">
-                        <button className="   disabled:opacity-50 inline-flex items-center px-3 py-2 ">
+                        <button className="disabled:opacity-50 inline-flex items-center px-3 py-2 ">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-4"
@@ -238,7 +239,7 @@ const SingleProductPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full px-2">
+                <div className="w-full md:px-2">
                   <button className="w-full bg-primary  text-white py-2 md:px-4 rounded-full font-bold hover:bg-gray-800 text-base md:text-lg">
                     Add to Cart
                   </button>

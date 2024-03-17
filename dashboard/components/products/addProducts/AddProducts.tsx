@@ -6,6 +6,7 @@ import AddProductTextEditor from "./AddProductTextEditor";
 import ImageUpload2 from "./ImageUpload2";
 import ShowAddVariant from "./ShowAddVariant";
 import Variants from "./Variants";
+import { Input } from "rsuite";
 
 const AddProductsSection = () => {
   const { register, handleSubmit, control } = useForm({
@@ -37,11 +38,7 @@ const AddProductsSection = () => {
               </div>
               <div className="flex flex-col gap-2 w-full mt-3">
                 <label htmlFor="title">Description</label>
-                <AddProductTextEditor
-                  register={register}
-                  // controller={Controller}
-                  control={control}
-                />
+                <Input as="textarea" rows={5} placeholder="Description" />
               </div>
             </div>
             <div className="my-5 p-4 bg-white rounded-xl">
@@ -57,9 +54,9 @@ const AddProductsSection = () => {
             hi
           </aside>
         </div>
-        <section className="bg-white p-4 w-[100%] rounded-xl">
+        {/* <section className="bg-white p-4 w-[100%] rounded-xl">
           <ShowAddVariant />
-        </section>
+        </section> */}
         {/* <button>Add Product</button> */}
       </form>
     </div>
