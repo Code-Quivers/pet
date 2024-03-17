@@ -5,21 +5,21 @@ import { Input } from "rsuite";
 const AddPricing = () => {
   return (
     <div>
-      <div>
+      {/* <div>
         <h2 className="text-sm font-medium">Pricing</h2>
-      </div>
+      </div> */}
 
       {/*  */}
       <div>
         <div>
-          <label htmlFor="compareAtPrice" className="text-xs  block my-2 mt-3 ">
+          <label htmlFor="price" className="text-xs  block my-2 mt-3 ">
             Price
           </label>
 
-          <Input className="w-[50%] border-black/50" placeholder="0.00" />
+          <Input id="price" className="w-[50%] border-black/50" placeholder="0.00" />
         </div>
 
-        <div className="flex w-full  gap-5  ">
+        {/* <div className="flex w-full  gap-5  ">
           <div className=" w-full">
             <div>
               <label
@@ -56,7 +56,7 @@ const AddPricing = () => {
               <Input disabled className="  border-black/50" placeholder="--" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

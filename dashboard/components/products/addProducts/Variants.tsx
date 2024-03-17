@@ -3,54 +3,33 @@
 import { useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { HiPlus } from "react-icons/hi";
-import { Input, SelectPicker } from "rsuite";
+import { InputNumber, InputPicker, SelectPicker } from "rsuite";
+import { useDispatch, useSelector } from "react-redux";
+import { addVariant } from "@/redux/features/slice/variantsSlice";
+import { Controller, set, useForm } from "react-hook-form";
 
 const Variants = () => {
-  const data = ["Size", "Color", "Style"].map((item) => ({
+  const dispatch = useDispatch();
+  // const { productVariations } = useSelector((state: any) => state?.variants);
+  const [productVariations, setProductVariations] = useState<any>([]);
+  const { control } = useForm();
+
+  const handleVariant = (value: any, variantIndex: number, fieldName: any) => {
+    const updatedProductVariations = [...productVariations];
+    updatedProductVariations[variantIndex][fieldName] = value;
+    setProductVariations(updatedProductVariations);
+    console.log(productVariations);
+  };
+
+  const data = ["Red", "Green", "Pink", "Blue"].map((item) => ({
+    label: item,
+    value: item,
+  }));
+  const sizeData = ["Small", "Large", "Medium"].map((item) => ({
     label: item,
     value: item,
   }));
 
-  // state manage
-  const [variants, setVariants] = useState([]);
-
-  const addVariant = () => {
-    const newVariants = [...variants, { optionName: "", optionValues: [""] }];
-    setVariants(newVariants);
-  };
-
-  const removeVariant = (index) => {
-    const newVariants = [...variants];
-    newVariants.splice(index, 1);
-    setVariants(newVariants);
-  };
-
-  const handleOptionNameChange = (index, value) => {
-    const newVariants = [...variants];
-    newVariants[index].optionName = value;
-    setVariants(newVariants);
-  };
-
-  const handleOptionValueChange = (variantIndex, valueIndex, value) => {
-    const newVariants = [...variants];
-    newVariants[variantIndex].optionValues[valueIndex] = value;
-    setVariants(newVariants);
-  };
-
-  const addOptionValue = (variantIndex) => {
-    const newVariants = [...variants];
-    newVariants[variantIndex].optionValues.push("");
-    setVariants(newVariants);
-  };
-
-  const removeOptionValue = (variantIndex, valueIndex) => {
-    const newVariants = [...variants];
-    newVariants[variantIndex].optionValues.splice(valueIndex, 1);
-    setVariants(newVariants);
-  };
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
   return (
     <>
       <section className="my-5 py-4 bg-white border rounded-xl">
@@ -58,90 +37,118 @@ const Variants = () => {
           <p className="font-semibold text-sm border-b px-4 pb-4">Variants</p>
         </div>
 
-        {variants?.map((variant, variantIndex) => (
+        {productVariations?.map((variant: any, variantIndex: number) => (
           <div
             key={variantIndex}
-            className={`${variantIndex === 2 ? "" : "border-b"}`}
+            className={`${variantIndex === 2 ? "" : "border-b"} px-5 my-3`}
           >
-            {/* option name */}
-            <div className="px-5 pt-3">
-              <label htmlFor="" className="text-sm font-medium ">
-                Option name
-              </label>
-              <div className="flex items-center gap-5">
-                <SelectPicker
-                  defaultValue={data[0]}
-                  style={{
-                    width: "100%",
-                  }}
-                  onChange={handleChange}
-                  data={data}
-                />
-                <RiDeleteBinLine
-                  onClick={() => removeVariant(variantIndex)}
-                  size={20}
-                  className="hover:text-red-600 cursor-pointer"
+            <div className="flex gap-7 mb-2">
+              {/* Color name */}
+              <div className="w-full">
+                <label htmlFor="color">Color</label>
+                <Controller
+                  control={control}
+                  name="color"
+                  render={({ field }) => (
+                    <div>
+                      <InputPicker
+                        creatable
+                        className="w-full mt-1"
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleVariant(value, variantIndex, "color");
+                          // productVariations[variantIndex].color = value;
+                          // setProductVariations(productVariations);
+                          // console.log(productVariations);
+                        }}
+                        data={data}
+                      />
+                    </div>
+                  )}
                 />
               </div>
-            </div>
-
-            {/* option values */}
-            <div className="px-6 pt-3">
-              {variant.optionValues?.length > 0 && (
-                <label htmlFor="" className="block text-sm">
-                  Option values
+              {/* Size values */}
+              <div className="w-full">
+                <label htmlFor="" className="">
+                  Size
                 </label>
-              )}
-              {variant.optionValues.map((value, valueIndex) => (
-                <>
-                  <div className="flex  gap-5" key={valueIndex}>
-                    <Input
-                      onChange={(value) =>
-                        handleOptionValueChange(variantIndex, valueIndex, value)
-                      }
-                      placeholder="add something..."
-                      className="w-[95%] mb-2"
-                      value={value?.value}
+                <div className="">
+                  <Controller
+                    control={control}
+                    name="size"
+                    render={({ field }) => (
+                      <InputPicker
+                        data={sizeData}
+                        className="w-full mt-1"
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleVariant(value, variantIndex, "size");
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-7 mb-5">
+              <div className="w-full">
+                <label htmlFor="stock">Stock</label>
+                <Controller
+                  name="stock"
+                  control={control}
+                  render={({ field }) => (
+                    <InputNumber
+                      max={100}
+                      min={1}
+                      className="w-full mt-1"
+                      placeholder="Stock"
+                      onChange={(value) => {
+                        field.onChange(value);
+                        handleVariant(value, variantIndex, "stock");
+                      }}
                     />
-                    <RiDeleteBinLine
-                      onClick={() =>
-                        removeOptionValue(variantIndex, valueIndex)
-                      }
-                      size={20}
-                      className={`${
-                        valueIndex < 0
-                          ? "hidden"
-                          : "hover:text-red-600 cursor-pointer block mt-1"
-                      }`}
+                  )}
+                />
+              </div>
+              <div className="w-full">
+                <label htmlFor="stock">Variant Price</label>
+                <Controller
+                  name="price"
+                  control={control}
+                  render={({ field }) => (
+                    <InputNumber
+                      max={100}
+                      min={1}
+                      className="w-full mt-1"
+                      placeholder="Price"
+                      onChange={(value) => {
+                        field.onChange(value);
+                        handleVariant(value, variantIndex, "price");
+                      }}
                     />
-                  </div>
-                </>
-              ))}
-              <div className=" flex flex-col justify-start items-start  my-2">
-                <button
-                  onClick={() => addOptionValue(variantIndex)}
-                  className="text-sm mb-2 text-blue-600 inline-block cursor-pointer hover:underline-offset-2 hover:underline"
-                >
-                  <HiPlus className="inline-block" /> Add option value
-                </button>{" "}
-                {variant.optionValues.length > 0 && (
-                  <button className="border text-xs px-4 py-2 rounded-lg text-slate-500 font-semibold shadow doneButton ">
-                    Done
-                  </button>
-                )}
+                  )}
+                />
               </div>
             </div>
           </div>
         ))}
 
-        {variants.length < 3 && (
-          <span
-            onClick={addVariant}
-            className="px-4 pt-5 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
-          >
-            <HiPlus className="inline-block" /> Add options size or color
-          </span>
-        )}
+        <span
+          onClick={() => {
+            setProductVariations([
+              ...productVariations,
+              {
+                color: "",
+                size: "",
+                stock: "",
+                price: "",
+              },
+            ]);
+          }}
+          className="px-4 pt-5 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
+        >
+          <HiPlus className="inline-block" /> Add options size or color
+        </span>
       </section>
     </>
   );
