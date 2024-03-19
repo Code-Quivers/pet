@@ -20,6 +20,9 @@ export type IProductRequest = {
     color: string;
     size: string;
     stock: number;
+    barCodes: {
+      code: string;
+    }[];
   }[];
 };
 
