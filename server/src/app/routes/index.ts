@@ -3,7 +3,6 @@ import { AuthRoutes } from '../modules/auth/auth.routes';
 import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { ColorVarientRoutes } from '../modules/colorVarient/colorVarient.routes';
-import { SizeVarientRoutes } from '../modules/sizeVarient/sizeVarient.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
 import { PetRoutes } from '../modules/Pet/pet.routes';
@@ -32,10 +31,6 @@ const moduleRoutes = [
   {
     path: '/color-varient',
     route: ColorVarientRoutes,
-  },
-  {
-    path: '/size-varient',
-    route: SizeVarientRoutes,
   },
   {
     path: '/product',
