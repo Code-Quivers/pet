@@ -94,16 +94,26 @@ model Product {
 
 // the model for product variations
 model ProductVariation {
-  variantId    String  @id @default(uuid())
-  barcodeCode  String  @unique
+  variantId    String    @id @default(uuid())
+  // barcodeCode  String    @unique
   variantPrice Float
   color        String
   size         String?
-  stock        Int     @default(0)
+  stock        Int       @default(0)
   productId    String
-  product      Product @relation(fields: [productId], references: [productId])
-  createdAt    DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt    DateTime @updatedAt @db.Timestamptz(0)
+  product      Product   @relation(fields: [productId], references: [productId])
+  createdAt    DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
+  barCodes      BarCode[]
+}
+
+model BarCode {
+  barcodeId String           @id @default(uuid())
+  code      String           @unique
+  variantId String
+  variant   ProductVariation @relation(fields: [variantId], references: [variantId])
+  createdAt DateTime         @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime         @updatedAt @db.Timestamptz(0)
 }
 
 enum ProductStatus {

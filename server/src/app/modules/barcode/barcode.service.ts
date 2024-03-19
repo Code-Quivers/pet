@@ -1,7 +1,8 @@
+import { IBarCodeFilterRequest } from './barcode.interface';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Pet, Prisma, ProductVariation } from '@prisma/client';
+import { BarCode, Pet, Prisma, ProductVariation } from '@prisma/client';
 
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
@@ -11,6 +12,10 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
+
+const addBarCode = async (data: any): Promise<BarCode> => {
+  
+};
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
