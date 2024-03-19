@@ -19,7 +19,7 @@ import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchab
 // modules
 
 // !----------------------------------Create New Category--------------------------------------->>>
-const addProducts = async (req: Request): Promise<Product> => {
+const createProduct = async (req: Request): Promise<Product> => {
   //@ts-ignore
   const file = req.file as IUploadFile;
 
@@ -29,94 +29,63 @@ const addProducts = async (req: Request): Promise<Product> => {
   const data = req.body as any;
 
   // await ProductValidation(data);
+  const variants = data?.productVariations?.map((variant: any) => {
+    return {
+      variantPrice: variant.variantPrice,
+      color: variant.color,
+      size: variant.size,
+      stock: variant.stock,
+    };
+  });
 
   const result = await prisma.$transaction(async transactionClient => {
-    const newProduct = {
+    const productInfo = {
       productName: data.productName,
       productPrice: data.productPrice,
       productDescription: data.productDescription,
       productImage: filePath,
       categoryId: data.categoryId,
+      productVariations: {
+        create: variants
+      }
     };
 
-    const createProduct = await transactionClient.product.create({
-      data: newProduct,
+    const createdProduct = await transactionClient.product.create({
+      data: productInfo,
     });
 
-    if (!createProduct) {
+    if (!createdProduct) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
     }
 
-    const productVariation = data?.productVariations?.map((variant: any) => {
-      return {
-        productId: createProduct.productId,
-        // barcodeCode: generateBarCode(),
-        variantPrice: variant.variantPrice,
-        color: variant.color,
-        size: variant.size,
-        stock: variant.stock,
-      };
-    });
+    const productId = createdProduct.productId;
 
-    console.log(productVariation);
+    for (const variant of variants) {
+      const pv = await transactionClient.productVariation.findFirst({
+        where: {
+          productId: productId,
+          color: variant.color,
+          size: variant.size
+        }
+      });
 
-    // const productVariations: any = [];
+      if (!pv) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Product variation not found');
+      }
 
-    // Loop over each product variation
-    // data.productVariations.forEach(variation => {
-    // For each product variation, generate 'stock' number of instances
-    //   for (let i = 0; i < variation.stock; i++) {
-    //     productVariations.push({
-    //       productId: createProduct.productId,
-    //       barcodeCode: generateBarCode(),
-    //       variantPrice: variation.variantPrice,
-    //       color: variation.color,
-    //       size: variation.size,
-    //       stock: 1, // Assuming each product variation has a stock of 1
-    //     });
-    //   }
-    // });
-
-    // console.log('productVariations', productVariations);
-
-    const createdProductVariation = await transactionClient.productVariation.createMany({
-      data: productVariation,
+      const codes = Array.from({ length: variant.stock }, () => ({
+        code: generateBarCode(),
+        variantId: pv.variantId
+      }));
       
-    });
+      const createdBarcodes = await transactionClient.barCode.createMany({ data: codes });
 
-
-    console.log('..................');
-    console.log(createdProductVariation);
-
-    // console.log('productVariant', productVariant);
-
-    if (!createdProductVariation) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Product variation creation failed');
+      if (!createdBarcodes || createdBarcodes.count !== variant.stock) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
+      }
     }
 
-
-    // const barCodes: any = [];
-
-    // // // Loop over each product variation
-    // data.productVariations.forEach((variation: any) => {
-    //   // For each product variation, generate 'stock' number of instances
-    //   for (let i = 0; i < variation.stock; i++) {
-    //     barCodes.push({
-    //       variantId: createdProductVariation[i].variantId,
-    //       code: generateBarCode(),
-    //     });
-    //   }
-    // });
-
-    // const createBarCodes = await transactionClient.barCode.createMany({
-    //   data: barCodes,
-    // });
-
-    // if (!createBarCodes) {
-    //   throw new ApiError(httpStatus.BAD_REQUEST, 'BarCode creation failed');
-    // }
-
-    return createProduct;
+    return createdProduct;
   });
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to create Product, result error');
@@ -360,7 +329,7 @@ const deleteProduct = async (productId: string): Promise<Product> => {
 };
 
 export const ProductService = {
-  addProducts,
+  createProduct,
   getProducts,
   getSingleProduct,
   updateProduct,

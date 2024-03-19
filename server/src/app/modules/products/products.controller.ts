@@ -22,7 +22,7 @@ import { ProductFilterableFields } from './prroduct.constants';
 // !----------------------------------Create New Category---------------------------------------->>>
 const addProductsController = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  const result = await ProductService.addProducts(req);
+  const result = await ProductService.createProduct(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
