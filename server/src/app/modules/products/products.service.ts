@@ -47,14 +47,34 @@ const addProducts = async (req: Request): Promise<Product> => {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
     }
 
-    const productVariations = data?.productVariations?.map((variant: any) => ({
-      productId: createProduct.productId,
-      barcodeCode: generateBarCode(),
-      variantPrice: variant.variantPrice,
-      color: variant.color,
-      size: variant.size,
-      stock: variant.stock,
-    }));
+    // const productVariations = data?.productVariations?.map((variant: any) => ({
+    //   productId: createProduct.productId,
+    //   barcodeCode: generateBarCode(),
+    //   variantPrice: variant.variantPrice,
+    //   color: variant.color,
+    //   size: variant.size,
+    //   stock: variant.stock,
+    // }));
+
+    // console.log('productVariations', productVariations);
+    const productVariations: any = [];
+
+    // Loop over each product variation
+    data.productVariations.forEach(variation => {
+      // For each product variation, generate 'stock' number of instances
+      for (let i = 0; i < variation.stock; i++) {
+        productVariations.push({
+          productId: createProduct.productId,
+          barcodeCode: generateBarCode(),
+          variantPrice: variation.variantPrice,
+          color: variation.color,
+          size: variation.size,
+          stock: 1, // Assuming each product variation has a stock of 1
+        });
+      }
+    });
+
+    console.log('productVariations', productVariations);
 
     console.log('productVariations', productVariations);
 
@@ -148,7 +168,20 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
     where: whereConditions,
     include: {
       category: true,
-      productVariations: true,
+      productVariations: {
+        include: {
+          product: {
+            select: {
+              productName: true,
+              category: {
+                select: {
+                  categoryName: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
     skip,
     take: limit,

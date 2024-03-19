@@ -5,6 +5,8 @@ import { useGetProductQuery } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
+  Button,
+  ButtonToolbar,
   IconButton,
   Input,
   InputGroup,
@@ -23,6 +25,7 @@ import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import ProductVariantTable from "./ProductVariantTable";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -66,6 +69,17 @@ const AllProductList = () => {
       value: category.categoryName,
     })
   );
+
+  // Drawer
+  const [drawerSize, setDrawerSize] = useState();
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState("bottom");
+
+  const [productVariant, setProductVariant] = useState<any[]>([]);
+  const handleOpen = (value: any) => {
+    setDrawerSize(value);
+    setOpen(true);
+  };
 
   return (
     <>
@@ -210,29 +224,7 @@ const AllProductList = () => {
                 dataKey="category.categoryName"
               />
             </Column>
-            {/* product short summary */}
-            <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                ProductColor
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="colorVarient.productColor"
-              />
-            </Column>
 
-            {/* sub category */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Size</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="sizeVarient.productSize"
-              >
-                {(rowData) => rowData.sizeVarient?.productSize || "N/A"}
-              </Cell>
-            </Column>
             {/* Price */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Price</HeaderCell>
@@ -242,19 +234,6 @@ const AllProductList = () => {
                 dataKey="productPrice"
               >
                 {(rowData) => `$ ${rowData.productPrice}`}
-              </Cell>
-            </Column>
-
-            {/* Stock */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Stock</HeaderCell>
-
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.productStock} pcs`}
               </Cell>
             </Column>
 
@@ -268,6 +247,30 @@ const AllProductList = () => {
                 dataKey="productPrice"
               >
                 {(rowData) => `${rowData.productStatus} `}
+              </Cell>
+            </Column>
+
+            {/* Product variant */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Product Variant</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData: any) => (
+                  <ButtonToolbar>
+                    <Button
+                      size="lg"
+                      onClick={() => {
+                        handleOpen("full");
+                        setProductVariant(rowData);
+                      }}
+                    >
+                      See Variant
+                    </Button>
+                  </ButtonToolbar>
+                )}
               </Cell>
             </Column>
 
@@ -301,6 +304,16 @@ const AllProductList = () => {
               </Cell>
             </Column>
           </Table>
+
+          <div>
+            <ProductVariantTable
+              productVariant={productVariant}
+              size={drawerSize}
+              open={open}
+              setOpen={setOpen}
+              placement={placement}
+            />
+          </div>
           <div style={{ padding: 20 }}>
             <Pagination
               total={allProductsList?.meta?.total}
