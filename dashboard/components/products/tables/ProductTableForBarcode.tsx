@@ -243,13 +243,13 @@ const ProductBarcode = () => {
   let checked = false;
   let indeterminate = false;
 
-  if (checkedKeys.length === allProductsList?.data?.length) {
+  if (checkedKeys?.length === allProductsList?.data?.length) {
     checked = true;
-  } else if (checkedKeys.length === 0) {
+  } else if (checkedKeys?.length === 0) {
     checked = false;
   } else if (
-    checkedKeys.length > 0 &&
-    checkedKeys.length < allProductsList?.data?.length
+    checkedKeys?.length > 0 &&
+    checkedKeys?.length < allProductsList?.data?.length
   ) {
     indeterminate = true;
   }

@@ -1,8 +1,8 @@
 "use client";
 
-import { Input } from "rsuite";
+import { InputNumber } from "rsuite";
 
-const AddPricing = () => {
+const AddPricing = ({ field }: any) => {
   return (
     <div>
       {/* <div>
@@ -11,15 +11,16 @@ const AddPricing = () => {
 
       {/*  */}
       <div>
-        <div>
-          <label htmlFor="price" className="text-xs  block my-2 mt-3 ">
-            Price
-          </label>
+        <label htmlFor="">Base price</label>
+        <InputNumber
+          value={field.value}
+          min={1}
+          formatter={(value) => `€ ${value}`}
+          onChange={(value) => field.onChange(value)}
+        />
+      </div>
 
-          <Input id="price" className="w-[50%] border-black/50" placeholder="0.00" />
-        </div>
-
-        {/* <div className="flex w-full  gap-5  ">
+      {/* <div className="flex w-full  gap-5  ">
           <div className=" w-full">
             <div>
               <label
@@ -57,7 +58,6 @@ const AddPricing = () => {
             </div>
           </div>
         </div> */}
-      </div>
     </div>
   );
 };

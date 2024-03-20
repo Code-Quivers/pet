@@ -253,3 +253,10 @@ body {
 .embla-thumbs__slide--selected .embla-thumbs__slide__number {
   border: #8e8e93 1px solid;
 }
+
+/* rsuite css override */
+
+/* .rs-uploader-picture {
+  display: flex !important;
+  flex-direction: column-reverse !important;
+} */
