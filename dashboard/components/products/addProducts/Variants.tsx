@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { HiPlus } from "react-icons/hi";
@@ -7,11 +6,12 @@ import { InputNumber, InputPicker, SelectPicker } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
 import { addVariant } from "@/redux/features/slice/variantsSlice";
 import { Controller, set, useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 
-const Variants = () => {
+const Variants = ({ productVariations, setProductVariations }: any) => {
   const dispatch = useDispatch();
   // const { productVariations } = useSelector((state: any) => state?.variants);
-  const [productVariations, setProductVariations] = useState<any>([]);
+  // const [productVariations, setProductVariations] = useState<any>([]);
   const { control } = useForm();
 
   const handleVariant = (value: any, variantIndex: number, fieldName: any) => {
@@ -20,7 +20,13 @@ const Variants = () => {
     setProductVariations(updatedProductVariations);
     console.log(productVariations);
   };
-
+  console.log(productVariations);
+  const removeVariant = (id: any) => {
+    const updatedProductVariations = productVariations.filter(
+      (item: any) => item?.id !== id
+    );
+    setProductVariations(updatedProductVariations);
+  };
   const data = ["Red", "Green", "Pink", "Blue"].map((item) => ({
     label: item,
     value: item,
@@ -32,16 +38,27 @@ const Variants = () => {
 
   return (
     <>
-      <section className="my-5 py-4 bg-white border rounded-xl">
-        <div>
+      <section className=" py-4 bg-white border border-[#d1d5db] rounded-xl">
+        {/* <div>
           <p className="font-semibold text-sm border-b px-4 pb-4">Variants</p>
-        </div>
+        </div> */}
 
         {productVariations?.map((variant: any, variantIndex: number) => (
           <div
             key={variantIndex}
-            className={`${variantIndex === 2 ? "" : "border-b"} px-5 my-3`}
+            className={`${
+              variantIndex === 2 ? "" : "border-b-[#d1d5db] border-b "
+            } px-5 my-3`}
           >
+            <div className="mb-3 flex justify-between">
+              <h1>Variant {variantIndex + 1}</h1>
+              <span
+                onClick={() => removeVariant(variant?.id)}
+                className="cursor-pointer"
+              >
+                Remove
+              </span>
+            </div>
             <div className="flex gap-7 mb-2">
               {/* Color name */}
               <div className="w-full">
@@ -53,6 +70,7 @@ const Variants = () => {
                     <div>
                       <InputPicker
                         creatable
+                        value={variant?.color}
                         className="w-full mt-1"
                         onChange={(value) => {
                           field.onChange(value);
@@ -79,6 +97,7 @@ const Variants = () => {
                     render={({ field }) => (
                       <InputPicker
                         data={sizeData}
+                        value={variant?.size}
                         className="w-full mt-1"
                         onChange={(value) => {
                           field.onChange(value);
@@ -100,6 +119,7 @@ const Variants = () => {
                     <InputNumber
                       max={100}
                       min={1}
+                      value={variant?.stock}
                       className="w-full mt-1"
                       placeholder="Stock"
                       onChange={(value) => {
@@ -119,6 +139,7 @@ const Variants = () => {
                     <InputNumber
                       max={100}
                       min={1}
+                      value={variant?.price}
                       className="w-full mt-1"
                       placeholder="Price"
                       onChange={(value) => {
@@ -138,6 +159,7 @@ const Variants = () => {
             setProductVariations([
               ...productVariations,
               {
+                id: uuidv4(),
                 color: "",
                 size: "",
                 stock: "",
@@ -145,7 +167,7 @@ const Variants = () => {
               },
             ]);
           }}
-          className="px-4 pt-5 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
+          className="px-4 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
         >
           <HiPlus className="inline-block" /> Add options size or color
         </span>
