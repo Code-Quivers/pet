@@ -13,9 +13,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
 
-const addBarCode = async (data: any): Promise<BarCode> => {
-  
-};
+const addBarCode = async (data: any): Promise<BarCode> => {};
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
@@ -105,6 +103,11 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
         select: {
           productId: true,
           productName: true,
+          productVariations: {
+            select: {
+              barCodes: true,
+            },
+          },
           category: {
             select: {
               categoryName: true,
@@ -136,6 +139,7 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
     data: result,
   };
 };
+
 
 const getSingleBarCode = async (barcodeCode: string): Promise<Pet | null> => {
   if (!barcodeCode) {
