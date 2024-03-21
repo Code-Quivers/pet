@@ -11,12 +11,7 @@ export const allCountApi = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: [
-        tagTypes.user,
-        tagTypes.product,
-        tagTypes.events,
-        tagTypes.orders,
-      ],
+      providesTags: [tagTypes.user, tagTypes.product, tagTypes.orders],
     }),
   }),
 });

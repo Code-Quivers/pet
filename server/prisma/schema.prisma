@@ -110,6 +110,7 @@ model ProductVariation {
 model BarCode {
   barcodeId String           @id @default(uuid())
   code      String           @unique
+  barcodeStatus BarcodeStatus @default(AVAILABLE)
   variantId String
   variant   ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt DateTime         @default(now()) @db.Timestamptz(0)
@@ -120,6 +121,14 @@ enum ProductStatus {
   AVAILABLE
   UNAVAILABLE
 }
+
+enum BarcodeStatus {
+  SOLD
+  AVAILABLE
+  ACTIVE
+  DEACTIVE
+}
+
 
 model PromoCode {
   promoCodeId String   @id @default(uuid())
