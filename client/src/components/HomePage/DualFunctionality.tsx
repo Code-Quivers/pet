@@ -19,8 +19,9 @@ const OurInspiration = () => {
               Dual Functionality Convenience{" "}
             </h2>
             <p className="mb-6 font-medium tracking-wide text-gray-600  md:text-lg text-center">
-              Activate your E.T. Phone Home Band with an easy tap or scan. Using
-              Both NFC and QR code technology. Compatible with any smart phone.
+              Using Both NFC and QR code technology E.T. Phone Home bands are
+              Compatible with any smartphone Activate your E.T. Phone Home Band
+              with an easy tap or scan. So simple a 3yo can do it.
             </p>
             <a
               href="#"
