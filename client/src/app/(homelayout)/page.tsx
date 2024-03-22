@@ -9,6 +9,8 @@ import ReviewsSlider from "@/components/HomePage/ReviewsSlider";
 import Image from "next/image";
 import Faq from "@/components/HomePage/Faq";
 import Hero from "@/components/HomePage/Hero";
+import GpsLocation from "@/components/HomePage/GpsLocation";
+import PrivacyPriority from "@/components/HomePage/PrivacyPriority";
 
 export default function Home() {
   return (
@@ -34,7 +36,13 @@ export default function Home() {
         <ConnectYourWay />
       </div>
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <GpsLocation />
+      </div>
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <OurFeatures />
+      </div>
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <PrivacyPriority />
       </div>
       <div className="bg-gray-50 py-10">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 ">

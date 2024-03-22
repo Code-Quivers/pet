@@ -1,8 +1,8 @@
 import React from "react";
 
-const TotalControl = () => {
+const GpsLocation = () => {
   return (
-    <div className="pt-10 md:pb-20  ">
+    <div className="pt-10  md:pb-20">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:mb-0 mb-8">
           <div className="relative  md:mr-0 w-full">
@@ -18,17 +18,14 @@ const TotalControl = () => {
         <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
           <div className="flex flex-col justify-center items-center px-4">
             <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
-              YOUR PROFILE
+              LOCATION
             </span>
             <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl text-center">
-              Total Control. Total Convenience.
+              GPS Location Sharing Made Easy.
             </h2>
             <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg text-center">
-              Takes only minutes to set up and Contains all the information
-              necessary to connect you when needed with unlimited contacts. You
-              decide what information goes on your ET Phone Home profile. Update
-              from anywhere in the world in seconds without needing to be with
-              the band.
+              With an Easy Tap share GPS location to any contact listed on your
+              profile. Zero risk of hacking and tracking.
             </p>
             <a
               href="#"
@@ -43,4 +40,4 @@ const TotalControl = () => {
   );
 };
 
-export default TotalControl;
+export default GpsLocation;

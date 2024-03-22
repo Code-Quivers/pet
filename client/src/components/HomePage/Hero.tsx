@@ -14,8 +14,8 @@ const Hero = () => {
             </h2>
 
             <p className="max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
-              The smallest and easiest safety wearable on the market So simple a
-              toddler can use it.
+              The smallest and easiest safety wearable on the market. So simple
+              a toddler can use it
             </p>
 
             <div className="mt-4 sm:mt-8">
