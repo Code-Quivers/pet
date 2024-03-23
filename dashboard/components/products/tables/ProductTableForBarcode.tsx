@@ -32,8 +32,8 @@ import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
-import { predefinedRanges } from "@/helpers/constant";
-import { useGetBarcodeQuery } from "@/redux/features/barcodeApi";
+import { predefinedRanges } from "@/helpers/constant"; 
+import { useGetBarcodeQuery } from "@/redux/features/barCodeApi";
 
 const ProductBarcode = () => {
   const query: Record<string, any> = {};
