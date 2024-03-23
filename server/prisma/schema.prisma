@@ -21,7 +21,7 @@ model User {
   profileId     String?         @unique
   profile       Profile?        @relation(fields: [profileId], references: [profileId])
   productReview ProductReview[]
-  pet           Pet[]
+  KidDetails    KidDetails[]
 }
 
 model Profile {
@@ -81,7 +81,6 @@ model Product {
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
-  Pet                Pet?
   promoCode          PromoCode?
   order              Order[]
 
@@ -90,6 +89,7 @@ model Product {
 
   // a many-to-many relationship between products and promotions
   promotions Promotion[]
+  KidDetails KidDetails?
 }
 
 // the model for product variations
@@ -100,21 +100,21 @@ model ProductVariation {
   color        String
   size         String?
   stock        Int       @default(0)
-  productId    String
-  product      Product   @relation(fields: [productId], references: [productId])
+  productId    String?
+  product      Product?  @relation(fields: [productId], references: [productId], onDelete: SetNull)
   createdAt    DateTime  @default(now()) @db.Timestamptz(0)
   updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
-  barCodes      BarCode[]
+  barCodes     BarCode[]
 }
 
 model BarCode {
-  barcodeId String           @id @default(uuid())
-  code      String           @unique
-  barcodeStatus BarcodeStatus @default(AVAILABLE)
-  variantId String
-  variant   ProductVariation @relation(fields: [variantId], references: [variantId])
-  createdAt DateTime         @default(now()) @db.Timestamptz(0)
-  updatedAt DateTime         @updatedAt @db.Timestamptz(0)
+  barcodeId     String           @id @default(uuid())
+  code          String           @unique
+  barcodeStatus BarcodeStatus    @default(AVAILABLE)
+  variantId     String
+  variant       ProductVariation @relation(fields: [variantId], references: [variantId])
+  createdAt     DateTime         @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime         @updatedAt @db.Timestamptz(0)
 }
 
 enum ProductStatus {
@@ -129,7 +129,6 @@ enum BarcodeStatus {
   DEACTIVE
 }
 
-
 model PromoCode {
   promoCodeId String   @id @default(uuid())
   promoCode   String   @unique
@@ -137,7 +136,7 @@ model PromoCode {
   expiryDate  DateTime
   description String
   productId   String?  @unique
-  product     Product? @relation(fields: [productId], references: [productId])
+  product     Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
   createdAt   DateTime @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
   order       Order[]
@@ -147,8 +146,8 @@ model ProductQA {
   productQaId String   @id @default(uuid())
   question    String
   answer      String
-  productId   String
-  product     Product  @relation(fields: [productId], references: [productId])
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
   createdAt   DateTime @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
 }
@@ -192,19 +191,22 @@ enum OrderStatus {
   REJECTED
 }
 
-model Pet {
-  petId          String   @id @default(uuid())
-  petName        String
-  petImage       String
-  petDescription String
-  petGender      String
-  petAge         String
-  petWeight      String
+model KidDetails {
+  kidId          String   @id @default(uuid())
+  kidName        String
+  kidImage       String
+  kidGender      String
   petAddress     String
-  petBehavior    String
-  petHealth      String
-  petVaccination String
-  petProvider    String
+  kidFathername  String?
+  kidFatherphone String?
+  kidMothername  String?
+  kidMotherphone String?
+  kidUnclename   String?
+  kidUnclephone  String?
+  kidAuntname    String?
+  kidAuntphone   String?
+  kidFriendname  String?
+  kidFriendphone String?
   userId         String
   user           User     @relation(fields: [userId], references: [userId])
   productId      String?  @unique
@@ -254,4 +256,15 @@ enum PromotionType {
 enum RuleType {
   BUY_ONE_GET_ONE
   DISCOUNT_BASED_ON_AMOUNT
+}
+
+model Testimonial {
+  testimonialId          String   @id @default(uuid())
+  clientName             String
+  clientImage            String
+  testimonialTitle       String
+  testimonialDescription String
+  rating                 String
+  createdAt              DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt              DateTime @updatedAt @db.Timestamptz(0)
 }
