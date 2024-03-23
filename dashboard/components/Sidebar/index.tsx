@@ -379,6 +379,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
               {/* Order Reports */}
 
+              {/* Testimonial */}
+              <li>
+                <Link
+                  href="/testimonial"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname === "/testimonial" && "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                  <ImList2 />
+                  Testimonial
+                </Link>
+              </li>
+              {/* Testimonial*/}
+
               {/* client list */}
               <li>
                 <Link

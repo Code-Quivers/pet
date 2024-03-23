@@ -4,6 +4,7 @@ import "./globals.css";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import Providers from "@/utils/provider";
 import Script from "next/script";
+import { InternetDisconnectedMessage } from "@/components/Alert/InternetDisconnectMessage";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
           }}
         />
         <body className={nunito.className}>
+          <InternetDisconnectedMessage />
           <Providers>{children}</Providers>
         </body>
       </>
