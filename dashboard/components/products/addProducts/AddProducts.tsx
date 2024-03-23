@@ -78,7 +78,7 @@ const AddProductsSection = () => {
                       type="text"
                       id="title"
                       className="border focus:outline-none py-1 px-3 rounded-md border-[#d1d5db]"
-                      placeholder="Short sleeve t-shirt"
+                      placeholder="Active Band"
                     />
                   )}
                 />
