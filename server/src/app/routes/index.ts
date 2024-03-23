@@ -8,6 +8,7 @@ import { QARoutes } from '../modules/productQA/productQA.routes';
 import { PetRoutes } from '../modules/Pet/pet.routes';
 import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 import { ProductRoutes } from '../modules/products/products.routes';
+import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
 
 const router = express.Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/tag',
     route: BarcodeRoutes,
+  },
+  {
+    path: '/testimonial',
+    route: TestimonialRoutes,
   },
 ];
 

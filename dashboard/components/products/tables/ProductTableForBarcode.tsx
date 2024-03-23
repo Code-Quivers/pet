@@ -502,7 +502,7 @@ const ProductBarcode = () => {
 
             {/* Barcode */}
             <Column flexGrow={3}>
-              <HeaderCell style={headerCss}>Barcode Link</HeaderCell>
+              <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
