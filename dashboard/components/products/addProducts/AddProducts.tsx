@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import { useDebounced } from "@/redux/hook";
 import AddProductUpload from "./AddProductUpload";
+import { FileType } from "rsuite/esm/Uploader";
 
 const AddProductsSection = () => {
   const data2 = [
@@ -42,12 +43,13 @@ const AddProductsSection = () => {
     label: item?.categoryName,
     value: item?.categoryId,
   }));
-  console.log(category);
+  // console.log(category);
   const [productVariations, setProductVariations] = useState<any>([]);
   const { handleSubmit, control } = useForm();
 
   const handleAddProduct = (data: any) => {
-    console.log(data);
+    const formData = new FormData();
+
     const product = {
       productName: data.title,
       productDescription: data.description,
@@ -55,7 +57,14 @@ const AddProductsSection = () => {
       productPrice: data.productPrice,
       productVariations,
     };
-    console.log(product);
+    const obj = JSON.stringify(product);
+
+    // appending files to formData
+    data?.productImages?.forEach((file: FileType, index: number) => {
+      formData.append("files", file.blobFile as Blob);
+    });
+    // appending all data to formData
+    formData.append("data", obj);
   };
 
   return (
@@ -144,7 +153,7 @@ const AddProductsSection = () => {
             <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
               <div className="">
                 <Controller
-                  name="productImage"
+                  name="productImages"
                   control={control}
                   render={({ field }) => (
                     <AddProductUpload field={field as any} />
