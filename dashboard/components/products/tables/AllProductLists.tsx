@@ -129,7 +129,7 @@ const AllProductList = () => {
 
             <button
               onClick={() => {
-                router.push("/products/add-product");
+                router.push("/products/add-products");
               }}
               className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
             >

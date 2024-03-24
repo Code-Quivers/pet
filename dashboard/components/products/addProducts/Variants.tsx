@@ -8,7 +8,11 @@ import { addVariant } from "@/redux/features/slice/variantsSlice";
 import { Controller, set, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 
-const Variants = ({ productVariations, setProductVariations }: any) => {
+const Variants = ({
+  productVariations,
+  setProductVariations,
+  basePrice,
+}: any) => {
   const dispatch = useDispatch();
   // const { productVariations } = useSelector((state: any) => state?.variants);
   // const [productVariations, setProductVariations] = useState<any>([]);
@@ -110,6 +114,7 @@ const Variants = ({ productVariations, setProductVariations }: any) => {
               </div>
             </div>
             <div className="flex gap-7 mb-5">
+              {/* stock */}
               <div className="w-full">
                 <label htmlFor="stock">Stock</label>
                 <Controller
@@ -130,8 +135,10 @@ const Variants = ({ productVariations, setProductVariations }: any) => {
                   )}
                 />
               </div>
+              {/* price */}
               <div className="w-full">
                 <label htmlFor="stock">Variant Price</label>
+                {console.log(basePrice)}
                 <Controller
                   name="price"
                   control={control}
@@ -139,11 +146,11 @@ const Variants = ({ productVariations, setProductVariations }: any) => {
                     <InputNumber
                       max={100}
                       min={1}
-                      value={variant?.price}
+                      defaultValue={basePrice}
                       className="w-full mt-1"
                       placeholder="Price"
                       onChange={(value) => {
-                        field.onChange(value);
+                        field.onChange(value === "" ? basePrice : value);
                         handleVariant(value, variantIndex, "price");
                       }}
                     />

@@ -11,19 +11,10 @@ import { useDebounced } from "@/redux/hook";
 import AddProductUpload from "./AddProductUpload";
 
 const AddProductsSection = () => {
-  const data2 = [
-    "Eugenia",
-    "Bryan",
-    "Linda",
-    "Nancy",
-    "Lloyd",
-    "Alice",
-    "Julia",
-    "Albert",
-  ].map((item) => ({ label: item, value: item }));
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
+  const [basePrice, setBasePrice] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   query["limit"] = size;
@@ -42,7 +33,7 @@ const AddProductsSection = () => {
     label: item?.categoryName,
     value: item?.categoryId,
   }));
-  console.log(category);
+
   const [productVariations, setProductVariations] = useState<any>([]);
   const { handleSubmit, control } = useForm();
 
@@ -127,12 +118,15 @@ const AddProductsSection = () => {
               <Controller
                 control={control}
                 name="productPrice"
-                render={({ field }) => <AddPricing field={field} />}
+                render={({ field }) => (
+                  <AddPricing field={field} setBasePrice={setBasePrice} />
+                )}
               />
             </div>
             <div>
               <h1 className="text-xl mt-3 mb-2 font-medium">Variants</h1>
               <Variants
+                basePrice={basePrice}
                 productVariations={productVariations}
                 setProductVariations={setProductVariations}
               />
