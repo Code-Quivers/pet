@@ -66,3 +66,11 @@ export type ICreateProductPromo = {
   description: string;
   productId: string;
 };
+
+export type ICreateTestimonial = {
+  clientName: string;
+  testimonialTitle: string;
+  testimonialDescription: string;
+  rating: string;
+  clientImage: FileType;
+};

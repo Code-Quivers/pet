@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
   FileUploadHelper.uploadTestimonialImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = TestimonialValidation.addTestimonial.parse(JSON.parse(req.body.data));

@@ -79,6 +79,8 @@ const UserImageUpload = ({ field }: UserImageUploadProps) => {
         >
           {imagePreview ? (
             <Image
+              width={20}
+              height={20}
               src={imagePreview}
               alt="Image Preview"
               className=" w-[200px] rounded-full h-full object-cover object-center cursor-pointer"
