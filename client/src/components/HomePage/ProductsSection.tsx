@@ -72,7 +72,7 @@ const ProductsSection = () => {
     }, 1000);
   };
   return (
-    <section className="flex items-center bg-gray-100 py-10">
+    <section className="flex items-center bg-gray-100 mt-10 py-10">
       <div className="p-4 mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto">
           <div className="text-center ">
