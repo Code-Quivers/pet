@@ -10,7 +10,6 @@ import {
   InputGroup,
   Pagination,
   Popover,
-  SelectPicker,
   Table,
   Whisper,
 } from "rsuite";
@@ -20,11 +19,11 @@ import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
-import { useGetProductQAQuery } from "@/redux/features/productQAApi";
 import { RiDeleteBinFill } from "react-icons/ri";
 
 import TestimonialEditTable from "./TestimonialEditModal";
+import { useGetTestimonialQuery } from "@/redux/features/testimonialApi";
+import DeleteTestimonialModal from "./DeleteTestimonialModal";
 
 const TestimonialTableSection = () => {
   const query: Record<string, any> = {};
@@ -49,11 +48,16 @@ const TestimonialTableSection = () => {
 
   //Filter By Product
 
+  //Data Fetch for testimonial
+
   const {
-    data: allProductsList,
+    data: allTestimonial,
     isLoading,
     isFetching,
-  } = useGetProductQuery({});
+  } = useGetTestimonialQuery({
+    ...query,
+  });
+
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   // close modal
@@ -61,10 +65,6 @@ const TestimonialTableSection = () => {
     setIsOpenEdit(false);
     setEditData(null);
   };
-
-  //Fetching all products QA
-
-  const { data: allProductsQA } = useGetProductQAQuery({ ...query });
 
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const [deleteData, setDeleteData] = useState<any | null>(null);
@@ -76,7 +76,7 @@ const TestimonialTableSection = () => {
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              All Testimonial | {allProductsQA?.meta?.total}
+              All Testimonial | {allTestimonial?.meta?.total}
             </h2>
           </div>
 
@@ -114,7 +114,7 @@ const TestimonialTableSection = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allProductsQA?.data}
+            data={allTestimonial?.data}
           >
             {/*img*/}
             <Column flexGrow={1}>
@@ -131,10 +131,8 @@ const TestimonialTableSection = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.product?.productImage
-                                ? `${fileUrlKey()}/${
-                                    rowData?.product?.productImage
-                                  }`
+                              rowData?.clientImage
+                                ? `${fileUrlKey()}/${rowData?.clientImage}`
                                 : noImage
                             }
                             className="object-cover"
@@ -149,10 +147,8 @@ const TestimonialTableSection = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.product?.productImage
-                            ? `${fileUrlKey()}/${
-                                rowData?.product?.productImage
-                              }`
+                          rowData?.clientImage
+                            ? `${fileUrlKey()}/${rowData?.clientImage}`
                             : noImage
                         }
                         className="object-center  object-cover"
@@ -162,38 +158,44 @@ const TestimonialTableSection = () => {
                 )}
               </Cell>
             </Column>
-            {/* product name */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Client Image</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="product.productName"
-              />
-            </Column>
-
             {/* Item Description */}
             <Column flexGrow={1} minWidth={105}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 Client Name
               </HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="question" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="clientName"
+              />
             </Column>
 
             {/* category */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Testimonial Title</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="answer" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="testimonialTitle"
+              />
             </Column>
             {/* category */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Description</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="answer" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="testimonialDescription"
+              />
+            </Column>
+            <Column width={100}>
+              <HeaderCell style={headerCss}>Rating</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
             </Column>
 
             {/* Action */}
 
-            <Column width={70}>
+            <Column width={100}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
@@ -247,15 +249,15 @@ const TestimonialTableSection = () => {
           </Table>
 
           {/* delete confirmation */}
-          {/* <ProductQADeleteConfirmationModal
+          <DeleteTestimonialModal
             isOpenDelete={isOpenDelete}
             handleCloseDelete={handleCloseDelete}
             deleteData={deleteData}
-          /> */}
+          />
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allProductsQA?.meta?.total}
+              total={allTestimonial?.meta?.total}
               prev
               next
               first
