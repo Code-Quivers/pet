@@ -61,8 +61,8 @@ const AddProductsSection = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(handleAddProduct)}>
-        <div className="flex gap-5">
-          <section className="w-[55%]">
+        <div className="md:flex md:gap-5">
+          <section className="md:w-[55%]">
             <h1 className="text-xl mb-1 font-medium">Product information</h1>
             <div className="bg-white border border-[#d1d5db] rounded-xl p-4">
               <div className="flex flex-col gap-2">
@@ -84,7 +84,9 @@ const AddProductsSection = () => {
                 />
               </div>
               <div className="flex flex-col gap-2 w-full mt-3">
-                <label htmlFor="title">Description</label>
+                <label htmlFor="title" className="font-medium">
+                  Description
+                </label>
                 <Controller
                   control={control}
                   name="description"
@@ -100,7 +102,9 @@ const AddProductsSection = () => {
                 />
               </div>
               <div className="flex flex-col gap-2 mt-2">
-                <label htmlFor="category">Category</label>
+                <label htmlFor="category" className="font-medium">
+                  Category
+                </label>
                 <Controller
                   name="category"
                   control={control}
@@ -142,8 +146,8 @@ const AddProductsSection = () => {
             </div>
           </section>
           {/* media */}
-          <section className="w-[45%]">
-            <h1 className="text-xl mb-1 font-medium">Product Image</h1>
+          <section className="md:w-[45%]">
+            <h1 className="text-xl mb-1 font-medium max-md:my-2">Product Image</h1>
             <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
               <div className="">
                 <Controller
@@ -158,7 +162,7 @@ const AddProductsSection = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 bg-primary text-white font-medium rounded-md mt-3"
+                className="px-4 py-2 w-full bg-primary text-white font-medium rounded-lg mt-3"
               >
                 Add product
               </button>

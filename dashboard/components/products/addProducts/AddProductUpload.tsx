@@ -31,6 +31,11 @@ const AddProductUpload = ({ field }: any) => {
   return (
     <div>
       <Uploader
+        style={{
+          display: "flex",
+          flexDirection: "column-reverse",
+          gap: "10px",
+        }}
         // style={{ width: "100%" }}
         listType="picture"
         fileList={fileValue}
@@ -48,7 +53,7 @@ const AddProductUpload = ({ field }: any) => {
             paddingBottom: "30px",
             paddingTop: "30px",
             width: "100%",
-            height: "100%",
+            height: "200px",
             display: "flex",
             flexDirection: "column",
           }}
