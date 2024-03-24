@@ -1,46 +1,15 @@
 "use client";
 
+import { useGetTestimonialsQuery } from "@/redux/api/features/testimonialsApi";
 import { useState } from "react";
 import { Carousel, Divider } from "rsuite";
 
 const RadioLabel = ({ children }: any) => (
   <label style={{ padding: 7 }}>{children}</label>
 );
-
-const reviews = [
-  {
-    review: "LOVE These",
-    name: "Mary Ann",
-    testimonials:
-      "I love that these bands never require charging and I dont have to pay any ongoing monthly payments and the designs are so cute and lightweight compared to a smart watch.",
-  },
-  {
-    review: "So Easy!    ",
-    name: "Rosey",
-    testimonials:
-      "I’m not comfortable with my kids having a smartphone given all the dangers that come with them. This is the perfect solution for our family to stay in contact in an emergency. My kids also loved the MAGIC bonus gift in the box!!.",
-  },
-  {
-    review: "Peace of Mind",
-    name: "Joel",
-    testimonials:
-      "Perfect for a day at the beach and our upcoming trip to Disney. So simple to tap and connect if they get lost or separated from us. Peace of mind at a great price.",
-  },
-  {
-    review: "No More worrying about dead phones",
-    name: "Ryan",
-    testimonials:
-      "My kids are always playing games on their phones and running the battery dead, these bands mean I know they can still reach me or their mother or grandparents easily. They also love using it with our phones to call nanny and pop!",
-  },
-  {
-    review: "Simple & Safe",
-    name: "Lucy",
-    testimonials:
-      "I wanted an option that didnt include a monthly payment and didnt involve exposing my kids to EMFs or hacking risks. These are fashionable and light and so simple.",
-  },
-];
-
 const ReviewsSlider = () => {
+  const { data: testimonials } = useGetTestimonialsQuery({});
+  console.log("object", testimonials);
   const [shape] = useState("bar");
   return (
     <div className="pt-10 mb-14 ">
@@ -66,7 +35,7 @@ const ReviewsSlider = () => {
         </div>
         <Divider vertical />
         <Carousel key={`${shape}`} shape={shape} className="custom-slider">
-          {reviews?.map((rev, index) => (
+          {testimonials?.data?.map((rev: any) => (
             <>
               <div className="flex justify-center items-center ">
                 <div className="py-10">
@@ -117,13 +86,13 @@ const ReviewsSlider = () => {
                     </svg>
                   </div>
                   <h2 className="text-2xl text-center font-bold text-secondary sm:text-3xl">
-                    {rev?.name}
+                    {rev?.clientName}
                   </h2>
                   <p className="text-center font-bold">
-                    <small>Review: {rev?.review}</small>
+                    <small>Review: {rev?.testimonialTitle}</small>
                   </p>
                   <p className="mt-4 leading-relaxed text-gray-700 text-center md:w-[70%] mx-auto pb-4">
-                    {rev?.testimonials}
+                    {rev?.testimonialDescription}
                   </p>
                 </div>
               </div>
