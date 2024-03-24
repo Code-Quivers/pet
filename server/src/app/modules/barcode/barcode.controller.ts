@@ -23,6 +23,7 @@ const getBarcodeController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
 // !----------------------------------get Single Category---------------------------------------->>>
 const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
   const { barcodeCode } = req.params;

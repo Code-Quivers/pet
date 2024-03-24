@@ -20,6 +20,6 @@ const getTotalCount = catchAsync(async (req: Request, res: Response) => {
   });
 });
  
-export const DAshboardController = { 
+export const DashboardController = { 
   getTotalCount, 
 };

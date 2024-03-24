@@ -232,18 +232,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href="/products/add-product"
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out 
-                              hover:text-white ${
-                                pathname === "/products/add-product" &&
-                                "text-white"
-                              } `}
-                            >
-                              Add New Product
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
                               href="/products/add-products"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out 
                               hover:text-white ${
@@ -251,7 +239,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 "text-white"
                               } `}
                             >
-                              Add New Product (V2)
+                              Add New Product
                             </Link>
                           </li>
 
@@ -378,6 +366,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 }}
               </SidebarLinkGroup>
               {/* Order Reports */}
+
+              {/* Testimonial */}
+              <li>
+                <Link
+                  href="/testimonial"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname === "/testimonial" && "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                  <ImList2 />
+                  Testimonial
+                </Link>
+              </li>
+              {/* Testimonial*/}
 
               {/* client list */}
               <li>

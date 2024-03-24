@@ -48,7 +48,7 @@ const ProductVariantTable = ({
                     Product Price
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                    Product Stock
+                    Product Status
                   </th>
                 </tr>
               </thead>
@@ -85,7 +85,7 @@ const ProductVariantTable = ({
                           <p>{variant?.variantPrice}</p>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <p>{variant?.stock}</p>
+                          {/* <p>{variant?.stock}</p> */}
                         </td>
                       </tr>
                     )
@@ -99,11 +99,11 @@ const ProductVariantTable = ({
               </div>
             )} */}
             {/* if no data found */}
-            {/* {!isLoading && !allSubEventList?.data?.length && (
+            {!productVariant?.productVariations?.length && (
               <div className="flex justify-center items-center min-h-[40vh]">
-                <h3 className="font-semibold">No Events Found!</h3>
+                <h3 className="font-semibold">No Product Variants Found!</h3>
               </div>
-            )} */}
+            )}
           </div>
         </Drawer.Body>
       </Drawer>

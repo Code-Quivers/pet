@@ -8,13 +8,15 @@ import RecentProducts from "../Tables/RecentProducts";
 const ECommerce = () => {
   const { data, isLoading } = useGetAllCountsQuery({});
 
+  console.log(data, "..............................");
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardDataStats
           isLoading={isLoading}
-          title="Total Events"
-          total={data?.data?.totalEvents ?? "0"}
+          title="Total Category"
+          total={data?.data?.totalCategory ?? "0"}
           rate="0.43%"
           levelUp
         >

@@ -20,9 +20,9 @@ const OurRange = () => {
             </div>
           </div>
           <p className="mb-16 text-base text-center text-gray-500">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Delectus
-            magni eius eaque? Pariatur numquam, odio quod nobis ipsum ex
-            cupiditate?
+            Merging playful design with frictionless technology. Our bands offer
+            peace of mind by empowering adventure whilst prioritizing safety and
+            independence for all ages and needs.
           </p>
         </div>
       </div>
@@ -40,10 +40,10 @@ const OurRange = () => {
             </div>
             <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
               <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                Buddy Bands
+                Backup Buddy
               </h1>
               <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                A Little Paradise in Portugal
+                Ages 3-11
               </h1>
             </div>
           </div>
@@ -60,10 +60,10 @@ const OurRange = () => {
             </div>
             <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
               <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                Active Bands
+                Active
               </h1>
               <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                A Little Paradise in Portugal
+                Ages 3+
               </h1>
             </div>
           </div>
@@ -80,10 +80,10 @@ const OurRange = () => {
             </div>
             <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
               <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                I.C.E Bands
+                I.C.E
               </h1>
               <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                A Little Paradise in Portugal
+                Age 12+
               </h1>
             </div>
           </div>
