@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { HiPlus } from "react-icons/hi";
-import { InputNumber, InputPicker, SelectPicker } from "rsuite";
+import { Input, InputNumber, InputPicker, SelectPicker } from "rsuite";
 import { useDispatch, useSelector } from "react-redux";
 import { addVariant } from "@/redux/features/slice/variantsSlice";
 import { Controller, set, useForm } from "react-hook-form";
@@ -55,10 +55,10 @@ const Variants = ({
             } px-5 my-3`}
           >
             <div className="mb-3 flex justify-between">
-              <h1>Variant {variantIndex + 1}</h1>
+              <h1 className="text-xl">Variant {variantIndex + 1}</h1>
               <span
                 onClick={() => removeVariant(variant?.id)}
-                className="cursor-pointer"
+                className="cursor-pointer hover:text-[#ef4444]"
               >
                 Remove
               </span>
@@ -66,24 +66,21 @@ const Variants = ({
             <div className="flex gap-7 mb-2">
               {/* Color name */}
               <div className="w-full">
-                <label htmlFor="color">Color</label>
+                <label htmlFor="color" className="font-medium text-sm">
+                  Color
+                </label>
                 <Controller
                   control={control}
                   name="color"
                   render={({ field }) => (
                     <div>
-                      <InputPicker
-                        creatable
+                      <Input
                         value={variant?.color}
                         className="w-full mt-1"
                         onChange={(value) => {
                           field.onChange(value);
                           handleVariant(value, variantIndex, "color");
-                          // productVariations[variantIndex].color = value;
-                          // setProductVariations(productVariations);
-                          // console.log(productVariations);
                         }}
-                        data={data}
                       />
                     </div>
                   )}
@@ -91,16 +88,15 @@ const Variants = ({
               </div>
               {/* Size values */}
               <div className="w-full">
-                <label htmlFor="" className="">
+                <label htmlFor="" className="font-medium text-sm">
                   Size
                 </label>
-                <div className="">
+                <div>
                   <Controller
                     control={control}
                     name="size"
                     render={({ field }) => (
-                      <InputPicker
-                        data={sizeData}
+                      <Input
                         value={variant?.size}
                         className="w-full mt-1"
                         onChange={(value) => {
@@ -116,7 +112,9 @@ const Variants = ({
             <div className="flex gap-7 mb-5">
               {/* stock */}
               <div className="w-full">
-                <label htmlFor="stock">Stock</label>
+                <label htmlFor="stock" className="font-medium text-sm">
+                  Stock
+                </label>
                 <Controller
                   name="stock"
                   control={control}
@@ -137,8 +135,9 @@ const Variants = ({
               </div>
               {/* price */}
               <div className="w-full">
-                <label htmlFor="stock">Variant Price</label>
-                {console.log(basePrice)}
+                <label htmlFor="stock" className="font-medium text-sm">
+                  Variant Price
+                </label>
                 <Controller
                   name="price"
                   control={control}
@@ -150,7 +149,7 @@ const Variants = ({
                       className="w-full mt-1"
                       placeholder="Price"
                       onChange={(value) => {
-                        field.onChange(value === "" ? basePrice : value);
+                        field.onChange(value);
                         handleVariant(value, variantIndex, "price");
                       }}
                     />
@@ -170,7 +169,7 @@ const Variants = ({
                 color: "",
                 size: "",
                 stock: "",
-                price: "",
+                price: basePrice,
               },
             ]);
           }}

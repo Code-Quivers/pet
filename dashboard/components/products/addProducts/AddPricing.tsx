@@ -5,7 +5,7 @@ import { InputNumber } from "rsuite";
 const AddPricing = ({ field, setBasePrice }: any) => {
   return (
     <div>
-      <label htmlFor="">Base price</label>
+      <label htmlFor="" className="font-medium">Base price</label>
       <InputNumber
         value={field.value}
         min={1}
