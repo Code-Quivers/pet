@@ -11,6 +11,7 @@ import Faq from "@/components/HomePage/Faq";
 import Hero from "@/components/HomePage/Hero";
 import GpsLocation from "@/components/HomePage/GpsLocation";
 import PrivacyPriority from "@/components/HomePage/PrivacyPriority";
+import Stats from "@/components/HomePage/Stats";
 
 export default function Home() {
   return (
@@ -19,6 +20,9 @@ export default function Home() {
       {/* <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <HeroSection />
       </div> */}
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <Stats />
+      </div>
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <ProductsSection />
       </div>
