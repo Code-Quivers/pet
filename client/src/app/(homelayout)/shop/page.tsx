@@ -192,3 +192,28 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
+// const product = {
+//   productId: "",
+//   productName: "",
+//   productPrice: "",
+//   productDescription: "",
+//   productStatus: "",
+//   categoryId: "",
+//   category: {
+//     categoryId: "",
+//     categoryName: "",
+//   },
+
+//   productVariations: [
+//     {
+//       variantPrice: "",
+//       size: "", //optional
+//       color: "",
+//       stock: "",
+//       productQrCode: [],
+//       productImage: "",
+//       productStatus: "",
+//     },
+//   ],
+// };

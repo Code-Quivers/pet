@@ -124,30 +124,24 @@ const AddProductsSection = () => {
                   )}
                 />
               </div>
+              <div>
+                <Controller
+                  control={control}
+                  name="productPrice"
+                  render={({ field }) => (
+                    <AddPricing field={field} setBasePrice={setBasePrice} />
+                  )}
+                />
+              </div>
             </div>
             {/* Pricing */}
-            <h1 className="text-xl mt-3 mb-2 font-medium">Pricing</h1>
-            <div className="p-4 bg-white rounded-xl border border-[#d1d5db]">
-              <Controller
-                control={control}
-                name="productPrice"
-                render={({ field }) => (
-                  <AddPricing field={field} setBasePrice={setBasePrice} />
-                )}
-              />
-            </div>
-            <div>
-              <h1 className="text-xl mt-3 mb-2 font-medium">Variants</h1>
-              <Variants
-                basePrice={basePrice}
-                productVariations={productVariations}
-                setProductVariations={setProductVariations}
-              />
-            </div>
+            {/* <h1 className="text-xl mt-3 mb-2 font-medium">Pricing</h1> */}
           </section>
           {/* media */}
           <section className="md:w-[45%]">
-            <h1 className="text-xl mb-1 font-medium max-md:my-2">Product Image</h1>
+            <h1 className="text-xl mb-1 font-medium max-md:my-2">
+              Product Image
+            </h1>
             <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
               <div className="">
                 <Controller
@@ -159,15 +153,23 @@ const AddProductsSection = () => {
                 />
               </div>
             </aside>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="px-4 py-2 w-full bg-primary text-white font-medium rounded-lg mt-3"
-              >
-                Add product
-              </button>
-            </div>
           </section>
+        </div>
+        <div>
+          <h1 className="text-xl mt-3 mb-2 font-medium">Variants</h1>
+          <Variants
+            basePrice={basePrice}
+            productVariations={productVariations}
+            setProductVariations={setProductVariations}
+          />
+        </div>
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="px-4 py-2 w-full bg-primary text-white font-medium rounded-lg mt-3"
+          >
+            Add product
+          </button>
         </div>
       </form>
     </div>
