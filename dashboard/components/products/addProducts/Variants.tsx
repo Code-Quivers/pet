@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addVariant } from "@/redux/features/slice/variantsSlice";
 import { Controller, set, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
+import SingleUploadProduct from "./SingleUploadProduct";
 
 const Variants = ({
   productVariations,
@@ -63,98 +64,111 @@ const Variants = ({
                 Remove
               </span>
             </div>
-            <div className="flex gap-7 mb-2">
-              {/* Color name */}
-              <div className="w-full">
-                <label htmlFor="color" className="font-medium text-sm">
-                  Color
-                </label>
+            <div className="flex gap-10">
+              <div className="w-[10%]">
                 <Controller
+                  name="productImages"
                   control={control}
-                  name="color"
                   render={({ field }) => (
+                    <SingleUploadProduct field={field as any} />
+                  )}
+                />
+              </div>
+              <div className="w-[90%]">
+                <div className="flex gap-7 mb-2">
+                  {/* Color name */}
+                  <div className="w-full">
+                    <label htmlFor="color" className="font-medium text-sm">
+                      Color
+                    </label>
+                    <Controller
+                      control={control}
+                      name="color"
+                      render={({ field }) => (
+                        <div>
+                          <Input
+                            value={variant?.color}
+                            className="w-full mt-1"
+                            onChange={(value) => {
+                              field.onChange(value);
+                              handleVariant(value, variantIndex, "color");
+                            }}
+                          />
+                        </div>
+                      )}
+                    />
+                  </div>
+                  {/* Size values */}
+                  <div className="w-full">
+                    <label htmlFor="" className="font-medium text-sm">
+                      Size
+                    </label>
                     <div>
-                      <Input
-                        value={variant?.color}
-                        className="w-full mt-1"
-                        onChange={(value) => {
-                          field.onChange(value);
-                          handleVariant(value, variantIndex, "color");
-                        }}
+                      <Controller
+                        control={control}
+                        name="size"
+                        render={({ field }) => (
+                          <Input
+                            value={variant?.size}
+                            className="w-full mt-1"
+                            onChange={(value) => {
+                              field.onChange(value);
+                              handleVariant(value, variantIndex, "size");
+                            }}
+                          />
+                        )}
                       />
                     </div>
-                  )}
-                />
-              </div>
-              {/* Size values */}
-              <div className="w-full">
-                <label htmlFor="" className="font-medium text-sm">
-                  Size
-                </label>
-                <div>
-                  <Controller
-                    control={control}
-                    name="size"
-                    render={({ field }) => (
-                      <Input
-                        value={variant?.size}
-                        className="w-full mt-1"
-                        onChange={(value) => {
-                          field.onChange(value);
-                          handleVariant(value, variantIndex, "size");
-                        }}
-                      />
-                    )}
-                  />
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="flex gap-7 mb-5">
-              {/* stock */}
-              <div className="w-full">
-                <label htmlFor="stock" className="font-medium text-sm">
-                  Stock
-                </label>
-                <Controller
-                  name="stock"
-                  control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      max={100}
-                      min={1}
-                      value={variant?.stock}
-                      className="w-full mt-1"
-                      placeholder="Stock"
-                      onChange={(value) => {
-                        field.onChange(value);
-                        handleVariant(value, variantIndex, "stock");
-                      }}
+                <div className="flex gap-7 mb-5">
+                  {/* stock */}
+                  <div className="w-full">
+                    <label htmlFor="stock" className="font-medium text-sm">
+                      Stock
+                    </label>
+                    <Controller
+                      name="stock"
+                      control={control}
+                      render={({ field }) => (
+                        <InputNumber
+                          max={100}
+                          min={1}
+                          value={variant?.stock}
+                          className="w-full mt-1"
+                          placeholder="Stock"
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleVariant(value, variantIndex, "stock");
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </div>
-              {/* price */}
-              <div className="w-full">
-                <label htmlFor="stock" className="font-medium text-sm">
-                  Variant Price
-                </label>
-                <Controller
-                  name="price"
-                  control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      max={100}
-                      min={1}
-                      defaultValue={basePrice}
-                      className="w-full mt-1"
-                      placeholder="Price"
-                      onChange={(value) => {
-                        field.onChange(value);
-                        handleVariant(value, variantIndex, "price");
-                      }}
+                  </div>
+                  {/* price */}
+                  <div className="w-full">
+                    <label htmlFor="stock" className="font-medium text-sm">
+                      Variant Price
+                    </label>
+                    <Controller
+                      name="price"
+                      control={control}
+                      render={({ field }) => (
+                        <InputNumber
+                          max={100}
+                          min={1}
+                          defaultValue={basePrice}
+                          className="w-full mt-1"
+                          placeholder="Price"
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleVariant(value, variantIndex, "price");
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
