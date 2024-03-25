@@ -77,7 +77,7 @@ const createProduct = async (req: Request): Promise<Product> => {
         code: generateBarCode(),
         variantId: pv.variantId
       }));
-      
+
       const createdBarcodes = await transactionClient.barCode.createMany({ data: codes });
 
       if (!createdBarcodes || createdBarcodes.count !== variant.stock) {
@@ -166,20 +166,20 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
   const result = await prisma.product.findMany({
     where: whereConditions,
     include: {
-      category: true,
+      category: {
+        select: {
+          categoryId: true,
+          categoryName: true
+        }
+      },
       productVariations: {
-        include: {
-          product: {
-            select: {
-              productName: true,
-              category: {
-                select: {
-                  categoryName: true,
-                },
-              },
-            },
-          },
-        },
+        select:{
+          variantId: true,
+          color:true,
+          size:true,
+          stock:true,
+          variantPrice:true
+        }
       },
     },
     skip,
