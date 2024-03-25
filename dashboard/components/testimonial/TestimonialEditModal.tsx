@@ -1,58 +1,61 @@
 "use client";
 
-import { IUpdateProductQA } from "@/types/forms/product";
+import { IUpdateTestimonial } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   Form,
   Input,
-  InputPicker,
   Message,
   Modal,
   SelectPicker,
   useToaster,
 } from "rsuite";
 
-import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
-import {
-  useGetProductQuery,
-  useUpdateProductMutation,
-} from "@/redux/features/productsApi";
 import { useEffect } from "react";
-import { useUpdateProductQAMutation } from "@/redux/features/productQAApi";
+import { useUpdateTestimonialMutation } from "@/redux/features/testimonialApi";
+import UpdateTestimonialClientImage from "./UpdateTestimonialClientImage";
 
-const TestimonialEditTable = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
-  const { data: productList } = useGetProductQuery({});
-
-  const productEnum = productList?.data?.map((item: any) => {
-    return {
-      label: item.productName,
-      value: item.productId,
-    };
-  });
+const TestimonialEditTable = ({
+  isOpenEdit,
+  handleCloseEdit,
+  editData,
+}: any) => {
+  console.log("editData", editData);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset: formReset,
-  } = useForm<IUpdateProductQA>();
+  } = useForm<IUpdateTestimonial>();
   const toaster = useToaster();
   const [
-    updateProductQA,
+    updateTestimonial,
     { data, isLoading, isSuccess, isError, error, reset: resetReq },
-  ] = useUpdateProductQAMutation();
+  ] = useUpdateTestimonialMutation();
 
-  const handleUpdateProductQA = async (updatedData: IUpdateProductQA) => {
+  const handleUpdateTestimonial = async (updatedData: IUpdateTestimonial) => {
+    const formData = new FormData();
+
+    if (updatedData?.clientImage?.blobFile) {
+      formData.append("file", updatedData?.clientImage?.blobFile);
+    }
+
     const objData = {
-      productId: updatedData?.productId,
-      question: updatedData?.question,
-      answer: updatedData?.answer,
+      clientName: updatedData.clientName,
+      testimonialTitle: updatedData.testimonialTitle,
+      testimonialDescription: updatedData.testimonialDescription,
+      rating: updatedData.rating,
     };
 
-    await updateProductQA({
-      data: objData,
-      productQaId: editData?.productQaId,
+    const updateData = JSON.stringify(objData);
+
+    formData.append("data", updateData);
+
+    await updateTestimonial({
+      data: formData,
+      testimonialId: editData?.testimonialId,
     });
   };
 
@@ -61,7 +64,7 @@ const TestimonialEditTable = ({ isOpenEdit, handleCloseEdit, editData }: any) =>
       toaster.push(
         <Message bordered showIcon type="success" closable>
           <h4 className="font-semibold ">
-            {data?.message || "Successfully Product QA Updated"}
+            {data?.message || "Successfully Updated"}
           </h4>
         </Message>,
         { placement: "topEnd", duration: 2000 }
@@ -76,7 +79,7 @@ const TestimonialEditTable = ({ isOpenEdit, handleCloseEdit, editData }: any) =>
           <h4 className="font-semibold ">
             {
               // @ts-ignore
-              error?.message || "Product QA Update Failed"
+              error?.message || "Update Failed"
             }
           </h4>
         </Message>,
@@ -106,118 +109,164 @@ const TestimonialEditTable = ({ isOpenEdit, handleCloseEdit, editData }: any) =>
         <Modal.Header>
           <Modal.Title>
             <span className="text-sm font-semibold ">
-              Edit Product QA Information
+              Edit Testimonial Information
             </span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
+          <div className="p-5 ">
             <form
-              onSubmit={handleSubmit(handleUpdateProductQA)}
+              onSubmit={handleSubmit(handleUpdateTestimonial)}
               className="px-1"
             >
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
                 {/* left */}
-                <div>
-                  {/* Product Name */}
-
+                <div className="col-span-2 space-y-2">
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Product Name
+                      Client Name
                     </label>
                     <Controller
-                      name="productId"
+                      name="clientName"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
-                          <InputPicker
-                            size="lg"
+                          <Input
                             {...field}
-                            data={productEnum || []}
-                            defaultValue={editData?.product?.productId}
-                            placeholder="Enter Product Name.."
+                            defaultValue={editData?.clientName}
+                            placeholder="Name..."
                             className="!w-full"
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.productId &&
-                                !!errors?.productId?.message) ||
+                              (!!errors?.clientName &&
+                                !!errors?.clientName?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.productId?.message}
+                              {errors?.clientName?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
                       )}
                     />
                   </div>
+                  <div className="col-span-2 space-y-2">
+                    {/* Question */}
+                    <div className="space-y-1">
+                      <label className="block font-medium text-black ">
+                        Testimonial Title
+                      </label>
+                      <Controller
+                        name="testimonialTitle"
+                        control={control}
+                        render={({ field }) => (
+                          <div className="rs-form-control-wrapper">
+                            <Input
+                              {...field}
+                              defaultValue={editData?.testimonialTitle}
+                              placeholder="Title..."
+                              className="!w-full"
+                            />
+                            <Form.ErrorMessage
+                              show={
+                                (!!errors?.testimonialTitle &&
+                                  !!errors?.testimonialTitle?.message) ||
+                                false
+                              }
+                              placement="topEnd"
+                            >
+                              <span className="font-semibold">
+                                {errors?.testimonialTitle?.message}
+                              </span>
+                            </Form.ErrorMessage>
+                          </div>
+                        )}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block font-medium text-black ">
+                        Client Image
+                      </label>
 
-                  {/* Product Price */}
+                      <div className="">
+                        <Controller
+                          name="clientImage"
+                          control={control}
+                          render={({ field }) => (
+                            <UpdateTestimonialClientImage
+                              defaultImage={editData?.clientImage}
+                              field={field as any}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
+                {/* right */}
+                <div className="col-span-2 space-y-2">
+                  {/* Product Answer */}
                   <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Product Question
+                      Rating
                     </label>
                     <Controller
-                      name="question"
+                      name="rating"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <Input
-                            as="textarea"
-                            size="lg"
                             {...field}
-                            defaultValue={editData?.question}
-                            placeholder="Enter Product Question.."
+                            defaultValue={editData?.rating}
+                            placeholder="rating..."
                             className="!w-full"
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.question &&
-                                !!errors?.question?.message) ||
+                              (!!errors?.rating && !!errors?.rating?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.question?.message}
+                              {errors?.rating?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
                       )}
                     />
                   </div>
-
-                  {/* Product Description(optional) */}
-                  <div className="space-y-1 ">
+                  <div className="space-y-1">
                     <label className="block font-medium text-black ">
-                      Product Answer
+                      Description
                     </label>
                     <Controller
-                      name="answer"
+                      name="testimonialDescription"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <Input
                             as="textarea"
-                            defaultValue={editData?.answer}
-                            rows={3}
+                            defaultValue={editData?.testimonialDescription}
+                            rows={10}
                             {...field}
-                            placeholder="Write product Answer..."
-                            className="!w-full !h-40"
+                            placeholder="Description..."
+                            className="!w-full"
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.answer && !!errors?.answer?.message) ||
+                              (!!errors?.testimonialDescription &&
+                                !!errors?.testimonialDescription?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.answer?.message}
+                              {errors?.testimonialDescription?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
@@ -233,7 +282,7 @@ const TestimonialEditTable = ({ isOpenEdit, handleCloseEdit, editData }: any) =>
                   className="!bg-[#3c50e0] !px-6 !text-white  !font-semibold"
                   size="lg"
                 >
-                  Update Product QA Information
+                  Edit Testimonial
                 </Button>
               </div>
             </form>
