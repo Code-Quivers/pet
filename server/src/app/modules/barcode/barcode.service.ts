@@ -13,7 +13,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
 
-const addBarCode = async (data: any): Promise<BarCode> => { };
+;
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
