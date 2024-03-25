@@ -13,11 +13,11 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
 
-const addBarCode = async (data: any): Promise<BarCode> => {};
+const addBarCode = async (data: any): Promise<BarCode> => { };
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
-const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<ProductVariation[]>> => {
+const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<ProductVariation[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
@@ -95,36 +95,40 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductVariationWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Retrieve Courier with filtering and pagination
+  // Retrieve product vriants with filtering and pagination
   const result = await prisma.productVariation.findMany({
     where: whereConditions,
     include: {
       product: {
         select: {
-          productId: true,
           productName: true,
-          productVariations: {
-            select: {
-              barCodes: true,
-            },
-          },
           category: {
             select: {
-              categoryName: true,
-            },
-          },
-        },
+              categoryName: true
+            }
+          }
+        }
       },
+
     },
     skip,
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
   });
 
+  const variants = result
+    .filter(variant => variant.product) // Filter out variants without a product
+    .map(({ product, ...rest }) => ({
+      ...rest,
+      productName: product?.productName,
+      categoryName: product?.category?.categoryName
+    }));
+
   // Count total matching orders for pagination
   const total = await prisma.productVariation.count({
     where: whereConditions,
   });
+
 
   // Calculate total pages
   const totalPage = limit > 0 ? Math.ceil(total / limit) : 0;
@@ -136,7 +140,7 @@ const getProductBarcode = async (filters: IBarCodeFilterRequest, options: IPagin
       total,
       totalPage,
     },
-    data: result,
+    data: variants,
   };
 };
 
@@ -174,5 +178,5 @@ const getSingleBarCode = async (barcodeCode: string): Promise<Pet | null> => {
 
 export const BarcodeService = {
   getSingleBarCode,
-  getProductBarcode,
+  getProductBarcodes,
 };
