@@ -109,6 +109,13 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
           }
         }
       },
+      barCodes: {
+        select: {
+          barcodeId: true,
+          code: true,
+          barcodeStatus: true
+        }
+      }
 
     },
     skip,
