@@ -15,8 +15,8 @@ const testimonialApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.testimonial],
     }),
     updateTestimonial: builder.mutation({
-      query: ({ data, categoryId }) => ({
-        url: `${TESTIMONIAL_API}/${categoryId}`,
+      query: ({ data, testimonialId }) => ({
+        url: `${TESTIMONIAL_API}/${testimonialId}`,
         method: "PATCH",
         data: data,
         contentType: "multipart/form-data",

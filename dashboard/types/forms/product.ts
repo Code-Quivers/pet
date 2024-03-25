@@ -74,3 +74,12 @@ export type ICreateTestimonial = {
   rating: string;
   clientImage: FileType;
 };
+
+export type IUpdateTestimonial = {
+  testimonialId?: string;
+  clientName?: string;
+  testimonialTitle?: string;
+  testimonialDescription?: string;
+  rating?: string;
+  clientImage?: FileType;
+};
