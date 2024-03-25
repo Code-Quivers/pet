@@ -28,7 +28,7 @@ import DeleteTestimonialModal from "./DeleteTestimonialModal";
 const TestimonialTableSection = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(10);
+  const [size, setSize] = useState<number>(5);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [productFilter, setProductFilter] = useState<string>("");
 
@@ -57,6 +57,8 @@ const TestimonialTableSection = () => {
   } = useGetTestimonialQuery({
     ...query,
   });
+
+  console.log(allTestimonial);
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);

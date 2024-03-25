@@ -81,7 +81,7 @@ model Product {
   updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
-  promoCode          PromoCode?
+  // promoCode          PromoCode?
   order              Order[]
 
   // a many-to-many relationship between products and variations
@@ -129,18 +129,18 @@ enum BarcodeStatus {
   DEACTIVE
 }
 
-model PromoCode {
-  promoCodeId String   @id @default(uuid())
-  promoCode   String   @unique
-  discount    Float
-  expiryDate  DateTime
-  description String
-  productId   String?  @unique
-  product     Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
-  createdAt   DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt   DateTime @updatedAt @db.Timestamptz(0)
-  order       Order[]
-}
+// model PromoCode {
+//   promoCodeId String   @id @default(uuid())
+//   promoCode   String   @unique
+//   discount    Float
+//   expiryDate  DateTime
+//   description String
+//   productId   String?  @unique
+//   product     Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
+//   createdAt   DateTime @default(now()) @db.Timestamptz(0)
+//   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
+//   order       Order[]
+// }
 
 model ProductQA {
   productQaId String   @id @default(uuid())
@@ -177,8 +177,8 @@ model Order {
   postalCode      String
   productId       String
   product         Product     @relation(fields: [productId], references: [productId])
-  promoCodeId     String?
-  promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
+  // promoCodeId     String?
+  // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
   createdAt       DateTime    @default(now()) @db.Timestamptz(0)
   updatedAt       DateTime    @updatedAt @db.Timestamptz(0)
 }
@@ -218,24 +218,29 @@ model KidDetails {
 // The model for promotions
 model Promotion {
   promotionId String        @id @default(uuid())
-  name        String
+  promotionName        String
+  promoCode String
+  expireDate DateTime
   type        PromotionType
+
 
   // many-to-many relationship between promotions and products
   products Product[]
 
   // one-to-many relationship between promotion and rules
-  rules PromotionRule[]
+  promotionRules PromotionRule[]
 }
 
 // model for promotion rules
 model PromotionRule {
   id          String    @id @default(uuid())
+ 
   promotion   Promotion @relation(fields: [promotionId], references: [promotionId])
   promotionId String
 
+
   // type of rule, e.g., BuyOneGetOne, DiscountBasedOnAmount
-  type RuleType
+  type RuleType?
 
   // For BuyOneGetOne
   buy Int?

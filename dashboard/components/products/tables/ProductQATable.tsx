@@ -18,11 +18,8 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import ProductEditModal from "../modal/ProductEditModal";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
-import { FaPlus } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import { useGetProductQAQuery } from "@/redux/features/productQAApi";
 import ProductQAModal from "../modal/ProductQAModal";
@@ -220,7 +217,7 @@ const ProductQATable = () => {
 
             {/* Action */}
 
-            <Column width={70}>
+            <Column width={100}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
