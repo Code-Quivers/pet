@@ -64,17 +64,24 @@ const Variants = ({
                 Remove
               </span>
             </div>
-            <div className="flex gap-10">
-              <div className="w-[10%]">
-                <Controller
-                  name="productImages"
-                  control={control}
-                  render={({ field }) => (
-                    <SingleUploadProduct field={field as any} />
-                  )}
-                />
+            <div className="grid grid-cols-1  md:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-6 gap-10">
+              <div className="col-span-1 md:col-span-2 lg:col-span-2 2xl:col-span-1  ">
+                <div className="w-full">
+                  <Controller
+                    name="productImages"
+                    control={control}
+                    render={({ field }) => (
+                      <SingleUploadProduct
+                        handleVariant={handleVariant}
+                        label="image"
+                        variantIndex={variantIndex}
+                        field={field as any}
+                      />
+                    )}
+                  />
+                </div>
               </div>
-              <div className="w-[90%]">
+              <div className="col-span-1 md:col-span-4 lg:col-span-6 2xl:col-span-5  ">
                 <div className="flex gap-7 mb-2">
                   {/* Color name */}
                   <div className="w-full">

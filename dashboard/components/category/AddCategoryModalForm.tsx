@@ -144,8 +144,9 @@ const AddCategoryModalForm = ({ open, handleClose }: any) => {
                           <Input
                             as={"textarea"}
                             {...field}
+                            rows={3}
                             placeholder="Description..."
-                            className="!w-full !h-60"
+                            className="!w-full "
                           />
                           <Form.ErrorMessage
                             show={
