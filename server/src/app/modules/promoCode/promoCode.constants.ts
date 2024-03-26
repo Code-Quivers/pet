@@ -1,8 +1,8 @@
-export const QAFilterableFields: string[] = ['searchTerm', 'productName'];
-export const QASearchableFields: string[] = [];
+export const PromoCodeFilterableFields: string[] = ['searchTerm'];
+export const PromoCodeSearchableFields: string[] = ['promoCode'];
 
-export const QARelationalFields: string[] = ['productColor'];
+export const PromoCodeRelationalFields: string[] = ['productName'];
 
-export const QARelationalFieldsMapper: { [key: string]: string } = {
-  assetName: 'name',
+export const PromoCodeRelationalFieldsMapper: { [key: string]: string } = {
+  productName: 'productName',
 };

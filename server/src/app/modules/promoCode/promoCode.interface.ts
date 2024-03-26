@@ -1,12 +1,19 @@
-export type IQAFilterRequest = {
+import { RuleType } from '@prisma/client';
+
+export type IPromoFilterRequest = {
   searchTerm?: string | undefined;
-  productName?: string | undefined;
 };
 
-export type IQARequest = {
+export type IPromoRequest = {
   productId: string;
-  question: string;
-  answer: string;
+  promotionName: string;
+  promoCode: string;
+  expireDate: Date;
+  type: RuleType;
+  buy?: number;
+  get?: number;
+  threshold?: number;
+  discount?: number;
 };
 
 export type IQAUpdateRequest = {

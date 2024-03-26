@@ -4,67 +4,67 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { QAService } from './promoCode.service';
-import { QAFilterableFields } from './promoCode.constants';
+import { PromoCodeFilterableFields } from './promoCode.constants';
+import { PromoCodeService } from './promoCode.service';
 
 // !----------------------------------Create New Hall---------------------------------------->>>
-const addQAController = catchAsync(async (req: Request, res: Response) => {
-  const result = await QAService.addQA(req.body);
+const addPromo = catchAsync(async (req: Request, res: Response) => {
+  const result = await PromoCodeService.addPromoCode(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'QA Added Successfully',
+    message: 'Added Successfully',
     data: result,
   });
 });
 
 // !----------------------------------get all Hall---------------------------------------->>>
-const getQAController = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, QAFilterableFields);
+const getPromo = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, PromoCodeFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await QAService.getQA(filters, options);
+  const result = await PromoCodeService.getPromoCode(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'All QA fetched successfully',
+    message: 'fetched successfully',
     meta: result.meta,
     data: result.data,
   });
 });
 
 // !----------------------------------Update Slot---------------------------------------->>>
-const updateQA = catchAsync(async (req: Request, res: Response) => {
-  const { productQaId } = req.params;
+const updatePromo = catchAsync(async (req: Request, res: Response) => {
+  const { promotionId } = req.params;
   const payload = req.body;
-  const result = await QAService.updateQA(productQaId, payload);
+  const result = await PromoCodeService.updatePromoCode(promotionId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product QA Updated successfully !',
+    message: 'Updated successfully !',
     data: result,
   });
 });
 
-const deleteQA = catchAsync(async (req: Request, res: Response) => {
-  const { productQaId } = req.params;
-  const result = await QAService.deleteQA(productQaId);
+const deletePromo = catchAsync(async (req: Request, res: Response) => {
+  const { promotionId } = req.params;
+  const result = await PromoCodeService.deletePromoCode(promotionId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'QA Deleted successfully !',
+    message: 'Deleted successfully !',
     data: result,
   });
 });
 
-export const QAController = {
-  addQAController,
-  getQAController,
-  updateQA,
-  deleteQA,
+export const PromoCodeController = {
+  addPromo,
+  getPromo,
+  updatePromo,
+  deletePromo,
 };
