@@ -60,11 +60,16 @@ export type IUpdateProductQA = {
 };
 
 export type ICreateProductPromo = {
-  promoCode: string;
-  discount: number;
-  expiryDate: string;
-  description: string;
+  type: string;
   productId: string;
+  promoName: string;
+  promoCode: string;
+  expireDate: Date;
+  threshold?: string;
+  discount?: string;
+  buy?: string;
+  get?: string;
+  categoryHref?: string;
 };
 
 export type ICreateTestimonial = {

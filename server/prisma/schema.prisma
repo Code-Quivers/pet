@@ -223,7 +223,6 @@ model Promotion {
   expireDate DateTime
   type        PromotionType
 
-
   // many-to-many relationship between promotions and products
   products Product[]
 
@@ -240,7 +239,7 @@ model PromotionRule {
 
 
   // type of rule, e.g., BuyOneGetOne, DiscountBasedOnAmount
-  type RuleType?
+  // typtypee RuleType?
 
   // For BuyOneGetOne
   buy Int?
@@ -258,10 +257,10 @@ enum PromotionType {
 }
 
 // enum for rule types
-enum RuleType {
-  BUY_ONE_GET_ONE
-  DISCOUNT_BASED_ON_AMOUNT
-}
+// enum RuleType {
+//   BUY_ONE_GET_ONE
+//   DISCOUNT_BASED_ON_AMOUNT
+// }
 
 model Testimonial {
   testimonialId          String   @id @default(uuid())
