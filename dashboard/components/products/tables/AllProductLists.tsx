@@ -18,7 +18,7 @@ import {
 } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-import { MdModeEdit } from "react-icons/md";
+import { MdKeyboardArrowRight, MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
@@ -83,6 +83,13 @@ const AllProductList = () => {
 
   return (
     <>
+      <div className="flex items-center mb-2 text-sm">
+        <p>Dashboard</p>
+
+        <MdKeyboardArrowRight size={20} />
+
+        <p>All products</p>
+      </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
