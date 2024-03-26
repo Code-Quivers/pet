@@ -46,8 +46,8 @@ const createProduct = async (req: Request): Promise<Product> => {
       productImage: filePath,
       categoryId: data.categoryId,
       productVariations: {
-        create: variants
-      }
+        create: variants,
+      },
     };
 
     const createdProduct = await transactionClient.product.create({
@@ -65,8 +65,8 @@ const createProduct = async (req: Request): Promise<Product> => {
         where: {
           productId: productId,
           color: variant.color,
-          size: variant.size
-        }
+          size: variant.size,
+        },
       });
 
       if (!pv) {
@@ -75,7 +75,7 @@ const createProduct = async (req: Request): Promise<Product> => {
 
       const codes = Array.from({ length: variant.stock }, () => ({
         code: generateBarCode(),
-        variantId: pv.variantId
+        variantId: pv.variantId,
       }));
 
       const createdBarcodes = await transactionClient.barCode.createMany({ data: codes });
@@ -169,17 +169,17 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
       category: {
         select: {
           categoryId: true,
-          categoryName: true
-        }
+          categoryName: true,
+        },
       },
       productVariations: {
-        select:{
+        select: {
           variantId: true,
-          color:true,
-          size:true,
-          stock:true,
-          variantPrice:true
-        }
+          color: true,
+          size: true,
+          stock: true,
+          variantPrice: true,
+        },
       },
     },
     skip,
@@ -215,6 +215,17 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
   const result = await prisma.product.findUnique({
     where: {
       productId,
+    },
+    include: {
+      productVariations: {
+        select: {
+          variantId: true,
+          color: true,
+          size: true,
+          stock: true,
+          variantPrice: true,
+        },
+      },
     },
   });
 

@@ -1,7 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useGetProductQuery } from "@/redux/features/productsApi";
+import {
+  useGetProductQuery,
+  useGetSingleProductQuery,
+} from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
@@ -23,9 +26,8 @@ import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
-import ProductVariantTable from "./ProductVariantTable";
 import Link from "next/link";
 
 const AllProductList = () => {
@@ -71,35 +73,31 @@ const AllProductList = () => {
     })
   );
 
-  // Drawer
-  const [drawerSize, setDrawerSize] = useState();
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState("bottom");
+  const searchParams = useSearchParams();
+  const productId = searchParams.get("productId");
+  console.log("productId", productId);
 
-  const [productVariant, setProductVariant] = useState<any[]>([]);
-  const handleOpen = (value: any) => {
-    setDrawerSize(value);
-    setOpen(true);
-  };
+  const { data: singleProduct } = useGetSingleProductQuery(productId as string);
+  console.log("singleProduct", singleProduct);
 
   return (
     <>
       <div className="flex items-center mb-2 text-sm">
         <p>Dashboard</p>
-
         <MdKeyboardArrowRight size={20} />
-
-        <p>All products</p>
+        <Link href={`/products`}>All products</Link>
+        <MdKeyboardArrowRight size={20} />
+        <p className="font-bold">Variants</p>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          <div>
+          {/* <div>
             <h2 className="text-lg font-semibold ">
               All Products | {allProductsList?.meta?.total}
             </h2>
-          </div>
+          </div> */}
 
-          <div className="flex max-md:justify-between gap-10 items-center">
+          {/* <div className="flex max-md:justify-between gap-10 items-center">
             <div>
               <SelectPicker
                 placeholder="Product Filter By Category"
@@ -134,16 +132,7 @@ const AllProductList = () => {
                 </InputGroup.Addon>
               </InputGroup>
             </div>
-
-            <button
-              onClick={() => {
-                router.push("/products/add-products");
-              }}
-              className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
-            >
-              <FaPlus /> Add Product
-            </button>
-          </div>
+          </div> */}
         </div>
 
         {/*  */}
@@ -157,10 +146,10 @@ const AllProductList = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allProductsList?.data}
+            data={singleProduct?.data?.productVariations}
           >
             {/*img*/}
-            <Column width={70}>
+            {/* <Column width={70}>
               <HeaderCell style={headerCss}>Image</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
                 {(rowData) => (
@@ -200,19 +189,19 @@ const AllProductList = () => {
                   </Whisper>
                 )}
               </Cell>
-            </Column>
+            </Column> */}
             {/* product name */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Name</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="productName"
               />
-            </Column>
+            </Column> */}
 
             {/* Item Description */}
-            <Column flexGrow={1} minWidth={105}>
+            {/* <Column flexGrow={1} minWidth={105}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 Product Description
               </HeaderCell>
@@ -221,32 +210,68 @@ const AllProductList = () => {
                 verticalAlign="middle"
                 dataKey="productDescription"
               />
-            </Column>
+            </Column> */}
 
             {/* category */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Category Name</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="category.categoryName"
               />
-            </Column>
+            </Column> */}
 
             {/* Price */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Price</HeaderCell>
+              <HeaderCell style={headerCss}>Color</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => `${rowData.color}`}
+              </Cell>
+            </Column>
+            {/* Size */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Size</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => `${rowData.size}`}
+              </Cell>
+            </Column>
+            {/* price */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Price</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="productPrice"
               >
-                {(rowData) => `$ ${rowData.productPrice}`}
+                {(rowData) => `$ ${rowData.variantPrice}`}
+              </Cell>
+            </Column>
+            {/* stock */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Stock</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => `${rowData.stock}`}
+              </Cell>
+            </Column>
+            {/* Qr Code */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Qr Code</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => <button>Qr Code List</button>}
               </Cell>
             </Column>
 
             {/* Product Status */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Status</HeaderCell>
 
               <Cell
@@ -256,10 +281,10 @@ const AllProductList = () => {
               >
                 {(rowData) => `${rowData.productStatus} `}
               </Cell>
-            </Column>
+            </Column> */}
 
             {/* Product variant */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Variant</HeaderCell>
               <Cell
                 style={cellCss}
@@ -267,20 +292,20 @@ const AllProductList = () => {
                 dataKey="productPrice"
               >
                 {(rowData: any) => (
-                  <div>
-                    <Link
-                      href={`/products/variants?productId=${rowData?.productId}`}
-                      // onClick={() => {
-                      //   handleOpen("full");
-                      //   setProductVariant(rowData);
-                      // }}
+                  <ButtonToolbar>
+                    <Button
+                      size="lg"
+                      onClick={() => {
+                        handleOpen("full");
+                        setProductVariant(rowData);
+                      }}
                     >
                       See Variant
-                    </Link>
-                  </div>
+                    </Button>
+                  </ButtonToolbar>
                 )}
               </Cell>
-            </Column>
+            </Column> */}
 
             {/* Action */}
 
@@ -313,7 +338,7 @@ const AllProductList = () => {
             </Column>
           </Table>
 
-          <div>
+          {/* <div>
             <ProductVariantTable
               productVariant={productVariant}
               size={drawerSize}
@@ -321,10 +346,10 @@ const AllProductList = () => {
               setOpen={setOpen}
               placement={placement}
             />
-          </div>
+          </div> */}
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allProductsList?.meta?.total}
+              total={singleProduct?.data?.productVariations?.length || 0}
               prev
               next
               first
@@ -343,13 +368,6 @@ const AllProductList = () => {
           </div>
         </div>
       </div>
-      {/* 
-      <ProductEditModal
-        isOpenEdit={isOpenEdit}
-        setIsOpenEdit={setIsOpenEdit}
-        editData={editData}
-        handleCloseEdit={handleCloseEdit}
-      /> */}
     </>
   );
 };
