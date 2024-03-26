@@ -32,11 +32,19 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.product, tagTypes.categories],
     }),
+    getSingleProduct: builder.query({
+      query: (productId: string) => ({
+        url: `${PRODUCT_API}/${productId}`,
+        method: "GET",
+      }),
+      providesTags: [tagTypes.product],
+    }),
   }),
 });
 
 export const {
   useAddProductMutation,
   useGetProductQuery,
+  useGetSingleProductQuery,
   useUpdateProductMutation,
 } = productApi;
