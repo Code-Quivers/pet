@@ -21,6 +21,7 @@ const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { useGetTestimonialQuery } from "@/redux/features/testimonialApi";
+import { useGetPromoQuery } from "@/redux/features/promoCodeApi";
 
 const PromoCodeTableList = () => {
   const query: Record<string, any> = {};
@@ -48,14 +49,12 @@ const PromoCodeTableList = () => {
   //Data Fetch for testimonial
 
   const {
-    data: allTestimonial,
+    data: allPromo,
     isLoading,
     isFetching,
-  } = useGetTestimonialQuery({
+  } = useGetPromoQuery({
     ...query,
   });
-
-  console.log(allTestimonial);
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -75,7 +74,7 @@ const PromoCodeTableList = () => {
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              All Promo Code | {allTestimonial?.meta?.total}
+              All Promo Code | {allPromo?.meta?.total}
             </h2>
           </div>
           <div className="flex max-md:justify-between gap-10 items-center">
@@ -112,7 +111,7 @@ const PromoCodeTableList = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            // data={allTestimonial?.data}
+            data={allPromo?.data}
           >
             {/*img*/}
             {/* <Column flexGrow={1}>
@@ -174,7 +173,7 @@ const PromoCodeTableList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="testimonialTitle"
+                dataKey="promotionName"
               />
             </Column>
             {/* category */}
@@ -183,28 +182,48 @@ const PromoCodeTableList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="testimonialDescription"
+                dataKey="promoCode"
               />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Expire Date</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="expireDate"
+              />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Buy</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="promotionRules.buy"
+              />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Get</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="promotionRules.get"
+              />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Order Amount</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="promotionRules.threshold"
+              />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Discount Amount</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="rating" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="promotionRules.discount"
+              />
             </Column>
 
             {/* Action */}
@@ -271,7 +290,7 @@ const PromoCodeTableList = () => {
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allTestimonial?.meta?.total}
+              total={allPromo?.meta?.total}
               prev
               next
               first

@@ -1,68 +1,86 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma, ProductQA } from '@prisma/client';
+import { Prisma, ProductQA, Promotion } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
-import { IQAFilterRequest, IQARequest, IQAUpdateRequest } from './promoCode.interface';
-import { productQAValidation } from './promoCode.utils';
-import { QARelationalFields, QARelationalFieldsMapper, QASearchableFields } from './promoCode.constants';
-
+import { IPromoFilterRequest, IPromoRequest, IQAUpdateRequest } from './promoCode.interface';
+import { PromoCodeRelationalFields, PromoCodeRelationalFieldsMapper, PromoCodeSearchableFields } from './promoCode.constants';
 // modules
 
-// !----------------------------------Create New Event------------------------------------->>>
-const addQA = async (data: IQARequest): Promise<ProductQA> => {
-  await productQAValidation(data);
+// !----------------------------------Create New Promo Code------------------------------------->>>
+const addPromoCode = async (data: IPromoRequest) => {
+  const findProduct = await prisma.product.findUnique({
+    where: {
+      productId: data.productId,
+    },
+  });
+
+  if (!findProduct) throw new ApiError(httpStatus.BAD_REQUEST, 'Product not found !!!');
 
   const dataObj = {
-    productId: data.productId,
-    question: data.question,
-    answer: data.answer,
+    products: {
+      connect: {
+        productId: data.productId,
+      },
+    },
+    promotionName: data.promotionName,
+    promoCode: data.promoCode,
+    expireDate: data.expireDate,
+    type: data.type,
   };
 
-  const result = await prisma.productQA.create({
+  const createPromotion = await prisma.promotion.create({
     data: dataObj,
   });
 
-  if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to add QA');
+  if (!createPromotion) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to add Promotion !!!');
+
+  const result = await prisma.promotionRule.create({
+    data: {
+      buy: data.buy,
+      get: data.get,
+      threshold: data.threshold,
+      discount: data.discount,
+      promotion: {
+        connect: {
+          promotionId: createPromotion.promotionId,
+        },
+      },
+    },
+  });
+
+  if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to add Promotion Rule !!!');
 
   return result;
 };
 
 // !----------------------------------get all Event---------------------------------------->>>
-const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<ProductQA[]>> => {
+const getPromoCode = async (filters: IPromoFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Promotion[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productName, ...filterData } = filters;
+  const { searchTerm, ...filterData } = filters;
 
   // Define an array to hold filter conditions
-  const andConditions: Prisma.ProductQAWhereInput[] = [];
+  const andConditions: Prisma.PromotionWhereInput[] = [];
 
   // Add search term condition if provided
 
   if (searchTerm) {
     andConditions.push({
       OR: [
-        ...QASearchableFields.map((field: any) => ({
+        ...PromoCodeSearchableFields.map((field: any) => ({
           [field]: {
             contains: searchTerm,
             mode: 'insensitive',
           },
         })),
-        {
-          product: {
-            productName: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-        },
       ],
     });
   }
@@ -71,9 +89,9 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map(key => {
-        if (QARelationalFields.includes(key)) {
+        if (PromoCodeRelationalFields.includes(key)) {
           return {
-            [QARelationalFieldsMapper[key]]: {
+            [PromoCodeRelationalFieldsMapper[key]]: {
               name: (filterData as any)[key],
             },
           };
@@ -88,23 +106,12 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
     });
   }
 
-  if (productName) {
-    andConditions.push({
-      product: {
-        productName: {
-          equals: productName,
-        },
-      },
-    });
-  }
-
   // Create a whereConditions object with AND conditions
-  const whereConditions: Prisma.ProductQAWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
+  const whereConditions: Prisma.PromotionWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Retrieve Courier with filtering and pagination
-  const result = await prisma.productQA.findMany({
+  const result = await prisma.promotion.findMany({
     include: {
-      product: true,
+      promotionRules: true,
     },
     where: whereConditions,
     skip,
@@ -112,8 +119,8 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'desc' },
   });
 
-  // Count total matching orders for pagination
-  const total = await prisma.productQA.count({
+  // Count total matching for pagination
+  const total = await prisma.promotion.count({
     where: whereConditions,
   });
 
@@ -132,7 +139,7 @@ const getQA = async (filters: IQAFilterRequest, options: IPaginationOptions): Pr
 };
 
 // !----------------------------------Update Courier---------------------------------------->>>
-const updateQA = async (productQaId: string, payload: IQAUpdateRequest): Promise<ProductQA> => {
+const updatePromoCode = async (productQaId: string, payload: IQAUpdateRequest): Promise<ProductQA> => {
   const result = await prisma.$transaction(async transactionClient => {
     const existingQA = await transactionClient.productQA.findUnique({
       where: {
@@ -167,7 +174,7 @@ const updateQA = async (productQaId: string, payload: IQAUpdateRequest): Promise
   return result;
 };
 
-const deleteQA = async (productQaId: string): Promise<ProductQA> => {
+const deletePromoCode = async (productQaId: string): Promise<ProductQA> => {
   if (!productQaId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'productQaId is required');
   }
@@ -181,9 +188,9 @@ const deleteQA = async (productQaId: string): Promise<ProductQA> => {
   return result;
 };
 
-export const QAService = {
-  addQA,
-  getQA,
-  updateQA,
-  deleteQA,
+export const PromoCodeService = {
+  addPromoCode,
+  getPromoCode,
+  updatePromoCode,
+  deletePromoCode,
 };

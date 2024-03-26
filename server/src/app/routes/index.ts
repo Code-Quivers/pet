@@ -9,6 +9,7 @@ import { PetRoutes } from '../modules/Pet/pet.routes';
 import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 import { ProductRoutes } from '../modules/products/products.routes';
 import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
+import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
 
 const router = express.Router();
 
@@ -30,10 +31,6 @@ const moduleRoutes = [
     route: CategoryRoutes,
   },
   {
-    path: '/color-varient',
-    route: ColorVarientRoutes,
-  },
-  {
     path: '/product',
     route: ProductRoutes,
   },
@@ -52,6 +49,10 @@ const moduleRoutes = [
   {
     path: '/testimonial',
     route: TestimonialRoutes,
+  },
+  {
+    path: '/promo-code',
+    route: PromoCodeRoutes,
   },
 ];
 

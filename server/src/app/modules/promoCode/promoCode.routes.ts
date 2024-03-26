@@ -1,21 +1,20 @@
 import express from 'express';
-
 import validateRequest from '../../middlewares/validateRequest';
-import { QAValidation } from './promoCode.validations';
+import { PromoCodeValidation, QAValidation } from './promoCode.validations';
 import { UserRoles } from '@prisma/client';
 import auth from '../../middlewares/auth';
-import { QAController } from './promoCode.controller';
+import { PromoCodeController } from './promoCode.controller';
 
 const router = express.Router();
 
 // ! Create New List ------------------------------->>>
-router.post('/', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), validateRequest(QAValidation.addQA), QAController.addQAController);
+router.post('/', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), validateRequest(PromoCodeValidation.addPromoCode), PromoCodeController.addPromo);
 
 // ! Get all List----------------------------------->>>
-router.get('/', QAController.getQAController);
+router.get('/', PromoCodeController.getPromo);
 
-router.patch('/:productQaId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), QAController.updateQA);
+router.patch('/:promotionId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.updatePromo);
 
-router.delete('/:productQaId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), QAController.deleteQA);
+router.delete('/:promotionId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.deletePromo);
 
-export const QARoutes = router;
+export const PromoCodeRoutes = router;
