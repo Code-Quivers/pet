@@ -36,6 +36,22 @@ const getPromo = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPromotionalOffer = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, PromoCodeFilterableFields);
+
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+  const result = await PromoCodeService.getPromotionalOffer(filters, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'fetched successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 // !----------------------------------Update Slot---------------------------------------->>>
 const updatePromo = catchAsync(async (req: Request, res: Response) => {
   const { promotionId } = req.params;
@@ -67,4 +83,5 @@ export const PromoCodeController = {
   getPromo,
   updatePromo,
   deletePromo,
+  getPromotionalOffer,
 };

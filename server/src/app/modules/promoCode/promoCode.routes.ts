@@ -1,6 +1,6 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { PromoCodeValidation, QAValidation } from './promoCode.validations';
+import { PromoCodeValidation } from './promoCode.validations';
 import { UserRoles } from '@prisma/client';
 import auth from '../../middlewares/auth';
 import { PromoCodeController } from './promoCode.controller';
@@ -12,6 +12,7 @@ router.post('/', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), validateRequest(Pr
 
 // ! Get all List----------------------------------->>>
 router.get('/', PromoCodeController.getPromo);
+router.get('/promotionalOffer', PromoCodeController.getPromotionalOffer);
 
 router.patch('/:promotionId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.updatePromo);
 

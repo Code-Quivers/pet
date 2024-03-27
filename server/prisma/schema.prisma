@@ -228,12 +228,14 @@ model Promotion {
 
   // one-to-many relationship between promotion and rules
   promotionRules PromotionRule[]
+
+  createdAt      DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // model for promotion rules
 model PromotionRule {
   id          String    @id @default(uuid())
- 
   promotion   Promotion @relation(fields: [promotionId], references: [promotionId])
   promotionId String
 
@@ -248,6 +250,9 @@ model PromotionRule {
   // For DiscountBasedOnAmount
   threshold Float?
   discount  Float?
+
+  createdAt      DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // enum for promotion types

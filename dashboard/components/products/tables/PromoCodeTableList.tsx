@@ -21,7 +21,10 @@ const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { useGetTestimonialQuery } from "@/redux/features/testimonialApi";
-import { useGetPromoQuery } from "@/redux/features/promoCodeApi";
+import {
+  useGetPromoQuery,
+  useGetPromotionalOfferQuery,
+} from "@/redux/features/promoCodeApi";
 
 const PromoCodeTableList = () => {
   const query: Record<string, any> = {};
@@ -52,7 +55,7 @@ const PromoCodeTableList = () => {
     data: allPromo,
     isLoading,
     isFetching,
-  } = useGetPromoQuery({
+  } = useGetPromotionalOfferQuery({
     ...query,
   });
 
@@ -173,7 +176,7 @@ const PromoCodeTableList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="promotionName"
+                dataKey="promotion.promotionName"
               />
             </Column>
             {/* category */}
@@ -182,7 +185,7 @@ const PromoCodeTableList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="promoCode"
+                dataKey="promotion.promoCode"
               />
             </Column>
             <Column flexGrow={1}>
@@ -190,40 +193,32 @@ const PromoCodeTableList = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="expireDate"
-              />
+                dataKey="promotion.expireDate"
+              >
+                {(rowData: any) => {
+                  return new Date(rowData.promotion.expireDate).toDateString();
+                }}
+              </Cell>
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Buy</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="promotionRules.buy"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="buy" />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Get</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="promotionRules.get"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="get" />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Order Amount</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="promotionRules.threshold"
+                dataKey="threshold"
               />
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Discount Amount</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="promotionRules.discount"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="discount" />
             </Column>
 
             {/* Action */}
