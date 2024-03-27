@@ -217,49 +217,55 @@ const getPromotionalOffer = async (filters: IPromoFilterRequest, options: IPagin
 };
 
 // !----------------------------------Update Courier---------------------------------------->>>
-const updatePromoCode = async (productQaId: string, payload: IQAUpdateRequest): Promise<ProductQA> => {
+const updatePromoCode = async (id: string, payload: IQAUpdateRequest): Promise<PromotionRule> => {
   const result = await prisma.$transaction(async transactionClient => {
-    const existingQA = await transactionClient.productQA.findUnique({
+    const existingPromotionRule = await transactionClient.promotionRule.findUnique({
       where: {
-        productQaId,
+        id,
       },
     });
 
-    if (!existingQA) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'QA Not Found!!');
+    if (!existingPromotionRule) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Promotion Rule Not Found!!');
     }
 
     const updatedDetails = {
-      productId: payload?.productId,
-      question: payload?.question,
-      answer: payload?.answer,
+      productId: payload.productId,
+      promotionName: payload.promotionName,
+      promoCode: payload.promoCode,
+      expireDate: payload.expireDate,
+      type: payload.type,
+      buy: payload.buy,
+      get: payload.get,
+      threshold: payload.threshold,
+      discount: payload.discount,
     };
 
-    const updatedQA = await transactionClient.productQA.update({
+    const updatedData = await transactionClient.promotionRule.update({
       where: {
-        productQaId,
+        id,
       },
       data: updatedDetails,
     });
 
-    return updatedQA;
+    return updatedData;
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update QA !!');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update !!');
   }
 
   return result;
 };
 
-const deletePromoCode = async (productQaId: string): Promise<ProductQA> => {
-  if (!productQaId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'productQaId is required');
+const deletePromotionRuleCode = async (id: string): Promise<PromotionRule> => {
+  if (!id) {
+    throw new ApiError(httpStatus.BAD_REQUEST, ' Promotion Rule Id is required');
   }
 
-  const result = await prisma.productQA.delete({
+  const result = await prisma.promotionRule.delete({
     where: {
-      productQaId,
+      id,
     },
   });
 
@@ -270,6 +276,6 @@ export const PromoCodeService = {
   addPromoCode,
   getPromoCode,
   updatePromoCode,
-  deletePromoCode,
+  deletePromotionRuleCode,
   getPromotionalOffer,
 };

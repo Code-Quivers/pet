@@ -54,9 +54,9 @@ const getPromotionalOffer = catchAsync(async (req: Request, res: Response) => {
 
 // !----------------------------------Update Slot---------------------------------------->>>
 const updatePromo = catchAsync(async (req: Request, res: Response) => {
-  const { promotionId } = req.params;
+  const { id } = req.params;
   const payload = req.body;
-  const result = await PromoCodeService.updatePromoCode(promotionId, payload);
+  const result = await PromoCodeService.updatePromoCode(id, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -66,9 +66,9 @@ const updatePromo = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deletePromo = catchAsync(async (req: Request, res: Response) => {
-  const { promotionId } = req.params;
-  const result = await PromoCodeService.deletePromoCode(promotionId);
+const deletePromotionRule = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PromoCodeService.deletePromotionRuleCode(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -82,6 +82,6 @@ export const PromoCodeController = {
   addPromo,
   getPromo,
   updatePromo,
-  deletePromo,
+  deletePromotionRule,
   getPromotionalOffer,
 };

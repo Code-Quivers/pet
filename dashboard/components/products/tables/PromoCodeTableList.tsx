@@ -25,6 +25,7 @@ import {
   useGetPromoQuery,
   useGetPromotionalOfferQuery,
 } from "@/redux/features/promoCodeApi";
+import PromoCodeDeleteConfirmationModal from "../modal/PromoCodeDeleteConfirmationModal";
 
 const PromoCodeTableList = () => {
   const query: Record<string, any> = {};
@@ -202,25 +203,37 @@ const PromoCodeTableList = () => {
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Buy</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="buy" />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="buy">
+                {(rowData: any) => {
+                  return rowData.buy ? rowData.buy : "N/A";
+                }}
+              </Cell>
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Number of Get</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="get" />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="get">
+                {(rowData: any) => {
+                  return rowData.get ? rowData.get : "N/A";
+                }}
+              </Cell>
             </Column>
+
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Order Amount</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="threshold"
-              />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="threshold">
+                {(rowData: any) => {
+                  return rowData.threshold ? `$ ${rowData.threshold}` : "N/A";
+                }}
+              </Cell>
             </Column>
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Discount Amount</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="discount" />
+              <Cell style={cellCss} verticalAlign="middle" dataKey="discount">
+                {(rowData: any) => {
+                  return rowData.discount ? `${rowData.discount}%` : "N/A";
+                }}
+              </Cell>
             </Column>
-
             {/* Action */}
 
             <Column width={100}>
@@ -277,11 +290,11 @@ const PromoCodeTableList = () => {
           </Table>
 
           {/* delete confirmation */}
-          {/* <DeleteTestimonialModal
+          <PromoCodeDeleteConfirmationModal
             isOpenDelete={isOpenDelete}
             handleCloseDelete={handleCloseDelete}
             deleteData={deleteData}
-          /> */}
+          />
 
           <div style={{ padding: 20 }}>
             <Pagination

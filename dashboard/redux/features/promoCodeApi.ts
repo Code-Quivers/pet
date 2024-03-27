@@ -32,8 +32,8 @@ export const promoApi = baseApi.injectEndpoints({
     }),
 
     updatePromo: build.mutation({
-      query: ({ data, promotionId }) => ({
-        url: `${PROMO_CODE_API}/${promotionId}`,
+      query: ({ data, id }) => ({
+        url: `${PROMOTION_OFFER_API}/${id}`,
         method: "PATCH",
         data: data,
       }),
@@ -41,11 +41,11 @@ export const promoApi = baseApi.injectEndpoints({
     }),
 
     deletePromo: build.mutation({
-      query: ({ promotionId }) => ({
-        url: `${PROMO_CODE_API}/${promotionId}`,
+      query: ({ id }) => ({
+        url: `${PROMOTION_OFFER_API}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.promo],
+      invalidatesTags: [tagTypes.promo, tagTypes.promotionalOffer],
     }),
   }),
 });
