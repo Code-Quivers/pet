@@ -13,8 +13,6 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
 
-;
-
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
 const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<ProductVariation[]>> => {
@@ -104,19 +102,18 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
           productName: true,
           category: {
             select: {
-              categoryName: true
-            }
-          }
-        }
+              categoryName: true,
+            },
+          },
+        },
       },
       barCodes: {
         select: {
           barcodeId: true,
           code: true,
-          barcodeStatus: true
-        }
-      }
-
+          barcodeStatus: true,
+        },
+      },
     },
     skip,
     take: limit,
@@ -128,14 +125,13 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
     .map(({ product, ...rest }) => ({
       ...rest,
       productName: product?.productName,
-      categoryName: product?.category?.categoryName
+      categoryName: product?.category?.categoryName,
     }));
 
   // Count total matching orders for pagination
   const total = await prisma.productVariation.count({
     where: whereConditions,
   });
-
 
   // Calculate total pages
   const totalPage = limit > 0 ? Math.ceil(total / limit) : 0;
@@ -150,7 +146,6 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
     data: variants,
   };
 };
-
 
 const getSingleBarCode = async (barcodeCode: string): Promise<Pet | null> => {
   if (!barcodeCode) {
@@ -183,7 +178,42 @@ const getSingleBarCode = async (barcodeCode: string): Promise<Pet | null> => {
   return result;
 };
 
+const getSingleVariant = async (variantId: string): Promise<ProductVariation | null> => {
+  if (!variantId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+  }
+
+  // Find the product using the productCode
+  const result = await prisma.productVariation.findUnique({
+    where: {
+      variantId,
+    },
+    select: {
+      variantId: true,
+      productId: true,
+      _count: true,
+      barCodes: {
+        select: {
+          barcodeId: true,
+          code: true,
+          barcodeStatus: true,
+        },
+      },
+      // product: true,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
+  }
+
+  // console.log('product', result);
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCode,
   getProductBarcodes,
+  getSingleVariant,
 };
