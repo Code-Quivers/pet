@@ -23,9 +23,7 @@ const Variants = ({
     const updatedProductVariations = [...productVariations];
     updatedProductVariations[variantIndex][fieldName] = value;
     setProductVariations(updatedProductVariations);
-    console.log(productVariations);
   };
-  console.log(productVariations);
   const removeVariant = (id: any) => {
     const updatedProductVariations = productVariations.filter(
       (item: any) => item?.id !== id

@@ -1,10 +1,9 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
-import AddPricing from "./AddPricing";
-import AddProductTextEditor from "./AddProductTextEditor";
-import ShowAddVariant from "./ShowAddVariant";
+// import AddProductTextEditor from "./AddProductTextEditor";
+// import ShowAddVariant from "./ShowAddVariant";
 import Variants from "./Variants";
-import { Input, SelectPicker } from "rsuite";
+import { Form, Input, InputNumber, SelectPicker } from "rsuite";
 import { useState } from "react";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import { useDebounced } from "@/redux/hook";
@@ -28,34 +27,58 @@ const AddProductsSection = () => {
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
-  const { data } = useGetCategoryQuery({ ...query });
-  let category = data?.data;
-  category = category?.map((item: any) => ({
-    label: item?.categoryName,
-    value: item?.categoryId,
-  }));
+  const { data: categories } = useGetCategoryQuery({ ...query });
 
   const [productVariations, setProductVariations] = useState<any>([]);
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+  } = useForm();
 
   const handleAddProduct = (data: any) => {
     const formData = new FormData();
-
+    // Map productVariations data and format it
+    const productVariationData = productVariations?.map(
+      ({ image, ...items }: any) => {
+        return {
+          ...items,
+          price: parseFloat(items?.price),
+          stock: parseInt(items?.stock),
+        };
+      }
+    );
+    // Construct the product object
     const product = {
       productName: data.title,
       productDescription: data.description,
       categoryId: data.category,
       productPrice: data.productPrice,
-      productVariations,
+      productVariations: productVariationData,
     };
-    const obj = JSON.stringify(product);
-
-    // appending files to formData
-    data?.productImages?.forEach((file: FileType, index: number) => {
+    // Convert product object to JSON string
+    const productJSON = JSON.stringify(product);
+    // Append product images to formData
+    data?.productImages?.forEach((file: FileType) => {
       formData.append("files", file.blobFile as Blob);
     });
+
+    // Append variant photos to formData
+    productVariations?.forEach(({ image, ...others }: any) => {
+      const { blobFile, name } = image ?? {};
+      const [baseName, extension] = name?.split(".") ?? [];
+      if (blobFile && baseName && extension) {
+        formData.append(
+          "files",
+          blobFile as Blob,
+          `${others?.id}_${baseName}.${extension}`
+        );
+      }
+    });
+
     // appending all data to formData
-    formData.append("data", obj);
+    formData.append("data", productJSON);
   };
 
   return (
@@ -65,24 +88,38 @@ const AddProductsSection = () => {
           <section className="md:w-[55%]">
             <h1 className="text-xl mb-1 font-medium">Product information</h1>
             <div className="bg-white border border-[#d1d5db] rounded-xl p-4">
-              <div className="flex flex-col gap-2">
+              {/* product title */}
+              <div className="flex flex-col   gap-2">
                 <label htmlFor="title" className="font-medium">
                   Title
                 </label>
                 <Controller
                   name="title"
                   control={control}
+                  rules={{ required: "Product Title is Required !!" }}
                   render={({ field }) => (
-                    <input
-                      onChange={(e) => field.onChange(e.target.value)}
-                      type="text"
-                      id="title"
-                      className="border focus:outline-none py-1 px-3 rounded-md border-[#d1d5db]"
-                      placeholder="Active Band"
-                    />
+                    <div className="rs-form-control-wrapper ">
+                      <Input
+                        {...field}
+                        type="text"
+                        id="title"
+                        className="!w-full border focus:outline-none py-1 px-3 rounded-md border-[#d1d5db]"
+                        placeholder="Active Band"
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.title && !!errors?.title?.message) || false
+                        }
+                        placement="topEnd"
+                      >
+                        <span>{errors?.title?.message as string}</span>
+                      </Form.ErrorMessage>
+                    </div>
                   )}
                 />
               </div>
+
+              {/* product description */}
               <div className="flex flex-col gap-2 w-full mt-3">
                 <label htmlFor="title" className="font-medium">
                   Description
@@ -90,17 +127,35 @@ const AddProductsSection = () => {
                 <Controller
                   control={control}
                   name="description"
+                  rules={{
+                    required: "Product Description is Required !!",
+                  }}
                   render={({ field }) => (
-                    <Input
-                      as="textarea"
-                      rows={5}
-                      placeholder="Description"
-                      value={field.value}
-                      onChange={(value) => field.onChange(value)}
-                    />
+                    <div className="rs-form-control-wrapper  w-full">
+                      <Input
+                        as="textarea"
+                        rows={5}
+                        placeholder="Description"
+                        value={field.value}
+                        className="!w-full"
+                        onChange={(value) => field.onChange(value)}
+                      />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.description &&
+                            !!errors?.description?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span>{errors?.description?.message as string}</span>
+                      </Form.ErrorMessage>
+                    </div>
                   )}
                 />
               </div>
+              {/* product category */}
+
               <div className="flex flex-col gap-2 mt-2">
                 <label htmlFor="category" className="font-medium">
                   Category
@@ -108,28 +163,72 @@ const AddProductsSection = () => {
                 <Controller
                   name="category"
                   control={control}
+                  rules={{ required: "Category is Required !!" }}
                   render={({ field }) => (
-                    <div>
+                    <div className="rs-form-control-wrapper ">
                       <SelectPicker
-                        // placement="top"
                         className="w-full"
-                        data={category || []}
+                        data={
+                          categories?.data?.map((item: any) => ({
+                            label: item?.categoryName,
+                            value: item?.categoryId,
+                          })) || []
+                        }
                         label={undefined}
                         loading={undefined}
                         caretAs={undefined}
                         value={field.value}
                         onChange={(value) => field.onChange(value)}
                       />
+                      <Form.ErrorMessage
+                        show={
+                          (!!errors?.category && !!errors?.category?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span>{errors?.category?.message as string}</span>
+                      </Form.ErrorMessage>
                     </div>
                   )}
                 />
               </div>
-              <div>
+              {/* product base price */}
+              <div className="mt-2">
+                <label htmlFor="" className="font-medium">
+                  Base price
+                </label>
                 <Controller
                   control={control}
                   name="productPrice"
+                  rules={{
+                    required: "Base Price is required !!",
+                    min: {
+                      value: 0,
+                      message: "Base Price must be greater than 0",
+                    },
+                  }}
                   render={({ field }) => (
-                    <AddPricing field={field} setBasePrice={setBasePrice} />
+                    <div className="rs-form-control-wrapper ">
+                      <div>
+                        <InputNumber
+                          value={field.value}
+                          min={1}
+                          step={0.1}
+                          formatter={(value) => `€ ${value}`}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setBasePrice(parseFloat(value as string));
+                          }}
+                        />
+                      </div>
+                      <Form.ErrorMessage
+                        show={!!errors?.productPrice}
+                        placement="topEnd"
+                      >
+                        <span>{errors?.productPrice?.message as string}</span>
+                      </Form.ErrorMessage>
+                    </div>
                   )}
                 />
               </div>
@@ -140,15 +239,24 @@ const AddProductsSection = () => {
           {/* media */}
           <section className="md:w-[45%]">
             <h1 className="text-xl mb-1 font-medium max-md:my-2">
-              Product Image
+              Product Images
             </h1>
             <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
               <div className="">
                 <Controller
+                  rules={{ required: "Product Image is Required" }}
                   name="productImages"
                   control={control}
                   render={({ field }) => (
-                    <AddProductUpload field={field as any} />
+                    <div className="rs-form-control-wrapper ">
+                      <AddProductUpload field={field as any} />
+                      <Form.ErrorMessage
+                        show={!!errors?.productImages}
+                        placement="topEnd"
+                      >
+                        <span>{errors?.productImages?.message as string}</span>
+                      </Form.ErrorMessage>
+                    </div>
                   )}
                 />
               </div>
@@ -177,43 +285,3 @@ const AddProductsSection = () => {
 };
 
 export default AddProductsSection;
-
-// const product = [
-//   {
-//     productId: "d9546eb0-46db-4586-8692-2e46b57c4bc9",
-//     productName: "Backup Buddy Belt",
-//     productImage:
-//       "productImg\\1710354002010-349231518_634724704867558_772649301878214380_n.jpg",
-//     productPrice: 100,
-//     productDescription: "Backup Buddy is a Only brand",
-//     productStatus: "AVAILABLE",
-//     categoryId: "f24e20d8-f2ac-40f4-bdcb-afdf341f1105",
-//     createdAt: "2024-03-13T18:20:02.000Z",
-//     updatedAt: "2024-03-13T18:20:02.000Z",
-
-//     productVariations: [
-//       {
-//         variantId: "9f4092e9-17a4-4e98-a746-a0698f1b7508",
-//         barcodeCode: "et3562611710354002255",
-//         variantPrice: 100,
-//         color: "red",
-//         size: "sm",
-//         stock: 12,
-//         productId: "d9546eb0-46db-4586-8692-2e46b57c4bc9",
-//         createdAt: "2024-03-13T18:20:02.000Z",
-//         updatedAt: "2024-03-13T18:20:02.000Z",
-//       },
-//       {
-//         variantId: "b6ca23a4-56f4-4af6-a088-8581e9c0a697",
-//         barcodeCode: "et7774031710354002255",
-//         variantPrice: 120,
-//         color: "blue",
-//         size: "md",
-//         stock: 20,
-//         productId: "d9546eb0-46db-4586-8692-2e46b57c4bc9",
-//         createdAt: "2024-03-13T18:20:02.000Z",
-//         updatedAt: "2024-03-13T18:20:02.000Z",
-//       },
-//     ],
-//   },
-// ];
