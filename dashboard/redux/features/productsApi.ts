@@ -39,6 +39,13 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.product],
     }),
+    getSingleVariant: builder.query({
+      query: (variantId: string) => ({
+        url: `/tag/get-single-variant/${variantId}`,
+        method: "GET",
+      }),
+      providesTags: [tagTypes.product],
+    }),
   }),
 });
 
@@ -47,4 +54,5 @@ export const {
   useGetProductQuery,
   useGetSingleProductQuery,
   useUpdateProductMutation,
+  useGetSingleVariantQuery,
 } = productApi;

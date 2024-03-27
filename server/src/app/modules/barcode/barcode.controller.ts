@@ -23,7 +23,6 @@ const getProductBarcodes = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 // !----------------------------------get Single Category---------------------------------------->>>
 const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
   const { barcodeCode } = req.params;
@@ -39,7 +38,22 @@ const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleVariant = catchAsync(async (req: Request, res: Response) => {
+  const { variantId } = req.params;
+  // console.log('variantId', variantId);
+
+  const result = await BarcodeService.getSingleVariant(variantId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Link retrieved successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCode,
   getProductBarcodes,
+  getSingleVariant,
 };
