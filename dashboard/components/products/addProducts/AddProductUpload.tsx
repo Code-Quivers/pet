@@ -8,8 +8,14 @@ const AddProductUpload = ({ field }: any) => {
   const [fileValue, setFileValue] = useState<FileType[]>([]);
 
   const handleChangeImages = (files: FileType[]) => {
+    if (files.length === 0) {
+      setFileValue([]);
+      field.onChange([]);
+    }
+
     const latestFile = files[files.length - 1];
-    const fileSizeLimit = 512 * 10 * 1024; // 512 kb
+    const fileSizeLimit = 512 * 10 * 1024; // 10 MB
+
     if (
       latestFile?.blobFile?.size &&
       latestFile?.blobFile?.size <= fileSizeLimit
@@ -19,9 +25,6 @@ const AddProductUpload = ({ field }: any) => {
 
       const file = latestFile;
       const reader = new FileReader();
-      // reader.onload = (e) => {
-      //   const imagePreviewUrl = e.target?.result as string;
-      // };
       reader.readAsDataURL(file.blobFile as File);
     } else {
       // clearImagePreview();

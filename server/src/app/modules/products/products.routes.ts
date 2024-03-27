@@ -10,7 +10,7 @@ const router = express.Router();
 
 // ! Create New List ------------------------------->>>
 
-router.post('/', FileUploadHelper.uploadProductImage.single('file'), (req: Request, res: Response, next: NextFunction) => {
+router.post('/', FileUploadHelper.uploadProductImage.array('files'), (req: Request, res: Response, next: NextFunction) => {
   req.body = ProductZodValidation.addProducts.parse(JSON.parse(req.body.data));
   return ProductController.addProductsController(req, res, next);
 });
