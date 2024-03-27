@@ -22,6 +22,7 @@ import {
 } from "@/redux/features/categoryApi";
 import { useAddProductQAMutation } from "@/redux/features/productQAApi";
 import moment from "moment";
+import { useAddPromoMutation } from "@/redux/features/promoCodeApi";
 
 const AddProductPromoForm = () => {
   const [orderDiscount, setOrderDiscount] = useState(false);
@@ -88,8 +89,8 @@ const AddProductPromoForm = () => {
     };
   });
 
-  const [addProductQA, { data, isLoading, isSuccess, isError, error, reset }] =
-    useAddProductQAMutation();
+  const [addPromoCode, { data, isLoading, isSuccess, isError, error, reset }] =
+    useAddPromoMutation();
 
   const handleAddPromoCode = async (newData: ICreateProductPromo) => {
     const objData = {
@@ -98,29 +99,15 @@ const AddProductPromoForm = () => {
       promotionName: newData.promoName,
       promoCode: newData.promoCode,
       expireDate: newData.expireDate,
-      thresHold: newData.threshold,
-      discount: newData.discount,
-      buy: newData.buy,
-      get: newData.get,
+      threshold: newData.threshold ? Number(newData.threshold) : undefined,
+      discount: newData.discount ? Number(newData.discount) : undefined,
+      buy: newData.buy ? Number(newData.buy) : undefined,
+      get: newData.get ? Number(newData.get) : undefined,
     };
 
     console.log("objData", objData);
 
-    // await addProductQA(objData);
-
-    formReset({
-      type: "",
-      productId: "",
-      promoName: "",
-      promoCode: "",
-      //@ts-ignore
-      expireDate: "",
-      threshold: "",
-      discount: "",
-      buy: "",
-      get: "",
-      categoryHref: "",
-    });
+    await addPromoCode(objData);
   };
 
   useEffect(() => {
@@ -134,7 +121,19 @@ const AddProductPromoForm = () => {
         { placement: "topEnd", duration: 2000 }
       );
       reset();
-      formReset();
+      formReset({
+        type: "",
+        productId: "",
+        promoName: "",
+        promoCode: "",
+        //@ts-ignore
+        expireDate: "",
+        threshold: "",
+        discount: "",
+        buy: "",
+        get: "",
+        categoryHref: "",
+      });
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
