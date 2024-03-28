@@ -69,23 +69,23 @@ model Category {
 }
 
 model Product {
-  productId          String          @id @default(uuid())
+  productId          String             @id @default(uuid())
   productName        String
   productImage       String[]
   productPrice       Float
   productDescription String
-  productStatus      ProductStatus   @default(AVAILABLE)
+  productStatus      ProductStatus      @default(AVAILABLE)
   categoryId         String
-  category           Category        @relation(fields: [categoryId], references: [categoryId])
-  createdAt          DateTime        @default(now()) @db.Timestamptz(0)
-  updatedAt          DateTime        @updatedAt @db.Timestamptz(0)
+  category           Category           @relation(fields: [categoryId], references: [categoryId])
+  createdAt          DateTime           @default(now()) @db.Timestamptz(0)
+  updatedAt          DateTime           @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
   productReview      ProductReview[]
   // promoCode          PromoCode?
   order              Order[]
-
+  featuredImage      String
   // a many-to-many relationship between products and variations
-  productVariations ProductVariation[]
+  productVariations  ProductVariation[]
 
   // a many-to-many relationship between products and promotions
   promotions Promotion[]
@@ -93,7 +93,7 @@ model Product {
 }
 
 // the model for product variations
-  // barcodeCode  String    @unique
+// barcodeCode  String    @unique
 model ProductVariation {
   variantId    String    @id @default(uuid())
   variantPrice Float
