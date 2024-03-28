@@ -9,7 +9,6 @@ import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { IUploadFile } from '../../../interfaces/file';
-
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
 import { IProductFilterRequest, IProductRequest, IProductUpdateRequest, IProductVariant } from './products.interface';
@@ -25,8 +24,10 @@ const createProduct = async (req: Request): Promise<Product> => {
   const productImagesPaths = files?.map(file => {
     return file.path?.substring(7);
   });
+  const featuredImage = files?.find(file => file?.filename?.includes('featured-image_'));
 
   const data = req.body as IProductRequest;
+  //
   const variants = data?.productVariations?.map((variant: IProductVariant) => {
     const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
     return {
@@ -37,8 +38,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       stock: variant.stock,
     };
   });
-  console.log(variants);
-
+  //
   const result = await prisma.$transaction(async transactionClient => {
     const productInfo = {
       productName: data.productName,
@@ -46,6 +46,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       productDescription: data.productDescription,
       productImage: productImagesPaths,
       categoryId: data.categoryId,
+      featuredImage: featuredImage?.path?.substring(7) as string,
       productVariations: {
         create: variants,
       },

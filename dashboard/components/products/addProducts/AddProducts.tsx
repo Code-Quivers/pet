@@ -16,6 +16,7 @@ import { useDebounced } from "@/redux/hook";
 import AddProductUpload from "./AddProductUpload";
 import { FileType } from "rsuite/esm/Uploader";
 import { useAddProductMutation } from "@/redux/features/productsApi";
+import AddFeaturedImage from "./AddFeaturedImage";
 
 const AddProductsSection = () => {
   const query: Record<string, any> = {};
@@ -77,6 +78,7 @@ const AddProductsSection = () => {
       productPrice: parseFloat(data.productPrice),
       productVariations: productVariationData,
     };
+
     // Convert product object to JSON string
     const productJSON = JSON.stringify(product);
     // Append product images to formData
@@ -84,6 +86,18 @@ const AddProductsSection = () => {
       formData.append("files", file.blobFile as Blob);
     });
 
+    // if featured image exist
+    if (data?.featuredImage?.blobFile) {
+      const { blobFile, name } = data?.featuredImage ?? {};
+      const [baseName, extension] = name?.split(".") ?? [];
+    
+  
+      formData.append(
+        "files",
+        blobFile as Blob,
+        `featured-image_${baseName}.${extension}`
+      );
+    }
     // Append variant photos to formData
     data?.productVariants?.forEach(({ image, ...others }: any) => {
       const { blobFile, name } = image ?? {};
@@ -144,7 +158,7 @@ const AddProductsSection = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(handleAddProduct)}>
-        <div className="md:flex md:gap-5">
+        <div className="md:flex md:items-start  md:gap-5">
           <section className="md:w-[55%]">
             <h1 className="text-xl mb-1 font-medium">Product information</h1>
             <div className="bg-white border border-[#d1d5db] rounded-xl p-4">
@@ -298,34 +312,69 @@ const AddProductsSection = () => {
           </section>
           {/* media */}
           <section className="md:w-[45%]">
-            <h1 className="text-xl mb-1 font-medium max-md:my-2">
-              Product Images
-            </h1>
-            <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
-              <div className="">
+            {/* product featured image */}
+            <div>
+              <h1 className="text-xl mb-1 font-medium max-md:my-2">
+                Featured Image
+              </h1>
+              <div>
                 <Controller
-                  rules={{ required: "Product Image is Required" }}
-                  name="productImages"
                   control={control}
+                  name="featuredImage"
+                  rules={{
+                    required: "Featured Image is Required !!",
+                  }}
                   render={({ field }) => (
-                    <div className="rs-form-control-wrapper ">
-                      <AddProductUpload field={field as any} />
+                    <div className="rs-form-control-wrapper  w-full">
+                      <AddFeaturedImage label="featuredImage" field={field} />
                       <Form.ErrorMessage
-                        show={!!errors?.productImages}
+                        show={
+                          (!!errors?.featuredImage &&
+                            !!errors?.featuredImage?.message) ||
+                          false
+                        }
                         placement="topEnd"
                       >
-                        <span>{errors?.productImages?.message as string}</span>
+                        <span>{errors?.featuredImage?.message as string}</span>
                       </Form.ErrorMessage>
                     </div>
                   )}
                 />
               </div>
-            </aside>
+            </div>
+            {/* product  gallery*/}
+            <div>
+              <h1 className="text-xl mb-1 font-medium max-md:my-2">
+                Product Gallery
+              </h1>
+              <aside className="bg-white p-4 border border-[#d1d5db] rounded-xl">
+                <div className="">
+                  <Controller
+                    rules={{ required: "Product Image is Required" }}
+                    name="productImages"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper ">
+                        <AddProductUpload field={field as any} />
+                        <Form.ErrorMessage
+                          show={!!errors?.productImages}
+                          placement="topEnd"
+                        >
+                          <span>
+                            {errors?.productImages?.message as string}
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+              </aside>
+            </div>
           </section>
         </div>
+        {/*  Variants*/}
         <div>
           <h1 className="text-xl mt-3 mb-2 font-medium">Variants</h1>
-
           <Variants errors={errors} control={control} basePrice={basePrice} />
         </div>
         <div className="flex justify-end mt-10">
