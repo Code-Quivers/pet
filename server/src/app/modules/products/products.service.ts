@@ -227,6 +227,7 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
           size: true,
           stock: true,
           variantPrice: true,
+          image: true,
         },
       },
     },

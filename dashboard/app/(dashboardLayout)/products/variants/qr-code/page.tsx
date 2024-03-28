@@ -56,7 +56,11 @@ const AllProductList = () => {
   const variantId = searchParams.get("variantId");
   console.log("variantId", variantId);
 
-  const { data: singleVariant } = useGetSingleVariantQuery(variantId as string);
+  const {
+    data: singleVariant,
+    isLoading,
+    isFetching,
+  } = useGetSingleVariantQuery(variantId as string);
   console.log("singleProduct", singleVariant);
 
   return (
@@ -77,6 +81,22 @@ const AllProductList = () => {
         <p className="font-bold">Qr Code</p>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <p>
+          Product Name:{" "}
+          <span className="font-semibold">
+            {singleVariant?.data?.product?.productName}
+          </span>
+        </p>
+        <p>
+          Color:{" "}
+          <span className="font-semibold">{singleVariant?.data?.color}</span>
+        </p>
+        {singleVariant?.data?.size ? (
+          <p>
+            Size:{" "}
+            <span className="font-semibold">{singleVariant?.data?.size}</span>
+          </p>
+        ) : null}
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           {/* <div>
             <h2 className="text-lg font-semibold ">
@@ -128,7 +148,7 @@ const AllProductList = () => {
             bordered={true}
             cellBordered={true}
             wordWrap="break-word"
-            // loading={isLoading || isFetching}
+            loading={isLoading || isFetching}
             rowHeight={70}
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table

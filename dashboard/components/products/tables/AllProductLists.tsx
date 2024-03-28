@@ -61,7 +61,7 @@ const AllProductList = () => {
     setIsOpenEdit(false);
     setEditData(null);
   };
-
+  // console.log(allProductsList?.data, "product");
   const { data: allCategories } = useGetCategoryQuery({});
 
   const categoryFilterForProduct = allCategories?.data?.map(
@@ -85,7 +85,9 @@ const AllProductList = () => {
   return (
     <>
       <div className="flex items-center mb-2 text-sm text-[#2563eb]">
-        <Link href={"/"}>Dashboard</Link>
+        <Link href={"/"} className="underline">
+          Dashboard
+        </Link>
 
         <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
 
@@ -157,7 +159,7 @@ const AllProductList = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allProductsList?.data}
+            data={allProductsList?.data || []}
           >
             {/*img*/}
             <Column width={70}>
@@ -174,8 +176,8 @@ const AllProductList = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.productImage
-                                ? `${fileUrlKey()}/${rowData?.productImage}`
+                              rowData?.featuredImage
+                                ? `${fileUrlKey()}/${rowData?.featuredImage}`
                                 : noImage
                             }
                             className="object-cover"
@@ -190,8 +192,8 @@ const AllProductList = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.productImage
-                            ? `${fileUrlKey()}/${rowData?.productImage}`
+                          rowData?.featuredImage
+                            ? `${fileUrlKey()}/${rowData?.featuredImage}`
                             : noImage
                         }
                         className="object-center  object-cover"
