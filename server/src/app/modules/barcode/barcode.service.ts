@@ -191,6 +191,13 @@ const getSingleVariant = async (variantId: string): Promise<ProductVariation | n
     select: {
       variantId: true,
       productId: true,
+      color: true,
+      size: true,
+      product: {
+        select: {
+          productName: true,
+        },
+      },
       _count: true,
       barCodes: {
         select: {

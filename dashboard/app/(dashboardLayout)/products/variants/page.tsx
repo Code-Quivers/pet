@@ -90,6 +90,12 @@ const AllProductList = () => {
         <p className="font-bold">Variants</p>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <p>
+          Product Name:{" "}
+          <span className="font-semibold">
+            {singleProduct?.data?.productName}
+          </span>
+        </p>
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           {/* <div>
             <h2 className="text-lg font-semibold ">
@@ -144,7 +150,7 @@ const AllProductList = () => {
             loading={isLoading || isFetching}
             rowHeight={70}
             headerHeight={50}
-            shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
+            shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the
             autoHeight={true}
             data={singleProduct?.data?.productVariations}
           >
@@ -221,8 +227,50 @@ const AllProductList = () => {
                 dataKey="category.categoryName"
               />
             </Column> */}
+            {/*img*/}
+            <Column width={70}>
+              <HeaderCell style={headerCss}>Image</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => (
+                  <Whisper
+                    placement="auto"
+                    speaker={
+                      <Popover>
+                        <div>
+                          <Image
+                            width={270}
+                            height={270}
+                            alt=""
+                            src={
+                              rowData?.image
+                                ? `${fileUrlKey()}/${rowData?.image}`
+                                : noImage
+                            }
+                            className="object-cover"
+                          />
+                        </div>
+                      </Popover>
+                    }
+                  >
+                    <div>
+                      <Image
+                        width={120}
+                        height={120}
+                        alt=""
+                        src={
+                          rowData?.image
+                            ? `${fileUrlKey()}/${rowData?.image}`
+                            : noImage
+                        }
+                        className="object-center  object-cover"
+                      />
+                    </div>
+                  </Whisper>
+                )}
+              </Cell>
+            </Column>
 
-            {/* Price */}
+            {/* color */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Color</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
