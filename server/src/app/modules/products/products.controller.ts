@@ -19,9 +19,8 @@ import { ProductFilterableFields } from './prroduct.constants';
 //     data: result,
 //   });
 // });
-// !----------------------------------Create New Category---------------------------------------->>>
+// !----------------------------------Create New Product---------------------------------------->>>
 const addProductsController = catchAsync(async (req: Request, res: Response) => {
-  // @ts-ignore
   const result = await ProductService.createProduct(req);
 
   sendResponse(res, {
@@ -32,7 +31,7 @@ const addProductsController = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
-// !----------------------------------get all Category---------------------------------------->>>
+// !----------------------------------get all Product---------------------------------------->>>
 const getProductsController = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterableFields);
 
@@ -49,7 +48,7 @@ const getProductsController = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
-// !----------------------------------get Single Category---------------------------------------->>>
+// !----------------------------------get Single Product---------------------------------------->>>
 const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;
   const result = await ProductService.getSingleProduct(productId);
@@ -62,7 +61,7 @@ const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// !----------------------------------Update Category---------------------------------------->>>
+// !----------------------------------Update Product---------------------------------------->>>
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params;
   // console.log('productId', productId);

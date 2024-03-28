@@ -8,14 +8,14 @@ import { ProductZodValidation } from './products.validation';
 
 const router = express.Router();
 
-// ! Create New List ------------------------------->>>
+// ! Create New Product ------------------------------->>>
 
 router.post('/', FileUploadHelper.uploadProductImage.array('files'), (req: Request, res: Response, next: NextFunction) => {
   req.body = ProductZodValidation.addProducts.parse(JSON.parse(req.body.data));
   return ProductController.addProductsController(req, res, next);
 });
 
-// ! Get all List----------------------------------->>>
+// ! Get all Product----------------------------------->>>
 router.get('/', ProductController.getProductsController);
 
 router.get('/:productId', ProductController.getSingleProduct);

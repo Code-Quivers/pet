@@ -1,7 +1,6 @@
 import { baseApi } from "./api/baseApi";
 import { reducer } from "./rootReducer";
 import { configureStore } from "@reduxjs/toolkit";
-import { setDeliveryFromLocalStorage } from "./slice/addDeliverySlice";
 
 const store = configureStore({
   reducer,

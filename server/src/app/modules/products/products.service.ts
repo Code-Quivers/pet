@@ -12,38 +12,39 @@ import { IUploadFile } from '../../../interfaces/file';
 
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { IProductFilterRequest, IProductRequest, IProductUpdateRequest } from './products.interface';
+import { IProductFilterRequest, IProductRequest, IProductUpdateRequest, IProductVariant } from './products.interface';
 import { generateBarCode } from './products.utils';
 import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './prroduct.constants';
 
 // modules
 
-// !----------------------------------Create New Category--------------------------------------->>>
+// !----------------------------------Create New Product--------------------------------------->>>
 const createProduct = async (req: Request): Promise<Product> => {
-  //@ts-ignore
-  const file = req.file as IUploadFile;
+  const files = req.files as IUploadFile[];
 
-  const filePath = file?.path?.substring(8);
+  const productImagesPaths = files?.map(file => {
+    return file.path?.substring(7);
+  });
 
-  //@ts-ignore
-  const data = req.body as any;
-
-  // await ProductValidation(data);
-  const variants = data?.productVariations?.map((variant: any) => {
+  const data = req.body as IProductRequest;
+  const variants = data?.productVariations?.map((variant: IProductVariant) => {
+    const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
     return {
+      image: imagePath,
       variantPrice: variant.variantPrice,
       color: variant.color,
       size: variant.size,
       stock: variant.stock,
     };
   });
+  console.log(variants);
 
   const result = await prisma.$transaction(async transactionClient => {
     const productInfo = {
       productName: data.productName,
       productPrice: data.productPrice,
       productDescription: data.productDescription,
-      productImage: filePath,
+      productImage: productImagesPaths,
       categoryId: data.categoryId,
       productVariations: {
         create: variants,
@@ -179,6 +180,7 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
           size: true,
           stock: true,
           variantPrice: true,
+          image: true,
         },
       },
     },

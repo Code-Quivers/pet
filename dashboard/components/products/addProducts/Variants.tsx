@@ -1,84 +1,81 @@
 "use client";
-import { useState } from "react";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { HiPlus } from "react-icons/hi";
-import { Input, InputNumber, InputPicker, SelectPicker } from "rsuite";
-import { useDispatch, useSelector } from "react-redux";
-import { addVariant } from "@/redux/features/slice/variantsSlice";
-import { Controller, set, useForm } from "react-hook-form";
+import { Form, Input, InputNumber } from "rsuite";
+import { Controller, useFieldArray } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import SingleUploadProduct from "./SingleUploadProduct";
 
-const Variants = ({
-  productVariations,
-  setProductVariations,
-  basePrice,
-}: any) => {
-  const dispatch = useDispatch();
-  // const { productVariations } = useSelector((state: any) => state?.variants);
-  // const [productVariations, setProductVariations] = useState<any>([]);
-  const { control } = useForm();
-
-  const handleVariant = (value: any, variantIndex: number, fieldName: any) => {
-    const updatedProductVariations = [...productVariations];
-    updatedProductVariations[variantIndex][fieldName] = value;
-    setProductVariations(updatedProductVariations);
-  };
-  const removeVariant = (id: any) => {
-    const updatedProductVariations = productVariations.filter(
-      (item: any) => item?.id !== id
-    );
-    setProductVariations(updatedProductVariations);
-  };
-  const data = ["Red", "Green", "Pink", "Blue"].map((item) => ({
-    label: item,
-    value: item,
-  }));
-  const sizeData = ["Small", "Large", "Medium"].map((item) => ({
-    label: item,
-    value: item,
-  }));
+const Variants = ({ control, basePrice, errors }: any) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "productVariants",
+  });
 
   return (
     <>
       <section className=" py-4 bg-white border border-[#d1d5db] rounded-xl">
-        {/* <div>
-          <p className="font-semibold text-sm border-b px-4 pb-4">Variants</p>
-        </div> */}
-
-        {productVariations?.map((variant: any, variantIndex: number) => (
+        {fields?.map((field, index) => (
           <div
-            key={variantIndex}
+            key={field.id}
             className={`${
-              variantIndex === 2 ? "" : "border-b-[#d1d5db] border-b "
+              index === fields.length - 1 ? "" : "border-b-[#d1d5db] border-b "
             } px-5 my-3`}
           >
             <div className="mb-3 flex justify-between">
-              <h1 className="text-xl">Variant {variantIndex + 1}</h1>
+              <h1 className="text-xl">Variant {index + 1}</h1>
               <span
-                onClick={() => removeVariant(variant?.id)}
+                onClick={() => remove(index)}
                 className="cursor-pointer hover:text-[#ef4444]"
               >
                 Remove
               </span>
             </div>
             <div className="grid grid-cols-1  md:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-6 gap-10">
+              {/* image */}
               <div className="col-span-1 md:col-span-2 lg:col-span-2 2xl:col-span-1  ">
                 <div className="w-full">
                   <Controller
-                    name="productImages"
+                    name={`productVariants[${index}].image`}
                     control={control}
+                    rules={{
+                      required: "Image is Required !!",
+                    }}
                     render={({ field }) => (
-                      <SingleUploadProduct
-                        handleVariant={handleVariant}
-                        label="image"
-                        variantIndex={variantIndex}
-                        field={field as any}
-                      />
+                      <div className="rs-form-control-wrapper ">
+                        <SingleUploadProduct
+                          label="image"
+                          variantIndex={index}
+                          field={{
+                            value: field.value,
+                            onChange: (file) => {
+                              if (Array.isArray(file)) {
+                                field.onChange(file[0]);
+                              } else {
+                                field.onChange(file);
+                              }
+                            },
+                          }}
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            errors?.productVariants?.length &&
+                            !!errors?.productVariants[index]?.image
+                          }
+                          placement="topEnd"
+                        >
+                          <span>
+                            {errors?.productVariants?.length &&
+                              ((errors?.productVariants[index]?.image
+                                ?.message as string) ||
+                                "Required")}
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
                     )}
                   />
                 </div>
               </div>
+              {/*  */}
               <div className="col-span-1 md:col-span-4 lg:col-span-6 2xl:col-span-5  ">
                 <div className="flex gap-7 mb-2">
                   {/* Color name */}
@@ -88,17 +85,33 @@ const Variants = ({
                     </label>
                     <Controller
                       control={control}
-                      name="color"
+                      rules={{
+                        required: "Color is Required !!",
+                      }}
+                      name={`productVariants[${index}].color`}
                       render={({ field }) => (
-                        <div>
+                        <div className="rs-form-control-wrapper  w-full">
                           <Input
-                            value={variant?.color}
-                            className="w-full mt-1"
+                            value={field.value}
+                            className="!w-full mt-1"
                             onChange={(value) => {
                               field.onChange(value);
-                              handleVariant(value, variantIndex, "color");
                             }}
                           />
+                          <Form.ErrorMessage
+                            show={
+                              errors?.productVariants?.length &&
+                              !!errors?.productVariants[index]?.color
+                            }
+                            placement="topEnd"
+                          >
+                            <span>
+                              {errors?.productVariants?.length &&
+                                ((errors?.productVariants[index]?.color
+                                  ?.message as string) ||
+                                  "Required")}
+                            </span>
+                          </Form.ErrorMessage>
                         </div>
                       )}
                     />
@@ -108,24 +121,38 @@ const Variants = ({
                     <label htmlFor="" className="font-medium text-sm">
                       Size
                     </label>
-                    <div>
-                      <Controller
-                        control={control}
-                        name="size"
-                        render={({ field }) => (
+                    <Controller
+                      control={control}
+                      name={`productVariants[${index}].size`}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper  w-full">
                           <Input
-                            value={variant?.size}
-                            className="w-full mt-1"
+                            value={field.value}
+                            className="!w-full mt-1"
                             onChange={(value) => {
                               field.onChange(value);
-                              handleVariant(value, variantIndex, "size");
                             }}
                           />
-                        )}
-                      />
-                    </div>
+                          <Form.ErrorMessage
+                            show={
+                              errors?.productVariants?.length &&
+                              !!errors?.productVariants[index]?.size
+                            }
+                            placement="topEnd"
+                          >
+                            <span>
+                              {errors?.productVariants?.length &&
+                                ((errors?.productVariants[index]?.size
+                                  ?.message as string) ||
+                                  "Required")}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
+                {/*  */}
                 <div className="flex gap-7 mb-5">
                   {/* stock */}
                   <div className="w-full">
@@ -133,20 +160,42 @@ const Variants = ({
                       Stock
                     </label>
                     <Controller
-                      name="stock"
+                      name={`productVariants[${index}].stock`}
                       control={control}
+                      rules={{
+                        required: "Stock is Required !!",
+                        min: {
+                          value: 0,
+                          message: "Stock must be equal or greater than 0",
+                        },
+                      }}
                       render={({ field }) => (
-                        <InputNumber
-                          max={100}
-                          min={1}
-                          value={variant?.stock}
-                          className="w-full mt-1"
-                          placeholder="Stock"
-                          onChange={(value) => {
-                            field.onChange(value);
-                            handleVariant(value, variantIndex, "stock");
-                          }}
-                        />
+                        <div className="rs-form-control-wrapper  w-full">
+                          <InputNumber
+                            max={100}
+                            min={1}
+                            value={field.value}
+                            className="!w-full mt-1"
+                            placeholder="Stock"
+                            onChange={(value) => {
+                              field.onChange(value);
+                            }}
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              errors?.productVariants?.length &&
+                              !!errors?.productVariants[index]?.stock
+                            }
+                            placement="topEnd"
+                          >
+                            <span>
+                              {errors?.productVariants?.length &&
+                                ((errors?.productVariants[index]?.stock
+                                  ?.message as string) ||
+                                  "Required")}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
                       )}
                     />
                   </div>
@@ -156,20 +205,42 @@ const Variants = ({
                       Variant Price
                     </label>
                     <Controller
-                      name="price"
+                      name={`productVariants[${index}].variantPrice`}
+                      rules={{
+                        required: "Variant price is Required !!",
+                        min: {
+                          value: 1,
+                          message: "Variant Price must be greater than 0",
+                        },
+                      }}
                       control={control}
                       render={({ field }) => (
-                        <InputNumber
-                          max={100}
-                          min={1}
-                          defaultValue={basePrice}
-                          className="w-full mt-1"
-                          placeholder="Price"
-                          onChange={(value) => {
-                            field.onChange(value);
-                            handleVariant(value, variantIndex, "price");
-                          }}
-                        />
+                        <div className="rs-form-control-wrapper  w-full">
+                          <InputNumber
+                            max={10000}
+                            min={1}
+                            defaultValue={basePrice ?? undefined}
+                            className="!w-full mt-1"
+                            placeholder="Price"
+                            onChange={(value) => {
+                              field.onChange(value);
+                            }}
+                          />
+                          <Form.ErrorMessage
+                            show={
+                              errors?.productVariants?.length &&
+                              !!errors?.productVariants[index]?.variantPrice
+                            }
+                            placement="topEnd"
+                          >
+                            <span>
+                              {errors?.productVariants?.length &&
+                                ((errors?.productVariants[index]?.variantPrice
+                                  ?.message as string) ||
+                                  "Required")}
+                            </span>
+                          </Form.ErrorMessage>
+                        </div>
                       )}
                     />
                   </div>
@@ -178,24 +249,23 @@ const Variants = ({
             </div>
           </div>
         ))}
-
-        <span
-          onClick={() => {
-            setProductVariations([
-              ...productVariations,
-              {
+        {/* button */}
+        <div>
+          <span
+            onClick={() => {
+              append({
                 id: uuidv4(),
                 color: "",
                 size: "",
                 stock: "",
                 price: basePrice,
-              },
-            ]);
-          }}
-          className="px-4 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
-        >
-          <HiPlus className="inline-block" /> Add options size or color
-        </span>
+              });
+            }}
+            className="px-4 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"
+          >
+            <HiPlus className="inline-block" /> Add options size or color
+          </span>
+        </div>
       </section>
     </>
   );

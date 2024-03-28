@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
 const addProducts = z.object({
-  productName: z.string().nonempty({ message: 'Product Name is required' }),
+  productName: z.string().nonempty(),
   productDescription: z.string().nonempty({ message: 'Product Description is required' }),
   productPrice: z.number().min(0, { message: 'Product Price must be a positive number' }),
-  categoryId: z.string().nonempty({ message: 'Category is required' }),
+  categoryId: z.string().nonempty(),
   productVariations: z.array(
     z.object({
+      id: z.string(),
       variantPrice: z.number().min(0, { message: 'Variant Price must be a positive number' }),
       color: z.string(),
       size: z.string(),
