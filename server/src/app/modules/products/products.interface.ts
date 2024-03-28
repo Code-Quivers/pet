@@ -15,15 +15,14 @@ export type IProductRequest = {
   productImage: string;
   productPrice: number;
   categoryId: string;
-  productVariations: {
-    variantPrice: number;
-    color: string;
-    size: string;
-    stock: number;
-    barCodes: {
-      code: string;
-    }[];
-  }[];
+  productVariations: IProductVariant[];
+};
+export type IProductVariant = {
+  id: string;
+  variantPrice: number;
+  color: string;
+  size: string;
+  stock: number;
 };
 
 export type IProductUpdateRequest = {

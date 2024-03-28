@@ -1,14 +1,21 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
-// import AddProductTextEditor from "./AddProductTextEditor";
-// import ShowAddVariant from "./ShowAddVariant";
 import Variants from "./Variants";
-import { Form, Input, InputNumber, SelectPicker } from "rsuite";
-import { useState } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Message,
+  SelectPicker,
+  useToaster,
+} from "rsuite";
+import { useEffect, useState } from "react";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import { useDebounced } from "@/redux/hook";
 import AddProductUpload from "./AddProductUpload";
 import { FileType } from "rsuite/esm/Uploader";
+import { useAddProductMutation } from "@/redux/features/productsApi";
 
 const AddProductsSection = () => {
   const query: Record<string, any> = {};
@@ -16,35 +23,48 @@ const AddProductsSection = () => {
   const [size, setSize] = useState<number>(10);
   const [basePrice, setBasePrice] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>("");
-
   query["limit"] = size;
   query["page"] = page;
+
+  //
   const debouncedTerm = useDebounced({
     searchQuery: searchTerm,
     delay: 300,
   });
 
-  if (!!debouncedTerm) {
-    query["searchTerm"] = debouncedTerm;
-  }
+  if (!!debouncedTerm) query["searchTerm"] = debouncedTerm;
+
   const { data: categories } = useGetCategoryQuery({ ...query });
 
-  const [productVariations, setProductVariations] = useState<any>([]);
   const {
     handleSubmit,
     control,
     formState: { errors },
     watch,
   } = useForm();
+  const { productVariants: allVariants } = watch();
+  //
+  const [
+    addProduct,
+    {
+      data: addProductData,
+      isLoading: isLoadingAdd,
+      isSuccess: isSuccessAdd,
+      isError: isErrorAdd,
+      error: errorAdd,
+      reset: resetAdd,
+    },
+  ] = useAddProductMutation();
 
-  const handleAddProduct = (data: any) => {
+  // ! submit
+  const handleAddProduct = async (data: any) => {
     const formData = new FormData();
     // Map productVariations data and format it
-    const productVariationData = productVariations?.map(
+    const productVariationData = data?.productVariants?.map(
       ({ image, ...items }: any) => {
         return {
           ...items,
-          price: parseFloat(items?.price),
+          variantPrice: parseFloat(items?.variantPrice),
           stock: parseInt(items?.stock),
         };
       }
@@ -54,7 +74,7 @@ const AddProductsSection = () => {
       productName: data.title,
       productDescription: data.description,
       categoryId: data.category,
-      productPrice: data.productPrice,
+      productPrice: parseFloat(data.productPrice),
       productVariations: productVariationData,
     };
     // Convert product object to JSON string
@@ -65,7 +85,7 @@ const AddProductsSection = () => {
     });
 
     // Append variant photos to formData
-    productVariations?.forEach(({ image, ...others }: any) => {
+    data?.productVariants?.forEach(({ image, ...others }: any) => {
       const { blobFile, name } = image ?? {};
       const [baseName, extension] = name?.split(".") ?? [];
       if (blobFile && baseName && extension) {
@@ -79,7 +99,47 @@ const AddProductsSection = () => {
 
     // appending all data to formData
     formData.append("data", productJSON);
+
+    await addProduct(formData);
   };
+
+  // ! side effect
+  const toaster = useToaster();
+
+  useEffect(() => {
+    if (isSuccessAdd && !isErrorAdd && !isLoadingAdd) {
+      toaster.push(
+        <Message bordered showIcon type="success" closable>
+          <h4 className="font-semibold ">
+            {addProductData?.message || "Successfully Created"}
+          </h4>
+        </Message>,
+        { placement: "topEnd", duration: 2000 }
+      );
+      resetAdd();
+    }
+    if (!isSuccessAdd && isErrorAdd && !isLoadingAdd && errorAdd) {
+      toaster.push(
+        <Message bordered showIcon type="error" closable>
+          <h4 className="font-semibold ">
+            {
+              // @ts-ignore
+              errorAdd?.message || "Failed to Create"
+            }
+          </h4>
+        </Message>,
+        { placement: "topEnd", duration: 2000 }
+      );
+    }
+  }, [
+    addProductData?.message,
+    errorAdd,
+    isErrorAdd,
+    isLoadingAdd,
+    isSuccessAdd,
+    resetAdd,
+    toaster,
+  ]);
 
   return (
     <div>
@@ -193,10 +253,10 @@ const AddProductsSection = () => {
                   )}
                 />
               </div>
-              {/* product base price */}
+              {/* product  price */}
               <div className="mt-2">
                 <label htmlFor="" className="font-medium">
-                  Base price
+                  Product price
                 </label>
                 <Controller
                   control={control}
@@ -265,19 +325,18 @@ const AddProductsSection = () => {
         </div>
         <div>
           <h1 className="text-xl mt-3 mb-2 font-medium">Variants</h1>
-          <Variants
-            basePrice={basePrice}
-            productVariations={productVariations}
-            setProductVariations={setProductVariations}
-          />
+
+          <Variants errors={errors} control={control} basePrice={basePrice} />
         </div>
-        <div className="flex justify-end">
-          <button
+        <div className="flex justify-end mt-10">
+          <Button
+            disabled={!allVariants?.length}
+            loading={isLoadingAdd}
             type="submit"
-            className="px-4 py-2 w-full bg-primary text-white font-medium rounded-lg mt-3"
+            className="!px-5 !py-3 !bg-primary !text-white !font-medium !rounded-lg "
           >
             Add product
-          </button>
+          </Button>
         </div>
       </form>
     </div>

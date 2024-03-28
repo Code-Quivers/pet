@@ -11,17 +11,11 @@ interface AddSingleVariantImageUploadProps {
     onChange: (file: FileType | undefined) => void;
     value: FileType | undefined;
   };
-  handleVariant: any;
   label: string;
   variantIndex: number;
 }
 
-const SingleUploadProduct = ({
-  field,
-  handleVariant,
-  label,
-  variantIndex,
-}: AddSingleVariantImageUploadProps) => {
+const SingleUploadProduct = ({ field }: AddSingleVariantImageUploadProps) => {
   const [fileValue, setFileValue] = useState<FileType[]>([]);
   const [imagePreview, setImagePreview] = useState<string | undefined>(
     undefined
@@ -39,8 +33,7 @@ const SingleUploadProduct = ({
       ) {
         setFileValue([latestFile]);
         field.onChange(latestFile);
-        handleVariant(latestFile, variantIndex, label);
-        //
+
         const file = latestFile;
         const reader = new FileReader();
 
@@ -69,7 +62,7 @@ const SingleUploadProduct = ({
 
   const clearImagePreview = () => {
     setImagePreview(undefined);
-    handleVariant(undefined, variantIndex, label);
+
     setFileValue([]);
     field.onChange(undefined);
   };

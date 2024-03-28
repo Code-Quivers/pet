@@ -71,7 +71,7 @@ model Category {
 model Product {
   productId          String          @id @default(uuid())
   productName        String
-  productImage       String
+  productImage       String[]
   productPrice       Float
   productDescription String
   productStatus      ProductStatus   @default(AVAILABLE)
@@ -93,12 +93,13 @@ model Product {
 }
 
 // the model for product variations
+  // barcodeCode  String    @unique
 model ProductVariation {
   variantId    String    @id @default(uuid())
-  // barcodeCode  String    @unique
   variantPrice Float
   color        String
   size         String?
+  image        String
   stock        Int       @default(0)
   productId    String?
   product      Product?  @relation(fields: [productId], references: [productId], onDelete: SetNull)
@@ -217,11 +218,11 @@ model KidDetails {
 
 // The model for promotions
 model Promotion {
-  promotionId String        @id @default(uuid())
-  promotionName        String
-  promoCode String
-  expireDate DateTime
-  type        PromotionType
+  promotionId   String        @id @default(uuid())
+  promotionName String
+  promoCode     String
+  expireDate    DateTime
+  type          PromotionType
 
   // many-to-many relationship between promotions and products
   products Product[]
@@ -229,8 +230,8 @@ model Promotion {
   // one-to-many relationship between promotion and rules
   promotionRules PromotionRule[]
 
-  createdAt      DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // model for promotion rules
@@ -238,7 +239,6 @@ model PromotionRule {
   id          String    @id @default(uuid())
   promotion   Promotion @relation(fields: [promotionId], references: [promotionId])
   promotionId String
-
 
   // type of rule, e.g., BuyOneGetOne, DiscountBasedOnAmount
   // typtypee RuleType?
@@ -251,8 +251,8 @@ model PromotionRule {
   threshold Float?
   discount  Float?
 
-  createdAt      DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // enum for promotion types
