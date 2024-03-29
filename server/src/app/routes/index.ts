@@ -2,7 +2,6 @@ import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
-import { ColorVarientRoutes } from '../modules/colorVarient/colorVarient.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
 import { PetRoutes } from '../modules/Pet/pet.routes';
@@ -10,6 +9,7 @@ import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 import { ProductRoutes } from '../modules/products/products.routes';
 import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
 import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
+import { BlogsRoutes } from '../modules/blogs/blogs.routes';
 
 const router = express.Router();
 
@@ -53,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/promo-code',
     route: PromoCodeRoutes,
+  },
+  {
+    path: '/blogs',
+    route: BlogsRoutes,
   },
 ];
 

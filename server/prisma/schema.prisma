@@ -49,23 +49,18 @@ model Profile {
   user                   User?
 }
 
-enum UserRoles {
-  SUPERADMIN
-  ADMIN
-  USER
-}
-
 // Product Part 
 
 model Category {
-  categoryId    String    @id @default(uuid())
-  categoryName  String    @unique
-  categoryHref  String    @unique
+  categoryId    String     @id @default(uuid())
+  categoryName  String     @unique
+  categoryHref  String     @unique
   description   String
   categoryImage String
-  createdAt     DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
-  product       Product[]
+  createdAt     DateTime   @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime   @updatedAt @db.Timestamptz(0)
+  product       Product[] 
+  comments      Comments[]
 }
 
 model Product {
@@ -116,18 +111,6 @@ model BarCode {
   variant       ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt     DateTime         @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime         @updatedAt @db.Timestamptz(0)
-}
-
-enum ProductStatus {
-  AVAILABLE
-  UNAVAILABLE
-}
-
-enum BarcodeStatus {
-  SOLD
-  AVAILABLE
-  ACTIVE
-  DEACTIVE
 }
 
 // model PromoCode {
@@ -182,14 +165,6 @@ model Order {
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
   createdAt       DateTime    @default(now()) @db.Timestamptz(0)
   updatedAt       DateTime    @updatedAt @db.Timestamptz(0)
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  DELIVERED
-  CANCELLED
-  REJECTED
 }
 
 model KidDetails {
@@ -255,18 +230,6 @@ model PromotionRule {
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
 
-// enum for promotion types
-enum PromotionType {
-  BUY_ONE_GET_ONE
-  DISCOUNT_BASED_ON_AMOUNT
-}
-
-// enum for rule types
-// enum RuleType {
-//   BUY_ONE_GET_ONE
-//   DISCOUNT_BASED_ON_AMOUNT
-// }
-
 model Testimonial {
   testimonialId          String   @id @default(uuid())
   clientName             String
@@ -276,4 +239,67 @@ model Testimonial {
   rating                 String
   createdAt              DateTime @default(now()) @db.Timestamptz(0)
   updatedAt              DateTime @updatedAt @db.Timestamptz(0)
+}
+
+model Blogs {
+  blogId      String     @id @default(uuid()) 
+  title       String
+  description String
+  blogImage   String 
+categoryName  String
+  // 
+  createdAt   DateTime   @default(now()) @db.Timestamptz(0)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(0)
+  comments    Comments[]
+}
+
+
+
+model Comments {
+  commentId  String    @id @default(uuid())
+  name       String
+  email      String
+  comment    String
+  // 
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
+  blogId     String?
+  blog       Blogs?    @relation(fields: [blogId], references: [blogId], onDelete: SetNull)
+  // 
+  createdAt  DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt  DateTime  @updatedAt @db.Timestamptz(0)
+}
+
+// ! enums -----------------------------------
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+  REJECTED
+}
+
+enum ProductStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+enum BarcodeStatus {
+  SOLD
+  AVAILABLE
+  ACTIVE
+  DEACTIVE
+}
+
+// enum for promotion types
+enum PromotionType {
+  BUY_ONE_GET_ONE
+  DISCOUNT_BASED_ON_AMOUNT
+}
+
+enum UserRoles {
+  SUPERADMIN
+  ADMIN
+  USER
 }
