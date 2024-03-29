@@ -11,6 +11,8 @@ import {
   Pagination,
   Popover,
   Table,
+  Tag,
+  TagGroup,
   Whisper,
 } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
@@ -26,6 +28,7 @@ import {
   useGetPromotionalOfferQuery,
 } from "@/redux/features/promoCodeApi";
 import PromoCodeDeleteConfirmationModal from "../modal/PromoCodeDeleteConfirmationModal";
+import PromoCodeEditModal from "../modal/PromoCodeEditModal";
 
 const PromoCodeTableList = () => {
   const query: Record<string, any> = {};
@@ -160,15 +163,31 @@ const PromoCodeTableList = () => {
               </Cell>
             </Column> */}
             {/* Item Description */}
-            <Column flexGrow={1} minWidth={105}>
+            <Column width={250}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 Product Name
               </HeaderCell>
               <Cell
+                className="m-2"
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="clientName"
-              />
+              >
+                {(rowData: any) => {
+                  return (
+                    <TagGroup className="grid grid-cols-2 items-center gap-3">
+                      {rowData?.promotion?.products?.map(
+                        (product: any, index: number) => (
+                          <Tag key={index} size="lg">
+                            {" "}
+                            {product.productName}{" "}
+                          </Tag>
+                        )
+                      )}
+                    </TagGroup>
+                  );
+                }}
+              </Cell>
             </Column>
 
             {/* category */}
@@ -319,12 +338,12 @@ const PromoCodeTableList = () => {
       </div>
 
       {/* Edit Modal */}
-      {/* <TestimonialEditTable
+      <PromoCodeEditModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
         editData={editData}
         handleCloseEdit={handleCloseEdit}
-      /> */}
+      />
     </>
   );
 };

@@ -8,7 +8,6 @@ import {
   DatePicker,
   Form,
   Input,
-  InputPicker,
   Message,
   SelectPicker,
   useToaster,
@@ -20,9 +19,9 @@ import {
   useGetCategoryQuery,
   useGetSingleCategoryQuery,
 } from "@/redux/features/categoryApi";
-import { useAddProductQAMutation } from "@/redux/features/productQAApi";
-import moment from "moment";
+
 import { useAddPromoMutation } from "@/redux/features/promoCodeApi";
+import { promoTypeEnums } from "@/helpers/constant";
 
 const AddProductPromoForm = () => {
   const [orderDiscount, setOrderDiscount] = useState(false);
@@ -70,24 +69,6 @@ const AddProductPromoForm = () => {
         };
       })
     : [];
-
-  const promos = [
-    {
-      label: "Buy & Get Offer",
-      value: "BUY_ONE_GET_ONE",
-    },
-    {
-      label: "Discount on Order",
-      value: "DISCOUNT_BASED_ON_AMOUNT",
-    },
-  ];
-
-  const promoTypeEnums = promos.map((promo: any) => {
-    return {
-      label: promo.label,
-      value: promo.value,
-    };
-  });
 
   const [addPromoCode, { data, isLoading, isSuccess, isError, error, reset }] =
     useAddPromoMutation();

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma, ProductQA, Promotion, PromotionRule } from '@prisma/client';
+import { Prisma, Promotion, PromotionRule } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
-import { IPromoFilterRequest, IPromoRequest, IQAUpdateRequest } from './promoCode.interface';
+import { IPromoFilterRequest, IPromoRequest, IPromoUpdateRequest } from './promoCode.interface';
 import { PromoCodeRelationalFields, PromoCodeRelationalFieldsMapper, PromoCodeSearchableFields } from './promoCode.constants';
 // modules
 
@@ -188,8 +188,17 @@ const getPromotionalOffer = async (filters: IPromoFilterRequest, options: IPagin
   const whereConditions: Prisma.PromotionRuleWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
   const result = await prisma.promotionRule.findMany({
-    include: {
-      promotion: true,
+    select: {
+      promotion: {
+        include: {
+          products: true,
+        },
+      },
+      buy: true,
+      get: true,
+      threshold: true,
+      discount: true,
+      id: true,
     },
     where: whereConditions,
     skip,
@@ -212,12 +221,13 @@ const getPromotionalOffer = async (filters: IPromoFilterRequest, options: IPagin
       total,
       totalPage,
     },
+    // @ts-ignore
     data: result,
   };
 };
 
 // !----------------------------------Update Courier---------------------------------------->>>
-const updatePromoCode = async (id: string, payload: IQAUpdateRequest): Promise<PromotionRule> => {
+const updatePromoCode = async (id: string, payload: IPromoUpdateRequest): Promise<PromotionRule> => {
   const result = await prisma.$transaction(async transactionClient => {
     const existingPromotionRule = await transactionClient.promotionRule.findUnique({
       where: {
@@ -230,11 +240,6 @@ const updatePromoCode = async (id: string, payload: IQAUpdateRequest): Promise<P
     }
 
     const updatedDetails = {
-      productId: payload.productId,
-      promotionName: payload.promotionName,
-      promoCode: payload.promoCode,
-      expireDate: payload.expireDate,
-      type: payload.type,
       buy: payload.buy,
       get: payload.get,
       threshold: payload.threshold,
@@ -247,6 +252,42 @@ const updatePromoCode = async (id: string, payload: IQAUpdateRequest): Promise<P
       },
       data: updatedDetails,
     });
+
+    if (!updatedData) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update !!');
+    }
+
+    const findPromotion = await transactionClient.promotion.findUnique({
+      where: {
+        promotionId: existingPromotionRule.promotionId,
+      },
+      include: {
+        products: true,
+      },
+    });
+
+    if (!findPromotion) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Promotion Not Found !!');
+    }
+
+    const updatedPromotion = await transactionClient.promotion.update({
+      where: {
+        promotionId: findPromotion.promotionId,
+      },
+      data: {
+        products: {
+          set: payload?.productId?.map(productId => ({ productId })),
+        },
+        promotionName: payload.promotionName,
+        promoCode: payload.promoCode,
+        expireDate: payload.expireDate,
+        type: payload.type,
+      },
+    });
+
+    if (!updatedPromotion) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update !!');
+    }
 
     return updatedData;
   });

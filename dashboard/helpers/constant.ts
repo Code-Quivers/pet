@@ -15,3 +15,21 @@ export const predefinedRanges = [
     value: [new Date(), addDays(new Date(), 30)],
   },
 ];
+
+const promos = [
+  {
+    label: "Buy & Get Offer",
+    value: "BUY_ONE_GET_ONE",
+  },
+  {
+    label: "Discount on Order",
+    value: "DISCOUNT_BASED_ON_AMOUNT",
+  },
+];
+
+export const promoTypeEnums = promos?.map((promo: any) => {
+  return {
+    label: promo.label,
+    value: promo.value,
+  };
+});
