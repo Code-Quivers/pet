@@ -44,6 +44,7 @@ const AddProductsSection = () => {
     watch,
   } = useForm();
   const { productVariants: allVariants } = watch();
+  console.log(allVariants);
   //
   const [
     addProduct,
@@ -65,7 +66,7 @@ const AddProductsSection = () => {
       ({ image, ...items }: any) => {
         return {
           ...items,
-          variantPrice: parseFloat(items?.variantPrice),
+          // variantPrice: parseFloat(items?.variantPrice),
           stock: parseInt(items?.stock),
         };
       }
@@ -78,7 +79,7 @@ const AddProductsSection = () => {
       productPrice: parseFloat(data.productPrice),
       productVariations: productVariationData,
     };
-
+    console.log(product, "product........");
     // Convert product object to JSON string
     const productJSON = JSON.stringify(product);
     // Append product images to formData
@@ -90,8 +91,7 @@ const AddProductsSection = () => {
     if (data?.featuredImage?.blobFile) {
       const { blobFile, name } = data?.featuredImage ?? {};
       const [baseName, extension] = name?.split(".") ?? [];
-    
-  
+
       formData.append(
         "files",
         blobFile as Blob,
@@ -114,7 +114,7 @@ const AddProductsSection = () => {
     // appending all data to formData
     formData.append("data", productJSON);
 
-    await addProduct(formData);
+    // await addProduct(formData);
   };
 
   // ! side effect
@@ -163,7 +163,7 @@ const AddProductsSection = () => {
             <h1 className="text-xl mb-1 font-medium">Product information</h1>
             <div className="bg-white border border-[#d1d5db] rounded-xl p-4">
               {/* product title */}
-              <div className="flex flex-col   gap-2">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="title" className="font-medium">
                   Title
                 </label>
@@ -288,7 +288,6 @@ const AddProductsSection = () => {
                         <InputNumber
                           value={field.value}
                           min={1}
-                          step={0.1}
                           formatter={(value) => `€ ${value}`}
                           onChange={(value) => {
                             field.onChange(value);

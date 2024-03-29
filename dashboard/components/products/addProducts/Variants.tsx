@@ -10,7 +10,7 @@ const Variants = ({ control, basePrice, errors }: any) => {
     control,
     name: "productVariants",
   });
-
+  // console.log(fields);
   return (
     <>
       <section className=" py-4 bg-white border border-[#d1d5db] rounded-xl">
@@ -30,7 +30,7 @@ const Variants = ({ control, basePrice, errors }: any) => {
                 Remove
               </span>
             </div>
-            <div className="grid grid-cols-1  md:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-6 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-6 gap-10">
               {/* image */}
               <div className="col-span-1 md:col-span-2 lg:col-span-2 2xl:col-span-1  ">
                 <div className="w-full">
@@ -75,81 +75,130 @@ const Variants = ({ control, basePrice, errors }: any) => {
                   />
                 </div>
               </div>
-              {/*  */}
+              {/* input form  */}
               <div className="col-span-1 md:col-span-4 lg:col-span-6 2xl:col-span-5  ">
                 <div className="flex gap-7 mb-2">
-                  {/* Color name */}
-                  <div className="w-full">
-                    <label htmlFor="color" className="font-medium text-sm">
-                      Color
-                    </label>
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: "Color is Required !!",
-                      }}
-                      name={`productVariants[${index}].color`}
-                      render={({ field }) => (
-                        <div className="rs-form-control-wrapper  w-full">
-                          <Input
-                            value={field.value}
-                            className="!w-full mt-1"
-                            onChange={(value) => {
-                              field.onChange(value);
-                            }}
-                          />
-                          <Form.ErrorMessage
-                            show={
-                              errors?.productVariants?.length &&
-                              !!errors?.productVariants[index]?.color
-                            }
-                            placement="topEnd"
-                          >
-                            <span>
-                              {errors?.productVariants?.length &&
-                                ((errors?.productVariants[index]?.color
-                                  ?.message as string) ||
-                                  "Required")}
-                            </span>
-                          </Form.ErrorMessage>
-                        </div>
-                      )}
-                    />
-                  </div>
-                  {/* Size values */}
-                  <div className="w-full">
-                    <label htmlFor="" className="font-medium text-sm">
-                      Size
-                    </label>
-                    <Controller
-                      control={control}
-                      name={`productVariants[${index}].size`}
-                      render={({ field }) => (
-                        <div className="rs-form-control-wrapper  w-full">
-                          <Input
-                            value={field.value}
-                            className="!w-full mt-1"
-                            onChange={(value) => {
-                              field.onChange(value);
-                            }}
-                          />
-                          <Form.ErrorMessage
-                            show={
-                              errors?.productVariants?.length &&
-                              !!errors?.productVariants[index]?.size
-                            }
-                            placement="topEnd"
-                          >
-                            <span>
-                              {errors?.productVariants?.length &&
-                                ((errors?.productVariants[index]?.size
-                                  ?.message as string) ||
-                                  "Required")}
-                            </span>
-                          </Form.ErrorMessage>
-                        </div>
-                      )}
-                    />
+                  <div className="w-full flex gap-2 max-sm:flex-wrap">
+                    {/* Color name */}
+                    <div className="w-full">
+                      <label htmlFor="color" className="font-medium text-sm">
+                        Color Name
+                      </label>
+                      <Controller
+                        control={control}
+                        rules={{
+                          required: "Color is Required !!",
+                        }}
+                        name={`productVariants[${index}].color.name`}
+                        render={({ field }) => (
+                          <div className="rs-form-control-wrapper  w-full">
+                            <Input
+                              value={field.value}
+                              className="!w-full mt-1"
+                              onChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            />
+                            <Form.ErrorMessage
+                              show={
+                                errors?.productVariants?.length &&
+                                !!errors?.productVariants[index]?.color?.name
+                              }
+                              placement="topEnd"
+                            >
+                              <span>
+                                {errors?.productVariants?.length &&
+                                  ((errors?.productVariants[index]?.color?.name
+                                    ?.message as string) ||
+                                    "Required")}
+                              </span>
+                            </Form.ErrorMessage>
+                          </div>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full">
+                      {/* Color code */}
+                      <label htmlFor="code" className="font-medium text-sm">
+                        Color Code
+                      </label>
+                      <Controller
+                        control={control}
+                        rules={{
+                          required: "Color code is Required !!",
+                        }}
+                        name={`productVariants[${index}].color.code`}
+                        render={({ field }) => (
+                          <div className="rs-form-control-wrapper w-full relative">
+                            <Input
+                              value={field.value}
+                              className="border !w-full mt-1"
+                            />
+                            <input
+                              type="color"
+                              value={field.value}
+                              className="!w-full mt-1 absolute inset-0 opacity-0 cursor-text z-99999"
+                              onChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            />
+                            <div
+                              style={{ backgroundColor: field.value }}
+                              className="absolute top-0 right-0 w-5 h-5 my-2 mr-2 rounded-full "
+                            ></div>
+                            <Form.ErrorMessage
+                              show={
+                                errors?.productVariants?.length &&
+                                !!errors?.productVariants[index]?.color?.code
+                              }
+                              placement="topEnd"
+                            >
+                              <span>
+                                {errors?.productVariants?.length &&
+                                  ((errors?.productVariants[index]?.color?.code
+                                    ?.message as string) ||
+                                    "Required")}
+                              </span>
+                            </Form.ErrorMessage>
+                          </div>
+                        )}
+                      />
+                    </div>
+                    {/* Size values */}
+                    <div className="w-full">
+                      <label htmlFor="" className="font-medium text-sm">
+                        Size
+                      </label>
+                      <Controller
+                        control={control}
+                        name={`productVariants[${index}].size`}
+                        render={({ field }) => (
+                          <div className="rs-form-control-wrapper  w-full">
+                            <Input
+                              value={field.value}
+                              className="!w-full mt-1"
+                              onChange={(value) => {
+                                field.onChange(value);
+                              }}
+                            />
+                            <Form.ErrorMessage
+                              show={
+                                errors?.productVariants?.length &&
+                                !!errors?.productVariants[index]?.size
+                              }
+                              placement="topEnd"
+                            >
+                              <span>
+                                {errors?.productVariants?.length &&
+                                  ((errors?.productVariants[index]?.size
+                                    ?.message as string) ||
+                                    "Required")}
+                              </span>
+                            </Form.ErrorMessage>
+                          </div>
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
                 {/*  */}
@@ -223,7 +272,7 @@ const Variants = ({ control, basePrice, errors }: any) => {
                             className="!w-full mt-1"
                             placeholder="Price"
                             onChange={(value) => {
-                              field.onChange(value);
+                              field.onChange(parseFloat(value || basePrice));
                             }}
                           />
                           <Form.ErrorMessage
@@ -255,10 +304,14 @@ const Variants = ({ control, basePrice, errors }: any) => {
             onClick={() => {
               append({
                 id: uuidv4(),
-                color: "",
+                color: {
+                  name: "",
+                  code: "",
+                },
                 size: "",
                 stock: "",
-                price: basePrice,
+                // price: basePrice,
+                variantPrice: basePrice,
               });
             }}
             className="px-4 text-[#3f84de] text-sm inline-block cursor-pointer hover:underline-offset-2 hover:underline"

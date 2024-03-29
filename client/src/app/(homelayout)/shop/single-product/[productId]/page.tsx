@@ -4,6 +4,7 @@ import Image from "next/image";
 import { EmblaOptionsType } from "embla-carousel";
 import React, { useState } from "react";
 import { Tooltip, Whisper } from "rsuite";
+import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 
 const tooltipWhite = <Tooltip>White</Tooltip>;
 const tooltipBlack = <Tooltip>Black</Tooltip>;
@@ -51,7 +52,21 @@ const productImages = [
 
 console.log(productImages);
 
-const SingleProductPage = () => {
+const SingleProductPage = ({ params }: any) => {
+  console.log(params);
+  const {
+    data: singleProduct,
+    error,
+    isLoading,
+  } = useGetSingleProductQuery({
+    id: params.productId,
+  });
+  console.log(singleProduct);
+
+  const productSize = singleProduct?.data?.productVariations?.map(
+    (product: any) => product.size && product.size
+  );
+  console.log(productSize);
   const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
@@ -70,9 +85,11 @@ const SingleProductPage = () => {
               {/* Title and Price  */}
               <div className="">
                 <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 mb-2">
-                  ByteTag Slide
+                  {singleProduct?.data?.productName}
                 </h2>
-                <p className="text-gray-600 text-xl">$29.99</p>
+                <p className="text-gray-600 text-xl">
+                  $ {singleProduct?.data?.productPrice}
+                </p>
               </div>
 
               {/* product colors */}
@@ -176,20 +193,21 @@ const SingleProductPage = () => {
               </div>
 
               {/* product size */}
-              <div className="my-3">
-                <h1>Size: </h1>
-                <div className="flex gap-2">
-                  <button className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center">
-                    Small
-                  </button>
-                  <button className="w-20 h-10 border rounded-md flex justify-center items-center">
-                    Medium
-                  </button>
-                  <button className="w-20 h-10 border rounded-md flex justify-center items-center">
-                    Large
-                  </button>
+              {productSize && productSize?.length > 0 && (
+                <div className="my-3">
+                  <h1>Size: </h1>
+                  <div className="flex gap-2">
+                    {productSize?.map((size: any, index: number) => (
+                      <button
+                        key={index}
+                        className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center"
+                      >
+                        Small
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* select quantity */}
               <div className="md:flex items-end mt-2 gap-7">
