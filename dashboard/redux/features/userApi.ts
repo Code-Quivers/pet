@@ -1,7 +1,6 @@
 import { baseApi } from "../api/baseApi";
 import { tagTypes } from "../tag-types/tag-types";
 
- 
 const USER_API = "/users";
 
 export const userApi = baseApi.injectEndpoints({
@@ -70,5 +69,5 @@ export const {
   useGetMyProfileQuery,
   useUpdateMyProfileMutation,
   useUpdateMyUserInfoMutation,
-  useGetAllClientsQuery
+  useGetAllClientsQuery,
 } = userApi;

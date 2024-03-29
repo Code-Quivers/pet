@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import axios from "axios";  
+import axios from "axios";
 import { IGenericErrorResponse, ResponseSuccessType } from "@/types";
 import { getAuthKey } from "./envConfig";
-import { removeUserInfo } from "./hooks/auth.helpers";
+import { getNewAccessToken, removeUserInfo } from "./hooks/auth.helpers";
+import { setToLocalStorage } from "./utils/local-storage";
 
 export const axiosInstance = axios.create();
 axiosInstance.defaults.headers.post["Content-Type"] = "application/json";
@@ -39,14 +39,13 @@ axiosInstance.interceptors.response.use(
 
     if (error?.response?.status === 403 && !config?.sent) {
       config.sent = true;
-      // // const response = await getNewAccessToken();
-      // const accessToken = response?.data?.accessToken;
-      // config.headers["Authorization"] = accessToken;
-      // setToLocalStorage(getAuthKey(), accessToken);
-      // return axiosInstance(config);
-      
+      const response = await getNewAccessToken();
+      const accessToken = response?.data?.accessToken;
+      config.headers["Authorization"] = accessToken;
+      setToLocalStorage(getAuthKey(), accessToken);
+      return axiosInstance(config);
+    } else if (error?.response?.status === 401 && !config.sent) {
       removeUserInfo(getAuthKey());
-      
     } else {
       const responseObject: IGenericErrorResponse = {
         statusCode: error?.response?.status || 500,

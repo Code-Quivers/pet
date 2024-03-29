@@ -222,7 +222,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     verifiedToken = jwtHelpers.verifyToken(token, config.jwt.refresh_secret as Secret);
   } catch (error) {
     // err
-    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid Refresh Token');
   }
   //! if user not exist
   // !checking deleted user's refresh token
