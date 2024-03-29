@@ -81,7 +81,7 @@ const SingleUploadProduct = ({ field }: AddSingleVariantImageUploadProps) => {
       >
         <div
           style={{
-            height: 200,
+            height: 150,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

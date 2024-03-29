@@ -109,14 +109,14 @@ const ProductsSection = () => {
                     <Image
                       width={200}
                       height={200}
-                      src={`${fileUrlKey()}/${product?.productImage}`}
+                      src={`${fileUrlKey()}/${product?.featuredImage}`}
                       alt={product.productName}
                       className="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110"
                     />
                     <Image
                       width={200}
                       height={200}
-                      src={`${fileUrlKey()}/${product?.productImage}`}
+                      src={`${fileUrlKey()}/${product?.featuredImage}`}
                       alt={product.productName}
                       className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110"
                     />
