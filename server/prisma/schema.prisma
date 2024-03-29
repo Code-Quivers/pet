@@ -195,19 +195,11 @@ enum OrderStatus {
 model KidDetails {
   kidId          String   @id @default(uuid())
   kidName        String
-  kidImage       String
+  kidImage       String?
   kidGender      String
-  petAddress     String
-  kidFathername  String?
-  kidFatherphone String?
-  kidMothername  String?
-  kidMotherphone String?
-  kidUnclename   String?
-  kidUnclephone  String?
-  kidAuntname    String?
-  kidAuntphone   String?
-  kidFriendname  String?
-  kidFriendphone String?
+  kidAge         Int
+  kidAddress    String?
+  relations   String[]
   userId         String
   user           User     @relation(fields: [userId], references: [userId])
   productId      String?  @unique
@@ -215,6 +207,8 @@ model KidDetails {
   createdAt      DateTime @default(now()) @db.Timestamptz(0)
   updatedAt      DateTime @updatedAt @db.Timestamptz(0)
 }
+
+
 
 // The model for promotions
 model Promotion {
