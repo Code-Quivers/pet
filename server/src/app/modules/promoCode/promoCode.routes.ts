@@ -14,7 +14,7 @@ router.post('/', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), validateRequest(Pr
 router.get('/', PromoCodeController.getPromo);
 router.get('/promotionalOffer', PromoCodeController.getPromotionalOffer);
 
-router.patch('/:id', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.updatePromo);
+router.patch('/promotionalOffer/:id', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.updatePromo);
 
 router.delete('/promotionalOffer/:id', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.deletePromotionRule);
 

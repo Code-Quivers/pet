@@ -37,7 +37,7 @@ export const promoApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data,
       }),
-      invalidatesTags: [tagTypes.promo],
+      invalidatesTags: [tagTypes.promo, tagTypes.promotionalOffer],
     }),
 
     deletePromo: build.mutation({

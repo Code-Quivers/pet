@@ -17,7 +17,7 @@ export type IPromoRequest = {
 };
 
 export type IPromoUpdateRequest = {
-  productId?: string;
+  productId?: string[];
   promotionName?: string;
   promoCode?: string;
   expireDate?: Date;

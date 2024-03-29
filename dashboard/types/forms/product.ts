@@ -72,6 +72,19 @@ export type ICreateProductPromo = {
   categoryHref?: string;
 };
 
+export type IUpdateProductPromo = {
+  type?: string;
+  productId?: string;
+  promotionName?: string;
+  promoCode?: string;
+  expireDate?: Date;
+  threshold?: string;
+  discount?: string;
+  buy?: string;
+  get?: string;
+  categoryHref?: string;
+};
+
 export type ICreateTestimonial = {
   clientName: string;
   testimonialTitle: string;
