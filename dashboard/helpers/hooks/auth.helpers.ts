@@ -3,7 +3,6 @@ import { getAuthKey, getBaseUrl } from "../envConfig";
 import { getFromLocalStorage, setToLocalStorage } from "../utils/local-storage";
 import { decodedToken } from "./jwtVerify";
 
- 
 export const storeUserInfo = ({ accessToken }: { accessToken: string }) => {
   return setToLocalStorage(getAuthKey(), accessToken as string);
 };
