@@ -29,6 +29,9 @@ if (!fs.existsSync('./uploads/productImg')) {
 if (!fs.existsSync('./uploads/testimonialImg')) {
   fs.mkdirSync('./uploads/testimonialImg');
 }
+if (!fs.existsSync('./uploads/blogs')) {
+  fs.mkdirSync('./uploads/blogs');
+}
 
 app.use(
   cors({

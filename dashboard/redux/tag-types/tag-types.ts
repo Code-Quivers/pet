@@ -11,6 +11,7 @@ export enum tagTypes {
   testimonial = "testimonial",
   promo = "promo",
   promotionalOffer = "promotionalOffer",
+  blogs = "blogs",
 }
 
 export const tagTypesList = [
