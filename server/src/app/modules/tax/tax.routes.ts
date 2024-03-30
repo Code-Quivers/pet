@@ -18,4 +18,5 @@ router.patch('/:taxId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), TaxControll
 
 router.delete('/:taxId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), TaxController.deleteTax);
 
+//export Route
 export const TaxRoutes = router;
