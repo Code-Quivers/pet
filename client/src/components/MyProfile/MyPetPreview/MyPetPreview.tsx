@@ -7,7 +7,7 @@ import { GiGps } from "react-icons/gi";
 
 const MyPetPreview = () => {
   return (
-    <div className="my-10">
+    <div className="my-10 md:max-w-2xl md:mx-auto">
       <div className="bg-primary px-10 pt-10 md:pb-20 flex justify-center items-center">
         <div className="bg-white inline-block p-2 rounded-full">
           <Image
@@ -41,7 +41,7 @@ const MyPetPreview = () => {
               <h2 className="text-lg md:text-xl text-gray-700 font-bold">
                 Dad
               </h2>
-              <a className="text-sm md:text-base text-gray-600">
+              <a className="text-sm md:text-base text-gray-600 md:block hidden">
                 +1 (555) 555-5555
               </a>
             </div>
@@ -70,7 +70,7 @@ const MyPetPreview = () => {
               <h2 className="text-lg md:text-xl text-gray-700 font-bold">
                 Mom
               </h2>
-              <h2 className="text-sm md:text-base text-gray-600">
+              <h2 className="text-sm md:text-base text-gray-600 md:block hidden">
                 +1 (555) 555-5555
               </h2>
             </div>
