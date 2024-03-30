@@ -101,3 +101,8 @@ export type IUpdateTestimonial = {
   rating?: string;
   clientImage?: FileType;
 };
+
+export type ICreateTaxSetting = {
+  state: string;
+  tax: string;
+};

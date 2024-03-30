@@ -113,18 +113,6 @@ model BarCode {
   updatedAt     DateTime         @updatedAt @db.Timestamptz(0)
 }
 
-// model PromoCode {
-//   promoCodeId String   @id @default(uuid())
-//   promoCode   String   @unique
-//   discount    Float
-//   expiryDate  DateTime
-//   description String
-//   productId   String?  @unique
-//   product     Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
-//   createdAt   DateTime @default(now()) @db.Timestamptz(0)
-//   updatedAt   DateTime @updatedAt @db.Timestamptz(0)
-//   order       Order[]
-// }
 
 model ProductQA {
   productQaId String   @id @default(uuid())
@@ -296,4 +284,13 @@ enum UserRoles {
   SUPERADMIN
   ADMIN
   USER
+}
+
+
+model Tax {
+  taxId     String   @id @default(uuid())
+  state   String
+  tax   Float
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
