@@ -106,3 +106,8 @@ export type ICreateTaxSetting = {
   state: string;
   tax: string;
 };
+
+export type IUpdateTaxSetting = {
+  state?: string;
+  tax?: string;
+};
