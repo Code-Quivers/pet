@@ -7,6 +7,7 @@ import { Button, Form, Input, Message, useToaster } from "rsuite";
 import { useEffect, useState } from "react";
 
 import { useAddProductQAMutation } from "@/redux/features/productQAApi";
+import { useAddTaxMutation } from "@/redux/features/taxApi";
 
 const AddTaxForm = () => {
   const toaster = useToaster();
@@ -19,12 +20,12 @@ const AddTaxForm = () => {
   } = useForm<ICreateTaxSetting>();
 
   const [addTax, { data, isLoading, isSuccess, isError, error, reset }] =
-    useAddProductQAMutation();
+    useAddTaxMutation();
 
-  const handleAddProductQA = async (newData: ICreateTaxSetting) => {
+  const handleAddTax = async (newData: ICreateTaxSetting) => {
     const objData = {
       state: newData.state,
-      tax: newData.tax,
+      tax: newData.tax ? parseFloat(newData.tax) : 0,
     };
 
     await addTax(objData);
@@ -79,7 +80,7 @@ const AddTaxForm = () => {
       </div>
       {/* content */}
       <div className="p-5 ">
-        <form onSubmit={handleSubmit(handleAddProductQA)} className="px-1">
+        <form onSubmit={handleSubmit(handleAddTax)} className="px-1">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* State */}
             <div className="space-y-1">
