@@ -45,10 +45,10 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 stroke-miterlimit="10"
-                stroke-width="40"
+                strokeWidth="40"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
@@ -92,7 +92,7 @@ const OurFeatures = () => {
               className="w-8 mb-4 inline-block"
               viewBox="0 0 24 24"
             >
-              <g fill-rule="evenodd" clip-rule="evenodd">
+              <g fillRule="evenodd" clipRule="evenodd">
                 <path
                   d="M17.03 8.97a.75.75 0 0 1 0 1.06l-4.2 4.2a.75.75 0 0 1-1.154-.114l-1.093-1.639L8.03 15.03a.75.75 0 0 1-1.06-1.06l3.2-3.2a.75.75 0 0 1 1.154.114l1.093 1.639L15.97 8.97a.75.75 0 0 1 1.06 0z"
                   data-original="#000000"
@@ -172,7 +172,7 @@ const OurFeatures = () => {
                 fill="none"
                 stroke="currentColor"
                 stroke-miterlimit="10"
-                stroke-width="30"
+                strokeWidth="30"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
@@ -204,7 +204,7 @@ const OurFeatures = () => {
                 fill="none"
                 stroke="currentColor"
                 stroke-miterlimit="10"
-                stroke-width="30"
+                strokeWidth="30"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
@@ -236,7 +236,7 @@ const OurFeatures = () => {
                 fill="none"
                 stroke="currentColor"
                 stroke-miterlimit="10"
-                stroke-width="30"
+                strokeWidth="30"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
@@ -268,7 +268,7 @@ const OurFeatures = () => {
                 fill="none"
                 stroke="currentColor"
                 stroke-miterlimit="10"
-                stroke-width="30"
+                strokeWidth="30"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
@@ -300,7 +300,7 @@ const OurFeatures = () => {
                 fill="none"
                 stroke="currentColor"
                 stroke-miterlimit="10"
-                stroke-width="30"
+                strokeWidth="30"
                 clip-path="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >

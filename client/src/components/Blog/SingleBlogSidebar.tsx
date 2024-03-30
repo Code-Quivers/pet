@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { AutoComplete, Input, InputGroup } from "rsuite";
+import { AutoComplete, InputGroup } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 
 const SingleBlogSidebar = () => {
@@ -61,133 +61,13 @@ const SingleBlogSidebar = () => {
             </a>
 
             <Link href="/blog">
-              <Image
+              {/* <Image
                 className="shadow-md rounded-lg bg-slate-50 w-40"
                 src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
                 alt=""
                 width={80}
                 height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
-            </Link>
-          </li>
-          <li className="flex justify-between items-center mb-6 hover:bg-gray-100 p-2 hover:p-2 hover:rounded-md transition-all ease-in-out hover:scale-105">
-            <a
-              href="/blog"
-              className="text-gray-800 font-bold hover:text-gray-900 hover:underline transition-shadow ease-in-out"
-            >
-              How a visual artist redefines success in graphic design
-              <br />
-              <small className="text-gray-400">April 09, 2022</small>
-            </a>
-
-            <Link href="/blog">
-              <Image
-                className="shadow-md rounded-lg bg-slate-50 w-40"
-                src="https://tailwindcss.com/_next/static/media/headlessui@75.c1d50bc1.jpg"
-                alt=""
-                width={80}
-                height={80}
-              />
+              /> */}
             </Link>
           </li>
         </ul>

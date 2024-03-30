@@ -1,29 +1,19 @@
 "use client";
 import { useDebounced } from "@/redux/hook";
 import { useState } from "react";
-import {
-  IconButton,
-  Input,
-  InputGroup,
-  Pagination,
-  Popover,
-  Table,
-  Whisper,
-} from "rsuite";
+import { Input, InputGroup, Pagination, Popover, Table, Whisper } from "rsuite";
 import { BiSearch } from "react-icons/bi";
-import Image from "next/image";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-import { fileUrlKey } from "@/helpers/envConfig";
-import { MdModeEdit } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";
-import { useGetAllBlogsQuery } from "@/redux/features/blogs/blogsApi";
 import { useRouter } from "next/navigation";
-import DeleteBlogConfirmationModal from "./DeleteBlogConfirmationModal";
+import DeleteBlogConfirmationModal from "@/components/blogs/DeleteBlogConfirmationModal";
+import { useGetAllCommentsQuery } from "@/redux/features/blogs/commentApi";
+import DeleteCommentConfirmationModal from "@/components/blogs/DeleteCommentConfirmationModal";
 const { Cell, Column, HeaderCell } = Table;
 // !
 
-const AllBlogPage = () => {
+const AllCommentsPage = () => {
   const router = useRouter();
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
@@ -41,10 +31,10 @@ const AllBlogPage = () => {
   }
 
   const {
-    data: allBlogs,
+    data: allComments,
     isLoading,
     isFetching,
-  } = useGetAllBlogsQuery({ ...query });
+  } = useGetAllCommentsQuery({ ...query });
   // ! for deleting blog
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const [deleteData, setDeleteData] = useState<any | null>(null);
@@ -56,7 +46,7 @@ const AllBlogPage = () => {
         <div className="flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              Blogs List | {allBlogs?.meta?.total}
+              All Comments | {allComments?.meta?.total}
             </h2>
           </div>
 
@@ -73,20 +63,13 @@ const AllBlogPage = () => {
                     width: 300,
                   }}
                   onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by title..."
+                  placeholder="Search here..."
                 />
                 <InputGroup.Addon>
                   <BiSearch />
                 </InputGroup.Addon>
               </InputGroup>
             </div>
-
-            <button
-              onClick={() => router.push("/blogs/add-new-blog")}
-              className="  px-4 py-2 rounded-full shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
-            >
-              <FaPlus /> Add New Blog
-            </button>
           </div>
         </div>
 
@@ -101,68 +84,31 @@ const AllBlogPage = () => {
             rowExpandedHeight={160}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allBlogs?.data}
+            data={allComments?.data}
           >
-            {/*img*/}
-            <Column width={80}>
-              <HeaderCell style={headerCss}>Image</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <Whisper
-                    enterable
-                    placement="auto"
-                    speaker={
-                      <Popover>
-                        <div>
-                          <Image
-                            width={200}
-                            height={200}
-                            alt=""
-                            src={`${fileUrlKey()}/${rowData?.blogImage}`}
-                            className="!h-[300px] !w-[300px]   object-cover"
-                          />
-                        </div>
-                      </Popover>
-                    }
-                  >
-                    <div>
-                      <Image
-                        width={120}
-                        height={120}
-                        alt=""
-                        src={`${fileUrlKey()}/${rowData?.blogImage}`}
-                        className="object-center  object-cover"
-                      />
-                    </div>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column>
-
             {/* Blog Title */}
             <Column flexGrow={2}>
               <HeaderCell style={headerCss}>Blog Title</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="title" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="blog.title"
+              />
             </Column>
             {/* Category name */}
             <Column flexGrow={2}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="categoryName"
-              />
+              <HeaderCell style={headerCss}>Comment</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="comment" />
             </Column>
-
-            {/* Category Description */}
-
-            <Column flexGrow={2}>
-              <HeaderCell style={headerCss}>Description</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="description"
-              />
+            {/* name */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Name</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="name" />
+            </Column>
+            {/* email */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Email</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="email" />
             </Column>
 
             {/* Action */}
@@ -172,13 +118,6 @@ const AllBlogPage = () => {
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
                   <div className="flex gap-3">
-                    <IconButton
-                      onClick={() => {
-                        router.push(`/blogs/edit/${rowData?.blogId}`);
-                      }}
-                      circle
-                      icon={<MdModeEdit size={20} />}
-                    />
                     {/* Delete */}
                     <Whisper
                       placement="topEnd"
@@ -209,7 +148,7 @@ const AllBlogPage = () => {
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allBlogs?.meta?.total}
+              total={allComments?.meta?.total}
               prev
               next
               first
@@ -230,7 +169,7 @@ const AllBlogPage = () => {
       </div>
 
       {/* delete confirmation */}
-      <DeleteBlogConfirmationModal
+      <DeleteCommentConfirmationModal
         isOpenDelete={isOpenDelete}
         handleCloseDelete={handleCloseDelete}
         deleteData={deleteData}
@@ -239,4 +178,4 @@ const AllBlogPage = () => {
   );
 };
 
-export default AllBlogPage;
+export default AllCommentsPage;

@@ -35,6 +35,6 @@ router.patch(
   }
 );
 
-router.delete('/:testimonialId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), BlogsController.deleteBlog);
+router.delete('/:blogId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), BlogsController.deleteBlog);
 
 export const BlogsRoutes = router;
