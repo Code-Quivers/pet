@@ -1,52 +1,59 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { tagTypes } from "@/redux/tag-types/tag-types";
-const CATEGORY_API = "/blogs";
+const BLOG_API = "/blogs";
 
 const BlogApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // create Item
     addNewBlog: builder.mutation({
       query: (data) => ({
-        url: `${CATEGORY_API}`,
+        url: `${BLOG_API}`,
         method: "POST",
         data: data,
         contentType: "multipart/form-data",
       }),
       invalidatesTags: [tagTypes.blogs],
     }),
-    updateCategory: builder.mutation({
-      query: ({ data, categoryId }) => ({
-        url: `${CATEGORY_API}/${categoryId}`,
+    updateBlog: builder.mutation({
+      query: ({ data, blogId }) => ({
+        url: `${BLOG_API}/${blogId}`,
         method: "PATCH",
         data: data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.categories],
+      invalidatesTags: [tagTypes.blogs],
     }),
 
     getAllBlogs: builder.query({
       query: (arg: Record<string, any>) => ({
-        url: `${CATEGORY_API}`,
+        url: `${BLOG_API}/all-blogs`,
         method: "GET",
         params: arg,
       }),
-      providesTags: [tagTypes.blogs, tagTypes.categories],
+      providesTags: [tagTypes.blogs, tagTypes.blogs],
     }),
 
-    getSingleCategory: builder.query({
-      query: (categoryHref: string | undefined) => ({
-        url: `${CATEGORY_API}/${categoryHref}`,
+    getSingleBlogById: builder.query({
+      query: ({ blogId }) => ({
+        url: `${BLOG_API}/get-single-by-id/${blogId}`,
         method: "GET",
       }),
-      providesTags: [tagTypes.categories],
+      providesTags: [tagTypes.blogs],
+    }),
+    getSingleBlogByHref: builder.query({
+      query: ({ blogHref }) => ({
+        url: `${BLOG_API}/get-single-by-href/${blogHref}`,
+        method: "GET",
+      }),
+      providesTags: [tagTypes.blogs],
     }),
 
-    deleteCategory: builder.mutation({
-      query: ({ categoryId }) => ({
-        url: `${CATEGORY_API}/${categoryId}`,
+    deleteBlog: builder.mutation({
+      query: ({ blogId }) => ({
+        url: `${BLOG_API}/${blogId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.categories],
+      invalidatesTags: [tagTypes.blogs],
     }),
   }),
 });
@@ -54,7 +61,8 @@ const BlogApi = baseApi.injectEndpoints({
 export const {
   useAddNewBlogMutation,
   useGetAllBlogsQuery,
-  useGetSingleCategoryQuery,
-  useUpdateCategoryMutation,
-  useDeleteCategoryMutation,
+  useUpdateBlogMutation,
+  useDeleteBlogMutation,
+  useGetSingleBlogByHrefQuery,
+  useGetSingleBlogByIdQuery,
 } = BlogApi;

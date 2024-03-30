@@ -38,14 +38,40 @@ const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
 
 // !----------------------------------Update Blog---------------------------------------->>>
 const updateBlog = catchAsync(async (req: Request, res: Response) => {
-  const { testimonialId } = req.params;
-  // @ts-ignore
-  const result = await BlogService.updateBlog(testimonialId, req);
+  const { blogId } = req.params;
+
+  const result = await BlogService.updateBlog(blogId, req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Testimonial Updated successfully !',
+    message: 'Updated successfully !',
+    data: result,
+  });
+});
+// !----------------------------------Get single blog for dashboard---------------------------------------->>>
+const getSingleBlogById = catchAsync(async (req: Request, res: Response) => {
+  const { blogId } = req.params;
+
+  const result = await BlogService.getSingleBlogById(blogId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog Retrieved Successfully !',
+    data: result,
+  });
+});
+// !----------------------------------Get single blog ---------------------------------------->>>
+const getSingleBlogByHref = catchAsync(async (req: Request, res: Response) => {
+  const { blogHref } = req.params;
+
+  const result = await BlogService.getSingleBlogByHref(blogHref);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog Retrieved Successfully !',
     data: result,
   });
 });
@@ -67,4 +93,6 @@ export const BlogsController = {
   getAllBlogs,
   updateBlog,
   deleteBlog,
+  getSingleBlogById,
+  getSingleBlogByHref,
 };

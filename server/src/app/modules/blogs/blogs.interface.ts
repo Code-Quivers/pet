@@ -8,11 +8,8 @@ export type IAddRequest = {
   categoryName: string;
 };
 
-export type ITestimonialUpdateRequest = {
-  clientName?: string | undefined;
-  testimonialTitle?: string | undefined;
-  testimonialDescription?: string | undefined;
-  rating?: string | undefined;
-  clientImage?: string | undefined;
-  oldFilePath?: string;
+export type IBlogUpdateRequest = {
+  title?: string;
+  description?: string;
+  categoryName?: string;
 };

@@ -3,18 +3,12 @@
 import AddDescriptionEditor from "@/components/blogs/AddDescriptionEditor";
 import UploadBlogImage from "@/components/blogs/UploadBlogImage";
 import { useAddNewBlogMutation } from "@/redux/features/blogs/blogsApi";
+import { AddBlog } from "@/types/blogs/blogType";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, Message, useToaster } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader";
-
-export type AddBlog = {
-  title: string;
-  blogImage: FileType;
-  categoryName: string;
-  description: string;
-};
 
 const AddNewBlogPage = () => {
   //

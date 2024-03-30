@@ -20,12 +20,15 @@ router.post(
 );
 
 // ! Get all Blog----------------------------------->>>
-router.get('/', BlogsController.getAllBlogs);
+router.get('/all-blogs', BlogsController.getAllBlogs);
+router.get('/get-single-by-href/:blogHref', BlogsController.getSingleBlogByHref);
+// for dashboard
+router.get('/get-single-by-id/:blogId', BlogsController.getSingleBlogById);
 // ! update blog
 router.patch(
-  '/:testimonialId',
+  '/:blogId',
   auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  FileUploadHelper.uploadTestimonialImage.single('file'),
+  FileUploadHelper.uploadBlogImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = BlogsValidation.updateBlog.parse(JSON.parse(req.body.data));
     return BlogsController.updateBlog(req, res, next);
