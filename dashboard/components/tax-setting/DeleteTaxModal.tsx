@@ -57,7 +57,7 @@ const DeleteTaxModal = ({
     reset,
     toaster,
   ]);
-
+  //Modal Close
   const handleModalClose = () => {
     handleCloseDelete();
     reset();
