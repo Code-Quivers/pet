@@ -13,7 +13,7 @@ import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
 import { IProductFilterRequest, IProductRequest, IProductUpdateRequest, IProductVariant } from './products.interface';
 import { generateBarCode } from './products.utils';
-import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './prroduct.constants';
+import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './product.constants';
 
 // modules
 
@@ -28,6 +28,7 @@ const createProduct = async (req: Request): Promise<Product> => {
 
   const data = req.body as IProductRequest;
   //
+  // making variant array with image
   const variants = data?.productVariations?.map((variant: IProductVariant) => {
     const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
     return {
@@ -38,7 +39,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       stock: variant.stock,
     };
   });
-  //
+  // prisma transaction
   const result = await prisma.$transaction(async transactionClient => {
     const productInfo = {
       productName: data.productName,
@@ -52,6 +53,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       },
     };
 
+    // creating product with variants
     const createdProduct = await transactionClient.product.create({
       data: productInfo,
     });
@@ -59,14 +61,13 @@ const createProduct = async (req: Request): Promise<Product> => {
     if (!createdProduct) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
     }
-
+    //
     const productId = createdProduct.productId;
 
     for (const variant of variants) {
       const pv = await transactionClient.productVariation.findFirst({
         where: {
           productId: productId,
-          color: variant.color,
           size: variant.size,
         },
       });
@@ -80,9 +81,9 @@ const createProduct = async (req: Request): Promise<Product> => {
         variantId: pv.variantId,
       }));
 
-      const createdBarcodes = await transactionClient.barCode.createMany({ data: codes });
+      const createdBarCodes = await transactionClient.barCode.createMany({ data: codes });
 
-      if (!createdBarcodes || createdBarcodes.count !== variant.stock) {
+      if (!createdBarCodes || createdBarCodes.count !== variant.stock) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
       }
     }
@@ -245,8 +246,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
 
-  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId, productStatus } =
-    req.body as IProductUpdateRequest;
+  const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, productStatus } = req.body as IProductUpdateRequest;
 
   // deleting old style Image
   const oldFilePaths = 'uploads/' + oldFilePath;
@@ -280,34 +280,12 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       if (!isCategoryExist) throw new ApiError(httpStatus.NOT_FOUND, ' Category Not Found!!');
     }
 
-    if (colorVarientId) {
-      const isColorExist = await transactionClient.colorVarient.findUnique({
-        where: {
-          colorVarientId,
-        },
-      });
-
-      if (!isColorExist) throw new ApiError(httpStatus.NOT_FOUND, ' Color Not Found!!');
-    }
-
-    if (sizeVarientId) {
-      const isSizeExist = await transactionClient.sizeVarient.findUnique({
-        where: {
-          sizeVarientId: sizeVarientId,
-        },
-      });
-
-      if (!isSizeExist) throw new ApiError(httpStatus.NOT_FOUND, ' Size Not Found!!');
-    }
-
     const updatedDetails = {
       productName,
       productDescription,
       productPrice,
       productStock,
       categoryId,
-      colorVarientId,
-      sizeVarientId,
       productStatus,
       productImage: filePath,
     };
