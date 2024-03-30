@@ -35,7 +35,7 @@ const CreatePetAllStep = () => {
             onClick={onNext}
             disabled={step === 1}
           >
-            Next
+            Submit
           </button>
         </ButtonGroup>
       </div>

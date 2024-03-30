@@ -1,35 +1,48 @@
 import React from "react";
 import { SelectPicker } from "rsuite";
+import { Uploader } from "rsuite";
+import CameraRetroIcon from "@rsuite/icons/legacy/CameraRetro";
 
 const SecondStep = () => {
   const data = ["Boy", "Girl"].map((item) => ({ label: item, value: item }));
 
   return (
     <div className="text-center py-10">
-      <h2 className="text-center text-4xl font-bold">Create New Pet</h2>
+      <h2 className="text-center text-4xl font-bold">Create New Kid</h2>
       <p className="pt-2 text-lg text-gray-500 w-3/4 md:w-3/6 mx-auto">
-        Step two: Enter information about your pet.
+        Step two: Enter information about your kid.
       </p>
       <form action="#" className="mt-10 max-w-4xl mx-auto px-5">
         {/* pet name and pet age */}
+        <div className="w-full text-center my-10">
+          <h2 className="text-lg block mb-2"> Upload Kid Photo</h2>
+          <Uploader
+            multiple
+            listType="picture"
+            action="//jsonplaceholder.typicode.com/posts/"
+          >
+            <button>
+              <CameraRetroIcon />
+            </button>
+          </Uploader>
+        </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet name */}
           <div className="w-full text-start">
-            <label className="text-base block mb-2">Enter pet name</label>
+            <label className="text-base block mb-2">Enter name</label>
             <div className="relative flex items-center mx-auto ">
               <input
-                name="email"
+                name="name"
                 type="text"
                 required
                 className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Enter pet name"
+                placeholder="Enter kid name"
               />
             </div>
           </div>
 
           {/* pet age */}
           <div className="w-full text-start">
-            <label className="text-base block mb-2">Pet age</label>
+            <label className="text-base block mb-2">Kid age</label>
             <div className="relative flex items-center mx-auto ">
               <input
                 name="age"
@@ -54,248 +67,56 @@ const SecondStep = () => {
             </div>
           </div>
         </div>
-        {/* breed and pet owner */}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet breed */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">
-              Breed of the pet? (Optional)
-            </label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="breed"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Write breed"
-              />
-            </div>
-          </div>
-
-          {/* pet owner */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">
-              Name of the Pet owner?
-            </label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="owner"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Write owner name"
-              />
-            </div>
-          </div>
-        </div>
-        {/* number and alt number */}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet breed */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Phone Number</label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="number"
-                type="tel"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Write phone number"
-              />
-            </div>
-          </div>
-
-          {/* pet owner */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">
-              Alternate Phone Number
-            </label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="altNumber"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Write alt. phone number"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet weight */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Pet weight</label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="weight"
-                type="tel"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-                placeholder="Write as Ibs"
-              />
-            </div>
-          </div>
-
-          {/* pet gender */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Pet Gender</label>
-            <div className="relative flex items-center mx-auto ">
-              <select
-                name="kids"
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              >
-                <option value="volvo">Boy</option>
-                <option value="saab">Girl</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        {/* pet address */}
-        <div className="pt-4 pb-2 text-start">
-          <h2 className="text-xl font-semibold pb-2">Address</h2>
+        {/* Contact person Information */}
+        <div className="text-center py-10">
+          <h2 className="text-xl font-semibold pb-2">My Contact</h2>
           <p className="text-sm text-gray-500">
-            This address is used to link to a map, so that the owner can be
-            traced to a physical address.
+            Add your contact Information as much as you want
           </p>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet Address */}
+          {/* contact person name */}
           <div className="w-full text-start">
-            <label className="text-base block mb-2">Street Address</label>
+            <label className="text-base block mb-2">Name</label>
             <div className="relative flex items-center mx-auto ">
               <input
-                name="streetAddress"
+                name="contactName"
                 type="text"
                 required
+                placeholder="Contact person name"
                 className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
 
-          {/* pet gender */}
+          {/* contact person relation */}
           <div className="w-full text-start">
-            <label className="text-base block mb-2">City</label>
+            <label className="text-base block mb-2">Relation name</label>
             <div className="relative flex items-center mx-auto ">
               <input
-                name="city"
+                name="contactRelation"
                 type="text"
                 required
+                placeholder="Contact person relation"
                 className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet Address */}
           <div className="w-full text-start">
-            <label className="text-base block mb-2">Postcode</label>
+            <label className="text-base block mb-2">Cell number</label>
             <div className="relative flex items-center mx-auto">
               <input
-                name="postcode"
-                type="text"
+                name="cellNumber"
+                type="tel"
                 required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              />
-            </div>
-          </div>
-
-          {/* pet gender */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Country</label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="country"
-                type="text"
-                required
+                placeholder="Contact person number"
                 className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
               />
             </div>
           </div>
         </div>
-        {/* behivior section  */}
-        <div className="pt-4 pb-2 text-start">
-          <h2 className="text-xl font-semibold pb-2">Behavior</h2>
-          <p className="text-sm text-gray-500">Good with...</p>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet behavior */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Kids</label>
-            <div className="relative flex items-center mx-auto ">
-              <select
-                name="kids"
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              >
-                <option value="volvo">Yes</option>
-                <option value="saab">No</option>
-              </select>
-            </div>
-          </div>
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Dogs</label>
-            <div className="relative flex items-center mx-auto ">
-              <select
-                name="dogs"
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              >
-                <option value="volvo">Yes</option>
-                <option value="saab">No</option>
-              </select>
-            </div>
-          </div>
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Cats</label>
-            <div className="relative flex items-center mx-auto ">
-              <select
-                name="cats"
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              >
-                <option value="volvo">Yes</option>
-                <option value="saab">No</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        {/* health section */}
-        <div className="pt-4 pb-2 text-start">
-          <h2 className="text-xl font-semibold pb-2">Health</h2>
-          <p className="text-sm text-gray-500">Any health disease?</p>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-3 pb-4">
-          {/* pet health */}
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Allergies</label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="allergies"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              />
-            </div>
-          </div>
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Medicine</label>
-            <div className="relative flex items-center mx-auto ">
-              <input
-                name="medicine"
-                type="text"
-                required
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              />
-            </div>
-          </div>
-          <div className="w-full text-start">
-            <label className="text-base block mb-2">Neutered/spayed</label>
-            <div className="relative flex items-center mx-auto ">
-              <select
-                name="cats"
-                className="w-full bg-transparent text-sm shadow-sm border border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg"
-              >
-                <option value="volvo">Yes</option>
-                <option value="saab">No</option>
-              </select>
-            </div>
-          </div>
+        <div className="text-start py-2 hover:underline cursor-pointer text-lg">
+          Add new contact
         </div>
       </form>
     </div>
