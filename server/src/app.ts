@@ -29,8 +29,8 @@ if (!fs.existsSync('./uploads/productImg')) {
 if (!fs.existsSync('./uploads/testimonialImg')) {
   fs.mkdirSync('./uploads/testimonialImg');
 }
-if (!fs.existsSync('./uploads/blogs')) {
-  fs.mkdirSync('./uploads/blogs');
+if (!fs.existsSync('./uploads/blog-images')) {
+  fs.mkdirSync('./uploads/blog-images');
 }
 
 app.use(

@@ -162,7 +162,7 @@ const uploadTestimonialImage = multer({
 
 const blogStorage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, 'uploads/blogs/');
+    callback(null, 'uploads/blog-images/');
   },
   filename: function (req, file, cb) {
     const uniqueFilename = Date.now() + '-' + file.originalname;

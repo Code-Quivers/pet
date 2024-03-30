@@ -7,10 +7,9 @@ const addNewBlog = z.object({
 });
 
 const updateBlog = z.object({
-  clientName: z.string().nonempty().optional(),
-  testimonialTitle: z.string().nonempty().optional(),
-  testimonialDescription: z.string().nonempty().optional(),
-  rating: z.string().optional(),
+  title: z.string().nonempty().optional(),
+  description: z.string().nonempty().optional(),
+  categoryName: z.string().nonempty().optional(),
 });
 
 export const BlogsValidation = {

@@ -59,7 +59,7 @@ model Category {
   categoryImage String
   createdAt     DateTime   @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime   @updatedAt @db.Timestamptz(0)
-  product       Product[] 
+  product       Product[]
   comments      Comments[]
 }
 
@@ -242,18 +242,18 @@ model Testimonial {
 }
 
 model Blogs {
-  blogId      String     @id @default(uuid()) 
-  title       String
-  description String
-  blogImage   String 
-categoryName  String
+  blogId       String @id @default(uuid())
+  title        String
+  description  String
+  blogImage    String
+  categoryName String
+  blogHref     String @unique
+
   // 
-  createdAt   DateTime   @default(now()) @db.Timestamptz(0)
-  updatedAt   DateTime   @updatedAt @db.Timestamptz(0)
-  comments    Comments[]
+  createdAt DateTime   @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(0)
+  comments  Comments[]
 }
-
-
 
 model Comments {
   commentId  String    @id @default(uuid())
