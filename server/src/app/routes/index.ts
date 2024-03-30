@@ -10,6 +10,7 @@ import { ProductRoutes } from '../modules/products/products.routes';
 import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
 import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
 import { BlogsRoutes } from '../modules/blogs/blogs.routes';
+import { TaxRoutes } from '../modules/tax/tax.routes';
 
 const router = express.Router();
 
@@ -57,6 +58,10 @@ const moduleRoutes = [
   {
     path: '/blogs',
     route: BlogsRoutes,
+  },
+  {
+    path: '/tax',
+    route: TaxRoutes,
   },
 ];
 

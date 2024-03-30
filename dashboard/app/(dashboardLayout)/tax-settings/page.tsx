@@ -1,7 +1,11 @@
+import AddTaxForm from "@/components/tax-setting/AddTaxForm";
+
 const TaxSettingPage = () => {
   return (
     <div>
-      <h1>Tax Setting Page</h1>
+      <div>
+        <AddTaxForm />
+      </div>
     </div>
   );
 };
