@@ -60,7 +60,6 @@ model Category {
   createdAt     DateTime   @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime   @updatedAt @db.Timestamptz(0)
   product       Product[]
-  comments      Comments[]
 }
 
 model Product {
@@ -243,8 +242,6 @@ model Comments {
   email      String
   comment    String
   // 
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
   blogId     String?
   blog       Blogs?    @relation(fields: [blogId], references: [blogId], onDelete: SetNull)
   // 

@@ -5,6 +5,8 @@ export enum tagTypes {
   contact = "contact",
   orders = "orders",
   testimonials = "testimonials",
+  blogs = "blogs",
+  comments = "comments",
 }
 
 export const tagTypesList = [
@@ -14,4 +16,6 @@ export const tagTypesList = [
   tagTypes.contact,
   tagTypes.orders,
   tagTypes.testimonials,
+  tagTypes.blogs,
+  tagTypes.comments,
 ];

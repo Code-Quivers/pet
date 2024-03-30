@@ -75,15 +75,15 @@ const getSingleBlogByHref = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
+// ! delete blog
 const deleteBlog = catchAsync(async (req: Request, res: Response) => {
-  const { testimonialId } = req.params;
-  const result = await BlogService.deleteBlog(testimonialId);
+  const { blogId } = req.params;
+  const result = await BlogService.deleteBlog(blogId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Testimonial Deleted successfully !',
+    message: 'Deleted successfully !',
     data: result,
   });
 });

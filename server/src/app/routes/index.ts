@@ -11,6 +11,7 @@ import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
 import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
 import { BlogsRoutes } from '../modules/blogs/blogs.routes';
 import { TaxRoutes } from '../modules/tax/tax.routes';
+import { CommentRoutes } from '../modules/blog-comments/comments.routes';
 
 const router = express.Router();
 
@@ -62,6 +63,10 @@ const moduleRoutes = [
   {
     path: '/tax',
     route: TaxRoutes,
+  },
+  {
+    path: '/comments',
+    route: CommentRoutes,
   },
 ];
 
