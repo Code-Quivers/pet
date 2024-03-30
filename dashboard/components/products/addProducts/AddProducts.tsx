@@ -17,15 +17,13 @@ import AddProductUpload from "./AddProductUpload";
 import { FileType } from "rsuite/esm/Uploader";
 import { useAddProductMutation } from "@/redux/features/productsApi";
 import AddFeaturedImage from "./AddFeaturedImage";
+import { useRouter } from "next/navigation";
 
 const AddProductsSection = () => {
   const query: Record<string, any> = {};
-  const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(10);
   const [basePrice, setBasePrice] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  query["limit"] = size;
-  query["page"] = page;
+  query["limit"] = 200;
 
   //
   const debouncedTerm = useDebounced({
@@ -44,8 +42,7 @@ const AddProductsSection = () => {
     watch,
   } = useForm();
   const { productVariants: allVariants } = watch();
-  console.log(allVariants);
-  //
+
   const [
     addProduct,
     {
@@ -79,7 +76,6 @@ const AddProductsSection = () => {
       productPrice: parseFloat(data.productPrice),
       productVariations: productVariationData,
     };
-    console.log(product, "product........");
     // Convert product object to JSON string
     const productJSON = JSON.stringify(product);
     // Append product images to formData
@@ -114,11 +110,12 @@ const AddProductsSection = () => {
     // appending all data to formData
     formData.append("data", productJSON);
 
-    // await addProduct(formData);
+    await addProduct(formData);
   };
 
   // ! side effect
   const toaster = useToaster();
+  const router = useRouter();
 
   useEffect(() => {
     if (isSuccessAdd && !isErrorAdd && !isLoadingAdd) {
@@ -131,6 +128,7 @@ const AddProductsSection = () => {
         { placement: "topEnd", duration: 2000 }
       );
       resetAdd();
+      router.push("/products");
     }
     if (!isSuccessAdd && isErrorAdd && !isLoadingAdd && errorAdd) {
       toaster.push(
@@ -152,6 +150,7 @@ const AddProductsSection = () => {
     isLoadingAdd,
     isSuccessAdd,
     resetAdd,
+    router,
     toaster,
   ]);
 
@@ -248,6 +247,7 @@ const AddProductsSection = () => {
                             value: item?.categoryId,
                           })) || []
                         }
+                        onSearch={(e) => setSearchTerm(e)}
                         label={undefined}
                         loading={undefined}
                         caretAs={undefined}

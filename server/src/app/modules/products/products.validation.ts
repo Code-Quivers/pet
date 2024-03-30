@@ -9,8 +9,11 @@ const addProducts = z.object({
     z.object({
       id: z.string(),
       variantPrice: z.number().min(0, { message: 'Variant Price must be a positive number' }),
-      color: z.string(),
-      size: z.string(),
+      color: z.object({
+        code: z.string().nonempty(),
+        name: z.string().nonempty(),
+      }),
+      size: z.string().nonempty(),
       stock: z.number().min(0, { message: 'Stock must be a positive number' }),
     })
   ),

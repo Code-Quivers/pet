@@ -20,9 +20,14 @@ export type IProductRequest = {
 export type IProductVariant = {
   id: string;
   variantPrice: number;
-  color: string;
+  color: IColor;
   size: string;
   stock: number;
+};
+
+type IColor = {
+  code: string;
+  name: string;
 };
 
 export type IProductUpdateRequest = {

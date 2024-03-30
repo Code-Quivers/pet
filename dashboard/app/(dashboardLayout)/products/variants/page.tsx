@@ -142,7 +142,7 @@ const AllProductList = () => {
         </div>
 
         {/*  */}
-        <div className="rounded-sm bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm bg-white">
           <Table
             bordered={true}
             cellBordered={true}
