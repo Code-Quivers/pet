@@ -83,7 +83,6 @@ model Product {
 
   // a many-to-many relationship between products and promotions
   promotions Promotion[]
-  KidDetails KidDetails?
 }
 
 // the model for product variations
@@ -110,8 +109,8 @@ model BarCode {
   variant       ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt     DateTime         @default(now()) @db.Timestamptz(0)
   updatedAt     DateTime         @updatedAt @db.Timestamptz(0)
+  kidDetails    KidDetails?
 }
-
 
 model ProductQA {
   productQaId String   @id @default(uuid())
@@ -155,22 +154,20 @@ model Order {
 }
 
 model KidDetails {
-  kidId          String   @id @default(uuid())
-  kidName        String
-  kidImage       String?
-  kidGender      String
-  kidAge         Int
-  kidAddress    String?
-  relations   String[]
-  userId         String
-  user           User     @relation(fields: [userId], references: [userId])
-  productId      String?  @unique
-  product        Product? @relation(fields: [productId], references: [productId])
-  createdAt      DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
+  kidId      String   @id @default(uuid())
+  kidName    String
+  kidImage   String?
+  kidGender  String
+  kidAge     String
+  kidAddress String?
+  relations  Json[]
+  barcodeId  String?  @unique
+  barCode    BarCode? @relation(fields: [barcodeId], references: [barcodeId])
+  userId     String
+  user       User     @relation(fields: [userId], references: [userId])
+  createdAt  DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(0)
 }
-
-
 
 // The model for promotions
 model Promotion {
@@ -283,11 +280,10 @@ enum UserRoles {
   USER
 }
 
-
 model Tax {
   taxId     String   @id @default(uuid())
-  state   String
-  tax   Float
+  state     String
+  tax       Float
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
