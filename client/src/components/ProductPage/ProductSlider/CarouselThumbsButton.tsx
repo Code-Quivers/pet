@@ -1,3 +1,4 @@
+import { fileUrlKey } from "@/utils/envConfig";
 import Image from "next/image";
 
 type PropType = {
@@ -21,7 +22,7 @@ export const CarouselThumbsButton: React.FC<PropType> = (props) => {
         className="embla-thumbs__slide__number"
       >
         <Image
-          src={slide?.url}
+          src={`${fileUrlKey()}/${slide?.src}`}
           alt="Product Image"
           className=" w-full"
           width={200}

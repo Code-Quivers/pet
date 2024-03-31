@@ -5,6 +5,7 @@ import { EmblaOptionsType } from "embla-carousel";
 import React, { useState } from "react";
 import { Tooltip, Whisper } from "rsuite";
 import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
+import { v4 as uuIdv4 } from "uuid";
 
 const tooltipWhite = <Tooltip>White</Tooltip>;
 const tooltipBlack = <Tooltip>Black</Tooltip>;
@@ -58,15 +59,68 @@ const SingleProductPage = ({ params }: any) => {
     data: singleProduct,
     error,
     isLoading,
+    isSuccess,
   } = useGetSingleProductQuery({
     id: params.productId,
   });
   console.log(singleProduct);
-
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
+    null
+  );
+  // product size
   const productSize = singleProduct?.data?.productVariations?.map(
     (product: any) => product.size && product.size
   );
-  console.log(productSize);
+  const productColor = singleProduct?.data?.productVariations?.map(
+    (color: any) => {
+      if (color.color.name && color.color.code) {
+        return {
+          name: color.color.name,
+          code: color.color.code,
+        };
+      }
+    }
+  );
+  const allProductImages = [
+    {
+      id: uuIdv4(),
+      src: singleProduct?.data?.featuredImage,
+      alt: "featured image",
+    },
+    ...(Array.isArray(singleProduct?.data?.productImage)
+      ? singleProduct?.data?.productImage?.map((image: any) => ({
+          id: uuIdv4(),
+          src: image, // Assuming 'url' is the property containing the image URL
+          alt: image, // Assuming 'alt' is the property containing the image alt text
+        }))
+      : []),
+    ...(Array.isArray(singleProduct?.data?.productVariations)
+      ? singleProduct?.data?.productVariations?.map((variation: any) => ({
+          id: uuIdv4(),
+          color: variation.color.name,
+          size: variation.size,
+          src: variation.image,
+          alt: variation.image,
+        }))
+      : []),
+  ];
+
+  console.log(allProductImages);
+  // const productImage = singleProduct?.data?.productImage.map(
+  //   (image: any, index: number) => {
+  //     return {
+  //       id: index,
+  //       src: image,
+  //     };
+  //   }
+  // );
+
+  // const productImagesGallery = [
+  //   singleProduct?.data?.featuredImage,
+  //   productImage,
+  // ];
+
+  // console.log(productImagesGallery);
   const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
@@ -74,13 +128,13 @@ const SingleProductPage = ({ params }: any) => {
   return (
     <div className="pb-8">
       <div className="max-w-7xl mx-auto">
-        <div className="md:flex gap-5">
+        <div className="md:grid md:grid-cols-2 gap-5">
           {/* product slider */}
-          <div className="md:max-w-[50%]">
-            <SingleProductSlider slides={productImages} options={OPTIONS} />
+          <div className="">
+            <SingleProductSlider slides={allProductImages} options={OPTIONS} />
           </div>
           {/* product variant and title */}
-          <div className="md:flex-1 px-4 md:max-w-[50%] mt-5 md:mt-0">
+          <div className="md:flex-1 px-4 mt-5 md:mt-0">
             <div>
               {/* Title and Price  */}
               <div className="">
@@ -99,96 +153,32 @@ const SingleProductPage = ({ params }: any) => {
                   <span className="text-bold">White</span>
                 </p>
                 <div className="flex items-center mt-2">
-                  {/* white */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipWhite}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-white border mr-2"></button>
-                  </Whisper>
-                  {/* black */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipBlack}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-black   mr-2"></button>
-                  </Whisper>
-                  {/* pink */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipPink}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-pink-500  mr-2"></button>
-                  </Whisper>
-                  {/* red */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipRed}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-red-500  mr-2"></button>
-                  </Whisper>
-                  {/* Yellow */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipYellow}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-yellow-500  mr-2"></button>
-                  </Whisper>
-                  {/* Floral */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipFloral}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-green-950  mr-2"></button>
-                  </Whisper>
-                  {/* mountain */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipMountain}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-neutral-600  mr-2"></button>
-                  </Whisper>
-                  {/* silicone */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipSilicone}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-neutral-800  mr-2"></button>
-                  </Whisper>
-                  {/* green */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipGreen}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-green-500  mr-2"></button>
-                  </Whisper>
-                  {/* Blue */}
-                  <Whisper
-                    placement="top"
-                    controlId="control-id-hover"
-                    trigger="hover"
-                    speaker={tooltipBlue}
-                  >
-                    <button className="w-6 h-6 md:w-9 md:h-9 rounded-full bg-blue-500  mr-2"></button>
-                  </Whisper>
+                  {/* color variants */}
+                  {productColor?.map((color: any, index: number) => (
+                    <Whisper
+                      key={index}
+                      placement="top"
+                      controlId={`control-id-hover-${index}`}
+                      trigger="hover"
+                      speaker={<Tooltip>{color?.name}</Tooltip>}
+                    >
+                      <button
+                        onClick={() => setSelectedColorIndex(index)}
+                        style={{
+                          // outlineOffset: "2px",
+                          backgroundColor: `${color?.code}`,
+                          // border: `2px solid ${
+                          //   selectedColorIndex == index ? "blue" : "transparent"
+                          // }`,
+                        }}
+                        className={`w-6 h-6 md:w-9 md:h-9 rounded-full mr-2 ${
+                          selectedColorIndex == index
+                            ? "border-2 border-gray-600"
+                            : ""
+                        } `}
+                      ></button>
+                    </Whisper>
+                  ))}
                 </div>
               </div>
 
@@ -287,6 +277,7 @@ const SingleProductPage = ({ params }: any) => {
           </div>
         </div>
       </div>
+
       {/* Product description */}
       <div className="pt-10 md:pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
