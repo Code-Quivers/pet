@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
@@ -24,10 +25,10 @@ const getProductBarcodes = catchAsync(async (req: Request, res: Response) => {
 });
 
 // !----------------------------------get Single Category---------------------------------------->>>
-const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
+const getSingleBarCodeDetailsForKid = catchAsync(async (req: Request, res: Response) => {
   const { code } = req.params;
 
-  const result = await BarcodeService.getSingleBarCode(code);
+  const result = await BarcodeService.getSingleBarCodeDetailsForKid(code);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -36,23 +37,21 @@ const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getSingleBarcode = catchAsync(async (req: Request, res: Response) => {
+  const { code } = req.query as any;
 
-const getSingleVariant = catchAsync(async (req: Request, res: Response) => {
-  const { variantId } = req.params;
-  // console.log('variantId', variantId);
-
-  const result = await BarcodeService.getSingleVariant(variantId);
+  const result = await BarcodeService.getSingleBarCode(code);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Barcode Link retrieved successfully',
+    message: 'product found successfully ',
     data: result,
   });
 });
 
 export const BarcodeController = {
-  getSingleBarCode,
+  getSingleBarCodeDetailsForKid,
   getProductBarcodes,
-  getSingleVariant,
+  getSingleBarcode,
 };
