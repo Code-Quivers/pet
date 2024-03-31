@@ -4,13 +4,14 @@ import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
-import { PetRoutes } from '../modules/Pet/pet.routes';
+import { KidRoutes } from '../modules/kid/kid.routes';
 import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 import { ProductRoutes } from '../modules/products/products.routes';
 import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';
 import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
 import { BlogsRoutes } from '../modules/blogs/blogs.routes';
 import { TaxRoutes } from '../modules/tax/tax.routes';
+import { CommentRoutes } from '../modules/blog-comments/comments.routes';
 
 const router = express.Router();
 
@@ -40,8 +41,8 @@ const moduleRoutes = [
     route: QARoutes,
   },
   {
-    path: '/pet',
-    route: PetRoutes,
+    path: '/kid',
+    route: KidRoutes,
   },
   {
     path: '/tag',
@@ -62,6 +63,10 @@ const moduleRoutes = [
   {
     path: '/tax',
     route: TaxRoutes,
+  },
+  {
+    path: '/comments',
+    route: CommentRoutes,
   },
 ];
 

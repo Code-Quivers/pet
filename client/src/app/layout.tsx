@@ -3,8 +3,8 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import Providers from "@/utils/provider";
-import Script from "next/script";
 import { InternetDisconnectedMessage } from "@/components/Alert/InternetDisconnectMessage";
+import Script from "next/script";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <>
         <Script
           id="tawk"
@@ -41,6 +41,7 @@ export default function RootLayout({
           `,
           }}
         />
+        {/*  */}
         <body className={nunito.className}>
           <InternetDisconnectedMessage />
           <Providers>{children}</Providers>

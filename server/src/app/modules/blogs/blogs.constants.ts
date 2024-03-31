@@ -1,5 +1,5 @@
 export const BlogFilterableFields: string[] = ['searchTerm'];
-export const BlogSearchableFields: string[] = ['title', 'shortTitle'];
+export const BlogSearchableFields: string[] = ['title', 'description'];
 
 export const BlogRelationalFields: string[] = [''];
 

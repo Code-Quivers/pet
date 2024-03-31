@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
-import { Testimonial, Prisma, Blogs } from '@prisma/client';
+import { Prisma, Blogs } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -221,16 +221,35 @@ const getSingleBlogByHref = async (blogHref: string): Promise<Blogs> => {
 };
 
 // ! delete blog
-const deleteBlog = async (testimonialId: string): Promise<Testimonial> => {
-  if (!testimonialId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Testimonial Id is required');
+const deleteBlog = async (blogId: string): Promise<Blogs> => {
+  if (!blogId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Blog Id is required');
   }
 
-  const result = await prisma.testimonial.delete({
+  const isExistBlog = await prisma.blogs.findUnique({
     where: {
-      testimonialId,
+      blogId,
     },
   });
+  if (!isExistBlog) throw new ApiError(httpStatus.NOT_FOUND, 'Blog Not Found');
+
+  const result = await prisma.blogs.delete({
+    where: {
+      blogId,
+    },
+  });
+
+  if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Delete');
+
+  if (result) {
+    const oldFilePaths = 'uploads/' + isExistBlog.blogImage;
+
+    fs.unlink(oldFilePaths, err => {
+      if (err) {
+        errorLogger.error('Error deleting old file');
+      }
+    });
+  }
 
   return result;
 };

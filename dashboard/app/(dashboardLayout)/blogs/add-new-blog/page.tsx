@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, Message, useToaster } from "rsuite";
-import { FileType } from "rsuite/esm/Uploader";
 
 const AddNewBlogPage = () => {
   //

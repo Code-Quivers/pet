@@ -1,7 +1,6 @@
 "use client";
 import { useDebounced } from "@/redux/hook";
 import { useState } from "react";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import {
   IconButton,
   Input,
@@ -18,10 +17,9 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { MdModeEdit } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";
-import CategoryDeleteConfirmationModal from "../category/CategoryDeleteConfirmationModal";
-import EditCategoryModal from "../category/EditCategoryModal";
 import { useGetAllBlogsQuery } from "@/redux/features/blogs/blogsApi";
 import { useRouter } from "next/navigation";
+import DeleteBlogConfirmationModal from "./DeleteBlogConfirmationModal";
 const { Cell, Column, HeaderCell } = Table;
 // !
 
@@ -41,20 +39,13 @@ const AllBlogPage = () => {
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
-  //others
-  const [open, setOpen] = useState(false);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [editData, setEditData] = useState<any | null>(null);
-  const [isOpenSubModal, setIsOpenSubModal] = useState<boolean>(false);
-  const handleClose = () => setOpen(false);
-  const handleCloseEditModal = () => setIsOpenEdit(false);
 
   const {
     data: allBlogs,
     isLoading,
     isFetching,
   } = useGetAllBlogsQuery({ ...query });
-
+  // ! for deleting blog
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const [deleteData, setDeleteData] = useState<any | null>(null);
   const handleCloseDelete = () => setIsOpenDelete(false);
@@ -239,16 +230,10 @@ const AllBlogPage = () => {
       </div>
 
       {/* delete confirmation */}
-      <CategoryDeleteConfirmationModal
+      <DeleteBlogConfirmationModal
         isOpenDelete={isOpenDelete}
         handleCloseDelete={handleCloseDelete}
         deleteData={deleteData}
-      />
-      {/* edit category */}
-      <EditCategoryModal
-        isOpenEdit={isOpenEdit}
-        handleClose={handleCloseEditModal}
-        editData={editData}
       />
     </>
   );

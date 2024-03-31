@@ -4,71 +4,67 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { PetService } from './pet.service';
-import { IRequestUser } from './pet.interface';
+import { KidService } from './kid.service';
+import { KidFilterableFields } from './kid.constants';
 
 // !----------------------------------Create New Category---------------------------------------->>>
-const addPetController = catchAsync(async (req: Request, res: Response) => {
+const addKid = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  const result = await PetService.addPet(req);
+  const result = await KidService.addKid(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Pet Added Successfully',
+    message: 'Kid Added Successfully',
     data: result,
   });
 });
 
 // !----------------------------------get all Category---------------------------------------->>>
-const getPetController = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ProductFilterableFields);
+const getKid = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, KidFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await PetService.getPet(filters, options);
+  const result = await KidService.getKid(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'All Product fetched successfully',
+    message: 'All Kid fetched successfully',
     meta: result.meta,
     data: result.data,
   });
 });
 
-
-
 // !----------------------------------Update Category---------------------------------------->>>
-const updatePet = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
-  // console.log('productId', productId);
-  // @ts-ignore
-  const result = await PetService.updatePet(productId, req);
+const updateKid = catchAsync(async (req: Request, res: Response) => {
+  const { kidId } = req.params;
+  const result = await KidService.updateKid(kidId, req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: ' Product Updated successfully !',
+    message: ' Updated successfully !',
     data: result,
   });
 });
 
-const deletePet = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
-  const result = await PetService.deletePet(productId);
+const deleteKid = catchAsync(async (req: Request, res: Response) => {
+  const { kidId } = req.params;
+  const result = await KidService.deleteKid(kidId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Deleted successfully !',
+    message: 'Deleted successfully !',
     data: result,
   });
 });
 
-export const PetController = {
-  addPetController,
-  getPetController,
-  updatePet,
-  deletePet,
+export const KidController = {
+  addKid,
+  getKid,
+  updateKid,
+  deleteKid,
 };
