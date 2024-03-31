@@ -89,7 +89,9 @@ const AllProductList = () => {
         </p>
         <p>
           Color:{" "}
-          <span className="font-semibold">{singleVariant?.data?.color}</span>
+          <span className="font-semibold">
+            {singleVariant?.data?.color?.name}
+          </span>
         </p>
         {singleVariant?.data?.size ? (
           <p>

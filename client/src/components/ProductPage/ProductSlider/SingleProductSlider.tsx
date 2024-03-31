@@ -3,10 +3,12 @@ import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { CarouselThumbsButton } from "./CarouselThumbsButton";
 import Image from "next/image";
+import { fileUrlKey } from "@/utils/envConfig";
 
 type PropType = {
   slides: any[];
   options?: EmblaOptionsType;
+  // selectColorName: string | null;
 };
 
 const SingleProductSlider: React.FC<PropType> = (props) => {
@@ -25,7 +27,15 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
     },
     [emblaMainApi, emblaThumbsApi]
   );
-
+  // Function to handle clicking on a variant
+  const handleVariantClick = (variantColor: string) => {
+    const variantIndex = slides.findIndex(
+      (slide) => slide.color === variantColor
+    );
+    if (variantIndex !== -1) {
+      onThumbClick(variantIndex);
+    }
+  };
   const onSelect = useCallback(() => {
     if (!emblaMainApi || !emblaThumbsApi) return;
     setSelectedIndex(emblaMainApi.selectedScrollSnap());
@@ -38,16 +48,15 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
     emblaMainApi.on("select", onSelect);
     emblaMainApi.on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
-
   return (
     <div className="embla">
       <div className="embla__viewport" ref={emblaMainRef}>
         <div className="embla__container">
-          {slides.map((slide) => (
+          {slides?.map((slide) => (
             <div className="embla__slide" key={slide.id}>
               <div className="embla__slide__number">
                 <Image
-                  src={slide?.url}
+                  src={`${fileUrlKey()}/${slide?.src}`}
                   alt="Product Image"
                   className="object-cover"
                   width={300}
@@ -62,10 +71,11 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
       <div className="embla-thumbs">
         <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
           <div className="embla-thumbs__container">
-            {slides.map((slide, index) => (
+            {slides?.map((slide, index) => (
               <CarouselThumbsButton
                 key={slide.id}
                 onClick={() => onThumbClick(index)}
+                // onClick={() => handleVariantClick(slide.color)}
                 selected={index === selectedIndex}
                 slide={slide}
               />

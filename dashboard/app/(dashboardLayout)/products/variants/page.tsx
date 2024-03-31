@@ -274,7 +274,7 @@ const AllProductList = () => {
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Color</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => `${rowData.color}`}
+                {(rowData) => `${rowData.color.name}`}
               </Cell>
             </Column>
             {/* Size */}
