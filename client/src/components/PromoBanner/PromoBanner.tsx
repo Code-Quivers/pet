@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const PromoBanner = () => {
@@ -15,12 +16,15 @@ const PromoBanner = () => {
               </p>
             </div>
             <div className="mt-2 w-full flex-shrink-0 lg:mt-0 lg:w-auto">
-              <a
+              <Link href={"/"} className="underline text-white text-xs">
+                SHOP NOW
+              </Link>
+              {/* <a
                 className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-teal-600 shadow-sm hover:bg-teal-50"
                 href="#pricing"
               >
                 Buy now
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
