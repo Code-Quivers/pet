@@ -1,22 +1,14 @@
 "use client";
+import React, { useCallback, useEffect, useState } from "react";
 import SingleProductSlider from "@/components/ProductPage/ProductSlider/SingleProductSlider";
 import Image from "next/image";
 import { EmblaOptionsType } from "embla-carousel";
-import React, { useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { Tooltip, Whisper } from "rsuite";
 import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 import { v4 as uuIdv4 } from "uuid";
-
-const tooltipWhite = <Tooltip>White</Tooltip>;
-const tooltipBlack = <Tooltip>Black</Tooltip>;
-const tooltipPink = <Tooltip>Pink</Tooltip>;
-const tooltipRed = <Tooltip>Red</Tooltip>;
-const tooltipYellow = <Tooltip>Yellow</Tooltip>;
-const tooltipFloral = <Tooltip>Floral</Tooltip>;
-const tooltipMountain = <Tooltip>Mountain</Tooltip>;
-const tooltipSilicone = <Tooltip>Silicone</Tooltip>;
-const tooltipGreen = <Tooltip>Green</Tooltip>;
-const tooltipBlue = <Tooltip>Blue</Tooltip>;
+import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/CarouselThumbsButton";
+import { fileUrlKey } from "@/utils/envConfig";
 
 const productImages = [
   {
@@ -51,8 +43,6 @@ const productImages = [
   },
 ];
 
-console.log(productImages);
-
 const SingleProductPage = ({ params }: any) => {
   console.log(params);
   const {
@@ -67,10 +57,12 @@ const SingleProductPage = ({ params }: any) => {
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null
   );
+  const [selectColorName, setSelectColorName] = useState<string | null>(null);
   // product size
   const productSize = singleProduct?.data?.productVariations?.map(
     (product: any) => product.size && product.size
   );
+  console.log(productSize, "productSize");
   const productColor = singleProduct?.data?.productVariations?.map(
     (color: any) => {
       if (color.color.name && color.color.code) {
@@ -106,21 +98,7 @@ const SingleProductPage = ({ params }: any) => {
   ];
 
   console.log(allProductImages);
-  // const productImage = singleProduct?.data?.productImage.map(
-  //   (image: any, index: number) => {
-  //     return {
-  //       id: index,
-  //       src: image,
-  //     };
-  //   }
-  // );
 
-  // const productImagesGallery = [
-  //   singleProduct?.data?.featuredImage,
-  //   productImage,
-  // ];
-
-  // console.log(productImagesGallery);
   const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
@@ -131,7 +109,12 @@ const SingleProductPage = ({ params }: any) => {
         <div className="md:grid md:grid-cols-2 gap-5">
           {/* product slider */}
           <div className="">
-            <SingleProductSlider slides={allProductImages} options={OPTIONS} />
+            <SingleProductSlider
+              slides={allProductImages}
+              options={OPTIONS}
+              selectColorName={selectColorName}
+              setSelectColorName={setSelectColorName}
+            />
           </div>
           {/* product variant and title */}
           <div className="md:flex-1 px-4 mt-5 md:mt-0">
@@ -150,7 +133,7 @@ const SingleProductPage = ({ params }: any) => {
               <div className="my-3">
                 <p className=" text-gray-700">
                   <span className="">Color</span>:{" "}
-                  <span className="text-bold">White</span>
+                  <span className="text-bold">{selectColorName}</span>
                 </p>
                 <div className="flex items-center mt-2">
                   {/* color variants */}
@@ -163,7 +146,10 @@ const SingleProductPage = ({ params }: any) => {
                       speaker={<Tooltip>{color?.name}</Tooltip>}
                     >
                       <button
-                        onClick={() => setSelectedColorIndex(index)}
+                        onClick={() => {
+                          setSelectedColorIndex(index);
+                          setSelectColorName(color?.name);
+                        }}
                         style={{
                           // outlineOffset: "2px",
                           backgroundColor: `${color?.code}`,
@@ -192,7 +178,7 @@ const SingleProductPage = ({ params }: any) => {
                         key={index}
                         className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center"
                       >
-                        Small
+                        {size}
                       </button>
                     ))}
                   </div>

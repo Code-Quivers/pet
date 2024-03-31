@@ -8,11 +8,12 @@ import { fileUrlKey } from "@/utils/envConfig";
 type PropType = {
   slides: any[];
   options?: EmblaOptionsType;
-  // selectColorName: string | null;
+  selectColorName: string | null;
+  setSelectColorName: (color: string | null) => void;
 };
 
 const SingleProductSlider: React.FC<PropType> = (props) => {
-  const { slides, options } = props;
+  const { slides, options, selectColorName, setSelectColorName } = props;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
@@ -48,6 +49,17 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
     emblaMainApi.on("select", onSelect);
     emblaMainApi.on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
+
+  useEffect(() => {
+    if (selectColorName) {
+      const variantIndex = slides?.findIndex(
+        (slide) => slide.color === selectColorName
+      );
+      if (variantIndex !== -1) {
+        onThumbClick(variantIndex);
+      }
+    }
+  }, [onThumbClick, selectColorName, slides]);
   return (
     <div className="embla">
       <div className="embla__viewport" ref={emblaMainRef}>
@@ -74,7 +86,10 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
             {slides?.map((slide, index) => (
               <CarouselThumbsButton
                 key={slide.id}
-                onClick={() => onThumbClick(index)}
+                onClick={() => {
+                  setSelectColorName(null);
+                  onThumbClick(index);
+                }}
                 // onClick={() => handleVariantClick(slide.color)}
                 selected={index === selectedIndex}
                 slide={slide}
