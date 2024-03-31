@@ -1,8 +1,8 @@
-export const PetFilterableFields: string[] = ['searchTerm', 'productColor', 'productSize', 'categoryName'];
-export const PetSearchableFields: string[] = ['productName'];
+export const KidFilterableFields: string[] = ['searchTerm'];
+export const KidSearchableFields: string[] = [];
 
-export const PetRelationalFields: string[] = ['productName'];
+export const KidRelationalFields: string[] = [];
 
-export const PetRelationalFieldsMapper: { [key: string]: string } = {
+export const kidRelationalFieldsMapper: { [key: string]: string } = {
   assetName: 'productName',
 };

@@ -2,7 +2,7 @@ import { IBarCodeFilterRequest } from './barcode.interface';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { BarCode, Pet, Prisma, ProductVariation } from '@prisma/client';
+import { BarCode, KidDetails, Pet, Prisma, ProductVariation } from '@prisma/client';
 
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
@@ -147,27 +147,25 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
   };
 };
 
-const getSingleBarCode = async (barcodeCode: string): Promise<Pet | null> => {
-  if (!barcodeCode) {
+const getSingleBarCode = async (code: string): Promise<KidDetails | null> => {
+  if (!code) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is required');
   }
 
   // Find the product using the productCode
-  const product = await prisma.productVariation.findUnique({
+  const barCodeDetails = await prisma.barCode.findUnique({
     where: {
-      barcodeCode,
+      code,
     },
   });
 
-  if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found');
+  if (!barCodeDetails) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'BarCode is Invalid');
   }
 
-  console.log('product', product);
-
-  const result = await prisma.pet.findUnique({
+  const result = await prisma.kidDetails.findUnique({
     where: {
-      productId: product.productId,
+      barcodeId: barCodeDetails.barcodeId,
     },
   });
 

@@ -1,11 +1,10 @@
+import { KidValidation } from './kid.validation';
 import express, { NextFunction, Request, Response } from 'express';
 
 import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
 import auth from '../../middlewares/auth';
 import { UserRoles } from '@prisma/client';
-import { PetController } from './kid.controller';
-import { PetValidation } from './kid.validation';
-import { IRequestUser } from './kid.interface';
+import { KidController } from './kid.controller';
 
 const router = express.Router();
 
@@ -16,13 +15,13 @@ router.post(
   auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
   FileUploadHelper.uploadProductImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = PetValidation.addPet.parse(JSON.parse(req.body.data));
-    return PetController.addPetController(req, res, next);
+    req.body = KidValidation.addKid.parse(JSON.parse(req.body.data));
+    return KidController.addKid(req, res, next);
   }
 );
 
 // ! Get all List----------------------------------->>>
-router.get('/', PetController.getPetController);
+router.get('/', KidController.getKid);
 
 // router.patch(
 //   '/:productId',
@@ -36,9 +35,9 @@ router.get('/', PetController.getPetController);
 // );
 
 router.delete(
-  '/:productId',
+  '/:kidId',
   // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  PetController.deletePet
+  KidController.deleteKid
 );
 
-export const PetRoutes = router;
+export const KidRoutes = router;

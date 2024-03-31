@@ -5,12 +5,12 @@ export type IProductFilterRequest = {
 export type IKidRequest = {
   kidName: string;
   kidImage: string;
-  kidDescription: string;
   kidGender: string;
   kidAge: string;
   kidAddress?: string;
-  barcodeId: string;
-  relations: string[];
+  userId: string;
+  code: string;
+  relations: IRelation[];
 };
 
 export type IKidUpdateRequest = {
@@ -20,8 +20,15 @@ export type IKidUpdateRequest = {
   kidGender?: string;
   kidAge?: string;
   kidAddress?: string;
-  barcodeId?: string;
-  relations?: string[];
+  userId?: string;
+  code?: string;
+  relations?: IRelation[];
+};
+
+export type IRelation = {
+  name: string;
+  relation: string;
+  phoneNo: string;
 };
 
 export type IRequestUser = {

@@ -1,17 +1,21 @@
 import { z } from 'zod';
 
-const addPet = z.object({
-  petName: z.string().nonempty({ message: 'Pet Name is required' }),
-  petDescription: z.string().nonempty({ message: 'Pet Description is required' }),
-  petGender: z.string().nonempty({ message: 'Pet Gender is required' }),
-  petAge: z.string().nonempty({ message: 'Pet Age is required' }),
-  petWeight: z.string().nonempty({ message: 'Pet Weight is required' }),
-  petAddress: z.string().nonempty({ message: 'Pet Address is required' }),
-  petBehavior: z.string().nonempty({ message: 'Pet Behavior is required' }),
-  petHealth: z.string().nonempty({ message: 'Pet Health is required' }),
-  petVaccination: z.string().nonempty({ message: 'Pet Vaccination is required' }),
-  petProvider: z.string().nonempty({ message: 'Pet Provider is required' }),
-  productCode: z.string().nonempty({ message: 'Product Code is required' }),
+export const IRelationSchema = z.object({
+  name: z.string(),
+  relation: z.string(),
+  phoneNo: z.string(),
+});
+
+export const addKid = z.object({
+  kidName: z.string().optional(),
+  kidImage: z.string().optional(),
+  kidDescription: z.string().optional(),
+  kidGender: z.string().optional(),
+  kidAge: z.string().optional(),
+  kidAddress: z.string().optional(),
+  userId: z.string().optional(),
+  code: z.string().optional(),
+  relations: z.array(IRelationSchema).optional(),
 });
 
 // const editPet = z.object({
@@ -24,7 +28,7 @@ const addPet = z.object({
 //   sizeVarientId: z.string().optional(),
 // });
 
-export const PetValidation = {
-  addPet,
+export const KidValidation = {
+  addKid,
   // editPet,
 };

@@ -25,15 +25,14 @@ const getProductBarcodes = catchAsync(async (req: Request, res: Response) => {
 
 // !----------------------------------get Single Category---------------------------------------->>>
 const getSingleBarCode = catchAsync(async (req: Request, res: Response) => {
-  const { barcodeCode } = req.params;
-  console.log('barcodeCode', barcodeCode);
+  const { code } = req.params;
 
-  const result = await BarcodeService.getSingleBarCode(barcodeCode);
+  const result = await BarcodeService.getSingleBarCode(code);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Barcode Link retrieved successfully',
+    message: 'Kid Details retrieved successfully',
     data: result,
   });
 });

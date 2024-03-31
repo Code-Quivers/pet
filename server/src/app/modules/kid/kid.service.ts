@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
-import { KidDetails, Pet, Prisma, Product } from '@prisma/client';
+import { KidDetails, Prisma, Product } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -11,8 +11,9 @@ import ApiError from '../../../errors/ApiError';
 import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { IKidRequest, IProductFilterRequest, IRequestUser } from './kid.interface';
+import { IKidRequest, IProductFilterRequest, IRelation, IRequestUser } from './kid.interface';
 import { KidValidation } from './kid.utils';
+import { KidRelationalFields, KidSearchableFields, kidRelationalFieldsMapper } from './kid.constants';
 
 // modules
 
@@ -32,58 +33,63 @@ const addKid = async (req: Request): Promise<KidDetails> => {
 
   const isProductExist = await prisma.barCode.findUnique({
     where: {
-      barcodeId: data.barcodeId,
+      code: data.code,
     },
   });
 
   if (!isProductExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found!!');
   }
 
-  let relations: any = [];
-  
-  
+  const relationDetails: IRelation[] = data.relations.map((relation: any) => {
+    return {
+      name: relation.name,
+      relation: relation.relation,
+      phoneNo: relation.phoneNo,
+    };
+  });
 
   const result = await prisma.$transaction(async transactionClient => {
-    const newPet = {
+    const newObjData = {
       kidImage: filePath,
       userId: userId,
       barcodeId: isProductExist.barcodeId,
       kidName: data.kidName,
-      kidDescription: data.kidDescription,
       kidGender: data.kidGender,
       kidAge: data.kidAge,
       kidAddress: data.kidAddress,
+      relations: relationDetails,
     };
 
-    const createNewPet = await transactionClient.pet.create({
-      data: newPet,
+    const addNewKid = await transactionClient.kidDetails.create({
+      // @ts-ignore
+      data: newObjData,
     });
 
-    return createNewPet;
+    return addNewKid;
   });
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Pet creation failed');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Kid creation failed');
   }
   return result;
 };
 
-// !----------------------------------get all Product---------------------------------------->>>
-const getKid = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
+// !----------------------------------get all Kid ---------------------------------------->>>
+const getKid = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<KidDetails[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, productColor, productSize, categoryName, ...filterData } = filters;
+  const { searchTerm, ...filterData } = filters;
 
   // Define an array to hold filter conditions
-  const andConditions: Prisma.ProductWhereInput[] = [];
+  const andConditions: Prisma.KidDetailsWhereInput[] = [];
 
   // Add search term condition if provided
 
   if (searchTerm) {
     andConditions.push({
-      OR: ProductSearchableFields.map((field: any) => ({
+      OR: KidSearchableFields.map((field: any) => ({
         [field]: {
           contains: searchTerm,
           mode: 'insensitive',
@@ -96,9 +102,9 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map(key => {
-        if (ProductRelationalFields.includes(key)) {
+        if (KidRelationalFields.includes(key)) {
           return {
-            [ProductRelationalFieldsMapper[key]]: {
+            [kidRelationalFieldsMapper[key]]: {
               subCategoryName: (filterData as any)[key],
             },
           };
@@ -113,82 +119,19 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
     });
   }
 
-  /// Filter By Color
-
-  if (productColor) {
-    andConditions.push({
-      colorVarient: {
-        productColor: {
-          equals: productColor,
-        },
-      },
-    });
-  }
-
-  // Filter By Size
-
-  if (productSize) {
-    andConditions.push({
-      sizeVarient: {
-        productSize: {
-          equals: productSize,
-        },
-      },
-    });
-  }
-
-  //Filter By Category
-  if (categoryName) {
-    andConditions.push({
-      category: {
-        categoryName: {
-          equals: categoryName,
-        },
-      },
-    });
-  }
-
   // Create a whereConditions object with AND conditions
-  const whereConditions: Prisma.ProductWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
+  const whereConditions: Prisma.KidDetailsWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
   // Retrieve Courier with filtering and pagination
-  const result = await prisma.product.findMany({
+  const result = await prisma.kidDetails.findMany({
     where: whereConditions,
-    include: {
-      category: true,
-      colorVarient: true,
-      sizeVarient: true,
-    },
-    // select: {
-    //   productId: true,
-    //   productImage: true,
-    //   productName: true,
-    //   productDescription: true,
-    //   productPrice: true,
-    //   productStock: true,
-    //   category: {
-    //     select: {
-    //       categoryName: true,
-    //     },
-    //   },
-    //   colorVarient: {
-    //     select: {
-    //       productColor: true,
-    //     },
-    //   },
-    //   sizeVarient: {
-    //     select: {
-    //       productSize: true,
-    //     },
-    //   },
-    // },
     skip,
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
   });
 
   // Count total matching orders for pagination
-  const total = await prisma.product.count({
+  const total = await prisma.kidDetails.count({
     where: whereConditions,
   });
 
@@ -294,14 +237,14 @@ const updateKid = async (productId: string, req: Request): Promise<Product> => {
   return result;
 };
 
-const deleteKid = async (productId: string): Promise<Product> => {
-  if (!productId) {
+const deleteKid = async (kidId: string): Promise<KidDetails> => {
+  if (!kidId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Product Id is required');
   }
 
-  const result = await prisma.product.delete({
+  const result = await prisma.kidDetails.delete({
     where: {
-      productId,
+      kidId,
     },
   });
 
