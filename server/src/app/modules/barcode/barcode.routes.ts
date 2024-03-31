@@ -4,8 +4,8 @@ import { BarcodeController } from './barcode.controller';
 const router = express.Router();
 
 router.get('/', BarcodeController.getProductBarcodes);
+router.get('/barcode', BarcodeController.getSingleBarcode);
 
-router.get('/get-single-variant/:variantId', BarcodeController.getSingleVariant);
-router.get('/:code', BarcodeController.getSingleBarCode);
+router.get('/:code', BarcodeController.getSingleBarCodeDetailsForKid);
 
 export const BarcodeRoutes = router;

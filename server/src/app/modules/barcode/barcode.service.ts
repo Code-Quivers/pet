@@ -147,7 +147,7 @@ const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPagi
   };
 };
 
-const getSingleBarCode = async (code: string): Promise<KidDetails | null> => {
+const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails | null> => {
   if (!code) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is required');
   }
@@ -176,49 +176,24 @@ const getSingleBarCode = async (code: string): Promise<KidDetails | null> => {
   return result;
 };
 
-const getSingleVariant = async (variantId: string): Promise<ProductVariation | null> => {
-  if (!variantId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
-  }
+const getSingleBarCode = async (code: string): Promise<BarCode | null> => {
+  if (!code) throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is required');
 
-  // Find the product using the productCode
-  const result = await prisma.productVariation.findUnique({
+  const findBarCode = await prisma.barCode.findUnique({
     where: {
-      variantId,
-    },
-    select: {
-      variantId: true,
-      productId: true,
-      color: true,
-      size: true,
-      product: {
-        select: {
-          productName: true,
-        },
-      },
-      _count: true,
-      barCodes: {
-        select: {
-          barcodeId: true,
-          code: true,
-          barcodeStatus: true,
-        },
-      },
-      // product: true,
+      code,
     },
   });
 
-  if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
+  if (!findBarCode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
   }
 
-  // console.log('product', result);
-
-  return result;
+  return findBarCode;
 };
 
 export const BarcodeService = {
-  getSingleBarCode,
+  getSingleBarCodeDetailsForKid,
   getProductBarcodes,
-  getSingleVariant,
+  getSingleBarCode,
 };
