@@ -91,7 +91,7 @@ model Product {
 model ProductVariation {
   variantId    String    @id @default(uuid())
   variantPrice Float
-  color        String
+  color        Json
   size         String?
   image        String
   stock        Int       @default(0)
@@ -221,15 +221,28 @@ model Testimonial {
 }
 
 model Blogs {
+<<<<<<< HEAD
   blogId       String     @id @default(uuid())
+=======
+  blogId       String @id @default(uuid())
+>>>>>>> 837e736399d6747bc28f63e782357895124e2595
   title        String
   description  String
   blogImage    String
   categoryName String
+<<<<<<< HEAD
   // 
   createdAt    DateTime   @default(now()) @db.Timestamptz(0)
   updatedAt    DateTime   @updatedAt @db.Timestamptz(0)
   comments     Comments[]
+=======
+  blogHref     String @unique
+
+  // 
+  createdAt DateTime   @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(0)
+  comments  Comments[]
+>>>>>>> 837e736399d6747bc28f63e782357895124e2595
 }
 
 model Comments {

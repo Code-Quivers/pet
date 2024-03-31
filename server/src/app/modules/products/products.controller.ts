@@ -5,7 +5,7 @@ import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { ProductService } from './products.service';
-import { ProductFilterableFields } from './prroduct.constants';
+import { ProductFilterableFields } from './product.constants';
 
 // !----------------------------------Create New Category---------------------------------------->>>
 // const addProductController = catchAsync(async (req: Request, res: Response) => {

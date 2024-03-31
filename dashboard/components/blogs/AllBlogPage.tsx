@@ -99,7 +99,7 @@ const AllBlogPage = () => {
           </div>
         </div>
 
-        <div className="rounded-sm mb-5 bg-white shadow-default   ">
+        <div className="rounded-sm mb-5 bg-white  ">
           <Table
             bordered={true}
             cellBordered={true}
@@ -166,7 +166,7 @@ const AllBlogPage = () => {
             {/* Category Description */}
 
             <Column flexGrow={2}>
-              <HeaderCell style={headerCss}>Category Description</HeaderCell>
+              <HeaderCell style={headerCss}>Description</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
@@ -181,26 +181,13 @@ const AllBlogPage = () => {
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
                   <div className="flex gap-3">
-                    <Whisper
-                      placement="topEnd"
-                      speaker={
-                        <Popover
-                          className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
-                          arrow={false}
-                        >
-                          Edit
-                        </Popover>
-                      }
-                    >
-                      <IconButton
-                        onClick={() => {
-                          setIsOpenEdit(true);
-                          setEditData(rowData);
-                        }}
-                        circle
-                        icon={<MdModeEdit size={20} />}
-                      />
-                    </Whisper>
+                    <IconButton
+                      onClick={() => {
+                        router.push(`/blogs/edit/${rowData?.blogId}`);
+                      }}
+                      circle
+                      icon={<MdModeEdit size={20} />}
+                    />
                     {/* Delete */}
                     <Whisper
                       placement="topEnd"
