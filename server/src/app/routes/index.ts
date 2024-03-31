@@ -4,7 +4,7 @@ import { UserRoutes } from '../modules/users/user.routes';
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 import { QARoutes } from '../modules/productQA/productQA.routes';
-import { PetRoutes } from '../modules/Pet/pet.routes';
+import { PetRoutes } from '../modules/kid/kid.routes';
 import { BarcodeRoutes } from '../modules/barcode/barcode.routes';
 import { ProductRoutes } from '../modules/products/products.routes';
 import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes';

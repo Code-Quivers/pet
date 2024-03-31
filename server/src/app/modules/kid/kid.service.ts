@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
-import { Pet, Prisma, Product } from '@prisma/client';
+import { KidDetails, Pet, Prisma, Product } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -9,31 +9,30 @@ import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { IUploadFile } from '../../../interfaces/file';
-
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { IPetRequest, IProductFilterRequest, IRequestUser } from './pet.interface';
-import { PetValidation } from './pet.utils';
+import { IKidRequest, IProductFilterRequest, IRequestUser } from './kid.interface';
+import { KidValidation } from './kid.utils';
 
 // modules
 
 // !----------------------------------Create New Pet--------------------------------------->>>
-const addPet = async (req: Request): Promise<Pet> => {
+const addKid = async (req: Request): Promise<KidDetails> => {
   //@ts-ignore
   const file = req.file as IUploadFile;
 
   const filePath = file?.path?.substring(8);
 
   //@ts-ignore
-  const data = req.body as IPetRequest;
+  const data = req.body as IKidRequest;
 
   const userId = (req.user as IRequestUser).userId;
 
-  await PetValidation(data, userId);
+  await KidValidation(data, userId);
 
-  const isProductExist = await prisma.product.findUnique({
+  const isProductExist = await prisma.barCode.findUnique({
     where: {
-      productCode: data.productCode,
+      barcodeId: data.barcodeId,
     },
   });
 
@@ -41,21 +40,20 @@ const addPet = async (req: Request): Promise<Pet> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
   }
 
+  let relations: any = [];
+  
+  
+
   const result = await prisma.$transaction(async transactionClient => {
     const newPet = {
-      petName: data.petName,
-      petImage: filePath,
-      petDescription: data.petDescription,
-      petGender: data.petGender,
-      petAge: data.petAge,
-      petWeight: data.petWeight,
-      petAddress: data.petAddress,
-      petBehavior: data.petBehavior,
-      petHealth: data.petHealth,
-      petVaccination: data.petVaccination,
-      petProvider: data.petProvider,
+      kidImage: filePath,
       userId: userId,
-      productId: isProductExist.productId,
+      barcodeId: isProductExist.barcodeId,
+      kidName: data.kidName,
+      kidDescription: data.kidDescription,
+      kidGender: data.kidGender,
+      kidAge: data.kidAge,
+      kidAddress: data.kidAddress,
     };
 
     const createNewPet = await transactionClient.pet.create({
@@ -71,7 +69,7 @@ const addPet = async (req: Request): Promise<Pet> => {
 };
 
 // !----------------------------------get all Product---------------------------------------->>>
-const getPet = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
+const getKid = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
@@ -209,7 +207,7 @@ const getPet = async (filters: IProductFilterRequest, options: IPaginationOption
 };
 
 // !----------------------------------Update Courier---------------------------------------->>>
-const updatePet = async (productId: string, req: Request): Promise<Product> => {
+const updateKid = async (productId: string, req: Request): Promise<Product> => {
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
 
@@ -296,7 +294,7 @@ const updatePet = async (productId: string, req: Request): Promise<Product> => {
   return result;
 };
 
-const deletePet = async (productId: string): Promise<Product> => {
+const deleteKid = async (productId: string): Promise<Product> => {
   if (!productId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Product Id is required');
   }
@@ -310,9 +308,9 @@ const deletePet = async (productId: string): Promise<Product> => {
   return result;
 };
 
-export const PetService = {
-  addPet,
-  getPet,
-  updatePet,
-  deletePet,
+export const KidService = {
+  addKid,
+  getKid,
+  updateKid,
+  deleteKid,
 };

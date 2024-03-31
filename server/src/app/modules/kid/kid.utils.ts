@@ -1,18 +1,17 @@
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-
-import { IPetRequest } from './pet.interface';
 import prisma from '../../../shared/prisma';
+import { IKidRequest } from './kid.interface';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const PetValidation = async (data: IPetRequest, userId: string) => {
-  if (!data.productCode) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Product Code is required');
+export const KidValidation = async (data: IKidRequest, userId: string) => {
+  if (!data.barcodeId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'BarCode is required');
   }
 
-  const isProductExist = await prisma.product.findUnique({
+  const isProductExist = await prisma.barCode.findUnique({
     where: {
-      productCode: data.productCode,
+      barcodeId: data.barcodeId,
     },
   });
 
@@ -24,27 +23,27 @@ export const PetValidation = async (data: IPetRequest, userId: string) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'User Id is required');
   }
 
-  const petAssign = await prisma.pet.findFirst({
+  const kidAssign = await prisma.kidDetails.findFirst({
     where: {
       userId: userId,
-      productId: isProductExist.productId,
+      barcodeId: isProductExist.barcodeId,
     },
   });
 
-  if (petAssign) {
+  if (kidAssign) {
     throw new ApiError(httpStatus.CONFLICT, 'Pet Already Assigned with User ');
   }
 
-  const petAssignToOtherUser = await prisma.pet.findFirst({
+  const kidAssignToOtherUser = await prisma.kidDetails.findFirst({
     where: {
       NOT: {
         userId: userId,
       },
-      productId: isProductExist.productId,
+      barcodeId: isProductExist.barcodeId,
     },
   });
 
-  if (petAssignToOtherUser) {
+  if (kidAssignToOtherUser) {
     throw new ApiError(httpStatus.CONFLICT, 'Pet Already Assigned to a different user');
   }
 };

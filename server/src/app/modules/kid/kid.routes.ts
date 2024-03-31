@@ -3,9 +3,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
 import auth from '../../middlewares/auth';
 import { UserRoles } from '@prisma/client';
-import { PetController } from './pet.controller';
-import { PetValidation } from './pet.validation';
-import { IRequestUser } from './pet.interface';
+import { PetController } from './kid.controller';
+import { PetValidation } from './kid.validation';
+import { IRequestUser } from './kid.interface';
 
 const router = express.Router();
 

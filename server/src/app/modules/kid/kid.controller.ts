@@ -4,8 +4,8 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { PetService } from './pet.service';
-import { IRequestUser } from './pet.interface';
+import { PetService } from './kid.service';
+import { IRequestUser } from './kid.interface';
 
 // !----------------------------------Create New Category---------------------------------------->>>
 const addPetController = catchAsync(async (req: Request, res: Response) => {
@@ -36,8 +36,6 @@ const getPetController = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-
-
 
 // !----------------------------------Update Category---------------------------------------->>>
 const updatePet = catchAsync(async (req: Request, res: Response) => {
