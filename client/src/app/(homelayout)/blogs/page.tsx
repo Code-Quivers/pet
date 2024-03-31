@@ -7,10 +7,6 @@ async function getData() {
     },
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
   return res.json();
 }
 //
@@ -21,11 +17,15 @@ import Link from "next/link";
 
 const BlogPage = async () => {
   const allBlogs = await getData();
+  console.log("allBlogs", allBlogs?.meta?.total);
   return (
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-      <ul className="grid grid-cols-1 xl:grid-cols-3 gap-y-10 gap-x-6 items-start my-10">
+    <div
+      suppressHydrationWarning={true}
+      className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8"
+    >
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-y-10 gap-x-6 items-start my-10">
         {allBlogs?.data?.map((singleBlog: any) => (
-          <li
+          <div
             key={singleBlog?.blogId}
             className="relative  flex flex-col sm:flex-row xl:flex-col items-start"
           >
@@ -35,13 +35,12 @@ const BlogPage = async () => {
                   {singleBlog?.categoryName}
                 </span>
               </h3>
-              <h1 className="text-xl font-semibold">
-                <Link href={`/blogs/${singleBlog?.blogHref}`}>
-                  {singleBlog?.title}
-                </Link>
-              </h1>
+              <Link href={`/blogs/${singleBlog?.blogHref}`}>
+                <h1 className="text-xl font-semibold">{singleBlog?.title}</h1>
+              </Link>
               <div className="prose prose-slate prose-sm text-slate-600 ">
                 <p
+                  suppressHydrationWarning
                   dangerouslySetInnerHTML={{
                     __html: singleBlog?.description ?? "",
                   }}
@@ -79,9 +78,9 @@ const BlogPage = async () => {
               width={1216}
               height={640}
             />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

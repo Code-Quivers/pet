@@ -239,6 +239,18 @@ const deleteBlog = async (blogId: string): Promise<Blogs> => {
     },
   });
 
+  if (!result) throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Delete');
+
+  if (result) {
+    const oldFilePaths = 'uploads/' + isExistBlog.blogImage;
+
+    fs.unlink(oldFilePaths, err => {
+      if (err) {
+        errorLogger.error('Error deleting old file');
+      }
+    });
+  }
+
   return result;
 };
 

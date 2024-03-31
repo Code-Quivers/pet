@@ -1,5 +1,6 @@
+const url = getBaseUrl();
+
 async function getData(id: string) {
-  const url = getBaseUrl();
   const res = await fetch(`${url}/blogs/get-single-by-href/${id}`, {
     next: {
       tags: ["blogs"],
@@ -14,8 +15,21 @@ import SingleBlogComment from "@/components/Blog/SingleBlogComment";
 import SingleBlogSidebar from "@/components/Blog/SingleBlogSidebar";
 import { fileUrlKey, getBaseUrl } from "@/helpers/config/envConfig";
 import moment from "moment";
+import { Metadata } from "next";
 import Image from "next/image";
 
+type Props = {
+  params: { blogHref: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const blogDetails = await getData(params.blogHref);
+
+  return {
+    title: `${blogDetails?.data?.title} - E.T`,
+    description: blogDetails?.data?.description,
+  };
+}
 const SingleBlog = async ({
   params,
 }: {
@@ -25,7 +39,10 @@ const SingleBlog = async ({
 }) => {
   const blogDetails = await getData(params.blogHref);
   return (
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+    <div
+      suppressHydrationWarning={true}
+      className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8"
+    >
       <div className="flex flex-col">
         <div className="py-8">
           <div className="mx-auto">
