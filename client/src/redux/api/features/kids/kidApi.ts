@@ -7,9 +7,10 @@ export const kidApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addKid: build.mutation({
       query: (data: any) => ({
-        url: `${KID_API}`,
+        url: `/kid`,
         method: "POST",
         data: data,
+        contentType: "multipart/form-data",
       }),
       invalidatesTags: [tagTypes.kids],
     }),

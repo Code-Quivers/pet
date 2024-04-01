@@ -37,6 +37,7 @@ const getSingleBarCodeDetailsForKid = catchAsync(async (req: Request, res: Respo
     data: result,
   });
 });
+//
 const getAvailableBarCode = catchAsync(async (req: Request, res: Response) => {
   const { code } = req.query as any;
 
@@ -45,7 +46,7 @@ const getAvailableBarCode = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product found Successfully ',
+    message: 'This Barcode is Available.',
     data: result,
   });
 });
