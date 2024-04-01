@@ -7,8 +7,6 @@ router.get('/', BarcodeController.getProductBarcodeVarientWise);
 
 router.get('/barcode', BarcodeController.getAvailableBarCode);
 
-router.get('/barcode', BarcodeController.getAvailableBarCode);
-
 router.get('/info/:code', BarcodeController.getSingleBarCodeDetailsForKid);
 
 export const BarcodeRoutes = router;

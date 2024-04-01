@@ -5,6 +5,7 @@ import { useDebounced } from "@/redux/hooks";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
+import { Button } from "rsuite";
 
 const FirstStep = ({
   setStep,
@@ -37,7 +38,6 @@ const FirstStep = ({
     //   skip: !searchTerm,
     // }
   );
-  console.log("data", debouncedTerm);
   return (
     <div>
       <div>
@@ -62,12 +62,20 @@ const FirstStep = ({
                 placeholder="Enter code"
               />
               <div className="h-10">
-                <span className="mt-2   text-red-600 text-sm">
-                  {isError &&
-                    error &&
-                    // @ts-ignore
-                    error?.message}
-                </span>
+                <p className="mt-2   ">
+                  {isError && error ? (
+                    <span className="text-red-600 text-sm">
+                      {
+                        // @ts-ignore
+                        error?.message
+                      }
+                    </span>
+                  ) : (
+                    <span className="text-green-700 text-sm">
+                      {data?.message}
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -79,13 +87,16 @@ const FirstStep = ({
         </p>
       </div>
       <div className="flex justify-end mt-10">
-        <button
-          className=" bg-[#29aae1] p-5 text-white hover:bg-[#38addf]  shadow-xl  rounded-full transition-all duration-300 ease-in-out "
+        <Button
+          loading={isLoading}
+          className=" !bg-[#29aae1] !p-5 !text-white hover:!bg-[#38addf]  !shadow-xl  !rounded-full !transition-all !duration-300 !ease-in-out "
           onClick={() => setStep(1)}
-          disabled={(!!isError && !!error) || !!isLoading}
+          disabled={!!isError && !!error}
         >
-          <FaArrowRight size={25} />
-        </button>
+          <span>
+            <FaArrowRight size={25} />
+          </span>
+        </Button>
       </div>
     </div>
   );
