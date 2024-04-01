@@ -1,3 +1,5 @@
+import { BarcodeStatus } from '@prisma/client';
+
 export type IProductFilterRequest = {
   searchTerm?: string | undefined;
 };
@@ -56,7 +58,7 @@ export type IRequestUser = {
 
 export type IBarCodeFilterRequest = {
   searchTerm?: string | undefined;
-  categoryName?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
+  barcodeStatus?: BarcodeStatus | undefined;
 };

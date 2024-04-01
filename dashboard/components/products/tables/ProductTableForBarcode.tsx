@@ -21,43 +21,37 @@ import {
 } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-import { MdModeEdit } from "react-icons/md";
+
 import { BiSearch } from "react-icons/bi";
 
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
-import {
-  useGetBarcodeForPrintQuery,
-  useGetBarcodeQuery,
-} from "@/redux/features/barCodeApi";
+import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
+import QRCode from "react-qr-code";
 
 const ProductBarcode = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [barcodeStatus, setBarcodeStatus] = useState<string>("");
   const [checkedKeys, setCheckedKeys] = useState<any>([]);
-  // const [selectedDate, setSelectedDate] = useState({
-  //   startDate: "",
-  //   endDate: "",
-  // });
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: "",
+    endDate: "",
+  });
 
   console.log("checkedKeys", checkedKeys);
 
-  // query["startDate"] = selectedDate.startDate;
-  // query["endDate"] = selectedDate.endDate;
-
-  // console.log("selectedDate", selectedDate);
-
-  query["categoryName"] = categoryFilter;
+  query["barcodeStatus"] = barcodeStatus;
+  query["startDate"] = selectedDate.startDate;
+  query["endDate"] = selectedDate.endDate;
 
   const router = useRouter();
   query["limit"] = size;
@@ -75,7 +69,7 @@ const ProductBarcode = () => {
     data: allBarCodeList,
     isLoading,
     isFetching,
-  } = useGetBarcodeForPrintQuery();
+  } = useGetBarcodeForPrintQuery({ ...query });
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -84,15 +78,6 @@ const ProductBarcode = () => {
     setIsOpenEdit(false);
     setEditData(null);
   };
-
-  const { data: allCategories } = useGetCategoryQuery({});
-
-  const categoryFilterForProduct = allCategories?.data?.map(
-    (category: any) => ({
-      label: category.categoryName,
-      value: category.categoryName,
-    })
-  );
 
   const handleFilterDate = (date: Date[] | null) => {
     if (!date?.length) {
@@ -144,17 +129,18 @@ const ProductBarcode = () => {
   };
 
   const checkedBoxData = allBarCodeList?.data?.filter((obj: any) =>
-    checkedKeys.includes(obj.variantId)
+    checkedKeys.includes(obj.barcodeId)
   );
 
   // ! export to excel
 
   const columns = [
     { header: "Product Name", key: "productName" },
-    { header: "Category Name", key: "categoryName" },
+    { header: "Product Price", key: "variantPrice" },
     { header: "Product Color", key: "productColor" },
     { header: "Product Size", key: "productSize" },
-    { header: "Barcode Link", key: "productCode" },
+    { header: "QR Code Link", key: "qrCodeLink" },
+    { header: "QR Code Image", key: "qrCodeImage" },
   ];
 
   const workbook = new Excel.Workbook();
@@ -182,21 +168,27 @@ const ProductBarcode = () => {
       checkedBoxData?.length > 0
         ? checkedBoxData?.forEach((singleData: any) => {
             const customRows = {
-              productName: singleData.product.productName,
-              categoryName: singleData.product.category.categoryName,
-              productColor: singleData.color,
-              productSize: singleData.size ? singleData.size : "No Size",
-              productCode: `http://localhost:3000/tag/${singleData.barcodeCode}`,
+              productName: singleData.variant.product.productName,
+              variantPrice: singleData.variant.variantPrice,
+              productColor: singleData.variant.color.name,
+              productSize: singleData.variant.size
+                ? singleData.variant.size
+                : "No Size",
+              qrCodeLink: `http://localhost:3000/tag/${singleData.code}`,
+              qrCodeImage: singleData.code,
             };
             worksheet.addRow(customRows);
           })
-        : allProductsList?.data?.forEach((singleData: any) => {
+        : allBarCodeList?.data?.forEach((singleData: any) => {
             const customRows = {
-              productName: singleData.product.productName,
-              categoryName: singleData.product.category.categoryName,
-              productColor: singleData.color,
-              productSize: singleData.size ? singleData.size : "No Size",
-              productCode: `http://localhost:3000/tag/${singleData.barcodeCode}`,
+              productName: singleData.variant.product.productName,
+              variantPrice: singleData.variant.variantPrice,
+              productColor: singleData.variant.color.name,
+              productSize: singleData.variant.size
+                ? singleData.variant.size
+                : "No Size",
+              qrCodeLink: `http://localhost:3000/tag/${singleData.code}`,
+              qrCodeImage: singleData.code,
             };
             worksheet.addRow(customRows);
           });
@@ -241,6 +233,7 @@ const ProductBarcode = () => {
   };
 
   /// Table Check Box
+
   let checked = false;
   let indeterminate = false;
 
@@ -257,7 +250,7 @@ const ProductBarcode = () => {
 
   const handleCheckAll = (value: any, checked: any) => {
     const keys = checked
-      ? allBarCodeList?.data?.map((item: any) => item.variantId)
+      ? allBarCodeList?.data?.map((item: any) => item.barcodeId)
       : [];
     setCheckedKeys(keys);
   };
@@ -288,6 +281,32 @@ const ProductBarcode = () => {
     );
   };
 
+  const barcodeAllStatus = [
+    {
+      label: "SOLD",
+      value: "SOLD",
+    },
+    {
+      label: "AVAILABLE",
+      value: "AVAILABLE",
+    },
+    {
+      label: "ACTIVE",
+      value: "ACTIVE",
+    },
+    {
+      label: "DEACTIVE",
+      value: "DEACTIVE",
+    },
+  ];
+
+  const enumStatus = barcodeAllStatus.map((item) => {
+    return {
+      label: item.label,
+      value: item.value,
+    };
+  });
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -295,14 +314,14 @@ const ProductBarcode = () => {
           <div className="flex justify-center items-center gap-3">
             <div>
               <h2 className="text-lg font-semibold ">
-                All Products | {allBarCodeList?.meta?.total}
+                Barcode List | {allBarCodeList?.meta?.total}
               </h2>
             </div>
             <div>
               <InputGroup
                 inside
                 style={{
-                  width: 300,
+                  width: 400,
                 }}
               >
                 <Input
@@ -310,7 +329,7 @@ const ProductBarcode = () => {
                     width: 300,
                   }}
                   onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
+                  placeholder="Search by barcode..."
                 />
                 <InputGroup.Addon>
                   <BiSearch />
@@ -320,12 +339,12 @@ const ProductBarcode = () => {
 
             <div>
               <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
+                placeholder="Product Filter By Status"
+                data={enumStatus}
                 className="w-60"
                 searchable={false}
                 onChange={(value: any) => {
-                  setCategoryFilter(value);
+                  setBarcodeStatus(value);
                 }}
                 style={{
                   width: 300,
@@ -412,7 +431,7 @@ const ProductBarcode = () => {
                 {(rowData) => (
                   <div>
                     <CheckCell
-                      dataKey="variantId"
+                      dataKey="barcodeId"
                       rowData={rowData}
                       checkedKeys={checkedKeys}
                       onChange={handleCheck}
@@ -491,7 +510,7 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="variant.color"
+                dataKey="variant.color.name"
               />
             </Column>
 
@@ -510,6 +529,34 @@ const ProductBarcode = () => {
               <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="code">
                 {(rowData) => `http:localhost:3000/tag/${rowData.code}`}
+              </Cell>
+            </Column>
+
+            {/* Barcode Image */}
+            {/* Barcode*/}
+            <Column flexGrow={2}>
+              <HeaderCell style={headerCss}>QR Code Image</HeaderCell>
+              <Cell dataKey="barcode" verticalAlign="middle">
+                {(rowData) => (
+                  <div>
+                    <div>
+                      <QRCode
+                        size={80}
+                        style={{
+                          height: "auto",
+                          maxWidth: "100%",
+                          width: "100%",
+                        }}
+                        viewBox={`0 0 256 256`}
+                        value={rowData.code}
+                      />
+                    </div>
+
+                    <div>
+                      <p className="text-xs text-center">{rowData.code}</p>
+                    </div>
+                  </div>
+                )}
               </Cell>
             </Column>
 

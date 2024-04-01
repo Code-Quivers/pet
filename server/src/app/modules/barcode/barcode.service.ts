@@ -200,7 +200,7 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, startDate, endDate, ...filterData } = filters;
+  const { searchTerm, startDate, endDate, barcodeStatus, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.BarCodeWhereInput[] = [];
@@ -238,6 +238,14 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
           };
         }
       }),
+    });
+  }
+
+  if (barcodeStatus) {
+    andConditions.push({
+      barcodeStatus: {
+        equals: barcodeStatus,
+      },
     });
   }
 
