@@ -32,8 +32,11 @@ import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
-import { predefinedRanges } from "@/helpers/constant"; 
-import { useGetBarcodeQuery } from "@/redux/features/barCodeApi";
+import { predefinedRanges } from "@/helpers/constant";
+import {
+  useGetBarcodeForPrintQuery,
+  useGetBarcodeQuery,
+} from "@/redux/features/barCodeApi";
 
 const ProductBarcode = () => {
   const query: Record<string, any> = {};
@@ -42,15 +45,15 @@ const ProductBarcode = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [checkedKeys, setCheckedKeys] = useState<any>([]);
-  const [selectedDate, setSelectedDate] = useState({
-    startDate: "",
-    endDate: "",
-  });
+  // const [selectedDate, setSelectedDate] = useState({
+  //   startDate: "",
+  //   endDate: "",
+  // });
 
   console.log("checkedKeys", checkedKeys);
 
-  query["startDate"] = selectedDate.startDate;
-  query["endDate"] = selectedDate.endDate;
+  // query["startDate"] = selectedDate.startDate;
+  // query["endDate"] = selectedDate.endDate;
 
   // console.log("selectedDate", selectedDate);
 
@@ -69,12 +72,10 @@ const ProductBarcode = () => {
   }
 
   const {
-    data: allProductsList,
+    data: allBarCodeList,
     isLoading,
     isFetching,
-  } = useGetBarcodeQuery({ ...query });
-
-  console.log("allProductsList", allProductsList?.data);
+  } = useGetBarcodeForPrintQuery();
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -131,7 +132,7 @@ const ProductBarcode = () => {
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
           <Dropdown.Item
-            disabled={!isLoading && !allProductsList?.data?.length}
+            disabled={!isLoading && !allBarCodeList?.data?.length}
             onClick={saveExcel}
             eventKey={4}
           >
@@ -142,7 +143,7 @@ const ProductBarcode = () => {
     );
   };
 
-  const checkedBoxData = allProductsList?.data?.filter((obj: any) =>
+  const checkedBoxData = allBarCodeList?.data?.filter((obj: any) =>
     checkedKeys.includes(obj.variantId)
   );
 
@@ -243,20 +244,20 @@ const ProductBarcode = () => {
   let checked = false;
   let indeterminate = false;
 
-  if (checkedKeys?.length === allProductsList?.data?.length) {
+  if (checkedKeys?.length === allBarCodeList?.data?.length) {
     checked = true;
   } else if (checkedKeys?.length === 0) {
     checked = false;
   } else if (
     checkedKeys?.length > 0 &&
-    checkedKeys?.length < allProductsList?.data?.length
+    checkedKeys?.length < allBarCodeList?.data?.length
   ) {
     indeterminate = true;
   }
 
   const handleCheckAll = (value: any, checked: any) => {
     const keys = checked
-      ? allProductsList?.data?.map((item: any) => item.variantId)
+      ? allBarCodeList?.data?.map((item: any) => item.variantId)
       : [];
     setCheckedKeys(keys);
   };
@@ -294,7 +295,7 @@ const ProductBarcode = () => {
           <div className="flex justify-center items-center gap-3">
             <div>
               <h2 className="text-lg font-semibold ">
-                All Products | {allProductsList?.meta?.total}
+                All Products | {allBarCodeList?.meta?.total}
               </h2>
             </div>
             <div>
@@ -393,7 +394,7 @@ const ProductBarcode = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allProductsList?.data}
+            data={allBarCodeList?.data}
           >
             <Column width={50} align="center">
               <HeaderCell style={{ padding: 0 }}>
@@ -436,10 +437,8 @@ const ProductBarcode = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.product?.productImage
-                                ? `${fileUrlKey()}/${
-                                    rowData?.product?.productImage
-                                  }`
+                              rowData?.variant?.image
+                                ? `${fileUrlKey()}/${rowData?.variant?.image}`
                                 : noImage
                             }
                             className="object-cover"
@@ -454,10 +453,8 @@ const ProductBarcode = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.product?.productImage
-                            ? `${fileUrlKey()}/${
-                                rowData?.product?.productImage
-                              }`
+                          rowData?.variant?.image
+                            ? `${fileUrlKey()}/${rowData?.variant?.image}`
                             : noImage
                         }
                         className="object-center  object-cover"
@@ -473,17 +470,17 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="product.productName"
+                dataKey="variant.product.productName"
               />
             </Column>
 
             {/* category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
+              <HeaderCell style={headerCss}>Variant Price</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="product.category.categoryName"
+                dataKey="variant.variantPrice"
               />
             </Column>
             {/* product short summary */}
@@ -491,25 +488,39 @@ const ProductBarcode = () => {
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 ProductColor
               </HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="color" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="variant.color"
+              />
             </Column>
 
             {/* Size */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Size</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="size" />
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="variant.size"
+              />
             </Column>
 
             {/* Barcode */}
             <Column flexGrow={3}>
               <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="code">
+                {(rowData) => `http:localhost:3000/tag/${rowData.code}`}
+              </Cell>
+            </Column>
+
+            {/* Barcode */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>QR Code Status</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="sizeVarient.productSize"
-              >
-                {(rowData) => `http:localhost:3000/tag/${rowData.barcodeCode}`}
-              </Cell>
+                dataKey="barcodeStatus"
+              ></Cell>
             </Column>
 
             {/* Crated At */}
@@ -518,7 +529,7 @@ const ProductBarcode = () => {
               <Cell
                 // style={cellCss}
                 verticalAlign="middle"
-                dataKey="sizeVarient.productSize"
+                dataKey="variant.size"
               >
                 {(rowData) => ` ${new Date(rowData.createdAt).toDateString()}`}
               </Cell>
@@ -526,7 +537,7 @@ const ProductBarcode = () => {
 
             {/* Action */}
 
-            <Column width={70}>
+            {/* <Column width={70}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
@@ -552,11 +563,11 @@ const ProductBarcode = () => {
                   </Whisper>
                 )}
               </Cell>
-            </Column>
+            </Column> */}
           </Table>
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allProductsList?.meta?.total}
+              total={allBarCodeList?.meta?.total}
               prev
               next
               first

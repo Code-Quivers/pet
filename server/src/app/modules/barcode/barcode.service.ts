@@ -14,7 +14,10 @@ import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchab
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
-const getProductBarcodes = async (filters: IBarCodeFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<ProductVariation[]>> => {
+const getProductBarcodeVarientWise = async (
+  filters: IBarCodeFilterRequest,
+  options: IPaginationOptions
+): Promise<IGenericResponse<ProductVariation[]>> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
@@ -192,8 +195,101 @@ const getAvailableBarCode = async (code: string): Promise<BarCode | null> => {
   return findBarCode;
 };
 
+const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<BarCode[]>> => {
+  // Calculate pagination options
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+
+  // Destructure filter properties
+  const { searchTerm, startDate, endDate, ...filterData } = filters;
+
+  // Define an array to hold filter conditions
+  const andConditions: Prisma.BarCodeWhereInput[] = [];
+
+  // Add search term condition if provided
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: [
+        ...BarcodeSearchableFields.map((field: any) => ({
+          [field]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
+      ],
+    });
+  }
+
+  // Add filterData conditions if filterData is provided
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => {
+        if (BarcodeRelationalFields.includes(key)) {
+          return {
+            [BarcodeRelationalFieldsMapper[key]]: {
+              subCategoryName: (filterData as any)[key],
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: (filterData as any)[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  if (startDate && endDate) {
+    andConditions.push({
+      createdAt: {
+        gte: startDate, // Greater than or equal to startDate
+        lte: endDate, // Less than or equal to endDate
+      },
+    });
+  }
+
+  // Create a whereConditions object with AND conditions
+  const whereConditions: Prisma.BarCodeWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
+
+  // Retrieve product vriants with filtering and pagination
+  const result = await prisma.barCode.findMany({
+    include: {
+      variant: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+  });
+
+  // Count total matching orders for pagination
+  const total = await prisma.barCode.count({
+    where: whereConditions,
+  });
+
+  // Calculate total pages
+  const totalPage = limit > 0 ? Math.ceil(total / limit) : 0;
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage,
+    },
+    data: result,
+  };
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
-  getProductBarcodes,
+  getProductBarcodeVarientWise,
   getAvailableBarCode,
+  getAllBarCodeForPrint,
 };
