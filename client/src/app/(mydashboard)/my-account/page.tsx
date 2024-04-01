@@ -1,5 +1,3 @@
-import FirstStep from "@/components/MyProfile/CreatePetProfile/FirstStep";
-import SecondStep from "@/components/MyProfile/CreatePetProfile/SecondStep";
 import Link from "next/link";
 import React from "react";
 
