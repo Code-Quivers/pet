@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import { ButtonGroup } from "rsuite";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 
-const CreatePetAllStep = () => {
-  const [step, setStep] = React.useState(0);
+const CreateKidAllStep = () => {
+  const [step, setStep] = useState(0);
   const onChange = (nextStep: number) => {
     setStep(nextStep < 0 ? 0 : nextStep > 1 ? 1 : nextStep);
   };
@@ -16,7 +16,7 @@ const CreatePetAllStep = () => {
   return (
     <div className="md:max-w-screen-md md:mx-auto min-h-screen">
       <div className="pt-10 pb-5">
-        {step === 0 && <FirstStep />}
+        {step === 0 && <FirstStep setStep={setStep} />}
         {step === 1 && <SecondStep />}
       </div>
       <div className="flex justify-end">
@@ -30,17 +30,10 @@ const CreatePetAllStep = () => {
           >
             Previous
           </button>
-          <button
-            className="bg-white text-right border hover:bg-gray-50 hover:text-cyan-600 hover:border-cyan-300 border-gray-300 shadow px-4 py-2 rounded-lg font-bold text-gray-700 transition-all duration-300 ease-in-out delay-0"
-            onClick={onNext}
-            disabled={step === 1}
-          >
-            Submit
-          </button>
         </ButtonGroup>
       </div>
     </div>
   );
 };
 
-export default CreatePetAllStep;
+export default CreateKidAllStep;

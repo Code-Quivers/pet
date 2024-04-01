@@ -2,7 +2,7 @@ import { IBarCodeFilterRequest } from './barcode.interface';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { BarCode, KidDetails, Pet, Prisma, ProductVariation } from '@prisma/client';
+import { BarCode, KidDetails, Prisma, ProductVariation } from '@prisma/client';
 
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
@@ -178,17 +178,18 @@ const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails |
   return result;
 };
 
-const getSingleBarCode = async (code: string): Promise<BarCode | null> => {
-  if (!code) throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is required');
+const getAvailableBarCode = async (code: string): Promise<BarCode | null> => {
+  if (!code) throw new ApiError(httpStatus.BAD_REQUEST, 'Please enter a Code');
 
   const findBarCode = await prisma.barCode.findUnique({
     where: {
       code,
+      barcodeStatus: 'AVAILABLE',
     },
   });
 
   if (!findBarCode) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'This Barcode is not available.');
   }
 
   return findBarCode;
@@ -289,6 +290,6 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
-  getSingleBarCode,
+  getAvailableBarCode,
   getAllBarCodeForPrint,
 };

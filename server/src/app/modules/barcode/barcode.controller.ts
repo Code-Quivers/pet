@@ -37,15 +37,15 @@ const getSingleBarCodeDetailsForKid = catchAsync(async (req: Request, res: Respo
     data: result,
   });
 });
-const getSingleBarcode = catchAsync(async (req: Request, res: Response) => {
+const getAvailableBarCode = catchAsync(async (req: Request, res: Response) => {
   const { code } = req.query as any;
 
-  const result = await BarcodeService.getSingleBarCode(code);
+  const result = await BarcodeService.getAvailableBarCode(code);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'product found successfully ',
+    message: 'Product found Successfully ',
     data: result,
   });
 });
@@ -70,5 +70,5 @@ export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAllBarCodeForPrint,
-  getSingleBarcode,
+  getAvailableBarCode,
 };
