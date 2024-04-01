@@ -8,12 +8,12 @@ import { BarcodeService } from './barcode.service';
 import { BarcodeFilterableFields } from './barcode.constant';
 import pick from '../../../shared/pick';
 
-const getProductBarcodes = catchAsync(async (req: Request, res: Response) => {
+const getProductBarcodeVarientWise = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, BarcodeFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await BarcodeService.getProductBarcodes(filters, options);
+  const result = await BarcodeService.getProductBarcodeVarientWise(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -50,8 +50,25 @@ const getSingleBarcode = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllBarCodeForPrint = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, BarcodeFilterableFields);
+
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+  const result = await BarcodeService.getAllBarCodeForPrint(filters, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All Barcode fetched successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
-  getProductBarcodes,
+  getProductBarcodeVarientWise,
+  getAllBarCodeForPrint,
   getSingleBarcode,
 };

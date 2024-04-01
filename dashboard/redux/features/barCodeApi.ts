@@ -14,14 +14,27 @@ export const barCodeApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.tag],
     }),
 
+    getBarcodeForPrint: builder.query({
+      query: (arg: Record<string, any>) => ({
+        url: `${BARCODE_API}/barcode-print`,
+        method: "GET",
+        params: arg,
+      }),
+      providesTags: [tagTypes.tag],
+    }),
+
     getSingleBarcode: builder.query({
       query: (barcodeCode: string | undefined) => ({
         url: `${BARCODE_API}/${barcodeCode}`,
         method: "GET",
       }),
-      providesTags: [tagTypes.categories],
+      providesTags: [tagTypes.tag],
     }),
   }),
 });
 
-export const { useGetBarcodeQuery, useGetSingleBarcodeQuery } = barCodeApi;
+export const {
+  useGetBarcodeQuery,
+  useGetSingleBarcodeQuery,
+  useGetBarcodeForPrintQuery,
+} = barCodeApi;
