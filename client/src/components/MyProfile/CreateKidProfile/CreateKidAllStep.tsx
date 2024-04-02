@@ -11,7 +11,7 @@ const CreateKidAllStep = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const debouncedTerm = useDebounced({
     searchQuery: searchTerm,
-    delay: 100,
+    delay: 300,
   });
 
   if (!!debouncedTerm) {

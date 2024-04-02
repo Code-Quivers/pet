@@ -8,7 +8,8 @@ const createUser = z.object({
     fullName: z.string().min(1, { message: 'First name is required' }),
     role: z
       .enum(['USER', 'ADMIN', 'SUPERADMIN'])
-      .or(z.string().refine(value => ['USER', 'ADMIN', 'SUPERADMIN'].includes(value), { message: 'Invalid role' })),
+      .or(z.string().refine(value => ['USER', 'ADMIN', 'SUPERADMIN'].includes(value)))
+      .optional(),
   }),
 });
 

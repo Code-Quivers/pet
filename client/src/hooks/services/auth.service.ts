@@ -1,4 +1,3 @@
-
 import { getAuthKey, getBaseUrl } from "@/helpers/config/envConfig";
 import { decodedToken } from "../../utils/jwtVerify";
 
@@ -16,7 +15,7 @@ export const storeUserInfo = ({ accessToken }: { accessToken: string }) => {
 //   role : string
 // }
 
-export const getUserInfo = ()=> {
+export const getUserInfo = () => {
   const authToken = getFromLocalStorage(getAuthKey());
 
   if (authToken) {
@@ -27,9 +26,9 @@ export const getUserInfo = ()=> {
   }
 };
 
-export const isLoggedIn = ():boolean => {
-  
+export const isLoggedIn = (): boolean => {
   const authToken = getFromLocalStorage(getAuthKey());
+
   return !!authToken;
 };
 
