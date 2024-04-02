@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -30,20 +31,6 @@ model Profile {
   mobileNumber           String?
   address                String?
   role                   UserRoles @default(USER)
-  mother                 String?
-  motherPhoneNumber      String?
-  father                 String?
-  fatherPhoneNumber      String?
-  aunt                   String?
-  auntPhoneNumber        String?
-  uncle                  String?
-  unclePhoneNumber       String?
-  friend                 String?
-  friendPhoneNumber      String?
-  grandFather            String?
-  grandFatherPhoneNumber String?
-  grandMother            String?
-  grandMotherPhoneNumber String?
   createdAt              DateTime  @default(now()) @db.Timestamptz(0)
   updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
   user                   User?
