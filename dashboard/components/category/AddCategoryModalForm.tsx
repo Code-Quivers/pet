@@ -18,7 +18,7 @@ const AddCategoryModalForm = ({ open, handleClose }: any) => {
     reset: formReset,
   } = useForm<ICreateCategory>();
 
-  const handleLogin = async (newData: ICreateCategory) => {
+  const handleCreateCategory = async (newData: ICreateCategory) => {
     const formData = new FormData();
 
     if (newData?.categoryImage?.blobFile) {
@@ -87,7 +87,7 @@ const AddCategoryModalForm = ({ open, handleClose }: any) => {
         </Modal.Header>
         <Modal.Body>
           <div className="px-1">
-            <form onSubmit={handleSubmit(handleLogin)}>
+            <form onSubmit={handleSubmit(handleCreateCategory)}>
               {/* Category Name */}
               <div className="space-y-1">
                 {/* category Name */}
