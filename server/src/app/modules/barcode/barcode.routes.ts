@@ -8,7 +8,7 @@ router.get('/', BarcodeController.getProductBarcodeVarientWise);
 router.get('/barcode-print', BarcodeController.getAllBarCodeForPrint);
 
 router.get('/barcode', BarcodeController.getAvailableBarCode);
-
-router.get('/info/:code', BarcodeController.getSingleBarCodeDetailsForKid);
+// Kid details with qr code  for the barcode
+router.get('/:code', BarcodeController.getSingleBarCodeDetailsForKid);
 
 export const BarcodeRoutes = router;

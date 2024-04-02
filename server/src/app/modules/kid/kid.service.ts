@@ -14,7 +14,6 @@ import { errorLogger } from '../../../shared/logger';
 import { IKidRequest, IProductFilterRequest, IRelation, IRequestUser } from './kid.interface';
 import { KidValidation } from './kid.utils';
 import { KidRelationalFields, KidSearchableFields, kidRelationalFieldsMapper } from './kid.constants';
-import { add } from 'winston';
 
 // modules
 
@@ -30,7 +29,7 @@ const addKid = async (req: Request): Promise<KidDetails> => {
 
   const userId = (req.user as IRequestUser).userId;
 
-  await KidValidation(data, userId);
+  await KidValidation(data);
 
   const isProductExist = await prisma.barCode.findUnique({
     where: {
