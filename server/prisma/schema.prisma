@@ -78,7 +78,7 @@ model ProductVariation {
   variantId    String    @id @default(uuid())
   variantPrice Float
   color        Json
-  size         String?
+  // size         String?
   image        String
   stock        Int       @default(0)
   productId    String?
@@ -143,10 +143,8 @@ model Order {
 model KidDetails {
   kidId      String   @id @default(uuid())
   kidName    String
-  kidImage   String?
-  kidGender  String
-  kidAge     String
-  kidAddress String?
+  kidImage   String? 
+  kidAge     String 
   relations  Json[]
   barcodeId  String?  @unique
   barCode    BarCode? @relation(fields: [barcodeId], references: [barcodeId])

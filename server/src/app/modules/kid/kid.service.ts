@@ -56,11 +56,11 @@ const addKid = async (req: Request): Promise<KidDetails> => {
       userId: userId,
       barcodeId: isProductExist.barcodeId,
       kidName: data.kidName,
-      kidGender: data.kidGender,
       kidAge: data.kidAge,
-      kidAddress: data.kidAddress,
       relations: relationDetails,
     };
+
+    console.log('new obj data', newObjData);
 
     const addNewKid = await transactionClient.kidDetails.create({
       // @ts-ignore

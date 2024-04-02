@@ -13,7 +13,7 @@ const addProducts = z.object({
         code: z.string().nonempty(),
         name: z.string().nonempty(),
       }),
-      size: z.string().nonempty(),
+      // size: z.string().nonempty(),
       stock: z.number().min(0, { message: 'Stock must be a positive number' }),
     })
   ),

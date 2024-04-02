@@ -4,10 +4,7 @@ export type IProductFilterRequest = {
 
 export type IKidRequest = {
   kidName: string;
-  kidImage: string;
-  kidGender: string;
-  kidAge: string;
-  kidAddress?: string;
+  kidAge: number;
   userId: string;
   code: string;
   relations: IRelation[];
