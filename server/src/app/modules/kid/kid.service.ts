@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
-import { KidDetails, Prisma, Product } from '@prisma/client';
+import { BarcodeStatus, KidDetails, Prisma, Product } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -14,6 +14,7 @@ import { errorLogger } from '../../../shared/logger';
 import { IKidRequest, IProductFilterRequest, IRelation, IRequestUser } from './kid.interface';
 import { KidValidation } from './kid.utils';
 import { KidRelationalFields, KidSearchableFields, kidRelationalFieldsMapper } from './kid.constants';
+import { add } from 'winston';
 
 // modules
 
@@ -65,6 +66,17 @@ const addKid = async (req: Request): Promise<KidDetails> => {
       // @ts-ignore
       data: newObjData,
     });
+
+    if (addNewKid) {
+      await transactionClient.barCode.update({
+        where: {
+          barcodeId: isProductExist.barcodeId,
+        },
+        data: {
+          barcodeStatus: BarcodeStatus.ACTIVE,
+        },
+      });
+    }
 
     return addNewKid;
   });

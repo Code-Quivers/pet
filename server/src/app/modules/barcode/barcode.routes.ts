@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get('/', BarcodeController.getProductBarcodeVarientWise);
 
+router.get('/barcode-print', BarcodeController.getAllBarCodeForPrint);
+
 router.get('/barcode', BarcodeController.getAvailableBarCode);
 
 router.get('/info/:code', BarcodeController.getSingleBarCodeDetailsForKid);

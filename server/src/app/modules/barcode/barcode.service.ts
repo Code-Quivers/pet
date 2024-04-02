@@ -22,7 +22,7 @@ const getProductBarcodeVarientWise = async (
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, categoryName, startDate, endDate, ...filterData } = filters;
+  const { searchTerm, startDate, endDate, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.ProductVariationWhereInput[] = [];
@@ -68,18 +68,6 @@ const getProductBarcodeVarientWise = async (
           };
         }
       }),
-    });
-  }
-
-  if (categoryName) {
-    andConditions.push({
-      product: {
-        category: {
-          categoryName: {
-            equals: categoryName,
-          },
-        },
-      },
     });
   }
 
