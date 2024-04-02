@@ -4,11 +4,13 @@ import SingleProductSlider from "@/components/ProductPage/ProductSlider/SinglePr
 import Image from "next/image";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { Tooltip, Whisper } from "rsuite";
+import { Loader, Tooltip, Whisper } from "rsuite";
 import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 import { v4 as uuIdv4 } from "uuid";
 import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/CarouselThumbsButton";
 import { fileUrlKey } from "@/utils/envConfig";
+import { addToCart } from "@/redux/slice/cartSlice";
+import { useDispatch } from "react-redux";
 
 const productImages = [
   {
@@ -44,6 +46,7 @@ const productImages = [
 ];
 
 const SingleProductPage = ({ params }: any) => {
+  const dispatch = useDispatch();
   console.log(params);
   const {
     data: singleProduct,
@@ -54,15 +57,34 @@ const SingleProductPage = ({ params }: any) => {
     id: params.productId,
   });
   console.log(singleProduct);
+  const [productForCart, setProductForCart] = useState<any>({
+    categoryId: singleProduct?.data?.categoryId,
+    productId: singleProduct?.data?.productId,
+    productName: singleProduct?.data?.productName,
+    variantId: singleProduct?.data?.productVariations?.[0].variantId,
+    price: singleProduct?.data?.productVariations?.[0].variantPrice,
+    color: {
+      name: singleProduct?.data?.productVariations?.[0].color?.name,
+      code: singleProduct?.data?.productVariations?.[0].color?.code,
+    },
+    image: singleProduct?.data?.productVariations?.[0].image,
+  });
+  const [start, setStart] = useState<boolean>(false);
+  console.log(productForCart, "productForCart");
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null
   );
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState<number | null>(
+    null
+  );
+
   const [selectColorName, setSelectColorName] = useState<string | null>(null);
+  const [selectSizeName, setSelectSizeName] = useState<string | null>(null);
   // product size
   const productSize = singleProduct?.data?.productVariations?.map(
     (product: any) => product.size && product.size
   );
-  console.log(productSize, "productSize");
+  // console.log(productSize, "productSize");
   const productColor = singleProduct?.data?.productVariations?.map(
     (color: any) => {
       if (color.color.name && color.color.code) {
@@ -97,16 +119,22 @@ const SingleProductPage = ({ params }: any) => {
       : []),
   ];
 
-  console.log(allProductImages);
-
+  // console.log(allProductImages);
+  const addToCartHandler = (product: any) => {
+    setStart(true);
+    dispatch(addToCart(product) as any);
+    setTimeout(() => {
+      setStart(false);
+    }, 2000);
+  };
   const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
-    <div className="pb-8">
+    <div>
       <div className="max-w-7xl mx-auto">
-        <div className="md:grid md:grid-cols-2 gap-5">
+        <div className="md:grid md:grid-cols-2 gap-10 mt-5">
           {/* product slider */}
           <div className="">
             <SingleProductSlider
@@ -149,17 +177,35 @@ const SingleProductPage = ({ params }: any) => {
                         onClick={() => {
                           setSelectedColorIndex(index);
                           setSelectColorName(color?.name);
+                          setProductForCart({
+                            categoryId: singleProduct?.data?.categoryId,
+                            productId: singleProduct?.data?.productId,
+                            productName: singleProduct?.data?.productName,
+                            variantId:
+                              singleProduct?.data?.productVariations?.[index]
+                                .variantId,
+                            price:
+                              singleProduct?.data?.productVariations?.[index]
+                                .variantPrice,
+                            color: {
+                              name: singleProduct?.data?.productVariations?.[
+                                index
+                              ].color?.name,
+                              code: singleProduct?.data?.productVariations?.[
+                                index
+                              ].color?.code,
+                            },
+                            image:
+                              singleProduct?.data?.productVariations?.[index]
+                                .image,
+                          });
                         }}
                         style={{
-                          // outlineOffset: "2px",
                           backgroundColor: `${color?.code}`,
-                          // border: `2px solid ${
-                          //   selectedColorIndex == index ? "blue" : "transparent"
-                          // }`,
                         }}
                         className={`w-6 h-6 md:w-9 md:h-9 rounded-full mr-2 ${
                           selectedColorIndex == index
-                            ? "border-2 border-gray-600"
+                            ? "border-[3px] border-gray-600"
                             : ""
                         } `}
                       ></button>
@@ -171,12 +217,20 @@ const SingleProductPage = ({ params }: any) => {
               {/* product size */}
               {productSize && productSize?.length > 0 && (
                 <div className="my-3">
-                  <h1>Size: </h1>
+                  <h1>Size: {selectSizeName}</h1>
                   <div className="flex gap-2">
                     {productSize?.map((size: any, index: number) => (
                       <button
+                        onClick={() => {
+                          setSelectedSizeIndex(index);
+                          setSelectSizeName(size);
+                        }}
                         key={index}
-                        className="w-20 h-10 hover:border-black border rounded-md flex justify-center items-center"
+                        className={`w-20 h-10 hover:border-black border ${
+                          selectedSizeIndex == index
+                            ? "border-2 border-black"
+                            : null
+                        } rounded-md flex justify-center items-center`}
                       >
                         {size}
                       </button>
@@ -187,14 +241,14 @@ const SingleProductPage = ({ params }: any) => {
 
               {/* select quantity */}
               <div className="md:flex items-end mt-2 gap-7">
-                <div className="flex items-end mb-3 md:mb-0">
+                {/* <div className="flex items-end mb-3 md:mb-0">
                   <div>
                     <p className="text-gray-700">
                       <span className="">Quantity:</span>
                     </p>
                     <div className="flex items-center">
                       <div className="inline-flex items-center mt-2 border text-gray-600 rounded-full">
-                        <button className="disabled:opacity-50 inline-flex items-center px-3 py-2 ">
+                        <button className="disabled:opacity-50 inline-flex items-center px-3 py-2">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-4"
@@ -211,7 +265,7 @@ const SingleProductPage = ({ params }: any) => {
                           </svg>
                         </button>
                         <div className="bg-gray-100 text-gray-600 hover:bg-gray-100 inline-flex items-center px-4 py-2 select-none">
-                          2
+                          1
                         </div>
                         <button className=" disabled:opacity-50 inline-flex items-center px-3 py-2">
                           <svg
@@ -232,11 +286,22 @@ const SingleProductPage = ({ params }: any) => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="w-full md:px-2">
-                  <button className="w-full bg-primary  text-white py-2 md:px-4 rounded-full font-bold hover:bg-gray-800 text-base md:text-lg">
-                    Add to Cart
-                  </button>
+                  {start ? (
+                    <button className="flex items-center w-full">
+                      <div className="w-full bg-gray-400 flex justify-center text-white md:px-4 rounded-full font-bold  text-base md:text-lg">
+                        <Loader size="sm" className="py-[13px] text-black" />
+                      </div>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => addToCartHandler(productForCart)}
+                      className="w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
+                    >
+                      Add to cart
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -269,14 +334,8 @@ const SingleProductPage = ({ params }: any) => {
         <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
           Product Description:
         </span>
-        <p className="text-gray-600   text-sm mt-2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante
-          justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus
-          commodo nulla ut lorem rhoncus aliquet. Duis dapibus augue vel ipsum
-          pretium, et venenatis sem blandit. Quisque ut erat vitae nisi ultrices
-          placerat non eget velit. Integer ornare mi sed ipsum lacinia, non
-          sagittis mauris blandit. Morbi fermentum libero vel nisl suscipit, nec
-          tincidunt mi consectetur.
+        <p className="text-gray-600  text-sm mt-2">
+          {singleProduct?.data?.productDescription}
         </p>
       </div>
       <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">

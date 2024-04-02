@@ -13,6 +13,7 @@ import { Accordion, Drawer, Placeholder } from "rsuite";
 import { Tooltip, Whisper, Button, ButtonToolbar } from "rsuite";
 import useMediaQuery from "@/hooks/useMediaQuiry";
 import EmptyCart from "./EmptyCart";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 const tooltip = <Tooltip>Remove All</Tooltip>;
 const tooltip2 = <Tooltip>Remove</Tooltip>;
@@ -20,7 +21,7 @@ const tooltip2 = <Tooltip>Remove</Tooltip>;
 const Cart = ({ cartOpen, setCartOpen }: any) => {
   const isLarge = useMediaQuery("(min-width: 640px)");
 
-  console.log(isLarge);
+  // console.log(isLarge);
   const cart = useSelector((state: any) => state.cart.cart);
   const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
     let totalPrice = 0;
     cart?.forEach((item: any) => {
       totalQuantity += item?.quantity;
-      totalPrice += item?.productPrice * item?.quantity;
+      totalPrice += item?.price * item?.quantity;
     });
     return { totalQuantity, totalPrice };
   };
@@ -74,35 +75,34 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                             <Image
                               width={80}
                               height={80}
-                              src={`${fileUrlKey()}/${item?.productImage}`}
+                              src={`${fileUrlKey()}/${item?.image}`}
                               alt={item?.productName}
                               className="w-20 h-20 object-cover rounded-md"
                             />
                           </div>
-                          <div className="w-4/5 flex flex-col gap-6">
-                            <div className="flex justify-between w-full">
-                              <p className="font-bold">{item?.productName}</p>
-                              <span
-                                className="hover:text-red-600 text-sm active:text-red-800 cursor-pointer"
-                                onClick={() =>
-                                  dispatch(removeItem(item?.productId) as any)
-                                }
-                              >
-                                Remove
-                                {/* <AiOutlineDelete size={20} /> */}
-                              </span>
-                            </div>
-                            <div>
-                              <div className="flex justify-between">
-                                <p className="font-semibold text-gray-700">
-                                  ${item?.productPrice * item?.quantity}
-                                </p>
-                                <div className="flex items-center justify-center">
+                          <div className="w-4/5 flex flex-col">
+                            <div className="flex justify-between items-center w-full">
+                              <p className="font-bold text-sm">
+                                {item?.productName}
+                              </p>
+                              <div className="flex items-center justify-center">
+                                {item?.quantity === 1 ? (
+                                  <button
+                                    className="hover:text-red-500"
+                                    onClick={() =>
+                                      dispatch(
+                                        removeItem(item?.variantId) as any
+                                      )
+                                    }
+                                  >
+                                    <RiDeleteBinLine size={18} />
+                                  </button>
+                                ) : (
                                   <button
                                     onClick={() =>
                                       dispatch(
                                         decrementQuantity(
-                                          item?.productId
+                                          item?.variantId
                                         ) as any
                                       )
                                     }
@@ -110,24 +110,42 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                                   >
                                     -
                                   </button>
-                                  <p className="text-center w-8 font-semibold">
-                                    {item?.quantity}
-                                  </p>
-                                  <button
-                                    onClick={() =>
-                                      dispatch(
-                                        incrementQuantity(
-                                          item?.productId
-                                        ) as any
-                                      )
-                                    }
-                                    className="w-7 h-7 hover:bg-gray-100 active:bg-gray-200 flex items-center justify-center border border-gray-300 shadow rounded-full text-xl font-semibold"
-                                  >
-                                    +
-                                  </button>
-                                </div>
+                                )}
+                                <p className="text-center w-8 font-semibold">
+                                  {item?.quantity}
+                                </p>
+                                <button
+                                  onClick={() =>
+                                    dispatch(
+                                      incrementQuantity(item?.variantId) as any
+                                    )
+                                  }
+                                  className="w-7 h-7 hover:bg-gray-100 active:bg-gray-200 flex items-center justify-center border border-gray-300 shadow rounded-full text-xl font-semibold"
+                                >
+                                  +
+                                </button>
+                              </div>
+                              {/* <span
+                                className="hover:text-red-600 text-sm active:text-red-800 cursor-pointer"
+                                onClick={() =>
+                                  dispatch(removeItem(item?.productId) as any)
+                                }
+                              >
+                                Remove
+                              </span> */}
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between">
+                                <p className="font-semibold text-gray-700">
+                                  ${item?.price * item?.quantity}
+                                </p>
                               </div>
                             </div>
+                            <p
+                              style={{ backgroundColor: item?.color?.code }}
+                              className={`w-6 h-6 md:w-9 md:h-9 rounded-full mr-2 mt-1.5`}
+                            ></p>
                           </div>
                           {/* price with quantity update */}
                         </div>
