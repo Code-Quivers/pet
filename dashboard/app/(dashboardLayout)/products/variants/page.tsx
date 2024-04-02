@@ -278,12 +278,12 @@ const AllProductList = () => {
               </Cell>
             </Column>
             {/* Size */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Size</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
                 {(rowData) => `${rowData.size}`}
               </Cell>
-            </Column>
+            </Column> */}
             {/* price */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Price</HeaderCell>

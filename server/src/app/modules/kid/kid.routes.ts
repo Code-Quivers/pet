@@ -8,7 +8,7 @@ import { KidController } from './kid.controller';
 
 const router = express.Router();
 
-// ! Create New List ------------------------------->>>
+// ! Create New kid ------------------------------->>>
 
 router.post(
   '/',
@@ -20,7 +20,7 @@ router.post(
   }
 );
 
-// ! Get all List----------------------------------->>>
+// ! Get all kids----------------------------------->>>
 router.get('/', KidController.getKid);
 
 // router.patch(
