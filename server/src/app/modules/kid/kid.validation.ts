@@ -7,14 +7,9 @@ export const IRelationSchema = z.object({
 });
 
 export const addKid = z.object({
-  kidName: z.string().optional(),
-  kidImage: z.string().optional(),
-  kidDescription: z.string().optional(),
-  kidGender: z.string().optional(),
-  kidAge: z.string().optional(),
-  kidAddress: z.string().optional(),
-  userId: z.string().optional(),
-  code: z.string().optional(),
+  kidName: z.string(),
+  kidAge: z.string(),
+  code: z.string(),
   relations: z.array(IRelationSchema).optional(),
 });
 

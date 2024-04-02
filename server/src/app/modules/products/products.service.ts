@@ -35,7 +35,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       image: imagePath,
       variantPrice: variant.variantPrice,
       color: variant.color,
-      size: variant.size,
+      // size: variant.size,
       stock: variant.stock,
     };
   });
@@ -63,12 +63,12 @@ const createProduct = async (req: Request): Promise<Product> => {
     }
     //
     const productId = createdProduct.productId;
-
+    //
     for (const variant of variants) {
       const pv = await transactionClient.productVariation.findFirst({
         where: {
           productId: productId,
-          size: variant.size,
+          // size: variant.size,
         },
       });
 

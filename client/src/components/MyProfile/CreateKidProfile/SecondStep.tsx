@@ -61,8 +61,8 @@ const SecondStep = ({
     // Construct the  object
     const kidData = {
       code: barCode,
-      name: kidInfo?.name,
-      age: parseInt(kidInfo?.age),
+      kidName: kidInfo?.name,
+      kidAge: kidInfo?.age,
       relations: kidInfo?.relations,
     };
 
@@ -75,7 +75,6 @@ const SecondStep = ({
 
     // appending all data to formData
     formData.append("data", kidJSON);
-    console.log(kidData);
     await addKid(formData);
   };
   // ! side effect
@@ -92,7 +91,7 @@ const SecondStep = ({
         </Message>,
         { placement: "topEnd", duration: 2000 }
       );
-      router.push("/products");
+      router.push("/my-account");
       resetReq();
     }
     if (!isSuccess && isError && !isLoading && error) {
@@ -198,16 +197,13 @@ const SecondStep = ({
               control={control}
               rules={{
                 required: "Kid Age is Required !!",
-                validate: (value) =>
-                  (parseInt(value) >= 0 && value !== "-0") ||
-                  "Age must be greater than or equal to 0",
               }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
                   <input
                     {...field}
                     name="name"
-                    type="number"
+                    type="text"
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
                     placeholder="Kid Age"
                   />
@@ -247,6 +243,7 @@ const SecondStep = ({
             Previous
           </button>
           <Button
+            loading={isLoading}
             disabled={!relations?.length}
             type="submit"
             className="!bg-primary !text-white
