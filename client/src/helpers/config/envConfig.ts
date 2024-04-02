@@ -3,7 +3,7 @@ export const getBaseUrl = (): string => {
 };
 
 export const getAuthKey = (): string => {
-  return process.env.NEXT_PUBLIC_AUTH_KEY!;
+  return process.env.NEXT_PUBLIC_API_AUTH_KEY!;
 };
 
 export const sideBarModeKey = (): string => {

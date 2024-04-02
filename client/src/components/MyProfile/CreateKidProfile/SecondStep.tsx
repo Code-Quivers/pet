@@ -76,7 +76,7 @@ const SecondStep = ({
     // appending all data to formData
     formData.append("data", kidJSON);
     console.log(kidData);
-    // await addKid(formData);
+    await addKid(formData);
   };
   // ! side effect
   const toaster = useToaster();

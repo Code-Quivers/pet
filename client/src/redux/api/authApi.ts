@@ -32,7 +32,7 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useUserLoginMutation,
   useRegistrationMutation,
+  useUserLoginMutation,
   useForgetPasswordMutation,
 } = authApi;

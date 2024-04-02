@@ -167,7 +167,7 @@ const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails |
 };
 
 const getAvailableBarCode = async (code: string): Promise<BarCode | null> => {
-  if (!code) throw new ApiError(httpStatus.BAD_REQUEST, 'Please enter a Code');
+  if (!code) throw new ApiError(httpStatus.BAD_REQUEST, 'Please enter a QR Code');
 
   const findBarCode = await prisma.barCode.findUnique({
     where: {
