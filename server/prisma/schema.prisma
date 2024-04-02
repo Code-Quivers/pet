@@ -56,8 +56,8 @@ model Product {
   productPrice       Float
   productDescription String
   productStatus      ProductStatus      @default(AVAILABLE)
-  categoryId         String
-  category           Category           @relation(fields: [categoryId], references: [categoryId])
+  categoryId         String?
+  category           Category?           @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
   createdAt          DateTime           @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime           @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
@@ -91,7 +91,7 @@ model ProductVariation {
 model BarCode {
   barcodeId     String           @id @default(uuid())
   code          String           @unique
-  barcodeStatus BarcodeStatus    @default(AVAILABLE)
+  barcodeStatus BarcodeStatus    @default(DEACTIVE)
   variantId     String
   variant       ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt     DateTime         @default(now()) @db.Timestamptz(0)
@@ -249,7 +249,6 @@ enum ProductStatus {
 }
 
 enum BarcodeStatus {
-  SOLD
   AVAILABLE
   ACTIVE
   DEACTIVE

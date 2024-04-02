@@ -296,6 +296,8 @@ const AddProductPromoForm = () => {
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <Input
+                      as="textarea"
+                      rows={3}
                       {...field}
                       placeholder="Write promo Name"
                       className="!w-full !text-capitalize"
