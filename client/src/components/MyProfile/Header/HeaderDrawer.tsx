@@ -31,10 +31,10 @@ const HeaderDrawer = ({ open, setOpen }: any) => {
                     <Link
                       onClick={() => setOpen(false)}
                       className="text-xl text-gray-900 transition hover:text-gray-900/75"
-                      href="/my-account/my-pet"
+                      href="/my-account/my-kids"
                     >
                       {" "}
-                      My Pet{" "}
+                      My Kids{" "}
                     </Link>
                   </div>
                 </Accordion.Panel>

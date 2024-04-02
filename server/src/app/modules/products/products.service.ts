@@ -179,7 +179,7 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
         select: {
           variantId: true,
           color: true,
-          size: true,
+
           stock: true,
           variantPrice: true,
           image: true,
@@ -225,7 +225,7 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
         select: {
           variantId: true,
           color: true,
-          size: true,
+
           stock: true,
           variantPrice: true,
           image: true,

@@ -515,14 +515,14 @@ const ProductBarcode = () => {
             </Column>
 
             {/* Size */}
-            <Column flexGrow={1}>
+            {/* <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Product Size</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="variant.size"
               />
-            </Column>
+            </Column> */}
 
             {/* Barcode */}
             <Column flexGrow={3}>
