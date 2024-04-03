@@ -11,4 +11,6 @@ router.get('/barcode', BarcodeController.getAvailableBarCode);
 // Kid details with qr code  for the barcode
 router.get('/:code', BarcodeController.getSingleBarCodeDetailsForKid);
 
+router.get('/get-single-variant/:variantId', BarcodeController.getSingleVariant);
+
 export const BarcodeRoutes = router;

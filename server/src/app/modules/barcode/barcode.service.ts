@@ -283,9 +283,50 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
   };
 };
 
+const getSingleVariant = async (variantId: string): Promise<any | null> => {
+  if (!variantId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+  }
+
+  // Find the product using the productCode
+  const result = await prisma.productVariation.findUnique({
+    where: {
+      variantId,
+    },
+    select: {
+      variantId: true,
+      productId: true,
+      color: true,
+      product: {
+        select: {
+          productName: true,
+        },
+      },
+      _count: true,
+      barCodes: {
+        select: {
+          barcodeId: true,
+          code: true,
+          barcodeStatus: true,
+        },
+      },
+      // product: true,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
+  }
+
+  // console.log('product', result);
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAvailableBarCode,
   getAllBarCodeForPrint,
+  getSingleVariant,
 };
