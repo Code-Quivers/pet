@@ -44,13 +44,13 @@ const SignInForm = () => {
             {data?.message || "Successfully Logged In"}
           </h4>
         </Message>,
-        { placement: "topEnd", duration: 2000 }
+        { placement: "bottomStart", duration: 2000 }
       );
       router.push("/my-account");
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
-        <Message bordered showIcon type="error" closable>
+        <Message bordered centered showIcon type="error" closable>
           <h4 className="font-semibold ">
             {
               // @ts-ignore
@@ -58,7 +58,7 @@ const SignInForm = () => {
             }
           </h4>
         </Message>,
-        { placement: "topEnd", duration: 2000 }
+        { placement: "bottomCenter", duration: 2000 }
       );
     }
   }, [data?.message, error, isError, isLoading, isSuccess, router, toaster]);

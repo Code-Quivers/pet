@@ -15,10 +15,9 @@ export const kidApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.kids],
     }),
     getKidProfile: build.query({
-      query: (arg: Record<string, any>) => ({
-        url: `${KID_API}`,
+      query: ({ code }: { code: string }) => ({
+        url: `${KID_API}/${code}`,
         method: "GET",
-        params: arg,
       }),
       providesTags: [tagTypes.kids],
     }),
