@@ -36,6 +36,7 @@ router.get('/my-kids', auth(UserRoles.USER), KidController.getMyAllKids);
 //   }
 // );
 
+//delete Kid
 router.delete(
   '/:kidId',
   // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
