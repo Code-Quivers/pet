@@ -23,6 +23,8 @@ router.post(
 // ! Get all kids----------------------------------->>>
 router.get('/', KidController.getKid);
 
+router.get('/my-kids', auth(UserRoles.USER), KidController.getMyAllKids);
+
 // router.patch(
 //   '/:productId',
 //   auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),

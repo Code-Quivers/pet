@@ -17,7 +17,7 @@ import { KidRelationalFields, KidSearchableFields, kidRelationalFieldsMapper } f
 
 // modules
 
-// !----------------------------------Create New Pet--------------------------------------->>>
+// !----------------------------------Create New Kid--------------------------------------->>>
 const addKid = async (req: Request): Promise<KidDetails> => {
   //@ts-ignore
   const file = req.file as IUploadFile;
@@ -160,7 +160,7 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
   };
 };
 
-// !----------------------------------Update Courier---------------------------------------->>>
+// !----------------------------------Update Kid---------------------------------------->>>
 const updateKid = async (productId: string, req: Request): Promise<Product> => {
   const file = req.file as IUploadFile;
   const filePath = file?.path?.substring(8);
@@ -248,6 +248,7 @@ const updateKid = async (productId: string, req: Request): Promise<Product> => {
   return result;
 };
 
+//! Kid Delete !
 const deleteKid = async (kidId: string): Promise<KidDetails> => {
   if (!kidId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Product Id is required');
@@ -262,9 +263,31 @@ const deleteKid = async (kidId: string): Promise<KidDetails> => {
   return result;
 };
 
+// ! get my kids (for user)
+
+const getMyAllKids = async (userId: string): Promise<KidDetails[]> => {
+  const result = await prisma.kidDetails.findMany({
+    where: {
+      user: {
+        userId,
+      },
+    },
+    include: {
+      barCode: true,
+    },
+  });
+
+  if (!result?.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "You haven't added any Kids");
+  }
+
+  return result;
+};
+
 export const KidService = {
   addKid,
   getKid,
   updateKid,
   deleteKid,
+  getMyAllKids,
 };
