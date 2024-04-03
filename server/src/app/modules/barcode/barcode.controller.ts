@@ -67,9 +67,24 @@ const getAllBarCodeForPrint = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
+const getSingleVariant = catchAsync(async (req: Request, res: Response) => {
+  const { variantId } = req.params;
+  // console.log('variantId', variantId);
+
+  const result = await BarcodeService.getSingleVariant(variantId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Link retrieved successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAllBarCodeForPrint,
   getAvailableBarCode,
+  getSingleVariant,
 };
