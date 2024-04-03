@@ -1,6 +1,6 @@
 "use client";
+import { useGetAvailableBarCodeQuery } from "@/redux/api/features/kids/barCodeApi";
 import SecondStep from "./SecondStep";
-import { useGetAvailableBarCodeQuery } from "@/redux/api/features/kids/kidApi";
 import { useDebounced } from "@/redux/hooks";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
