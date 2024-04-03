@@ -1,11 +1,11 @@
+"use client";
 import Image from "next/image";
-import React from "react";
 import myPetImage from "../../../../public/images/myaccount/mypet.png";
 import { FiPhone } from "react-icons/fi";
 import { AiOutlineMessage } from "react-icons/ai";
 import { GiGps } from "react-icons/gi";
 
-const MyPetPreview = () => {
+const KidDetailsPreview = () => {
   return (
     <div className="my-10 md:max-w-2xl md:mx-auto">
       <div className="bg-primary px-10 pt-10 md:pb-20 flex justify-center items-center">
@@ -94,4 +94,4 @@ const MyPetPreview = () => {
   );
 };
 
-export default MyPetPreview;
+export default KidDetailsPreview;
