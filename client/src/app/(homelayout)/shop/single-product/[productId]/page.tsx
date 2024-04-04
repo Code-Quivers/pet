@@ -215,7 +215,7 @@ const SingleProductPage = ({ params }: any) => {
               </div>
 
               {/* product size */}
-              {productSize && productSize?.length > 0 && (
+              {/* {productSize && productSize?.length > 0 && (
                 <div className="my-3">
                   <h1>Size: {selectSizeName}</h1>
                   <div className="flex gap-2">
@@ -237,7 +237,7 @@ const SingleProductPage = ({ params }: any) => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* select quantity */}
               <div className="md:flex items-end mt-2 gap-7">
