@@ -116,7 +116,7 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
   if (isUserExist && !isPasswordValid) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect !!');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect !!');
   }
 
   const { userId, profile, email: loggedInEmail } = isUserExist;
@@ -174,13 +174,13 @@ const dashboardLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse
   if (!isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
 
   if (isUserExist && isUserExist?.profile?.role === UserRoles.USER) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'You don`t have permission to Login. ask to Admin !!');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You don`t have permission to Login. ask to Admin !!');
   }
 
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
   if (isUserExist && !isPasswordValid) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect !!');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect !!');
   }
 
   const { userId, profile, email: loggedInEmail } = isUserExist;
