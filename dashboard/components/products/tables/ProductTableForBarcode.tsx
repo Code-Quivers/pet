@@ -280,10 +280,6 @@ const ProductBarcode = () => {
 
   const barcodeAllStatus = [
     {
-      label: "SOLD",
-      value: "SOLD",
-    },
-    {
       label: "AVAILABLE",
       value: "AVAILABLE",
     },
