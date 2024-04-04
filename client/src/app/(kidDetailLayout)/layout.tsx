@@ -8,9 +8,9 @@ const KidLayoutNavbar = dynamic(
 const KidDetailsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <div className="fixed top-2 w-full z-10">
+      {/* <div className="fixed top-2 w-full z-10">
         <KidLayoutNavbar />
-      </div>
+      </div> */}
       <div>{children}</div>
     </div>
   );
