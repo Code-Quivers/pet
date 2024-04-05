@@ -308,10 +308,11 @@ const SingleProductPage = ({ params }: any) => {
                       </button>
                     ) : (
                       <button
+                        disabled={!selectColorName}
                         onClick={() => addToCartHandler(productForCart)}
-                        className="w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
+                        className="disabled:bg-[#b5c4c6] w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
                       >
-                        Add to cart
+                        {selectColorName ? "ADD TO CART" : "SELECT A COLOR"}
                       </button>
                     )}
                   </div>
