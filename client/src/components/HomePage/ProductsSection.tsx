@@ -104,7 +104,7 @@ const ProductsSection = () => {
                   /> */}
                   </div>
                   <div className="px-4 py-2">
-                    <h2 className=" text-base font-bold text-black ">
+                    <h2 className="text-base font-bold text-black ">
                       {product?.productName}
                     </h2>
                     <p className="text-base pt-1 font-bold text-primary">
