@@ -111,7 +111,23 @@ const MyPetPage = ({ params }: Props) => {
                 <h2>Age: {kidDetails?.data?.kidAge}</h2>
               </div>
             </div>
-
+            <div className="grid grid-cols-5 p-5 text-center items-center">
+              <div className="text-lg md:text-xl text-gray-700 font-bold">
+                Name
+              </div>
+              <div className="text-lg md:text-xl text-gray-700 font-bold">
+                Relation
+              </div>
+              <div className="text-lg md:text-xl text-gray-700 font-bold">
+                Call
+              </div>
+              <div className="text-lg md:text-xl text-gray-700 font-bold">
+                Text
+              </div>
+              <div className="text-lg md:text-xl text-gray-700 font-bold">
+                GPS
+              </div>
+            </div>
             {/* kid emergency contact info */}
             {kidDetails?.data?.relations?.map((relation: any, idx: number) => (
               <div
@@ -119,20 +135,24 @@ const MyPetPage = ({ params }: Props) => {
                 className="flex justify-between items-center md:gap-6"
               >
                 <div className="text-start p-5 rounded-2xl flex justify-between items-center gap-3">
-                  <div>
+                  {/* <div>
                     <button className="px-3 py-1.5 bg-[#A1D7F3] rounded-full text-2xl font-extrabold text-[#6BB4DA]">
                       D
                     </button>
-                  </div>
+                  </div> */}
                   <div>
-                    <h2 className="text-lg md:text-xl text-gray-700 font-bold">
-                      {relation?.name}
-                    </h2>
-                    <a className="text-sm md:text-base text-gray-600 md:block hidden">
-                      {relation?.phoneNo}
-                    </a>
+                    <div className="flex justify-around">
+                      <h2 className="text-lg md:text-xl text-gray-700 font-bold">
+                        {relation?.name}
+                      </h2>
+                    </div>
+                    <div>
+                      <h2 className="text-lg md:text-xl text-gray-700 font-bold block md:hidden">
+                        {relation?.relation}
+                      </h2>
+                    </div>
                   </div>
-                  <div>
+                  <div className="md:block hidden">
                     <h2 className="text-lg md:text-xl text-gray-700 font-bold">
                       {relation?.relation}
                     </h2>
