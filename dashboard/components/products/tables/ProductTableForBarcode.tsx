@@ -31,7 +31,6 @@ import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
 import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
-import QRCode from "react-qr-code";
 
 const ProductBarcode = () => {
   const router = useRouter();
@@ -522,34 +521,6 @@ const ProductBarcode = () => {
               <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="code">
                 {(rowData) => `http:localhost:3000/tag/${rowData.code}`}
-              </Cell>
-            </Column>
-
-            {/* Barcode Image */}
-            {/* Barcode*/}
-            <Column flexGrow={2}>
-              <HeaderCell style={headerCss}>QR Code Image</HeaderCell>
-              <Cell dataKey="barcode" verticalAlign="middle">
-                {(rowData) => (
-                  <div>
-                    <div>
-                      <QRCode
-                        size={80}
-                        style={{
-                          height: "auto",
-                          maxWidth: "100%",
-                          width: "100%",
-                        }}
-                        viewBox={`0 0 256 256`}
-                        value={rowData.code}
-                      />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-center">{rowData.code}</p>
-                    </div>
-                  </div>
-                )}
               </Cell>
             </Column>
 
