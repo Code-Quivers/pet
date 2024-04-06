@@ -2,12 +2,12 @@ import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { IKidRequest } from './kid.interface';
-import { BarcodeStatus } from '@prisma/client';
+import { BarcodeStatus, User, UserRoles } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import config from '../../../config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const KidValidation = async (data: IKidRequest) => {
-  console.log('data', data);
-
   if (!data.code) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'BarCode is required');
   }
@@ -22,28 +22,46 @@ export const KidValidation = async (data: IKidRequest) => {
   if (!isProductExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
   }
+};
 
-  // const kidAssign = await prisma.kidDetails.findFirst({
-  //   where: {
-  //     userId: userId,
-  //     barcodeId: isProductExist.barcodeId,
-  //   },
-  // });
+export const UserCreation = async ({ email, password }: { email: string; password: string }): Promise<User> => {
+  //
 
-  // if (kidAssign) {
-  //   throw new ApiError(httpStatus.CONFLICT, 'Kid Already Assigned');
-  // }
+  const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
 
-  // const kidAssignToOtherUser = await prisma.kidDetails.findFirst({
-  //   where: {
-  //     NOT: {
-  //       userId: userId,
-  //     },
-  //     barcodeId: isProductExist.barcodeId,
-  //   },
-  // });
+  // transaction start
+  const result = await prisma.$transaction(async transactionClient => {
+    const profileData = {
+      role: UserRoles.USER,
+    };
 
-  // if (kidAssignToOtherUser) {
-  //   throw new ApiError(httpStatus.CONFLICT, 'Kid Already Assigned to a different user');
-  // }
+    const createdProfile = await transactionClient.profile.create({
+      data: {
+        ...profileData,
+      },
+      select: {
+        profileId: true,
+      },
+    });
+
+    if (!createdProfile) throw new ApiError(httpStatus.BAD_REQUEST, 'Profile creation failed');
+
+    const createdUser = await transactionClient.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        profile: {
+          connect: {
+            profileId: createdProfile.profileId,
+          },
+        },
+      },
+    });
+
+    if (!createdUser) throw new ApiError(httpStatus.BAD_REQUEST, 'User creation failed');
+
+    return createdUser;
+  });
+
+  return result;
 };

@@ -8,22 +8,13 @@ export const IRelationSchema = z.object({
 
 export const addKid = z.object({
   kidName: z.string(),
+  email: z.string(),
+  password: z.string(),
   kidAge: z.string(),
   code: z.string(),
   relations: z.array(IRelationSchema).optional(),
 });
 
-// const editPet = z.object({
-//   productName: z.string().optional(),
-//   productDescription: z.string().optional(),
-//   productPrice: z.number().optional(),
-//   productStock: z.number().optional(),
-//   categoryId: z.string().optional(),
-//   colorVarientId: z.string().optional(),
-//   sizeVarientId: z.string().optional(),
-// });
-
 export const KidValidation = {
   addKid,
-  // editPet,
 };

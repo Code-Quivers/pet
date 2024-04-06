@@ -54,6 +54,7 @@ const SingleProductPage = ({ params }: any) => {
   );
 
   const [selectColorName, setSelectColorName] = useState<string | null>(null);
+  const [colorName, setColorName] = useState<string | null>(null);
   const [selectSizeName, setSelectSizeName] = useState<string | null>(null);
   // product size
   const productSize = singleProduct?.data?.productVariations?.map(
@@ -169,6 +170,7 @@ const SingleProductPage = ({ params }: any) => {
                             onClick={() => {
                               setSelectedColorIndex(index);
                               setSelectColorName(color?.name);
+                              setColorName(color?.name);
                               setProductForCart({
                                 categoryId: singleProduct?.data?.categoryId,
                                 productId: singleProduct?.data?.productId,
@@ -308,11 +310,11 @@ const SingleProductPage = ({ params }: any) => {
                       </button>
                     ) : (
                       <button
-                        disabled={!selectColorName}
+                        disabled={!colorName}
                         onClick={() => addToCartHandler(productForCart)}
                         className="disabled:bg-[#b5c4c6] w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
                       >
-                        {selectColorName ? "ADD TO CART" : "SELECT A COLOR"}
+                        {colorName ? "ADD TO CART" : "SELECT A COLOR"}
                       </button>
                     )}
                   </div>
