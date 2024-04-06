@@ -65,7 +65,6 @@ export const generateBarCode = (): string => {
 
   existingCodes.push(code); // Add the new code to the array of existing codes
 
-  const timestamp = Date.now(); // Get current timestamp in milliseconds
   const truncatedCode = code.toString().slice(-6); // Extract last 8 digits of the code
-  return 'et' + truncatedCode + timestamp.toString(); // Prepend "et" and append timestamp
+  return 'et' + truncatedCode; // Prepend "et" and append timestamp
 };

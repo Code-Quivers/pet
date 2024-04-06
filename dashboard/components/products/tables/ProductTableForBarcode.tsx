@@ -287,8 +287,8 @@ const ProductBarcode = () => {
       value: "ACTIVE",
     },
     {
-      label: "DEACTIVE",
-      value: "DEACTIVE",
+      label: "INACTIVE",
+      value: "INACTIVE",
     },
   ];
 

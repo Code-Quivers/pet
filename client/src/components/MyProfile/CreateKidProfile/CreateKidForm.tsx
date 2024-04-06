@@ -90,7 +90,6 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
         </Message>,
         { placement: "topEnd", duration: 2000 }
       );
-      router.push("/my-account");
       resetReq();
     }
     if (!isSuccess && isError && !isLoading && error) {
