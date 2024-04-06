@@ -61,9 +61,12 @@ const addKid = async (req: Request): Promise<KidDetails> => {
         email,
       },
     });
+    
     if (!isExistEmail) {
       const createUser = await UserCreation({ email, password });
       newObjData['userId'] = createUser?.userId;
+    } else {
+      newObjData['userId'] = isExistEmail.userId;
     }
 
     const addNewKid = await transactionClient.kidDetails.create({

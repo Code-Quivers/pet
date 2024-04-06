@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
   FileUploadHelper.uploadProductImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = KidValidation.addKid.parse(JSON.parse(req.body.data));

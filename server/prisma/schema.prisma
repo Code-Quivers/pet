@@ -91,7 +91,7 @@ model ProductVariation {
 model BarCode {
   barcodeId     String           @id @default(uuid())
   code          String           @unique
-  barcodeStatus BarcodeStatus    @default(DEACTIVE)
+  barcodeStatus BarcodeStatus    @default(INACTIVE)
   variantId     String
   variant       ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt     DateTime         @default(now()) @db.Timestamptz(0)
@@ -249,7 +249,7 @@ enum ProductStatus {
 enum BarcodeStatus {
   AVAILABLE
   ACTIVE
-  DEACTIVE
+  INACTIVE
 }
 
 // enum for promotion types
