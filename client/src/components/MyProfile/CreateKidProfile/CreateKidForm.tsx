@@ -1,8 +1,8 @@
 "use client";
 
-import { Button, Form, Message, useToaster } from "rsuite";
+import { Button, DatePicker, Form, Message, useToaster } from "rsuite";
 import { Controller, useForm } from "react-hook-form";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 import MyContacts from "./MyContacts";
 import { FileType } from "rsuite/esm/Uploader";
 import UploadKidPhoto from "./UploadKidPhoto";
@@ -17,18 +17,14 @@ type IRelations = {
 
 type ICreateKid = {
   name: string;
-  age: string;
+  age: Date;
+  email: string;
+  password: string;
   kidImage: FileType;
   relations: IRelations[];
 };
 
-const SecondStep = ({
-  setStep,
-  barCode,
-}: {
-  setStep: Dispatch<SetStateAction<number>>;
-  barCode: string;
-}) => {
+const CreateKidForm = ({ tag }: { tag: string }) => {
   const {
     handleSubmit,
     control,
@@ -60,8 +56,10 @@ const SecondStep = ({
 
     // Construct the  object
     const kidData = {
-      code: barCode,
+      code: tag,
       kidName: kidInfo?.name,
+      email: kidInfo?.email,
+      password: kidInfo?.password,
       kidAge: kidInfo?.age,
       relations: kidInfo?.relations,
     };
@@ -75,6 +73,7 @@ const SecondStep = ({
 
     // appending all data to formData
     formData.append("data", kidJSON);
+
     await addKid(formData);
   };
   // ! side effect
@@ -200,10 +199,8 @@ const SecondStep = ({
               }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
-                  <input
+                  <DatePicker
                     {...field}
-                    name="name"
-                    type="text"
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
                     placeholder="Kid Age"
                   />
@@ -212,6 +209,73 @@ const SecondStep = ({
                     placement="topEnd"
                   >
                     <span>{errors?.age?.message as string}</span>
+                  </Form.ErrorMessage>
+                </div>
+              )}
+            />
+          </div>
+
+          {/* email */}
+
+          <div className="flex flex-col w-full gap-2">
+            <label className="text-start block ">Enter Email</label>
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email is Required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field }) => (
+                <div className="rs-form-control-wrapper ">
+                  <input
+                    {...field}
+                    name="email"
+                    type="text"
+                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
+                    placeholder="Enter Your Email"
+                  />
+                  <Form.ErrorMessage
+                    show={
+                      (!!errors?.email && !!errors?.email?.message) || false
+                    }
+                    placement="topEnd"
+                  >
+                    <span>{errors?.email?.message as string}</span>
+                  </Form.ErrorMessage>
+                </div>
+              )}
+            />
+          </div>
+
+          {/* Password */}
+
+          <div className="flex flex-col w-full gap-2">
+            <label className="text-start block ">Enter Password</label>
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: "Password is Required !!" }}
+              render={({ field }) => (
+                <div className="rs-form-control-wrapper ">
+                  <input
+                    {...field}
+                    name="password"
+                    type="password"
+                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
+                    placeholder="Enter password"
+                  />
+                  <Form.ErrorMessage
+                    show={
+                      (!!errors?.password && !!errors?.password?.message) ||
+                      false
+                    }
+                    placement="topEnd"
+                  >
+                    <span>{errors?.password?.message as string}</span>
                   </Form.ErrorMessage>
                 </div>
               )}
@@ -233,15 +297,6 @@ const SecondStep = ({
         {/*  */}
 
         <div className="flex justify-end">
-          <button
-            type="button"
-            className="
-          hover:text-cyan-600 hover:underline px-4 py-2 font-bold text-gray-700 transition-all duration-300 ease-in-out delay-0`}
-          "
-            onClick={() => setStep(0)}
-          >
-            Previous
-          </button>
           <Button
             loading={isLoading}
             disabled={!relations?.length}
@@ -258,4 +313,4 @@ const SecondStep = ({
   );
 };
 
-export default SecondStep;
+export default CreateKidForm;
