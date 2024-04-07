@@ -9,6 +9,7 @@ import UploadKidPhoto from "./UploadKidPhoto";
 import { useAddKidMutation } from "@/redux/api/features/kids/kidApi";
 import { useRouter } from "next/navigation";
 
+// type definition
 type IRelations = {
   name: string;
   relation: string;
