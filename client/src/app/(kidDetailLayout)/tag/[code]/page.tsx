@@ -1,5 +1,4 @@
 "use client";
-
 import CreateKidForm from "@/components/MyProfile/CreateKidProfile/CreateKidForm";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useGetKidProfileQuery } from "@/redux/api/features/kids/kidApi";
@@ -7,9 +6,9 @@ import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AiOutlineMessage } from "react-icons/ai";
 import { FiPhone } from "react-icons/fi";
-import { GiGps } from "react-icons/gi";
+import { GrMapLocation } from "react-icons/gr";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { Loader } from "rsuite";
 
 type Props = {
@@ -28,6 +27,32 @@ const MyPetPage = ({ params }: Props) => {
   } = useGetKidProfileQuery({
     code: params?.code,
   });
+
+  function formatDuration(start: any, end: any) {
+    console.log(start);
+    console.log(end);
+    const duration = moment.duration(moment(end).diff(moment(start)));
+    const years = duration.years();
+    const months = duration.months();
+    const days = duration.days();
+
+    let formattedString = "";
+
+    if (years > 0) {
+      formattedString += `${years} year${years > 1 ? "s" : ""} `;
+    }
+
+    if (months > 0) {
+      formattedString += `${months} month${months > 1 ? "s" : ""} `;
+    }
+
+    if (days > 0 && years === 0 && months === 0) {
+      formattedString += `${days} day${days > 1 ? "s" : ""}`;
+    }
+
+    return formattedString.trim();
+  }
+  const endDate = new Date().toISOString();
 
   return (
     <div className="mx-auto max-w-screen-xl   sm:px-6 lg:px-8">
@@ -103,31 +128,31 @@ const MyPetPage = ({ params }: Props) => {
             <CreateKidForm tag={params.code} />
           ) : (
             <div className="md:max-w-2xl md:mx-auto">
-              <div className="bg-primary px-10 py-20 md:pb-20 flex justify-center items-center">
+              <div className="bg-primary px-10 py-[70px] md:pb-20 flex justify-center items-center">
                 <div className="bg-white inline-block p-2 rounded-full">
                   <Image
-                    className="rounded-full"
+                    className="rounded-full w-32 h-32 object-cover"
                     src={`${fileUrlKey()}/${kidDetails?.data?.kidImage}`}
-                    width={120}
-                    height={120}
+                    width={128}
+                    height={128}
                     alt="pet pic"
                   />
                 </div>
               </div>
 
-              <div className="bg-white border -mt-10 rounded-tl-[26px] rounded-tr-[26px]">
-                <div className="flex flex-col justify-center items-center p-4 z-20">
-                  <div className="md:pt-2 pt-10">
+              <div className="bg-white border -mt-10 rounded-tl-[26px] rounded-tr-[26px] min-h-screen">
+                <div className="flex flex-col justify-center items-center pt-4 z-20">
+                  <div className="md:pt-2">
                     <h2 className="text-3xl font-bold">
                       {kidDetails?.data?.kidName}
                     </h2>
                   </div>
                   <div>
                     {/* <h2>{moment(kidDetails?.data?.kidAge).fromNow()}</h2> */}
-                    <h2>{kidDetails?.data?.kidAge}</h2>
+                    <h2>{formatDuration(kidDetails?.data?.kidAge, endDate)}</h2>
                   </div>
                 </div>
-                <div className="grid grid-cols-5 p-5 text-center items-center">
+                {/* <div className="grid grid-cols-5 p-5 text-center items-center">
                   <div className="text-lg md:text-xl text-gray-700 font-bold">
                     Name
                   </div>
@@ -143,23 +168,61 @@ const MyPetPage = ({ params }: Props) => {
                   <div className="text-lg md:text-xl text-gray-700 font-bold">
                     GPS
                   </div>
-                </div>
+                </div> */}
+
+                <section className="mt-5">
+                  <div className="grid grid-cols-12 px-3 text-sm font-bold">
+                    <p className="col-span-3">Name</p>
+                    <p className="col-span-3">Relationship</p>
+                    <p className="col-span-2 text-right">Call</p>
+                    <p className="col-span-2 text-center">Text</p>
+                    <p className="col-span-2 text-center">Location</p>
+                  </div>
+                  {kidDetails?.data?.relations?.length > 0 &&
+                    kidDetails?.data?.relations?.map(
+                      (relation: any, idx: number) => (
+                        <div
+                          key={idx}
+                          className="grid grid-cols-12 px-3 text-sm mt-2"
+                        >
+                          <p className="col-span-3">{relation?.name}</p>
+                          <p className="col-span-3">{relation?.relation}</p>
+                          <div className="col-span-2 text-right">
+                            <button className="hover:scale-105 transition-all ease-in-out">
+                              <FiPhone className="text-lg text-[#1d7296]" />
+                            </button>
+                          </div>
+                          <div className="col-span-2 text-center">
+                            <button className="hover:scale-105 transition-all ease-in-out">
+                              <IoChatboxEllipsesOutline className="text-lg text-[#1d7296]" />
+                            </button>
+                          </div>
+                          <div className="col-span-2 text-center">
+                            <button className="hover:scale-105 transition-all ease-in-out">
+                              <GrMapLocation className="text-lg text-[#1d7296]" />
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    )}
+                </section>
+
                 {/* kid emergency contact info */}
-                {kidDetails?.data?.relations?.map(
+                {/* {kidDetails?.data?.relations?.map(
                   (relation: any, idx: number) => (
                     <div
                       key={idx}
                       className="flex justify-between items-center md:gap-6"
                     >
-                      <div className="text-start p-5 rounded-2xl flex justify-between items-center gap-3">
+                      <div className="text-start px-5 rounded-2xl flex justify-between items-center gap-3">
                         <div>
                           <div className="flex justify-around">
-                            <h2 className="text-lg md:text-xl text-gray-700 font-bold">
+                            <h2 className="text-base line-clamp-1 md:text-xl text-gray-700 font-bold">
                               {relation?.name}
                             </h2>
                           </div>
                           <div>
-                            <h2 className="text-lg md:text-xl text-gray-700 font-bold block md:hidden">
+                            <h2 className="text-base md:text-xl text-gray-700 block md:hidden">
                               {relation?.relation}
                             </h2>
                           </div>
@@ -172,19 +235,19 @@ const MyPetPage = ({ params }: Props) => {
                       </div>
 
                       <div className="text-start p-5 rounded-2xl flex justify-between items-center gap-3">
-                        <button className="bg-primary p-2 rounded-3xl hover:scale-105 transition-all ease-in-out">
-                          <FiPhone className="text-2xl text-white" />
+                        <button className="bg-[#d4ecf7] p-2.5 rounded-3xl hover:scale-105 transition-all ease-in-out">
+                          <FiPhone className="text-lg text-[#1d7296]" />
                         </button>
-                        <button className="bg-black p-2 rounded-3xl hover:scale-105 transition-all ease-in-out">
-                          <AiOutlineMessage className="text-2xl text-white" />
+                        <button className="bg-[#d4ecf7] p-2.5 rounded-3xl hover:scale-105 transition-all ease-in-out">
+                          <AiOutlineMessage className="text-lg text-[#1d7296]" />
                         </button>
-                        <button className="bg-black p-2 rounded-3xl hover:scale-105 transition-all ease-in-out">
-                          <GiGps className="text-2xl text-white" />
+                        <button className="bg-[#d4ecf7] p-2.5 rounded-3xl hover:scale-105 transition-all ease-in-out">
+                          <GrMapLocation className="text-lg text-[#1d7296]" />
                         </button>
                       </div>
                     </div>
                   )
-                )}
+                )} */}
               </div>
             </div>
           )}
