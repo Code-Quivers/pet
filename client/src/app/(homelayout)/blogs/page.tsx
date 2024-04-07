@@ -17,7 +17,6 @@ import Link from "next/link";
 
 const BlogPage = async () => {
   const allBlogs = await getData();
-  console.log("allBlogs", allBlogs?.meta?.total);
   return (
     <div
       suppressHydrationWarning={true}
@@ -80,6 +79,15 @@ const BlogPage = async () => {
             />
           </div>
         ))}
+      </div>
+
+      {/* if no data */}
+      <div>
+        {!allBlogs?.data?.length && (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <h2 className="text-xl font-semibold">No Blogs Available</h2>
+          </div>
+        )}
       </div>
     </div>
   );
