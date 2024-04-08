@@ -4,7 +4,9 @@ export type IProductFilterRequest = {
 
 export type IKidRequest = {
   kidName: string;
-  kidAge: number;
+  email: string;
+  password: string;
+  kidAge: Date;
   userId: string;
   code: string;
   relations: IRelation[];
@@ -34,4 +36,12 @@ export type IRequestUser = {
   profileId: string;
   iat: number;
   exp: number;
+};
+export type ICreateKidDetails = {
+  kidImage?: string;
+  barcodeId: string;
+  kidName: string;
+  userId?: string;
+  kidAge: Date;
+  relations: IRelation[];
 };

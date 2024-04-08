@@ -6,10 +6,10 @@ import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { KidService } from './kid.service';
 import { KidFilterableFields } from './kid.constants';
+import { IRequestUser } from './kid.interface';
 
 // !----------------------------------Create New Category---------------------------------------->>>
 const addKid = catchAsync(async (req: Request, res: Response) => {
-  // @ts-ignore
   const result = await KidService.addKid(req);
 
   sendResponse(res, {
@@ -38,17 +38,17 @@ const getKid = catchAsync(async (req: Request, res: Response) => {
 });
 
 // !----------------------------------Update Category---------------------------------------->>>
-const updateKid = catchAsync(async (req: Request, res: Response) => {
-  const { kidId } = req.params;
-  const result = await KidService.updateKid(kidId, req);
+// const updateKid = catchAsync(async (req: Request, res: Response) => {
+//   const { kidId } = req.params;
+//   const result = await KidService.updateKid(kidId, req);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: ' Updated successfully !',
-    data: result,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: ' Updated successfully !',
+//     data: result,
+//   });
+// });
 
 const deleteKid = catchAsync(async (req: Request, res: Response) => {
   const { kidId } = req.params;
@@ -61,10 +61,25 @@ const deleteKid = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// ! get my kids (for user)
+
+const getMyAllKids = catchAsync(async (req: Request, res: Response) => {
+  const userId = (req.user as IRequestUser).userId;
+
+  const result = await KidService.getMyAllKids(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Kids Retrieved Successfully !',
+    data: result,
+  });
+});
 
 export const KidController = {
   addKid,
   getKid,
-  updateKid,
+  // updateKid,
   deleteKid,
+  getMyAllKids,
 };

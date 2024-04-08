@@ -1,13 +1,13 @@
 import { tagTypes } from "@/redux/tag-types";
 import { baseApi } from "../../baseApi";
 
-const KID_API = "/tag";
+const KID_API = "/kid";
 
 export const kidApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addKid: build.mutation({
       query: (data: any) => ({
-        url: `/kid`,
+        url: `${KID_API}`,
         method: "POST",
         data: data,
         contentType: "multipart/form-data",
@@ -15,18 +15,16 @@ export const kidApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.kids],
     }),
     getKidProfile: build.query({
-      query: (arg: Record<string, any>) => ({
-        url: `${KID_API}`,
+      query: ({ code }: { code: string }) => ({
+        url: `/tag/${code}`,
         method: "GET",
-        params: arg,
       }),
       providesTags: [tagTypes.kids],
     }),
-    getAvailableBarCode: build.query({
-      query: (code) => ({
-        url: `${KID_API}/barcode`,
+    getMyAllKids: build.query({
+      query: () => ({
+        url: `/${KID_API}/my-kids`,
         method: "GET",
-        params: code,
       }),
       providesTags: [tagTypes.kids],
     }),
@@ -36,5 +34,5 @@ export const kidApi = baseApi.injectEndpoints({
 export const {
   useAddKidMutation,
   useGetKidProfileQuery,
-  useGetAvailableBarCodeQuery,
+  useGetMyAllKidsQuery,
 } = kidApi;

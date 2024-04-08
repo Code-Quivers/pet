@@ -47,7 +47,7 @@ const SignUpForm = () => {
         </Message>,
         { placement: "topEnd", duration: 2000 }
       );
-      // router.push("/my-account");
+      router.push("/my-account");
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(

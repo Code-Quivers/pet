@@ -22,12 +22,12 @@ model User {
   profileId     String?         @unique
   profile       Profile?        @relation(fields: [profileId], references: [profileId])
   productReview ProductReview[]
-  KidDetails    KidDetails[]
+  kidDetails    KidDetails[]
 }
 
 model Profile {
   profileId              String    @id @default(uuid())
-  fullName               String
+  fullName               String?
   mobileNumber           String?
   address                String?
   role                   UserRoles @default(USER)
@@ -91,7 +91,7 @@ model ProductVariation {
 model BarCode {
   barcodeId     String           @id @default(uuid())
   code          String           @unique
-  barcodeStatus BarcodeStatus    @default(DEACTIVE)
+  barcodeStatus BarcodeStatus    @default(INACTIVE)
   variantId     String
   variant       ProductVariation @relation(fields: [variantId], references: [variantId])
   createdAt     DateTime         @default(now()) @db.Timestamptz(0)
@@ -144,12 +144,12 @@ model KidDetails {
   kidId      String   @id @default(uuid())
   kidName    String
   kidImage   String? 
-  kidAge     String 
+  kidAge     DateTime 
   relations  Json[]
   barcodeId  String?  @unique
   barCode    BarCode? @relation(fields: [barcodeId], references: [barcodeId])
-  userId     String
-  user       User     @relation(fields: [userId], references: [userId])
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [userId],onDelete: SetNull)
   createdAt  DateTime @default(now()) @db.Timestamptz(0)
   updatedAt  DateTime @updatedAt @db.Timestamptz(0)
 }
@@ -249,7 +249,7 @@ enum ProductStatus {
 enum BarcodeStatus {
   AVAILABLE
   ACTIVE
-  DEACTIVE
+  INACTIVE
 }
 
 // enum for promotion types

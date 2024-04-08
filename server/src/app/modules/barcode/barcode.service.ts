@@ -137,10 +137,13 @@ const getProductBarcodeVarientWise = async (
   };
 };
 
-const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails | null> => {
+// ! kid details or kid create details
+const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails | BarCode | null> => {
   if (!code) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is required');
   }
+
+  let result = null;
 
   // Find the product using the productCode
   const barCodeDetails = await prisma.barCode.findUnique({
@@ -150,17 +153,26 @@ const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails |
   });
 
   if (!barCodeDetails) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'BarCode is Invalid');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Does Not Exist');
   }
 
-  const result = await prisma.kidDetails.findUnique({
-    where: {
-      barcodeId: barCodeDetails.barcodeId,
-    },
-  });
+  if (barCodeDetails.barcodeStatus !== 'AVAILABLE' && barCodeDetails.barcodeStatus !== 'ACTIVE') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Barcode is not available or active');
+  }
 
-  if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Kid Not Found');
+  if (barCodeDetails.barcodeStatus === 'AVAILABLE') {
+    result = barCodeDetails;
+  } else {
+    const res = await prisma.kidDetails.findUnique({
+      where: {
+        barcodeId: barCodeDetails.barcodeId,
+      },
+    });
+
+    if (!res) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Kid Not Found');
+    }
+    result = res;
   }
 
   return result;
@@ -283,9 +295,50 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
   };
 };
 
+const getSingleVariant = async (variantId: string): Promise<any | null> => {
+  if (!variantId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+  }
+
+  // Find the product using the productCode
+  const result = await prisma.productVariation.findUnique({
+    where: {
+      variantId,
+    },
+    select: {
+      variantId: true,
+      productId: true,
+      color: true,
+      product: {
+        select: {
+          productName: true,
+        },
+      },
+      _count: true,
+      barCodes: {
+        select: {
+          barcodeId: true,
+          code: true,
+          barcodeStatus: true,
+        },
+      },
+      // product: true,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
+  }
+
+  // console.log('product', result);
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAvailableBarCode,
   getAllBarCodeForPrint,
+  getSingleVariant,
 };

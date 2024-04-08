@@ -21,9 +21,7 @@ import {
 } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-
 import { BiSearch } from "react-icons/bi";
-
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
@@ -33,9 +31,9 @@ import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
 import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
-import QRCode from "react-qr-code";
 
 const ProductBarcode = () => {
+  const router = useRouter();
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
@@ -47,13 +45,11 @@ const ProductBarcode = () => {
     endDate: "",
   });
 
-  console.log("checkedKeys", checkedKeys);
+  // console.log("checkedKeys", checkedKeys);
 
   query["barcodeStatus"] = barcodeStatus;
   query["startDate"] = selectedDate.startDate;
   query["endDate"] = selectedDate.endDate;
-
-  const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -71,14 +67,14 @@ const ProductBarcode = () => {
     isFetching,
   } = useGetBarcodeForPrintQuery({ ...query });
 
-  const [editData, setEditData] = useState(null);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  // const [editData, setEditData] = useState(null);
+  // const [isOpenEdit, setIsOpenEdit] = useState(false);
   // close modal
-  const handleCloseEdit = () => {
-    setIsOpenEdit(false);
-    setEditData(null);
-  };
-
+  // const handleCloseEdit = () => {
+  //   setIsOpenEdit(false);
+  //   setEditData(null);
+  // };
+  // Filter date
   const handleFilterDate = (date: Date[] | null) => {
     if (!date?.length) {
       setSelectedDate({
@@ -132,7 +128,7 @@ const ProductBarcode = () => {
     checkedKeys.includes(obj.barcodeId)
   );
 
-  // ! export to excel
+  // ! export to excel -------------------------------------------------
 
   const columns = [
     { header: "Product Name", key: "productName" },
@@ -283,10 +279,6 @@ const ProductBarcode = () => {
 
   const barcodeAllStatus = [
     {
-      label: "SOLD",
-      value: "SOLD",
-    },
-    {
       label: "AVAILABLE",
       value: "AVAILABLE",
     },
@@ -295,8 +287,8 @@ const ProductBarcode = () => {
       value: "ACTIVE",
     },
     {
-      label: "DEACTIVE",
-      value: "DEACTIVE",
+      label: "INACTIVE",
+      value: "INACTIVE",
     },
   ];
 
@@ -415,7 +407,7 @@ const ProductBarcode = () => {
             autoHeight={true}
             data={allBarCodeList?.data}
           >
-            <Column width={50} align="center">
+            <Column width={50} align="center" verticalAlign="middle">
               <HeaderCell style={{ padding: 0 }}>
                 <div style={{ lineHeight: "40px" }}>
                   <Checkbox
@@ -529,34 +521,6 @@ const ProductBarcode = () => {
               <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="code">
                 {(rowData) => `http:localhost:3000/tag/${rowData.code}`}
-              </Cell>
-            </Column>
-
-            {/* Barcode Image */}
-            {/* Barcode*/}
-            <Column flexGrow={2}>
-              <HeaderCell style={headerCss}>QR Code Image</HeaderCell>
-              <Cell dataKey="barcode" verticalAlign="middle">
-                {(rowData) => (
-                  <div>
-                    <div>
-                      <QRCode
-                        size={80}
-                        style={{
-                          height: "auto",
-                          maxWidth: "100%",
-                          width: "100%",
-                        }}
-                        viewBox={`0 0 256 256`}
-                        value={rowData.code}
-                      />
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-center">{rowData.code}</p>
-                    </div>
-                  </div>
-                )}
               </Cell>
             </Column>
 

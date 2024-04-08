@@ -12,39 +12,12 @@ import { fileUrlKey } from "@/utils/envConfig";
 import { addToCart } from "@/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 
-const productImages = [
-  {
-    id: 1,
-    url: "https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg",
-    alt: "Feature Image 1",
-    caption: "A stunning view of the product.",
-  },
-  {
-    id: 2,
-    url: "https://readymadeui.com/images/laptop2.webp",
-    alt: "Product Image 2",
-    caption: "Another perspective of the product.",
-  },
-  {
-    id: 3,
-    url: "https://readymadeui.com/images/laptop3.webp",
-    alt: "Product Image 3",
-    caption: "Close-up shot highlighting key features.",
-  },
-  {
-    id: 4,
-    url: "https://readymadeui.com/images/laptop4.webp",
-    alt: "Product Image 4",
-    caption: "Different color variant of the product.",
-  },
-  {
-    id: 5,
-    url: "https://readymadeui.com/images/laptop5.webp",
-    alt: "Product Image 5",
-    caption: "Product in action - showcasing its usage.",
-  },
-];
-
+const colorLoader = Array.from({ length: 3 }).map((_, index) => (
+  <div
+    key={index}
+    className="h-10 w-10 rounded-full animate-pulse bg-gray-300 mr-2"
+  ></div>
+));
 const SingleProductPage = ({ params }: any) => {
   const dispatch = useDispatch();
   console.log(params);
@@ -52,11 +25,13 @@ const SingleProductPage = ({ params }: any) => {
     data: singleProduct,
     error,
     isLoading,
+    isFetching,
     isSuccess,
   } = useGetSingleProductQuery({
     id: params.productId,
   });
   console.log(singleProduct);
+  const [quantity, setQuantity] = useState(1);
   const [productForCart, setProductForCart] = useState<any>({
     categoryId: singleProduct?.data?.categoryId,
     productId: singleProduct?.data?.productId,
@@ -79,6 +54,7 @@ const SingleProductPage = ({ params }: any) => {
   );
 
   const [selectColorName, setSelectColorName] = useState<string | null>(null);
+  const [colorName, setColorName] = useState<string | null>(null);
   const [selectSizeName, setSelectSizeName] = useState<string | null>(null);
   // product size
   const productSize = singleProduct?.data?.productVariations?.map(
@@ -122,22 +98,24 @@ const SingleProductPage = ({ params }: any) => {
   // console.log(allProductImages);
   const addToCartHandler = (product: any) => {
     setStart(true);
-    dispatch(addToCart(product) as any);
+    dispatch(addToCart({ product, quantity } as any));
     setTimeout(() => {
       setStart(false);
     }, 2000);
   };
-  const [mainImage, setMainImage] = useState(productImages[0]);
+  // const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
     <div>
-      <div className="max-w-7xl mx-auto">
-        <div className="md:grid md:grid-cols-2 gap-10 mt-5">
+      <div className="max-w-7xl mx-auto mt-5">
+        <div className="md:grid md:grid-cols-2 gap-10 ">
           {/* product slider */}
           <div className="">
             <SingleProductSlider
+              isLoading={isLoading}
+              isFetching={isFetching}
               slides={allProductImages}
               options={OPTIONS}
               selectColorName={selectColorName}
@@ -145,77 +123,94 @@ const SingleProductPage = ({ params }: any) => {
             />
           </div>
           {/* product variant and title */}
-          <div className="md:flex-1 px-4 mt-5 md:mt-0">
+          <div className="md:flex-1 px-4 md:mt-0">
             <div>
               {/* Title and Price  */}
-              <div className="">
-                <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 mb-2">
-                  {singleProduct?.data?.productName}
-                </h2>
-                <p className="text-gray-600 text-xl">
-                  $ {singleProduct?.data?.productPrice}
-                </p>
+              <div className="mt-5">
+                {isLoading && isFetching ? (
+                  <div className="h-10 w-1/2 animate-pulse bg-gray-300"></div>
+                ) : (
+                  <h2 className="text-[32px] font-semibold text-gray-900 mb-2">
+                    {singleProduct?.data?.productName}
+                  </h2>
+                )}
+
+                {isLoading && isFetching ? (
+                  <div className="h-7 w-1/3 animate-pulse bg-gray-300 mt-5"></div>
+                ) : (
+                  <p className="text-gray-600 text-xl">
+                    $ {singleProduct?.data?.productPrice}
+                  </p>
+                )}
               </div>
 
               {/* product colors */}
               <div className="my-3">
-                <p className=" text-gray-700">
-                  <span className="">Color</span>:{" "}
-                  <span className="text-bold">{selectColorName}</span>
-                </p>
+                {isLoading && isFetching ? (
+                  <div className="h-5 w-1/5 animate-pulse bg-gray-300 mb-3"></div>
+                ) : (
+                  <p className=" text-gray-700">
+                    <span className="">Color</span>:{" "}
+                    <span className="text-bold">{selectColorName}</span>
+                  </p>
+                )}
                 <div className="flex items-center mt-2">
                   {/* color variants */}
-                  {productColor?.map((color: any, index: number) => (
-                    <Whisper
-                      key={index}
-                      placement="top"
-                      controlId={`control-id-hover-${index}`}
-                      trigger="hover"
-                      speaker={<Tooltip>{color?.name}</Tooltip>}
-                    >
-                      <button
-                        onClick={() => {
-                          setSelectedColorIndex(index);
-                          setSelectColorName(color?.name);
-                          setProductForCart({
-                            categoryId: singleProduct?.data?.categoryId,
-                            productId: singleProduct?.data?.productId,
-                            productName: singleProduct?.data?.productName,
-                            variantId:
-                              singleProduct?.data?.productVariations?.[index]
-                                .variantId,
-                            price:
-                              singleProduct?.data?.productVariations?.[index]
-                                .variantPrice,
-                            color: {
-                              name: singleProduct?.data?.productVariations?.[
-                                index
-                              ].color?.name,
-                              code: singleProduct?.data?.productVariations?.[
-                                index
-                              ].color?.code,
-                            },
-                            image:
-                              singleProduct?.data?.productVariations?.[index]
-                                .image,
-                          });
-                        }}
-                        style={{
-                          backgroundColor: `${color?.code}`,
-                        }}
-                        className={`w-6 h-6 md:w-9 md:h-9 rounded-full mr-2 ${
-                          selectedColorIndex == index
-                            ? "border-[3px] border-gray-600"
-                            : ""
-                        } `}
-                      ></button>
-                    </Whisper>
-                  ))}
+                  {isLoading && isFetching
+                    ? colorLoader
+                    : productColor?.map((color: any, index: number) => (
+                        <Whisper
+                          key={index}
+                          placement="top"
+                          controlId={`control-id-hover-${index}`}
+                          trigger="hover"
+                          speaker={<Tooltip>{color?.name}</Tooltip>}
+                        >
+                          <button
+                            onClick={() => {
+                              setSelectedColorIndex(index);
+                              setSelectColorName(color?.name);
+                              setColorName(color?.name);
+                              setProductForCart({
+                                categoryId: singleProduct?.data?.categoryId,
+                                productId: singleProduct?.data?.productId,
+                                productName: singleProduct?.data?.productName,
+                                variantId:
+                                  singleProduct?.data?.productVariations?.[
+                                    index
+                                  ].variantId,
+                                price:
+                                  singleProduct?.data?.productVariations?.[
+                                    index
+                                  ].variantPrice,
+                                color: {
+                                  name: singleProduct?.data
+                                    ?.productVariations?.[index].color?.name,
+                                  code: singleProduct?.data
+                                    ?.productVariations?.[index].color?.code,
+                                },
+                                image:
+                                  singleProduct?.data?.productVariations?.[
+                                    index
+                                  ].image,
+                              });
+                            }}
+                            style={{
+                              backgroundColor: `${color?.code}`,
+                            }}
+                            className={`w-6 h-6 md:w-10 md:h-10 rounded-full mr-2 ${
+                              selectedColorIndex == index
+                                ? "border-[3px] border-gray-600"
+                                : ""
+                            } `}
+                          ></button>
+                        </Whisper>
+                      ))}
                 </div>
               </div>
 
               {/* product size */}
-              {productSize && productSize?.length > 0 && (
+              {/* {productSize && productSize?.length > 0 && (
                 <div className="my-3">
                   <h1>Size: {selectSizeName}</h1>
                   <div className="flex gap-2">
@@ -237,18 +232,28 @@ const SingleProductPage = ({ params }: any) => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* select quantity */}
-              <div className="md:flex items-end mt-2 gap-7">
-                {/* <div className="flex items-end mb-3 md:mb-0">
-                  <div>
+              <div className="mb-4 md:mb-0">
+                <div>
+                  {isLoading && isFetching ? (
+                    <div className="h-4 w-1/5 animate-pulse bg-gray-300"></div>
+                  ) : (
                     <p className="text-gray-700">
-                      <span className="">Quantity:</span>
+                      <span className="">Quantity: {quantity}</span>
                     </p>
+                  )}
+                  {isLoading && isFetching ? (
+                    <div className="h-10 w-1/3 animate-pulse bg-gray-300 mt-4"></div>
+                  ) : (
                     <div className="flex items-center">
-                      <div className="inline-flex items-center mt-2 border text-gray-600 rounded-full">
-                        <button className="disabled:opacity-50 inline-flex items-center px-3 py-2">
+                      <div className="inline-flex items-center mt-2 border text-black rounded-full">
+                        <button
+                          disabled={quantity === 1}
+                          onClick={() => setQuantity(quantity - 1)}
+                          className="disabled:opacity-30 inline-flex items-center px-3 py-2"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-4"
@@ -264,10 +269,13 @@ const SingleProductPage = ({ params }: any) => {
                             />
                           </svg>
                         </button>
-                        <div className="bg-gray-100 text-gray-600 hover:bg-gray-100 inline-flex items-center px-4 py-2 select-none">
-                          1
+                        <div className="justify-center text-gray-700 inline-flex items-center w-12 py-2 select-none">
+                          {quantity}
                         </div>
-                        <button className=" disabled:opacity-50 inline-flex items-center px-3 py-2">
+                        <button
+                          onClick={() => setQuantity(quantity + 1)}
+                          className=" disabled:opacity-50 inline-flex items-center px-3 py-2"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-4"
@@ -285,24 +293,32 @@ const SingleProductPage = ({ params }: any) => {
                         </button>
                       </div>
                     </div>
-                  </div>
-                </div> */}
-                <div className="w-full md:px-2">
-                  {start ? (
-                    <button className="flex items-center w-full">
-                      <div className="w-full bg-gray-400 flex justify-center text-white md:px-4 rounded-full font-bold  text-base md:text-lg">
-                        <Loader size="sm" className="py-[13px] text-black" />
-                      </div>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => addToCartHandler(productForCart)}
-                      className="w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
-                    >
-                      Add to cart
-                    </button>
                   )}
                 </div>
+              </div>
+
+              <div className="mt-5">
+                {isLoading && isFetching ? (
+                  <div className="h-10 animate-pulse bg-gray-300"></div>
+                ) : (
+                  <div className="w-full md:px-2">
+                    {start ? (
+                      <button className="flex items-center w-full">
+                        <div className="w-full bg-gray-400 flex justify-center text-white md:px-4 rounded-full font-bold  text-base md:text-lg">
+                          <Loader size="sm" className="py-[13px] text-black" />
+                        </div>
+                      </button>
+                    ) : (
+                      <button
+                        disabled={!colorName}
+                        onClick={() => addToCartHandler(productForCart)}
+                        className="disabled:bg-[#b5c4c6] w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
+                      >
+                        {colorName ? "ADD TO CART" : "SELECT A COLOR"}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 

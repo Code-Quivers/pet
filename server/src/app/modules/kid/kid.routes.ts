@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
   FileUploadHelper.uploadProductImage.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = KidValidation.addKid.parse(JSON.parse(req.body.data));
@@ -22,6 +22,8 @@ router.post(
 
 // ! Get all kids----------------------------------->>>
 router.get('/', KidController.getKid);
+
+router.get('/my-kids', auth(UserRoles.USER), KidController.getMyAllKids);
 
 // router.patch(
 //   '/:productId',
@@ -34,6 +36,7 @@ router.get('/', KidController.getKid);
 //   }
 // );
 
+//delete Kid
 router.delete(
   '/:kidId',
   // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
