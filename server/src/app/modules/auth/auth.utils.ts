@@ -1,3 +1,5 @@
+//Generate Password
+
 export const generatePassword = () => {
   const length = 8;
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
