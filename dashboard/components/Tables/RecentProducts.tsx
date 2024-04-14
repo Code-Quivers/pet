@@ -13,13 +13,9 @@ const RecentProducts = () => {
     ...query,
   });
 
-  console.log("recentProducts", recentProducts);
-
   return (
-    <div className="rounded-sm border border-stroke bg-white px-2 pt-3 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-medium text-black dark:text-white">
-        Recent Products
-      </h4>
+    <div className="rounded-sm border border-stroke bg-white px-2 pt-3 pb-2.5 shadow-default     sm:px-7.5 xl:pb-1">
+      <h4 className="mb-6 text-xl font-medium text-black  ">Recent Products</h4>
 
       <div className="flex flex-col">
         <div>
@@ -32,21 +28,14 @@ const RecentProducts = () => {
 
         {!isLoading && (
           <>
-            <div className="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
+            <div className="grid grid-cols-4 rounded-sm bg-gray-2   sm:grid-cols-5">
               <div className="hidden p-2.5 text-center sm:block xl:p-5">
                 <h5 className="text-sm font-medium uppercase ">Image</h5>
               </div>
               <div className="p-2.5 text-start xl:p-5">
                 <h5 className="text-sm font-medium uppercase ">Product Name</h5>
               </div>
-              <div className="hidden sm:block p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase ">
-                  Product Color
-                </h5>
-              </div>
-              <div className=" p-2.5 sm:text-center  xl:p-5">
-                <h5 className="text-sm font-medium uppercase ">Product Size</h5>
-              </div>
+
               <div className="p-2.5 sm:text-center sm:block xl:p-5">
                 <h5 className="text-sm font-medium uppercase ">
                   Product Price
@@ -78,7 +67,7 @@ const RecentProducts = () => {
                   console.log("singleProduct", singleProduct),
                   (
                     <div
-                      className={`grid grid-cols-4 sm:grid-cols-7 ${
+                      className={`grid grid-cols-4 sm:grid-cols-5 ${
                         idx === recentProducts?.data?.length - 1
                           ? ""
                           : "border-b border-stroke dark:border-strokedark"
@@ -98,9 +87,9 @@ const RecentProducts = () => {
                                     height={300}
                                     alt=""
                                     src={
-                                      singleProduct?.productImage
+                                      singleProduct?.productImage?.length
                                         ? `${fileUrlKey()}/${
-                                            singleProduct?.productImage
+                                            singleProduct?.productImage[0]
                                           }`
                                         : noImage
                                     }
@@ -112,13 +101,13 @@ const RecentProducts = () => {
                           >
                             <div className="aspect-video">
                               <Image
-                                width={50}
-                                height={50}
+                                width={70}
+                                height={70}
                                 alt=""
                                 src={
-                                  singleProduct?.productImage
+                                  singleProduct?.productImage?.length
                                     ? `${fileUrlKey()}/${
-                                        singleProduct?.productImage
+                                        singleProduct?.productImage[0]
                                       }`
                                     : noImage
                                 }
@@ -135,17 +124,6 @@ const RecentProducts = () => {
                         </p>
                       </div>
 
-                      <div className="hidden sm:flex items-center justify-center p-2.5 xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
-                          {singleProduct?.colorVarient?.productColor}
-                        </p>
-                      </div>
-
-                      <div className="  items-center sm:justify-center p-2.5 flex xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
-                          {singleProduct?.sizeVarient?.productSize}
-                        </p>
-                      </div>
                       <div className="  items-center sm:justify-center p-2.5 flex xl:p-5">
                         <p className="text-black dark:text-white font-medium">
                           $ {singleProduct?.productPrice}
@@ -158,7 +136,9 @@ const RecentProducts = () => {
                       </div>
                       <div className=" items-center sm:justify-center p-2.5 flex xl:p-5">
                         <p className="text-black dark:text-white font-medium">
-                        {singleProduct?.createdAt ? moment(singleProduct.createdAt).format('LL') : ''}
+                          {singleProduct?.createdAt
+                            ? moment(singleProduct.createdAt).format("LL")
+                            : ""}
                         </p>
                       </div>
                     </div>
