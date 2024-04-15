@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const IRelationSchema = z.object({
-  name: z.string(),
-  relation: z.string(),
-  phoneNo: z.string(),
+  name: z.string().optional(),
+  relation: z.string().optional(),
+  phoneNo: z.string().optional(),
 });
 
 export const addKid = z.object({
@@ -14,7 +14,13 @@ export const addKid = z.object({
   code: z.string(),
   relations: z.array(IRelationSchema).optional(),
 });
+export const updateKid = z.object({
+  kidName: z.string().optional(),
+  kidAge: z.string().optional(),
+  relations: z.array(IRelationSchema).optional(),
+});
 
 export const KidValidation = {
   addKid,
+  updateKid,
 };

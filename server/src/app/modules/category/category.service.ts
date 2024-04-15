@@ -227,7 +227,7 @@ const updateCategory = async (categoryId: string, req: Request): Promise<Categor
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update Category Information');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update');
   }
 
   return result;

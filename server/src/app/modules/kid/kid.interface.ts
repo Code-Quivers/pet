@@ -14,14 +14,9 @@ export type IKidRequest = {
 
 export type IKidUpdateRequest = {
   kidName?: string;
-  kidImage?: string;
-  kidDescription?: string;
-  kidGender?: string;
-  kidAge?: string;
-  kidAddress?: string;
-  userId?: string;
-  code?: string;
+  kidAge?: Date;
   relations?: IRelation[];
+  kidImage?: string;
 };
 
 export type IRelation = {

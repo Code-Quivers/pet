@@ -4,7 +4,15 @@ import { HiPlus } from "react-icons/hi";
 import { Form } from "rsuite";
 import { Controller, useFieldArray } from "react-hook-form";
 
-const MyContacts = ({ control, errors }: any) => {
+const MyContacts = ({
+  control,
+  errors,
+  relations,
+}: {
+  control: any;
+  errors: any;
+  relations: any;
+}) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "relations",

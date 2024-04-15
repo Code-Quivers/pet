@@ -153,7 +153,7 @@ const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails |
   });
 
   if (!barCodeDetails) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Does Not Exist');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Kid Does Not Exist');
   }
 
   if (barCodeDetails.barcodeStatus !== 'AVAILABLE' && barCodeDetails.barcodeStatus !== 'ACTIVE') {
@@ -166,6 +166,9 @@ const getSingleBarCodeDetailsForKid = async (code: string): Promise<KidDetails |
     const res = await prisma.kidDetails.findUnique({
       where: {
         barcodeId: barCodeDetails.barcodeId,
+      },
+      include: {
+        barCode: true,
       },
     });
 
