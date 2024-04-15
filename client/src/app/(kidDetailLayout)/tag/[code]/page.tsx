@@ -174,37 +174,50 @@ const MyPetPage = ({ params }: Props) => {
                   <div className="grid grid-cols-12 px-3 text-sm font-bold">
                     <p className="col-span-3">Name</p>
                     <p className="col-span-3">Relationship</p>
-                    <p className="col-span-2 text-right">Call</p>
+                    <p className="col-span-2 text-center">Call</p>
                     <p className="col-span-2 text-center">Text</p>
                     <p className="col-span-2 text-center">Location</p>
                   </div>
-                  {kidDetails?.data?.relations?.length > 0 &&
-                    kidDetails?.data?.relations?.map(
-                      (relation: any, idx: number) => (
-                        <div
-                          key={idx}
-                          className="grid grid-cols-12 px-3 text-sm mt-2"
-                        >
-                          <p className="col-span-3">{relation?.name}</p>
-                          <p className="col-span-3">{relation?.relation}</p>
-                          <div className="col-span-2 text-right">
-                            <button className="hover:scale-105 transition-all ease-in-out">
-                              <FiPhone className="text-lg text-[#1d7296]" />
-                            </button>
-                          </div>
-                          <div className="col-span-2 text-center">
-                            <button className="hover:scale-105 transition-all ease-in-out">
-                              <IoChatboxEllipsesOutline className="text-lg text-[#1d7296]" />
-                            </button>
-                          </div>
-                          <div className="col-span-2 text-center">
-                            <button className="hover:scale-105 transition-all ease-in-out">
-                              <GrMapLocation className="text-lg text-[#1d7296]" />
-                            </button>
-                          </div>
-                        </div>
-                      )
-                    )}
+                  <div className="grid grid-cols-12 px-3 text-sm mt-2 items-center">
+                    {kidDetails?.data?.relations?.length > 0 &&
+                      kidDetails?.data?.relations?.map(
+                        (relation: any, idx: number) => (
+                          <>
+                            <p className="col-span-3 py-2">{relation?.name}</p>
+                            <p className="col-span-3 py-2">
+                              {relation?.relation}
+                            </p>
+                            <div className="col-span-2 text-center py-2">
+                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center">
+                                  <FiPhone
+                                    size={20}
+                                    className=" text-[#038096]"
+                                  />
+                                </span>
+                              </button>
+                            </div>
+                            <div className="py-2 col-span-2 text-center">
+                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center">
+                                  <IoChatboxEllipsesOutline
+                                    className="text-[#038096]"
+                                    size={20}
+                                  />
+                                </span>
+                              </button>
+                            </div>
+                            <div className="py-2 col-span-2 text-center">
+                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center">
+                                  <GrMapLocation size={20} className="text-[#038096]" />
+                                </span>
+                              </button>
+                            </div>
+                          </>
+                        )
+                      )}
+                  </div>
                 </section>
 
                 {/* kid emergency contact info */}
