@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
@@ -64,4 +67,9 @@ export const UserCreation = async ({ email, password }: { email: string; passwor
   });
 
   return result;
+};
+
+//
+export const filterNonNull = <T extends Record<string, any>>(obj: T): Partial<T> => {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined && v !== '')) as Partial<T>;
 };

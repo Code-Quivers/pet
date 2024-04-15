@@ -37,22 +37,24 @@ const getKid = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// !----------------------------------Update Category---------------------------------------->>>
-// const updateKid = catchAsync(async (req: Request, res: Response) => {
-//   const { kidId } = req.params;
-//   const result = await KidService.updateKid(kidId, req);
+// !----------------------------------updateKid---------------------------------------->>>
+const updateKid = catchAsync(async (req: Request, res: Response) => {
+  const { kidId } = req.params;
+  const result = await KidService.updateKid(kidId, req);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: ' Updated successfully !',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Updated successfully !',
+    data: result,
+  });
+});
 
 const deleteKid = catchAsync(async (req: Request, res: Response) => {
   const { kidId } = req.params;
-  const result = await KidService.deleteKid(kidId);
+  const userId = (req.user as IRequestUser).userId;
+
+  const result = await KidService.deleteKid(kidId, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -79,7 +81,7 @@ const getMyAllKids = catchAsync(async (req: Request, res: Response) => {
 export const KidController = {
   addKid,
   getKid,
-  // updateKid,
+  updateKid,
   deleteKid,
   getMyAllKids,
 };

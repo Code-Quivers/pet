@@ -1,4 +1,3 @@
-
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -26,26 +25,26 @@ model User {
 }
 
 model Profile {
-  profileId              String    @id @default(uuid())
-  fullName               String?
-  mobileNumber           String?
-  address                String?
-  role                   UserRoles @default(USER)
-  createdAt              DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt              DateTime  @updatedAt @db.Timestamptz(0)
-  user                   User?
+  profileId    String    @id @default(uuid())
+  fullName     String?
+  mobileNumber String?
+  address      String?
+  role         UserRoles @default(USER)
+  createdAt    DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
+  user         User?
 }
 
 // Product Part 
 
 model Category {
-  categoryId    String     @id @default(uuid())
-  categoryName  String     @unique
-  categoryHref  String     @unique
+  categoryId    String    @id @default(uuid())
+  categoryName  String    @unique
+  categoryHref  String    @unique
   description   String
   categoryImage String
-  createdAt     DateTime   @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime   @updatedAt @db.Timestamptz(0)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(0)
   product       Product[]
 }
 
@@ -57,7 +56,7 @@ model Product {
   productDescription String
   productStatus      ProductStatus      @default(AVAILABLE)
   categoryId         String?
-  category           Category?           @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
+  category           Category?          @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
   createdAt          DateTime           @default(now()) @db.Timestamptz(0)
   updatedAt          DateTime           @updatedAt @db.Timestamptz(0)
   productQA          ProductQA[]
@@ -141,17 +140,17 @@ model Order {
 }
 
 model KidDetails {
-  kidId      String   @id @default(uuid())
-  kidName    String
-  kidImage   String? 
-  kidAge     DateTime 
-  relations  Json[]
-  barcodeId  String?  @unique
-  barCode    BarCode? @relation(fields: [barcodeId], references: [barcodeId])
-  userId     String?
-  user       User?     @relation(fields: [userId], references: [userId],onDelete: SetNull)
-  createdAt  DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt  DateTime @updatedAt @db.Timestamptz(0)
+  kidId     String   @id @default(uuid())
+  kidName   String
+  kidImage  String?
+  kidAge    DateTime
+  relations Json[]
+  barcodeId String?  @unique
+  barCode   BarCode? @relation(fields: [barcodeId], references: [barcodeId])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [userId], onDelete: SetNull)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // The model for promotions
@@ -219,16 +218,16 @@ model Blogs {
 }
 
 model Comments {
-  commentId  String    @id @default(uuid())
-  name       String
-  email      String
-  comment    String
+  commentId String   @id @default(uuid())
+  name      String
+  email     String
+  comment   String
   // 
-  blogId     String?
-  blog       Blogs?    @relation(fields: [blogId], references: [blogId], onDelete: SetNull)
+  blogId    String?
+  blog      Blogs?   @relation(fields: [blogId], references: [blogId], onDelete: SetNull)
   // 
-  createdAt  DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt  DateTime  @updatedAt @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
 
 // ! enums -----------------------------------

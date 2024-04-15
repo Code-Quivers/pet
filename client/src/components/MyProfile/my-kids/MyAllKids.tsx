@@ -4,16 +4,25 @@ import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useGetMyAllKidsQuery } from "@/redux/api/features/kids/kidApi";
 import { cellCss, headerCss } from "@/utils/commonStyles";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MdModeEdit } from "react-icons/md";
-import { RiDeleteBinFill } from "react-icons/ri";
-import { IconButton, Pagination, Popover, Table, Whisper } from "rsuite";
+import { FiEdit } from "react-icons/fi";
+import { LuEye } from "react-icons/lu";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { Pagination, Popover, Table, Whisper } from "rsuite";
+import DeleteKidConfirmationModal from "./DeleteKidConfirmationModal";
+import { useState } from "react";
 const { Cell, Column, ColumnGroup, HeaderCell } = Table;
 
 const MyAllKids = () => {
   const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetMyAllKidsQuery({});
   const router = useRouter();
+
+  // ! delete kid
+  const [deleteData, setDeleteData] = useState(null);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const handleClose = () => setIsOpenDelete(false);
 
   return (
     <div className="py-10">
@@ -65,18 +74,18 @@ const MyAllKids = () => {
           </Cell>
         </Column>
 
-        {/* Blog Title */}
+        {/*  Kid Name */}
         <Column flexGrow={2}>
           <HeaderCell style={headerCss}>Kid Name</HeaderCell>
           <Cell style={cellCss} verticalAlign="middle" dataKey="kidName" />
         </Column>
-        {/* Category name */}
+        {/* Kid Age */}
         <Column flexGrow={1}>
           <HeaderCell style={headerCss}>Age</HeaderCell>
           <Cell style={cellCss} verticalAlign="middle" dataKey="kidAge" />
         </Column>
 
-        {/* Category Description */}
+        {/*  */}
 
         <Column flexGrow={2}>
           <HeaderCell style={headerCss}>Description</HeaderCell>
@@ -85,40 +94,77 @@ const MyAllKids = () => {
 
         {/* Action */}
 
-        <Column width={100} align="center">
+        <Column width={150} align="center">
           <HeaderCell style={headerCss}>Action</HeaderCell>
           <Cell style={cellCss} verticalAlign="middle" align="center">
             {(rowData: any) => (
-              <div className="flex gap-3">
-                <IconButton
-                  onClick={() => {
-                    router.push(`/blogs/edit/${rowData?.blogId}`);
-                  }}
-                  circle
-                  icon={<MdModeEdit size={20} />}
-                />
-                {/* Delete */}
-                <Whisper
-                  placement="topEnd"
-                  speaker={
-                    <Popover
-                      className=" font-semibold rounded-full !py-1.5 "
-                      arrow={false}
-                    >
-                      Delete
-                    </Popover>
-                  }
-                >
-                  <button
-                    className="  hover:text-[#eb0712db] "
-                    onClick={() => {
-                      // setIsOpenDelete(true);
-                      // setDeleteData(rowData);
-                    }}
+              <div className="flex justify-between  w-full items-center gap-5">
+                {/* View */}
+                <div>
+                  <Whisper
+                    placement="topEnd"
+                    speaker={
+                      <Popover
+                        className=" font-semibold rounded-full !py-1.5 "
+                        arrow={false}
+                      >
+                        View
+                      </Popover>
+                    }
                   >
-                    <RiDeleteBinFill size={20} />
-                  </button>
-                </Whisper>
+                    <Link
+                      href={`/tag/${rowData?.barCode?.code}`}
+                      className=" hover:text-blue-600 text-[#82878f] "
+                    >
+                      <LuEye size={25} />
+                    </Link>
+                  </Whisper>
+                </div>
+                {/* Edit */}
+                <div>
+                  <Whisper
+                    placement="topEnd"
+                    speaker={
+                      <Popover
+                        className=" font-semibold rounded-full !py-1.5 "
+                        arrow={false}
+                      >
+                        Edit
+                      </Popover>
+                    }
+                  >
+                    <Link
+                      href={`/my-account/edit/${rowData?.barCode?.code}`}
+                      className=" hover:text-blue-600 text-[#82878f] "
+                    >
+                      <FiEdit size={25} />
+                    </Link>
+                  </Whisper>
+                </div>
+                {/* Delete */}
+                <div>
+                  <Whisper
+                    placement="topEnd"
+                    speaker={
+                      <Popover
+                        className=" font-semibold rounded-full !py-1.5 "
+                        arrow={false}
+                      >
+                        Delete
+                      </Popover>
+                    }
+                  >
+                    <span
+                      className="cursor-pointer text-[#82878f]  hover:text-[#eb0712db] "
+                      onClick={() => {
+                        setIsOpenDelete(true);
+                        setDeleteData(rowData);
+                      }}
+                    >
+                      <RiDeleteBin5Line size={25} />
+                    </span>
+                  </Whisper>
+                </div>
               </div>
             )}
           </Cell>
@@ -144,6 +190,14 @@ const MyAllKids = () => {
           // onChangePage={setPage}
         />
       </div>
+      <>
+        {/* delete kid modal */}
+        <DeleteKidConfirmationModal
+          handleClose={handleClose}
+          open={isOpenDelete}
+          deleteData={deleteData}
+        />
+      </>
     </div>
   );
 };

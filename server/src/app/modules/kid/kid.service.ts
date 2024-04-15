@@ -10,15 +10,15 @@ import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
-import { ICreateKidDetails, IKidRequest, IProductFilterRequest, IRelation } from './kid.interface';
-import { UserCreation } from './kid.utils';
+import { ICreateKidDetails, IKidRequest, IKidUpdateRequest, IProductFilterRequest, IRelation } from './kid.interface';
+import { UserCreation, filterNonNull } from './kid.utils';
 import { KidRelationalFields, KidSearchableFields, kidRelationalFieldsMapper } from './kid.constants';
-
+import fs from 'fs';
+import { errorLogger } from '../../../shared/logger';
 // modules
 
 // !----------------------------------Create New Kid--------------------------------------->>>
 const addKid = async (req: Request): Promise<KidDetails> => {
-  //@ts-ignore
   const file = req.file as IUploadFile;
 
   const filePath = file?.path?.substring(8);
@@ -61,7 +61,7 @@ const addKid = async (req: Request): Promise<KidDetails> => {
         email,
       },
     });
-    
+
     if (!isExistEmail) {
       const createUser = await UserCreation({ email, password });
       newObjData['userId'] = createUser?.userId;
@@ -144,6 +144,9 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
   const result = await prisma.kidDetails.findMany({
     where: whereConditions,
     skip,
+    include: {
+      barCode: true,
+    },
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
   });
@@ -168,103 +171,105 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
 };
 
 // !----------------------------------Update Kid---------------------------------------->>>
-// const updateKid = async (productId: string, req: Request): Promise<Product> => {
-//   const file = req.file as IUploadFile;
-//   const filePath = file?.path?.substring(8);
+const updateKid = async (kidId: string, req: Request): Promise<KidDetails> => {
+  const file = req.file as IUploadFile;
+  const filePath = file?.path?.substring(8);
 
-//   const { productName, oldFilePath, productPrice, productStock, productDescription, categoryId, sizeVarientId, colorVarientId } =
-//     req.body as IProductUpdateRequest;
+  const result = await prisma.$transaction(async transactionClient => {
+    const isExistKid = await transactionClient.kidDetails.findUnique({
+      where: {
+        kidId,
+      },
+    });
 
-//   // deleting old style Image
-//   const oldFilePaths = 'uploads/' + oldFilePath;
-//   if (oldFilePath !== undefined && filePath !== undefined) {
-//     // @ts-ignore
-//     fs.unlink(oldFilePaths, err => {
-//       if (err) {
-//         errorLogger.error('Error deleting old file');
-//       }
-//     });
-//   }
+    if (!isExistKid) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Kid Not Found!!');
+    }
 
-//   const result = await prisma.$transaction(async transactionClient => {
-//     const existingProduct = await transactionClient.product.findUnique({
-//       where: {
-//         productId,
-//       },
-//     });
+    // getting updated data
+    const updatedReq = {
+      kidImage: filePath,
+      ...(req.body as IKidUpdateRequest),
+    };
+    const updatedDetails = filterNonNull(updatedReq);
 
-//     if (!existingProduct) {
-//       throw new ApiError(httpStatus.NOT_FOUND, 'Product Not Found!!');
-//     }
+    const updatedProduct = await transactionClient.kidDetails.update({
+      where: {
+        kidId,
+      },
+      data: updatedDetails,
+    });
 
-//     if (categoryId) {
-//       const isCategoryExist = await transactionClient.category.findUnique({
-//         where: {
-//           categoryId,
-//         },
-//       });
+    if (!updatedProduct) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed To Update');
+    }
+    // deleting old style Image
+    if (updatedProduct && filePath !== undefined) {
+      const oldFilePath = 'uploads/' + isExistKid.kidImage;
+      if (oldFilePath !== undefined && filePath !== undefined) {
+        fs.unlink(oldFilePath, err => {
+          if (err) {
+            errorLogger.error('Error deleting old file');
+          }
+        });
+      }
+    }
 
-//       if (!isCategoryExist) throw new ApiError(httpStatus.NOT_FOUND, ' Category Not Found!!');
-//     }
+    return updatedProduct;
+  });
 
-//     if (colorVarientId) {
-//       const isColorExist = await transactionClient.colorVarient.findUnique({
-//         where: {
-//           colorVarientId,
-//         },
-//       });
-
-//       if (!isColorExist) throw new ApiError(httpStatus.NOT_FOUND, ' Color Not Found!!');
-//     }
-
-//     if (sizeVarientId) {
-//       const isSizeExist = await transactionClient.sizeVarient.findUnique({
-//         where: {
-//           sizeVarientId: sizeVarientId,
-//         },
-//       });
-
-//       if (!isSizeExist) throw new ApiError(httpStatus.NOT_FOUND, ' Size Not Found!!');
-//     }
-
-//     const updatedDetails = {
-//       productName,
-//       productDescription,
-//       productPrice,
-//       productStock,
-//       categoryId,
-//       colorVarientId,
-//       sizeVarientId,
-//       productImage: filePath,
-//     };
-
-//     const updatedProduct = await transactionClient.product.update({
-//       where: {
-//         productId,
-//       },
-//       data: updatedDetails,
-//     });
-
-//     return updatedProduct;
-//   });
-
-//   if (!result) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update Product Information');
-//   }
-
-//   return result;
-// };
-
-//! Kid Delete !
-const deleteKid = async (kidId: string): Promise<KidDetails> => {
-  if (!kidId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Product Id is required');
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update Product Information');
   }
 
-  const result = await prisma.kidDetails.delete({
-    where: {
-      kidId,
-    },
+  return result;
+};
+
+//! Kid Delete !
+const deleteKid = async (kidId: string, userId: string): Promise<KidDetails> => {
+  if (!kidId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Kid Id is required');
+  }
+
+  const result = await prisma.$transaction(async transactionClient => {
+    // check is exist or not
+    const isExistKid = await transactionClient.kidDetails.findUnique({
+      where: {
+        kidId,
+        userId,
+      },
+    });
+
+    if (!isExistKid) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Kid Not Found !');
+    }
+
+    //
+
+    const res = await prisma.kidDetails.delete({
+      where: {
+        kidId,
+      },
+    });
+
+    if (!res) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Failed to Delete Kid !');
+    }
+    //
+    const updateBarCodeStatus = await transactionClient.barCode.update({
+      where: {
+        barcodeId: res?.barcodeId as string,
+      },
+      data: {
+        barcodeStatus: 'AVAILABLE',
+      },
+    });
+
+    if (!updateBarCodeStatus) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Failed to Update Barcode Status!');
+    }
+
+    return res;
   });
 
   return result;
@@ -294,7 +299,7 @@ const getMyAllKids = async (userId: string): Promise<KidDetails[]> => {
 export const KidService = {
   addKid,
   getKid,
-  // updateKid,
+  updateKid,
   deleteKid,
   getMyAllKids,
 };
