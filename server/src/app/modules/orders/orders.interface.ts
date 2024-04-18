@@ -1,5 +1,8 @@
+import { OrderStatus } from '@prisma/client';
+
 export type IOrderFilterRequest = {
   searchTerm?: string | undefined;
+  orderStatus?: OrderStatus | undefined;
 };
 
 export type IOrderRequest = {

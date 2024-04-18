@@ -67,7 +67,7 @@ const getOrder = async (filters: IOrderFilterRequest, options: IPaginationOption
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   // Destructure filter properties
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, orderStatus, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.OrderWhereInput[] = [];
@@ -107,6 +107,15 @@ const getOrder = async (filters: IOrderFilterRequest, options: IPaginationOption
       }),
     });
   }
+
+  if (orderStatus) {
+    andConditions.push({
+      orderStatus: {
+        equals: orderStatus,
+      },
+    });
+  }
+
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.OrderWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
