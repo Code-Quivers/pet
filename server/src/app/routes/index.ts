@@ -12,6 +12,7 @@ import { PromoCodeRoutes } from '../modules/promoCode/promoCode.routes';
 import { BlogsRoutes } from '../modules/blogs/blogs.routes';
 import { TaxRoutes } from '../modules/tax/tax.routes';
 import { CommentRoutes } from '../modules/blog-comments/comments.routes';
+import { OrderRoutes } from '../modules/orders/orders.routes';
 
 const router = express.Router();
 
@@ -67,6 +68,10 @@ const moduleRoutes = [
   {
     path: '/comments',
     route: CommentRoutes,
+  },
+  {
+    path: '/orders',
+    route: OrderRoutes,
   },
 ];
 
