@@ -14,7 +14,7 @@ import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFiel
 // modules
 
 // !----------------------------------Create New Event------------------------------------->>>
-const addOrder = async (data: IOrderRequest): Promise<Order> => {
+const addOrder = async (data: IOrderRequest): Promise<any> => {
   const shippingInfo = {
     firstName: data.shippingInformation.firstName,
     lastName: data.shippingInformation.lastName,
@@ -46,12 +46,33 @@ const addOrder = async (data: IOrderRequest): Promise<Order> => {
     total: data.paymentInformation.total,
   };
 
-  const result = await prisma.order.create({
-    data: {
-      shippingInformation: shippingInfo,
-      paymentInformation: paymentInfo,
-      cartItems,
-    },
+  const result = await prisma.$transaction(async transactionClient => {
+    const newOrder = await transactionClient.order.create({
+      data: {
+        shippingInformation: shippingInfo,
+        paymentInformation: paymentInfo,
+        cartItems: cartItems,
+      },
+      select: {
+        cartItems: true,
+      },
+    });
+
+    // Update stock for each variant product
+    for (const item of cartItems) {
+      await transactionClient.productVariation.update({
+        where: {
+          variantId: item.variantId,
+        },
+        data: {
+          stock: {
+            decrement: item.quantity,
+          },
+        },
+      });
+    }
+
+    return newOrder;
   });
 
   if (!result) {
