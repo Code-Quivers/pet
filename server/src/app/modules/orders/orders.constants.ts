@@ -1,5 +1,5 @@
-export const OrderFilterableFields: string[] = ['searchTerm'];
-export const OrderSearchableFields: string[] = ['state'];
+export const OrderFilterableFields: string[] = ['searchTerm', 'orderStatus'];
+export const OrderSearchableFields: string[] = ['orderId'];
 
 export const OrderRelationalFields: string[] = ['state'];
 

@@ -152,7 +152,7 @@ const AllOrderList = () => {
                         <div className="flex flex-col lg:flex-row lg:justify-between  lg:items-center gap-2 lg:gap-0 ">
                           <div className="flex flex-col justify-start">
                             <h1 className="text-lg font-bold">
-                              Order No : {order?.partyOrderId}
+                              Order No : {order?.orderId}
                             </h1>
                             <p className="text-xs">
                               Created: {formatDate(order?.createdAt)}
@@ -160,7 +160,7 @@ const AllOrderList = () => {
                           </div>
                           <div className="flex flex-col justify-start items-start w-46">
                             <p className="text-lg font-bold">
-                              <span>€</span> {order?.totalGrand}
+                              <span>$</span> {order?.paymentInformation?.total}
                             </p>
                             <p className="text-xs">
                               Order Status :{" "}
@@ -227,7 +227,7 @@ const AllOrderList = () => {
                         {/* Client Info */}
                         <section className="md:flex gap-3 max-md:space-y-3">
                           {/*  */}
-                          <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
+                          {/* <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
                             <h1 className="text-xl font-semibold">
                               Event Information
                             </h1>
@@ -240,9 +240,9 @@ const AllOrderList = () => {
                                 </span>
                               </p>
                             </div>
-                          </div>
+                          </div> */}
                           {/* customers information */}
-                          <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
+                          {/* <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
                             <h1 className="text-xl font-semibold">
                               Customer Information
                             </h1>
@@ -297,9 +297,9 @@ const AllOrderList = () => {
                                 </span>
                               </p>
                             </div>
-                          </div>
+                          </div> */}
                           {/* shipping information */}
-                          <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
+                          <div className=" w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
                             <div className="flex items-center justify-between">
                               <h1 className="text-xl font-semibold">
                                 Shipping Information
@@ -321,24 +321,56 @@ const AllOrderList = () => {
                             </div>
                             <div>
                               <p>
+                                Name:
+                                <span className="font-medium text-black">
+                                  {" "}
+                                  {order?.shippingInformation?.firstName}
+                                </span>
+                                <span className="font-medium text-black">
+                                  {" "}
+                                  {order?.shippingInformation?.lastName}
+                                </span>
+                              </p>
+                              <p>
+                                email:
+                                <span className="font-medium text-black">
+                                  {" "}
+                                  {order?.shippingInformation?.email}
+                                </span>
+                              </p>
+                              <p>
+                                phone:
+                                <span className="font-medium text-black">
+                                  {" "}
+                                  {order?.shippingInformation?.phone}
+                                </span>
+                              </p>
+                              <p>
                                 Address:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingAddress}
+                                  {order?.shippingInformation?.address}
                                 </span>
                               </p>
                               <p>
                                 City:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.city}
+                                  {order?.shippingInformation?.city}
+                                </span>
+                              </p>
+                              <p>
+                                State:
+                                <span className="font-medium text-black">
+                                  {" "}
+                                  {order?.shippingInformation?.state}
                                 </span>
                               </p>
                               <p>
                                 Postal Code:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.postalCode}
+                                  {order?.shippingInformation?.postcode}
                                 </span>
                               </p>
                               <p>
@@ -424,45 +456,64 @@ const AllOrderList = () => {
                         </div> */}
                         {/* Delivery & Product */}
                         <div className=" border-[#CBD5E1] border-2 shadow-2 rounded-md my-4">
-                          {order?.details?.map((detail: any, index: any) => (
-                            <div key={index} className="mb-3">
-                              <div className="md:flex justify-between items-center p-4">
-                                <div>
-                                  <p className="text-xl font-semibold">
-                                    Delivery & Product Information: (Delivery -{" "}
-                                    {index + 1}){" "}
-                                  </p>
-                                  <p>
-                                    Delivery Date:{" "}
-                                    <span className="font-medium text-black">
-                                      {detail?.deliveryDay} at{" "}
-                                      {detail?.deliveryTime}
-                                    </span>
-                                  </p>
-                                </div>
-                                <div>
-                                  <p>
-                                    Hall Name:{" "}
-                                    <span className="font-medium text-black">
-                                      {detail?.hallName}
-                                    </span>
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex flex-col gap-1">
-                                <div className="grid grid-cols-1 gap-2 !bg-gray-50">
-                                  {detail?.products?.map(
-                                    (product: any, index: any) => (
-                                      <ProductListTable
-                                        key={index}
-                                        product={product}
-                                      />
-                                    )
-                                  )}
+                          <div className="flex flex-col gap-1">
+                            <div className="grid grid-cols-1 gap-2 !bg-gray-50">
+                              <div className="px-4 sm:px-6 lg:px-8">
+                                <div className="flex flex-col">
+                                  <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                    <div className="inline-block min-w-full py-2 align-middle">
+                                      <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
+                                        <table className="min-w-full divide-y divide-gray-300">
+                                          <thead className="bg-gray-50">
+                                            <tr>
+                                              <th
+                                                scope="col"
+                                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                                              >
+                                                Product Name
+                                              </th>
+                                              <th
+                                                scope="col"
+                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                              >
+                                                Color
+                                              </th>
+                                              <th
+                                                scope="col"
+                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                              >
+                                                Quantity
+                                              </th>
+                                              <th
+                                                scope="col"
+                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                              >
+                                                Price
+                                              </th>
+                                              <th
+                                                scope="col"
+                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                              >
+                                                Total Price
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          {order?.cartItems?.map(
+                                            (product: any, index: any) => (
+                                              <ProductListTable
+                                                key={index}
+                                                product={product}
+                                              />
+                                            )
+                                          )}
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          ))}
+                          </div>
                         </div>
                         {/* Payment Info */}
                         <div className="px-4">
@@ -471,19 +522,24 @@ const AllOrderList = () => {
                               <p className="flex justify-between">
                                 Total Grand:{" "}
                                 <span className="text-black font-medium">
-                                  € {order?.totalGrand?.toFixed(2)}
+                                  ${" "}
+                                  {order?.paymentInformation?.subtotal.toFixed(
+                                    2
+                                  )}
                                 </span>
                               </p>
                               <p className="flex justify-between">
                                 Total Vat:{" "}
                                 <span className="text-black font-medium">
-                                  € {order?.vat?.toFixed(2)}
+                                  ${" "}
+                                  {order?.paymentInformation?.taxes.toFixed(2)}
                                 </span>
                               </p>
                               <p className="flex justify-between">
                                 Total Gross:{" "}
                                 <span className="text-black font-medium">
-                                  € {order?.totalGross?.toFixed(2)}
+                                  ${" "}
+                                  {order?.paymentInformation?.total.toFixed(2)}
                                 </span>
                               </p>
                             </div>
