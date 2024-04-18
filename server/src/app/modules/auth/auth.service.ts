@@ -114,6 +114,7 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
   /// comment 
   if (!isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
 
+  // variable 
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
   if (isUserExist && !isPasswordValid) {

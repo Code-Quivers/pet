@@ -63,7 +63,6 @@ model Product {
   productQA          ProductQA[]
   productReview      ProductReview[]
   // promoCode          PromoCode?
-  order              Order[]
   featuredImage      String
   // a many-to-many relationship between products and variations
   productVariations  ProductVariation[]
@@ -124,16 +123,12 @@ model ProductReview {
 
 model Order {
   orderId         String      @id @default(uuid())
-  orderDate       DateTime
   orderStatus     OrderStatus @default(PENDING)
-  customerName    String
-  customerPhone   String
-  customerEmail   String
-  customerAddress String
-  city            String
-  postalCode      String
-  productId       String
-  product         Product     @relation(fields: [productId], references: [productId])
+  shippingInformation Json
+  paymentInformation  Json
+  cartItems            Json[]
+  // productId       String
+  // product         Product     @relation(fields: [productId], references: [productId])
   // promoCodeId     String?
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
   createdAt       DateTime    @default(now()) @db.Timestamptz(0)
@@ -271,3 +266,4 @@ model Tax {
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
+
