@@ -10,26 +10,26 @@ import { useGetTaxQuery } from "@/redux/api/features/stateTaxApi";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { fileUrlKey } from "@/helpers/config/envConfig";
+import { RxValue } from "react-icons/rx";
 
 const Checkouts = ({ params }: any) => {
-  console.log(params, "params");
   const { data: stateTax } = useGetTaxQuery({});
   const cart = useSelector((state: any) => state.cart.cart);
-  console.log(cart, "cart");
   const payAmount = useSelector((state: any) => state.cart.payAmount);
-  const [promoCode, setPromoCode] = useState("");
+  console.log(cart, "cart");
+  const data = stateTax?.data?.map((item: any) => ({
+    label: item.state,
+    value: item.tax,
+  }));
+
   const { control, handleSubmit } = useForm();
+  const [promoCode, setPromoCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const data = [
-    "Eugenia Eugenia Eugenia Eugenia Eugenia Eugenia",
-    "Bryan",
-    "Linda",
-    "Nancy",
-    "Lloyd",
-    "Alice",
-    "Julia",
-    "Albert",
-  ].map((item) => ({ label: item, value: item }));
+  const [stateTaxValue, setStateTaxValue] = useState(0);
+
+  const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
+  const roundedTaxAmount = Math.round(taxAmount * 100) / 100;
+  const totalAmount = payAmount?.subtotal + roundedTaxAmount;
 
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
@@ -149,7 +149,7 @@ const Checkouts = ({ params }: any) => {
                   />
                 </div>
                 {/* city & postcode */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3 mt-2">
                   <div className="">
                     <label htmlFor="city" className="block mb-1">
                       City
@@ -177,11 +177,15 @@ const Checkouts = ({ params }: any) => {
                       control={control}
                       render={({ field }) => (
                         <SelectPicker
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setStateTaxValue(value);
+                          }}
                           data={data}
                           searchable={false}
                           size="lg"
                           className="w-full"
-                          placeholder="state"
+                          placeholder="State"
                         />
                       )}
                     />
@@ -384,15 +388,15 @@ const Checkouts = ({ params }: any) => {
               <div>
                 <div className="flex justify-between mt-5">
                   <p>Subtotal</p>
-                  <p>$56</p>
+                  <p>{`$${payAmount?.subtotal?.toFixed(2)}`}</p>
                 </div>
                 <div className="flex justify-between">
                   <p>Taxes</p>
-                  <p>$6</p>
+                  <p>{`$${roundedTaxAmount?.toFixed(2)}`}</p>
                 </div>
                 <div className="flex justify-between mt-5">
                   <p className="text-xl font-semiBold">Total</p>
-                  <p className="text-2xl">$6</p>
+                  <p className="text-2xl">{`$${totalAmount?.toFixed(2)}`}</p>
                 </div>
               </div>
             </div>
