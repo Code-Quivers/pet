@@ -1,12 +1,13 @@
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import {
+  addPayAmount,
   decrementQuantity,
   incrementQuantity,
   removeItem,
 } from "@/redux/slice/cartSlice";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { v4 as uuIdv4 } from "uuid";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Accordion, Drawer, Placeholder } from "rsuite";
@@ -14,9 +15,6 @@ import { Tooltip, Whisper, Button, ButtonToolbar } from "rsuite";
 import useMediaQuery from "@/hooks/useMediaQuiry";
 import EmptyCart from "./EmptyCart";
 import { RiDeleteBinLine } from "react-icons/ri";
-
-const tooltip = <Tooltip>Remove All</Tooltip>;
-const tooltip2 = <Tooltip>Remove</Tooltip>;
 
 const Cart = ({ cartOpen, setCartOpen }: any) => {
   const isLarge = useMediaQuery("(min-width: 640px)");
@@ -34,6 +32,14 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
     });
     return { totalQuantity, totalPrice };
   };
+  const checkoutId = uuIdv4();
+  const checkoutHandler = () => {
+    setCartOpen(false);
+    dispatch(
+      addPayAmount({ subtotal: getTotal().totalPrice, checkoutId } as any)
+    );
+  };
+
   return (
     <div>
       <Drawer
@@ -41,14 +47,15 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
         onClose={() => setCartOpen(false)}
         size={isLarge ? "xs" : "full"}
       >
+        <Drawer.Header>Cart</Drawer.Header>
         <Drawer.Body
-          style={{ paddingLeft: 0, paddingRight: 0 }}
+          style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 0 }}
           // className="relative"
         >
           {cart?.length > 0 ? (
             <>
-              <div className="p-6 bg-white">
-                <div className="flex justify-between items-center">
+              <div className="p-6 bg-white mb-32">
+                {/* <div className="flex justify-between items-center">
                   <div className="flex items-center mt-3 mb-7">
                     <h2 className="text-xl font-bold">Cart</h2>
                     <span className="inline-flex items-center justify-center w-7 h-7 ml-3 text-sm font-bold bg-secondary rounded-full text-gray-50">
@@ -65,7 +72,7 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                       <button className="text-gray-700 ">Clear all</button>
                     </Whisper>
                   </div>
-                </div>
+                </div> */}
                 <div>
                   {cart?.length > 0 &&
                     cart?.map((item: any) => (
@@ -83,7 +90,7 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                           <div className="w-4/5 flex flex-col">
                             <div className="flex justify-between items-center w-full">
                               <p className="font-bold text-sm">
-                                {item?.productName}
+                                {`${item?.productName} - ${item?.color?.name}`}
                               </p>
                               <div className="flex items-center justify-center">
                                 {item?.quantity === 1 ? (
@@ -144,16 +151,15 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                             </div>
                             <p
                               style={{ backgroundColor: item?.color?.code }}
-                              className={`w-6 h-6 md:w-9 md:h-9 rounded-full mr-2 mt-1.5`}
+                              className="w-5 h-5 rounded-full mr-2 mt-1"
                             ></p>
                           </div>
-                          {/* price with quantity update */}
                         </div>
                       </div>
                     ))}
                 </div>
               </div>
-              <div className="fixed bottom-0 left-0 right-0 mb-2">
+              <div className="bg-slate-50 w-full fixed bottom-0 z-[1] right-0">
                 <hr />
                 <div className="px-6">
                   <div className="flex justify-between text-lg font-bold mt-2">
@@ -172,8 +178,8 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                       View Cart
                     </Link>
                     <Link
-                      onClick={() => setCartOpen(false)}
-                      href="/shop/checkout"
+                      onClick={checkoutHandler}
+                      href={`/checkout/${checkoutId}`}
                       className="w-full rounded-full py-3 text-lg font-bold bg-black text-gray-50 hover:bg-slate-900 focus:ring-2 ring-offset-2 ring-black text-center"
                     >
                       Checkout

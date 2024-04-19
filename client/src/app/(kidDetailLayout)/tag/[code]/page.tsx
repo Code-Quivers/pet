@@ -133,8 +133,8 @@ const MyPetPage = ({ params }: Props) => {
                   <Image
                     className="rounded-full w-32 h-32 object-cover"
                     src={`${fileUrlKey()}/${kidDetails?.data?.kidImage}`}
-                    width={128}
-                    height={128}
+                    width={1000}
+                    height={1000}
                     alt="pet pic"
                   />
                 </div>
@@ -178,7 +178,7 @@ const MyPetPage = ({ params }: Props) => {
                     <p className="col-span-2 text-center">Text</p>
                     <p className="col-span-2 text-center">Location</p>
                   </div>
-                  <div className="grid grid-cols-12 px-3 text-sm mt-2 items-center">
+                  <div className="grid grid-cols-12 px-3 text-sm mt-2 items-center gap-x-2">
                     {kidDetails?.data?.relations?.length > 0 &&
                       kidDetails?.data?.relations?.map(
                         (relation: any, idx: number) => (

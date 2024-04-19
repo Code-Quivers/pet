@@ -1,6 +1,7 @@
 import { baseApi } from "./api/baseApi";
 import { reducer } from "./rootReducer";
 import { configureStore } from "@reduxjs/toolkit";
+import { setCartFromLocalStorage } from "./slice/cartSlice";
 
 const store = configureStore({
   reducer,
@@ -9,7 +10,7 @@ const store = configureStore({
 });
 
 // Dispatch action to retrieve data from local storage and populate the Redux state
-// store.dispatch(setDeliveryFromLocalStorage(null));
+store.dispatch(setCartFromLocalStorage(null));
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
