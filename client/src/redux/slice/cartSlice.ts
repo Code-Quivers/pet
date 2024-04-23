@@ -41,6 +41,7 @@ export const cartSlice = createSlice({
         (item: any) => item.variantId === action.payload
       );
       itemInCart.quantity++;
+      setToLocalStorage("cart", JSON.stringify(state.cart));
     },
 
     decrementQuantity: (state: any, action: any) => {
@@ -52,6 +53,7 @@ export const cartSlice = createSlice({
       } else {
         itemInCart.quantity--;
       }
+      setToLocalStorage("cart", JSON.stringify(state.cart));
     },
 
     removeItem: (state: any, action: any) => {
@@ -59,6 +61,7 @@ export const cartSlice = createSlice({
         (item: any) => item.variantId !== action.payload
       );
       state.cart = removeItem;
+      setToLocalStorage("cart", JSON.stringify(state.cart));
     },
 
     addPayAmount: (state: any, action: any) => {

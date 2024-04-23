@@ -11,6 +11,7 @@ import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/Car
 import { fileUrlKey } from "@/utils/envConfig";
 import { addToCart } from "@/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
+import Cart from "@/components/ProductsPage/Cart/Cart";
 
 const colorLoader = Array.from({ length: 3 }).map((_, index) => (
   <div
@@ -52,7 +53,7 @@ const SingleProductPage = ({ params }: any) => {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState<number | null>(
     null
   );
-
+  const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [selectColorName, setSelectColorName] = useState<string | null>(null);
   const [colorName, setColorName] = useState<string | null>(null);
   const [selectSizeName, setSelectSizeName] = useState<string | null>(null);
@@ -95,122 +96,144 @@ const SingleProductPage = ({ params }: any) => {
       : []),
   ];
 
+  const colorVariantsHandler = (index: any, color: any) => {
+    setSelectedColorIndex(index);
+    setSelectColorName(color?.name);
+    setColorName(color?.name);
+    setProductForCart({
+      categoryId: singleProduct?.data?.categoryId,
+      productId: singleProduct?.data?.productId,
+      productName: singleProduct?.data?.productName,
+      variantId: singleProduct?.data?.productVariations?.[index].variantId,
+      price: singleProduct?.data?.productVariations?.[index].variantPrice,
+      color: {
+        name: singleProduct?.data?.productVariations?.[index].color?.name,
+        code: singleProduct?.data?.productVariations?.[index].color?.code,
+      },
+      image: singleProduct?.data?.productVariations?.[index].image,
+    });
+  };
+
   // console.log(allProductImages);
   const addToCartHandler = (product: any) => {
     setStart(true);
     dispatch(addToCart({ product, quantity } as any));
     setTimeout(() => {
       setStart(false);
-    }, 2000);
+      setCartOpen(true);
+    }, 1000);
   };
   // const [mainImage, setMainImage] = useState(productImages[0]);
   const OPTIONS: EmblaOptionsType = {};
   const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
-    <div>
-      <div className="max-w-7xl mx-auto mt-5">
-        <div className="md:grid md:grid-cols-2 gap-10 ">
-          {/* product slider */}
-          <div className="">
-            <SingleProductSlider
-              isLoading={isLoading}
-              isFetching={isFetching}
-              slides={allProductImages}
-              options={OPTIONS}
-              selectColorName={selectColorName}
-              setSelectColorName={setSelectColorName}
-            />
-          </div>
-          {/* product variant and title */}
-          <div className="md:flex-1 px-4 md:mt-0">
-            <div>
-              {/* Title and Price  */}
-              <div className="mt-5">
-                {isLoading && isFetching ? (
-                  <div className="h-10 w-1/2 animate-pulse bg-gray-300"></div>
-                ) : (
-                  <h2 className="text-[32px] font-semibold text-gray-900 mb-2">
-                    {singleProduct?.data?.productName}
-                  </h2>
-                )}
+    <>
+      <Cart cartOpen={cartOpen} setCartOpen={setCartOpen} />
+      <div>
+        <div className="max-w-7xl mx-auto mt-5">
+          <div className="md:grid md:grid-cols-2 gap-10 ">
+            {/* product slider */}
+            <div className="">
+              <SingleProductSlider
+                isLoading={isLoading}
+                isFetching={isFetching}
+                slides={allProductImages}
+                options={OPTIONS}
+                selectColorName={selectColorName}
+                setSelectColorName={setSelectColorName}
+              />
+            </div>
+            {/* product variant and title */}
+            <div className="md:flex-1 px-4 md:mt-0">
+              <div>
+                {/* Title and Price  */}
+                <div className="mt-5">
+                  {isLoading && isFetching ? (
+                    <div className="h-10 w-1/2 animate-pulse bg-gray-300"></div>
+                  ) : (
+                    <h2 className="text-[32px] font-semibold text-gray-900 mb-2">
+                      {singleProduct?.data?.productName}
+                    </h2>
+                  )}
 
-                {isLoading && isFetching ? (
-                  <div className="h-7 w-1/3 animate-pulse bg-gray-300 mt-5"></div>
-                ) : (
-                  <p className="text-gray-600 text-xl">
-                    $ {singleProduct?.data?.productPrice}
-                  </p>
-                )}
-              </div>
-
-              {/* product colors */}
-              <div className="my-3">
-                {isLoading && isFetching ? (
-                  <div className="h-5 w-1/5 animate-pulse bg-gray-300 mb-3"></div>
-                ) : (
-                  <p className=" text-gray-700">
-                    <span className="">Color</span>:{" "}
-                    <span className="text-bold">{selectColorName}</span>
-                  </p>
-                )}
-                <div className="flex items-center mt-2">
-                  {/* color variants */}
-                  {isLoading && isFetching
-                    ? colorLoader
-                    : productColor?.map((color: any, index: number) => (
-                        <Whisper
-                          key={index}
-                          placement="top"
-                          controlId={`control-id-hover-${index}`}
-                          trigger="hover"
-                          speaker={<Tooltip>{color?.name}</Tooltip>}
-                        >
-                          <button
-                            onClick={() => {
-                              setSelectedColorIndex(index);
-                              setSelectColorName(color?.name);
-                              setColorName(color?.name);
-                              setProductForCart({
-                                categoryId: singleProduct?.data?.categoryId,
-                                productId: singleProduct?.data?.productId,
-                                productName: singleProduct?.data?.productName,
-                                variantId:
-                                  singleProduct?.data?.productVariations?.[
-                                    index
-                                  ].variantId,
-                                price:
-                                  singleProduct?.data?.productVariations?.[
-                                    index
-                                  ].variantPrice,
-                                color: {
-                                  name: singleProduct?.data
-                                    ?.productVariations?.[index].color?.name,
-                                  code: singleProduct?.data
-                                    ?.productVariations?.[index].color?.code,
-                                },
-                                image:
-                                  singleProduct?.data?.productVariations?.[
-                                    index
-                                  ].image,
-                              });
-                            }}
-                            style={{
-                              backgroundColor: `${color?.code}`,
-                            }}
-                            className={`w-6 h-6 md:w-10 md:h-10 rounded-full mr-2 ${
-                              selectedColorIndex == index
-                                ? "border-[3px] border-gray-600"
-                                : ""
-                            } `}
-                          ></button>
-                        </Whisper>
-                      ))}
+                  {isLoading && isFetching ? (
+                    <div className="h-7 w-1/3 animate-pulse bg-gray-300 mt-5"></div>
+                  ) : (
+                    <p className="text-gray-600 text-xl">
+                      $ {singleProduct?.data?.productPrice}
+                    </p>
+                  )}
                 </div>
-              </div>
 
-              {/* product size */}
-              {/* {productSize && productSize?.length > 0 && (
+                {/* product colors */}
+                <div className="my-3">
+                  {isLoading && isFetching ? (
+                    <div className="h-5 w-1/5 animate-pulse bg-gray-300 mb-3"></div>
+                  ) : (
+                    <p className=" text-gray-700">
+                      <span className="">Color</span>:{" "}
+                      <span className="text-bold">{selectColorName}</span>
+                    </p>
+                  )}
+                  <div className="flex items-center mt-2">
+                    {/* color variants */}
+                    {isLoading && isFetching
+                      ? colorLoader
+                      : productColor?.map((color: any, index: number) => (
+                          <Whisper
+                            key={index}
+                            placement="top"
+                            controlId={`control-id-hover-${index}`}
+                            trigger="hover"
+                            speaker={<Tooltip>{color?.name}</Tooltip>}
+                          >
+                            <button
+                              onClick={() => {
+                                colorVariantsHandler(index, color);
+                                // setSelectedColorIndex(index);
+                                // setSelectColorName(color?.name);
+                                // setColorName(color?.name);
+                                // setProductForCart({
+                                //   categoryId: singleProduct?.data?.categoryId,
+                                //   productId: singleProduct?.data?.productId,
+                                //   productName: singleProduct?.data?.productName,
+                                //   variantId:
+                                //     singleProduct?.data?.productVariations?.[
+                                //       index
+                                //     ].variantId,
+                                //   price:
+                                //     singleProduct?.data?.productVariations?.[
+                                //       index
+                                //     ].variantPrice,
+                                //   color: {
+                                //     name: singleProduct?.data
+                                //       ?.productVariations?.[index].color?.name,
+                                //     code: singleProduct?.data
+                                //       ?.productVariations?.[index].color?.code,
+                                //   },
+                                //   image:
+                                //     singleProduct?.data?.productVariations?.[
+                                //       index
+                                //     ].image,
+                                // });
+                              }}
+                              style={{
+                                backgroundColor: `${color?.code}`,
+                              }}
+                              className={`w-6 h-6 md:w-10 md:h-10 rounded-full mr-2 ${
+                                selectedColorIndex == index
+                                  ? "border-[3px] border-gray-600"
+                                  : ""
+                              } `}
+                            ></button>
+                          </Whisper>
+                        ))}
+                  </div>
+                </div>
+
+                {/* product size */}
+                {/* {productSize && productSize?.length > 0 && (
                 <div className="my-3">
                   <h1>Size: {selectSizeName}</h1>
                   <div className="flex gap-2">
@@ -234,102 +257,105 @@ const SingleProductPage = ({ params }: any) => {
                 </div>
               )} */}
 
-              {/* select quantity */}
-              <div className="mb-4 md:mb-0">
-                <div>
-                  {isLoading && isFetching ? (
-                    <div className="h-4 w-1/5 animate-pulse bg-gray-300"></div>
-                  ) : (
-                    <p className="text-gray-700">
-                      <span className="">Quantity: {quantity}</span>
-                    </p>
-                  )}
-                  {isLoading && isFetching ? (
-                    <div className="h-10 w-1/3 animate-pulse bg-gray-300 mt-4"></div>
-                  ) : (
-                    <div className="flex items-center">
-                      <div className="inline-flex items-center mt-2 border text-black rounded-full">
-                        <button
-                          disabled={quantity === 1}
-                          onClick={() => setQuantity(quantity - 1)}
-                          className="disabled:opacity-30 inline-flex items-center px-3 py-2"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                {/* select quantity */}
+                <div className="mb-4 md:mb-0">
+                  <div>
+                    {isLoading && isFetching ? (
+                      <div className="h-4 w-1/5 animate-pulse bg-gray-300"></div>
+                    ) : (
+                      <p className="text-gray-700">
+                        <span className="">Quantity: {quantity}</span>
+                      </p>
+                    )}
+                    {isLoading && isFetching ? (
+                      <div className="h-10 w-1/3 animate-pulse bg-gray-300 mt-4"></div>
+                    ) : (
+                      <div className="flex items-center">
+                        <div className="inline-flex items-center mt-2 border text-black rounded-full">
+                          <button
+                            disabled={quantity === 1}
+                            onClick={() => setQuantity(quantity - 1)}
+                            className="disabled:opacity-30 inline-flex items-center px-3 py-2"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M20 12H4"
-                            />
-                          </svg>
-                        </button>
-                        <div className="justify-center text-gray-700 inline-flex items-center w-12 py-2 select-none">
-                          {quantity}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-6 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M20 12H4"
+                              />
+                            </svg>
+                          </button>
+                          <div className="justify-center text-gray-700 inline-flex items-center w-12 py-2 select-none">
+                            {quantity}
+                          </div>
+                          <button
+                            onClick={() => setQuantity(quantity + 1)}
+                            className=" disabled:opacity-50 inline-flex items-center px-3 py-2"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-6 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 4v16m8-8H4"
+                              />
+                            </svg>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => setQuantity(quantity + 1)}
-                          className=" disabled:opacity-50 inline-flex items-center px-3 py-2"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M12 4v16m8-8H4"
-                            />
-                          </svg>
-                        </button>
                       </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  {isLoading && isFetching ? (
+                    <div className="h-10 animate-pulse bg-gray-300"></div>
+                  ) : (
+                    <div className="w-full md:px-2">
+                      {start ? (
+                        <button className="flex items-center w-full">
+                          <div className="w-full bg-gray-400 flex justify-center text-white md:px-4 rounded-full font-bold  text-base md:text-lg">
+                            <Loader
+                              size="sm"
+                              className="py-[13px] text-black"
+                            />
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          disabled={!colorName}
+                          onClick={() => addToCartHandler(productForCart)}
+                          className="disabled:bg-[#b5c4c6] w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
+                        >
+                          {colorName ? "ADD TO CART" : "SELECT A COLOR"}
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-5">
-                {isLoading && isFetching ? (
-                  <div className="h-10 animate-pulse bg-gray-300"></div>
-                ) : (
-                  <div className="w-full md:px-2">
-                    {start ? (
-                      <button className="flex items-center w-full">
-                        <div className="w-full bg-gray-400 flex justify-center text-white md:px-4 rounded-full font-bold  text-base md:text-lg">
-                          <Loader size="sm" className="py-[13px] text-black" />
-                        </div>
-                      </button>
-                    ) : (
-                      <button
-                        disabled={!colorName}
-                        onClick={() => addToCartHandler(productForCart)}
-                        className="disabled:bg-[#b5c4c6] w-full bg-primary flex justify-center text-white py-2 md:px-4 rounded-full font-bold hover:bg-sky-400   text-base md:text-lg"
-                      >
-                        {colorName ? "ADD TO CART" : "SELECT A COLOR"}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Stock */}
-            {/* <div className="flex justify-start items-center gap-2 py-6">
+              {/* Stock */}
+              {/* <div className="flex justify-start items-center gap-2 py-6">
               <p className="font-bold text-gray-700   text-lg">Availability:</p>
               <p className="text-gray-600   text-xl">In Stock</p>
             </div> */}
 
-            {/* Add to cart */}
-            {/* <div className="flex -mx-2 mb-4">
+              {/* Add to cart */}
+              {/* <div className="flex -mx-2 mb-4">
               <div className="w-1/2 px-2">
                 <button className="w-full bg-primary  text-white py-2 md:px-4 rounded-full font-bold hover:bg-gray-800 text-base md:text-lg">
                   Add to Cart
@@ -341,173 +367,174 @@ const SingleProductPage = ({ params }: any) => {
                 </button>
               </div>
             </div> */}
-          </div>
-        </div>
-      </div>
-
-      {/* Product description */}
-      <div className="pt-10 md:pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
-          Product Description:
-        </span>
-        <p className="text-gray-600  text-sm mt-2">
-          {singleProduct?.data?.productDescription}
-        </p>
-      </div>
-      <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
-        <h3 className="text-lg font-bold text-[#333]">Reviews(10)</h3>
-        <div className="grid md:grid-cols-2 gap-12 mt-6">
-          <div>
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <p className="text-sm text-[#333] font-bold">5.0</p>
-                <svg
-                  className="w-5 fill-[#333] ml-1"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                </svg>
-                <div className="bg-gray-400 rounded w-full h-2 ml-3">
-                  <div className="w-2/3 h-full rounded bg-[#333]"></div>
-                </div>
-                <p className="text-sm text-[#333] font-bold ml-3">66%</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-sm text-[#333] font-bold">4.0</p>
-                <svg
-                  className="w-5 fill-[#333] ml-1"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                </svg>
-                <div className="bg-gray-400 rounded w-full h-2 ml-3">
-                  <div className="w-1/3 h-full rounded bg-[#333]"></div>
-                </div>
-                <p className="text-sm text-[#333] font-bold ml-3">33%</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-sm text-[#333] font-bold">3.0</p>
-                <svg
-                  className="w-5 fill-[#333] ml-1"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                </svg>
-                <div className="bg-gray-400 rounded w-full h-2 ml-3">
-                  <div className="w-1/6 h-full rounded bg-[#333]"></div>
-                </div>
-                <p className="text-sm text-[#333] font-bold ml-3">16%</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-sm text-[#333] font-bold">2.0</p>
-                <svg
-                  className="w-5 fill-[#333] ml-1"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                </svg>
-                <div className="bg-gray-400 rounded w-full h-2 ml-3">
-                  <div className="w-1/12 h-full rounded bg-[#333]"></div>
-                </div>
-                <p className="text-sm text-[#333] font-bold ml-3">8%</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-sm text-[#333] font-bold">1.0</p>
-                <svg
-                  className="w-5 fill-[#333] ml-1"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                </svg>
-                <div className="bg-gray-400 rounded w-full h-2 ml-3">
-                  <div className="w-[6%] h-full rounded bg-[#333]"></div>
-                </div>
-                <p className="text-sm text-[#333] font-bold ml-3">6%</p>
-              </div>
             </div>
           </div>
-          <div className="">
-            <div className="flex items-start">
-              <img
-                src="https://readymadeui.com/team-2.webp"
-                className="w-12 h-12 rounded-full border-2 border-white"
-              />
-              <div className="ml-3">
-                <h4 className="text-sm font-bold text-[#333]">John Doe</h4>
-                <div className="flex space-x-1 mt-1">
+        </div>
+
+        {/* Product description */}
+        <div className="pt-10 md:pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
+            Product Description:
+          </span>
+          <p className="text-gray-600  text-sm mt-2">
+            {singleProduct?.data?.productDescription}
+          </p>
+        </div>
+        <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
+          <h3 className="text-lg font-bold text-[#333]">Reviews(10)</h3>
+          <div className="grid md:grid-cols-2 gap-12 mt-6">
+            <div>
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <p className="text-sm text-[#333] font-bold">5.0</p>
                   <svg
-                    className="w-4 fill-[#333]"
+                    className="w-5 fill-[#333] ml-1"
                     viewBox="0 0 14 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
                   </svg>
+                  <div className="bg-gray-400 rounded w-full h-2 ml-3">
+                    <div className="w-2/3 h-full rounded bg-[#333]"></div>
+                  </div>
+                  <p className="text-sm text-[#333] font-bold ml-3">66%</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-sm text-[#333] font-bold">4.0</p>
                   <svg
-                    className="w-4 fill-[#333]"
+                    className="w-5 fill-[#333] ml-1"
                     viewBox="0 0 14 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
                   </svg>
+                  <div className="bg-gray-400 rounded w-full h-2 ml-3">
+                    <div className="w-1/3 h-full rounded bg-[#333]"></div>
+                  </div>
+                  <p className="text-sm text-[#333] font-bold ml-3">33%</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-sm text-[#333] font-bold">3.0</p>
                   <svg
-                    className="w-4 fill-[#333]"
+                    className="w-5 fill-[#333] ml-1"
                     viewBox="0 0 14 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
                   </svg>
+                  <div className="bg-gray-400 rounded w-full h-2 ml-3">
+                    <div className="w-1/6 h-full rounded bg-[#333]"></div>
+                  </div>
+                  <p className="text-sm text-[#333] font-bold ml-3">16%</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-sm text-[#333] font-bold">2.0</p>
                   <svg
-                    className="w-4 fill-[#CED5D8]"
+                    className="w-5 fill-[#333] ml-1"
                     viewBox="0 0 14 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
                   </svg>
+                  <div className="bg-gray-400 rounded w-full h-2 ml-3">
+                    <div className="w-1/12 h-full rounded bg-[#333]"></div>
+                  </div>
+                  <p className="text-sm text-[#333] font-bold ml-3">8%</p>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-sm text-[#333] font-bold">1.0</p>
                   <svg
-                    className="w-4 fill-[#CED5D8]"
+                    className="w-5 fill-[#333] ml-1"
                     viewBox="0 0 14 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
                   </svg>
-                  <p className="text-xs !ml-2 font-semibold text-[#333]">
-                    2 mins ago
+                  <div className="bg-gray-400 rounded w-full h-2 ml-3">
+                    <div className="w-[6%] h-full rounded bg-[#333]"></div>
+                  </div>
+                  <p className="text-sm text-[#333] font-bold ml-3">6%</p>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <div className="flex items-start">
+                <img
+                  src="https://readymadeui.com/team-2.webp"
+                  className="w-12 h-12 rounded-full border-2 border-white"
+                />
+                <div className="ml-3">
+                  <h4 className="text-sm font-bold text-[#333]">John Doe</h4>
+                  <div className="flex space-x-1 mt-1">
+                    <svg
+                      className="w-4 fill-[#333]"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
+                    </svg>
+                    <svg
+                      className="w-4 fill-[#333]"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
+                    </svg>
+                    <svg
+                      className="w-4 fill-[#333]"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
+                    </svg>
+                    <svg
+                      className="w-4 fill-[#CED5D8]"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
+                    </svg>
+                    <svg
+                      className="w-4 fill-[#CED5D8]"
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
+                    </svg>
+                    <p className="text-xs !ml-2 font-semibold text-[#333]">
+                      2 mins ago
+                    </p>
+                  </div>
+                  <p className="text-sm mt-4 text-[#333]">
+                    Lorem ipsum dolor sit amet, consectetur adipisci elit, sed
+                    eiusmod tempor incidunt ut labore et dolore magna aliqua.
                   </p>
                 </div>
-                <p className="text-sm mt-4 text-[#333]">
-                  Lorem ipsum dolor sit amet, consectetur adipisci elit, sed
-                  eiusmod tempor incidunt ut labore et dolore magna aliqua.
-                </p>
               </div>
+              <button
+                type="button"
+                className="w-full mt-10 px-4 py-2.5 bg-transparent hover:bg-gray-50 border border-[#333] text-[#333] font-bold rounded"
+              >
+                Read all reviews
+              </button>
             </div>
-            <button
-              type="button"
-              className="w-full mt-10 px-4 py-2.5 bg-transparent hover:bg-gray-50 border border-[#333] text-[#333] font-bold rounded"
-            >
-              Read all reviews
-            </button>
           </div>
         </div>
-      </div>
-      {/* <div className="max-w-xl mx-auto">
+        {/* <div className="max-w-xl mx-auto">
         <SingleProductSlider />
       </div> */}
-    </div>
+      </div>
+    </>
   );
 };
 
