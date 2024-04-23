@@ -11,9 +11,14 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { RxValue } from "react-icons/rx";
+import { useGetPromoQuery } from "@/redux/api/features/promoCodeApi";
+import PromoCode from "./CheckoutComponents/PromoCode";
 
 const Checkouts = ({ params }: any) => {
   const { data: stateTax } = useGetTaxQuery({});
+  const { data: promo } = useGetPromoQuery({});
+  console.log(promo, "promo");
+
   const cart = useSelector((state: any) => state.cart.cart);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
   console.log(cart, "cart");
@@ -501,32 +506,7 @@ const Checkouts = ({ params }: any) => {
                   </div>
                 ))}
               {/* promo code apply  */}
-              <div className="flex gap-3">
-                <Controller
-                  name="promoCode"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        setPromoCode(e.target.value);
-                      }}
-                      type="text"
-                      name="promoCode"
-                      id="promoCode"
-                      placeholder="Discount code or gift card"
-                      className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm placeholder:text-gray-600"
-                    />
-                  )}
-                />
-                <button
-                  disabled={promoCode.length === 0}
-                  className="py-2.5 px-6 rounded-lg bg-[#0495af] text-white font-semibold disabled:bg-gray-200 disabled:text-white disabled:cursor-not-allowed"
-                >
-                  Apply
-                </button>
-              </div>
-
+              <PromoCode />
               <div>
                 <div className="flex justify-between mt-5">
                   <p>Subtotal</p>

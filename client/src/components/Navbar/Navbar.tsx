@@ -9,11 +9,23 @@ import { CiSearch } from "react-icons/ci";
 import NavbarDrawer from "./NavbarDrawer";
 import Cart from "../ProductsPage/Cart/Cart";
 import SearchModalDrawer from "./SearchModalDrawer";
+import { HiOutlineShoppingBag } from "react-icons/hi2";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const cart = useSelector((state: any) => state.cart.cart);
+  const getTotal = () => {
+    let totalQuantity = 0;
+    let totalPrice = 0;
+    cart?.forEach((item: any) => {
+      totalQuantity += item?.quantity;
+      totalPrice += item?.price * item?.quantity;
+    });
+    return { totalQuantity, totalPrice };
+  };
   return (
     <header className="bg-primary">
       <NavbarDrawer open={open} setOpen={setOpen} />
@@ -53,14 +65,22 @@ const Navbar = () => {
                   <RiMenu2Line />
                 </button>
               </div>
-              <div className="block">
-                <button
+
+              <button
+                className="text-white cursor-pointer relative"
+                onClick={() => setCartOpen(true)}
+              >
+                <div className="text-white font-semibold flex justify-center items-center text-xs absolute w-5 h-5 bg-black rounded-full top-0 right-0 transform translate-x-1/2 -translate-y-1/2 opacity-80">
+                  {getTotal().totalQuantity}
+                </div>
+                <HiOutlineShoppingBag size={26} />
+              </button>
+              {/* <button
                   onClick={() => setCartOpen(true)}
                   className="rounded py-2 transition text-white text-3xl"
                 >
                   <IoCartOutline />
-                </button>
-              </div>
+                </button> */}
             </div>
           </div>
         </div>
