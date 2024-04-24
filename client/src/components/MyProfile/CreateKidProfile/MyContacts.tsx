@@ -6,12 +6,10 @@ import { Controller, useFieldArray } from "react-hook-form";
 
 const MyContacts = ({
   control,
-  errors,
-  relations,
+  errors, 
 }: {
   control: any;
-  errors: any;
-  relations: any;
+  errors: any; 
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -30,7 +28,7 @@ const MyContacts = ({
           }   my-3`}
         >
           <div className="mb-3 flex justify-between">
-            <h1 className="text-xl">Relation {index + 1}</h1>
+            <h1 className="text-xl">Contact {index + 1}</h1>
             <span
               onClick={() => {
                 remove(index);

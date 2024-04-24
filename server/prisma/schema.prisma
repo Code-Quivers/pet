@@ -121,17 +121,17 @@ model ProductReview {
 }
 
 model Order {
-  orderId         String      @id @default(uuid())
-  orderStatus     OrderStatus @default(PENDING)
+  orderId             String      @id @default(uuid())
+  orderStatus         OrderStatus @default(PENDING)
   shippingInformation Json
   paymentInformation  Json
-  cartItems            Json[]
+  cartItems           Json[]
   // productId       String
   // product         Product     @relation(fields: [productId], references: [productId])
   // promoCodeId     String?
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
-  createdAt       DateTime    @default(now()) @db.Timestamptz(0)
-  updatedAt       DateTime    @updatedAt @db.Timestamptz(0)
+  createdAt           DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt           DateTime    @updatedAt @db.Timestamptz(0)
 }
 
 model KidDetails {
@@ -182,6 +182,8 @@ model PromotionRule {
   // For DiscountBasedOnAmount
   threshold Float?
   discount  Float?
+
+  // 
 
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
@@ -265,4 +267,3 @@ model Tax {
   createdAt DateTime @default(now()) @db.Timestamptz(0)
   updatedAt DateTime @updatedAt @db.Timestamptz(0)
 }
-
