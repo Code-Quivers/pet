@@ -49,7 +49,7 @@ const OurFeatures = () => {
                 strokeLinejoin="round"
                 stroke-miterlimit="10"
                 strokeWidth="40"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
@@ -173,7 +173,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 stroke-miterlimit="10"
                 strokeWidth="30"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
@@ -205,7 +205,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 stroke-miterlimit="10"
                 strokeWidth="30"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
@@ -237,7 +237,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 stroke-miterlimit="10"
                 strokeWidth="30"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
@@ -269,7 +269,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 stroke-miterlimit="10"
                 strokeWidth="30"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
@@ -301,7 +301,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 stroke-miterlimit="10"
                 strokeWidth="30"
-                clip-path="url(#a)"
+                clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
