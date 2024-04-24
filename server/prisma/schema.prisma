@@ -170,7 +170,9 @@ model BuyItemGetItemPromotion {
   requiredItemId   String
   requiredItem     Product @relation("RequiredItems", references: [productId], fields: [requiredItemId])
   requiredQuantity Int     @default(1)
-
+  
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
   rewardItemId   String
   rewardItem     Product @relation("RewardItems", references: [productId], fields: [rewardItemId])
   rewardQuantity Int     @default(1)

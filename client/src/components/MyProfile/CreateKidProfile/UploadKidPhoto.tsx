@@ -69,10 +69,12 @@ const UploadKidPhoto = ({ field }: IAddKidPhoto) => {
     <div className="relative w-full !flex !justify-center mt-1 group">
       <Uploader
         fileList={fileValue}
+        
         onChange={handleChangeImages}
         draggable
         autoUpload={false}
         action={""}
+        
         removable={true}
         // fileListVisible={false}
         onRemove={clearImagePreview}
@@ -81,8 +83,8 @@ const UploadKidPhoto = ({ field }: IAddKidPhoto) => {
       >
         <div
           style={{
-            width: 400,
-            height: 400,
+            width: 350,
+            height: 350,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -93,8 +95,8 @@ const UploadKidPhoto = ({ field }: IAddKidPhoto) => {
         >
           {imagePreview ? (
             <Image
-              width={400}
-              height={400}
+              width={350}
+              height={350}
               src={imagePreview}
               alt="Image Preview"
               className="w-full md:w-full rounded-full h-full object-cover object-center cursor-pointer"

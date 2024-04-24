@@ -119,9 +119,9 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
 
   return (
     <div className="text-center py-10">
-      <h2 className="text-center text-4xl font-bold">Create New Kid</h2>
+      <h2 className="text-center text-4xl font-bold">Create New Band</h2>
       <p className="pt-2 text-lg text-gray-500 w-3/4 md:w-3/6 mx-auto">
-        Step two: Enter information about your kid.
+        Step two: Enter information.
       </p>
       <form
         onSubmit={handleSubmit(handleCreateKid)}
@@ -132,7 +132,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           {/* product featured image */}
           <div className="space-y-4">
             <h1 className="text-xl mb-1 font-medium max-md:my-2">
-              Upload Kid Photo
+              Upload Photo
             </h1>
             <div>
               <Controller
@@ -190,19 +190,20 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
 
           {/* Kid Age */}
           <div className="flex flex-col w-full gap-2">
-            <label className="text-base text-start block ">Kid Age</label>
+            <label className="text-base text-start block">Date of birth</label>
             <Controller
               name="age"
               control={control}
               rules={{
-                required: "Kid Age is Required !!",
+                required: "Date of Birth is Required !!",
               }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
-                  <DatePicker
+                  <DatePicker 
+                  
                     {...field}
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
-                    placeholder="Kid Age"
+                    placeholder="DOB"
                   />
                   <Form.ErrorMessage
                     show={(!!errors?.age && !!errors?.age?.message) || false}
@@ -218,7 +219,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           {/* email */}
 
           <div className="flex flex-col w-full gap-2">
-            <label className="text-start block ">Enter Email</label>
+            <label className="text-start block">Email</label>
             <Controller
               name="email"
               control={control}
@@ -254,7 +255,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           {/* Password */}
 
           <div className="flex flex-col w-full gap-2">
-            <label className="text-start block ">Enter Password</label>
+            <label className="text-start block ">Password</label>
             <Controller
               name="password"
               control={control}
@@ -266,7 +267,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                     name="password"
                     type="password"
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
-                    placeholder="Enter password"
+                    placeholder="Password"
                   />
                   <Form.ErrorMessage
                     show={
@@ -285,8 +286,8 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
         {/* Contact person Information */}
         <div className="text-center py-10">
           <h2 className="text-xl font-semibold pb-2">My Contacts</h2>
-          <p className="text-sm text-gray-500">
-            Add your contact Information as much as you want
+          <p className="text-[15px] text-gray-500">
+            Add unlimited contacts
           </p>
         </div>
         {/* contacts */}
