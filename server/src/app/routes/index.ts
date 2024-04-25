@@ -54,7 +54,7 @@ const moduleRoutes = [
     route: TestimonialRoutes,
   },
   {
-    path: '/promo-code',
+    path: '/promotion',
     route: PromoCodeRoutes,
   },
   {

@@ -149,33 +149,33 @@ model KidDetails {
 
 // The model for promotions
 model Promotion {
-  promotionId             String                    @id @default(uuid())
+  promotionId             String                   @id @default(uuid())
   promotionName           String
-  promoCode               String
-  isActive                Boolean                   @default(false)
+  promoCode               String                   @unique
+  isActive                Boolean                  @default(false)
   startDate               DateTime?
   endDate                 DateTime?
   type                    PromotionType
-  createdAt               DateTime                  @default(now()) @db.Timestamptz(0)
-  updatedAt               DateTime                  @updatedAt @db.Timestamptz(0)
-  BuyItemGetItemPromotion BuyItemGetItemPromotion[]
+  createdAt               DateTime                 @default(now()) @db.Timestamptz(0)
+  updatedAt               DateTime                 @updatedAt @db.Timestamptz(0)
+  buyItemGetItemPromotion BuyItemGetItemPromotion?
 }
 
 // Define schema for buy something get something promotion
 model BuyItemGetItemPromotion {
   id          Int       @id @default(autoincrement())
-  promotionId String
-  promotion   Promotion @relation(fields: [promotionId], references: [promotionId])
+  promotionId String    @unique
+  promotion   Promotion @relation(fields: [promotionId], references: [promotionId], onDelete: Cascade)
 
   requiredItemId   String
-  requiredItem     Product @relation("RequiredItems", references: [productId], fields: [requiredItemId])
+  requiredItem     Product @relation("RequiredItems", references: [productId], fields: [requiredItemId], onDelete: SetDefault)
   requiredQuantity Int     @default(1)
-  
-  createdAt DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+
+  createdAt      DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(0)
   rewardItemId   String
-  rewardItem     Product @relation("RewardItems", references: [productId], fields: [rewardItemId])
-  rewardQuantity Int     @default(1)
+  rewardItem     Product  @relation("RewardItems", references: [productId], fields: [rewardItemId], onDelete: SetDefault)
+  rewardQuantity Int      @default(1)
 }
 
 model Testimonial {

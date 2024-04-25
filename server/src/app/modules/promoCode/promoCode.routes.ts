@@ -7,15 +7,11 @@ import { PromoCodeController } from './promoCode.controller';
 
 const router = express.Router();
 
-// ! Create New List ------------------------------->>>
-router.post('/', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), validateRequest(PromoCodeValidation.addPromoCode), PromoCodeController.addPromo);
-
 // ! Get all List----------------------------------->>>
-router.get('/', PromoCodeController.getPromo);
-router.get('/promotionalOffer', PromoCodeController.getPromotionalOffer);
-
-router.patch('/promotionalOffer/:id', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.updatePromo);
-
-router.delete('/promotionalOffer/:id', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), PromoCodeController.deletePromotionRule);
+router.post("/create", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.createPromotion)
+router.post("/update/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.updatePromotion)
+router.post("/delete/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.deletePromotion)
+router.get("/", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.getPromotions)
+router.post('/apply-promotion-code/:promoCode', auth(UserRoles.USER), PromoCodeController.applyPromoCode)
 
 export const PromoCodeRoutes = router;

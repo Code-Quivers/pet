@@ -7,41 +7,14 @@ import sendResponse from '../../../shared/sendResponse';
 import { PromoCodeFilterableFields } from './promoCode.constants';
 import { PromoCodeService } from './promoCode.service';
 
-// !----------------------------------Create New Hall---------------------------------------->>>
-const addPromo = catchAsync(async (req: Request, res: Response) => {
-  const result = await PromoCodeService.addPromoCode(req.body);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Added Successfully',
-    data: result,
-  });
-});
 
 // !----------------------------------get all Hall---------------------------------------->>>
-const getPromo = catchAsync(async (req: Request, res: Response) => {
+const getPromotion = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, PromoCodeFilterableFields);
 
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await PromoCodeService.getPromoCode(filters, options);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'fetched successfully',
-    meta: result.meta,
-    data: result.data,
-  });
-});
-
-const getPromotionalOffer = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, PromoCodeFilterableFields);
-
-  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-
-  const result = await PromoCodeService.getPromotionalOffer(filters, options);
+  const result = await PromoCodeService.getPromotions(filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -53,10 +26,10 @@ const getPromotionalOffer = catchAsync(async (req: Request, res: Response) => {
 });
 
 // !----------------------------------Update Slot---------------------------------------->>>
-const updatePromo = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const payload = req.body;
-  const result = await PromoCodeService.updatePromoCode(id, payload);
+const updatePromotion = catchAsync(async (req: Request, res: Response) => {
+  const { promotionId } = req.params;
+  const { buyItemGetItemPromotionInfo, ...promotionInfo } = req.body;
+  const result = await PromoCodeService.updatePromotion(promotionId, promotionInfo, buyItemGetItemPromotionInfo);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -66,9 +39,9 @@ const updatePromo = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deletePromotionRule = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await PromoCodeService.deletePromotionRuleCode(id);
+const deletePromotion = catchAsync(async (req: Request, res: Response) => {
+  const { promotionId } = req.params;
+  const result = await PromoCodeService.deletePromotion(promotionId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -78,10 +51,54 @@ const deletePromotionRule = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+const applyPromoCode = catchAsync(async (req: Request, res: Response) => {
+  const { promoCode } = req.params;
+  const { requiredItemId, requiredQuantity } = req.body;
+  const result = await PromoCodeService.applyPromoCode(promoCode, requiredItemId, requiredQuantity);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted successfully !',
+    data: result,
+  });
+});
+
+const createPromotion = catchAsync(async (req: Request, res: Response) => {
+  const { buyItemGetItemPromotion, ...promotionInfo } = req.body;
+  // const { requiredItemId, requiredQuantity } = req.body;
+  const result = await PromoCodeService.createPromotion(promotionInfo, buyItemGetItemPromotion);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Created successfully !',
+    data: result,
+  });
+});
+
+const getPromotions = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, PromoCodeFilterableFields);
+
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+  const result = await PromoCodeService.getPromotions(filters, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Extracted successfully !',
+    data: result,
+  });
+});
+
+
 export const PromoCodeController = {
-  addPromo,
-  getPromo,
-  updatePromo,
-  deletePromotionRule,
-  getPromotionalOffer,
+  createPromotion,
+  updatePromotion,
+  deletePromotion,
+  getPromotions,
+  applyPromoCode,
+
 };
