@@ -24,7 +24,7 @@ const MyContacts = ({
           className={`${
             index === fields.length - 1
               ? ""
-              : "border-b-[#d1d5db] pb-5 border-b "
+              : " pb-5 "
           }   my-3`}
         >
           <div className="mb-3 flex justify-between">
