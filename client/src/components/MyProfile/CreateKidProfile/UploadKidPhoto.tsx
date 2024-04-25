@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Message, Uploader, useToaster } from "rsuite";
+import { Message, Uploader, useToaster, Text } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import Image from "next/image";
@@ -69,22 +69,29 @@ const UploadKidPhoto = ({ field }: IAddKidPhoto) => {
     <div className="relative w-full !flex !justify-center mt-1 group">
       <Uploader
         fileList={fileValue}
-        
         onChange={handleChangeImages}
         draggable
         autoUpload={false}
         action={""}
-        
         removable={true}
         // fileListVisible={false}
         onRemove={clearImagePreview}
-        className="w-full "
+        className="w-full"
         accept="image/*"
+        renderFileInfo={(file) => {
+          return (
+            <Text maxLines={1}>
+              {file.name?.length ?? 0 > 7
+                ? file.name?.slice(0, 7) + " ..."
+                : file.name}
+            </Text>
+          );
+        }}
       >
         <div
           style={{
-            width: 350,
-            height: 350,
+            width: 200,
+            height: 200,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

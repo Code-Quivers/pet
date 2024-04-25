@@ -18,6 +18,7 @@ type IRelations = {
 
 type ICreateKid = {
   name: string;
+  lastName: string;
   age: Date;
   email: string;
   password: string;
@@ -120,15 +121,15 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
   return (
     <div className="text-center py-10">
       <h2 className="text-center text-4xl font-bold">Create New Band</h2>
-      <p className="pt-2 text-lg text-gray-500 w-3/4 md:w-3/6 mx-auto">
+      {/* <p className="pt-2 text-lg text-gray-500 w-3/4 md:w-3/6 mx-auto">
         Step two: Enter information.
-      </p>
+      </p> */}
       <form
         onSubmit={handleSubmit(handleCreateKid)}
-        className="mt-10 max-w-4xl mx-auto px-5"
+        className="max-w-4xl mx-auto px-5"
       >
         {/* kid name and pet age */}
-        <div className="w-full flex justify-center  my-10">
+        <div className="w-full flex justify-center mb-5">
           {/* product featured image */}
           <div className="space-y-4">
             <h1 className="text-xl mb-1 font-medium max-md:my-2">
@@ -142,7 +143,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                   required: "Image is Required !!",
                 }}
                 render={({ field }) => (
-                  <div className="rs-form-control-wrapper  w-full">
+                  <div className="rs-form-control-wrapper w-full">
                     <UploadKidPhoto field={field} />
                     <Form.ErrorMessage
                       show={
@@ -160,10 +161,10 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           </div>
         </div>
         {/* name and age */}
-        <div className="grid md:grid-cols-2 gap-3  ">
-          {/* name */}
-          <div className="flex flex-col w-full gap-2">
-            <label className="text-start block ">Enter name</label>
+        <div className="grid md:grid-cols-12 gap-3">
+          {/* first name */}
+          <div className="md:col-span-4 flex flex-col w-full gap-2">
+            <label className="text-start block ">First name</label>
             <Controller
               name="name"
               control={control}
@@ -174,7 +175,35 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                     {...field}
                     name="name"
                     type="text"
-                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
+                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-2.5 outline-none rounded-lg "
+                    placeholder="Enter kid name"
+                  />
+                  <Form.ErrorMessage
+                    show={(!!errors?.name && !!errors?.name?.message) || false}
+                    placement="topEnd"
+                  >
+                    <span>{errors?.name?.message as string}</span>
+                  </Form.ErrorMessage>
+                </div>
+              )}
+            />
+          </div>
+          {/* last name */}
+          <div className="md:col-span-4 flex flex-col w-full gap-2">
+            <label htmlFor="lastName" className="text-start block ">
+              Last name <span className="text-sm text-slate-500">(optional)</span>
+            </label>
+            <Controller
+              name="lastName"
+              control={control}
+              rules={{ required: "Kid Name is Required !!" }}
+              render={({ field }) => (
+                <div className="rs-form-control-wrapper ">
+                  <input
+                    {...field}
+                    id="lastName"
+                    type="text"
+                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-2.5 outline-none rounded-lg "
                     placeholder="Enter kid name"
                   />
                   <Form.ErrorMessage
@@ -189,7 +218,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           </div>
 
           {/* Kid Age */}
-          <div className="flex flex-col w-full gap-2">
+          <div className="md:col-span-4 flex flex-col w-full gap-2">
             <label className="text-base text-start block">Date of birth</label>
             <Controller
               name="age"
@@ -199,10 +228,10 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
               }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
-                  <DatePicker 
-                  
+                  <DatePicker
                     {...field}
-                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-3 outline-none rounded-lg "
+                    size="lg"
+                    className="w-full bg-transparent text-sm outline-none rounded-lg "
                     placeholder="DOB"
                   />
                   <Form.ErrorMessage
@@ -218,7 +247,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
 
           {/* email */}
 
-          <div className="flex flex-col w-full gap-2">
+          <div className="md:col-span-6 flex flex-col w-full gap-2">
             <label className="text-start block">Email</label>
             <Controller
               name="email"
@@ -254,7 +283,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
 
           {/* Password */}
 
-          <div className="flex flex-col w-full gap-2">
+          <div className="md:col-span-6 flex flex-col w-full gap-2">
             <label className="text-start block ">Password</label>
             <Controller
               name="password"
@@ -284,11 +313,9 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           </div>
         </div>
         {/* Contact person Information */}
-        <div className="text-center py-10">
+        <div className="text-center pt-10 pb-5">
           <h2 className="text-xl font-semibold pb-2">My Contacts</h2>
-          <p className="text-[15px] text-gray-500">
-            Add unlimited contacts
-          </p>
+          <p className="text-[15px] text-gray-500">Add unlimited contacts</p>
         </div>
         {/* contacts */}
         <div>
