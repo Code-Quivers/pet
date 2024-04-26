@@ -9,9 +9,12 @@ const router = express.Router();
 
 // ! Get all List----------------------------------->>>
 router.post("/create", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.createPromotion)
-router.post("/update/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.updatePromotion)
-router.post("/delete/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.deletePromotion)
+router.patch("/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.updatePromotion)
+router.delete("/delete/:promotionId", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.deletePromotion)
 router.get("/", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.getPromotions)
-router.post('/apply-promotion-code/:promoCode', auth(UserRoles.USER), PromoCodeController.applyPromoCode)
+router.get("/check/:promoCode", auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.isExist)
+router.post('/apply-promotion-code/:promoCode',
+    // auth(UserRoles.USER), 
+    PromoCodeController.applyPromoCode)
 
 export const PromoCodeRoutes = router;

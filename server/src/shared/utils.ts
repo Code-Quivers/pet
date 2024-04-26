@@ -16,3 +16,14 @@ export const isValidISOString = (value: string): boolean => {
     return false;
   }
 };
+
+export const getDateISODateWithoutTimestamp = (date: Date) => {
+  // Extract the year, month, and day
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+  const day = date.getDate();
+
+  // Format the date as a string
+  const formattedDate = `${year}-${month}-${day}`
+  return formattedDate;
+}

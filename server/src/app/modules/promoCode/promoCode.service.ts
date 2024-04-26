@@ -11,6 +11,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPromoFilterRequest, IPromoRequest, IPromoUpdateRequest } from './promoCode.interface';
 import { PromoCodeRelationalFields, PromoCodeRelationalFieldsMapper, PromoCodeSearchableFields } from './promoCode.constants';
 import { isValid } from 'zod';
+import { getDateISODateWithoutTimestamp } from '../../../shared/utils';
 // modules
 
 
@@ -19,15 +20,16 @@ const updatePromotion = async (promotionId: string, pormotionInfo: any, buyItemG
   const result = await prisma.$transaction(async transactionClient => {
     let dataToUpdate = {
       ...pormotionInfo,
-      buyItemGetItemPromotionInfo: {
+    }
+    if (pormotionInfo.startDate) dataToUpdate['startDate'] = new Date(pormotionInfo.startDate).toISOString();
+    if (pormotionInfo.endDate) dataToUpdate['endDate'] = new Date(pormotionInfo.endDate).toISOString();
+    if (buyItemGetItemPromotionInfo) {
+      dataToUpdate['buyItemGetItemPromotion'] = {
         update: {
           ...buyItemGetItemPromotionInfo
         }
       }
     }
-    if (pormotionInfo.startDate) dataToUpdate['startDate'] = new Date(pormotionInfo.startDate).toISOString();
-    if (pormotionInfo.endDate) dataToUpdate['endDate'] = new Date(pormotionInfo.endDate).toISOString();
-
     const updatedData = transactionClient.promotion.update({
       where: { promotionId: promotionId },
       data: dataToUpdate
@@ -55,39 +57,6 @@ const updateBuyItemGetItemPromotion = async (promotionId: string, infoToUpdate: 
   }
 }
 
-
-const applyPromoCode = async (promoCode: string, requiredItemId: string, requiredQuantity: string) => {
-  const currentDate = new Date().toISOString()
-  console.log(currentDate)
-  const promotion = prisma.promotion.findUnique({
-    where: {
-      promoCode: promoCode,
-      isActive: true,
-      startDate: {
-        gte: currentDate
-      },
-      endDate: {
-        lte: currentDate
-      }
-    },
-    include: {
-      buyItemGetItemPromotion: true
-    }
-  })
-
-  if (!promotion) {
-    return {
-      isValid: false
-    }
-  }
-  console.log(promotion)
-  return {
-    isValid: true,
-    promotion: promotion.buyItemGetItemPromotion
-  }
-
-}
-
 const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any): Promise<any> => {
   try {
     const result = await prisma.$transaction(async transactionClient => {
@@ -104,7 +73,8 @@ const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any)
     })
 
     return { promotion: result }
-  } catch (error) {
+  } catch (err) {
+    console.log("Error in create promotion service:", err)
     throw new ApiError(httpStatus.BAD_REQUEST, "Failed to create promotion!")
   }
 }
@@ -197,6 +167,65 @@ const getPromotions = async (filters: IPromoFilterRequest, options: IPaginationO
   };
 };
 
+
+const applyPromoCode = async (promoCode: string, purchasedItemId: string, purchasedQuantity: number) => {
+  const currentDate = new Date(getDateISODateWithoutTimestamp(new Date())).toISOString()
+  console.log(currentDate)
+  const promotion = await prisma.promotion.findUnique({
+    where: {
+      promoCode: promoCode,
+      isActive: true,
+      startDate: {
+        lte: currentDate
+      },
+      endDate: {
+        gte: currentDate
+      },
+      buyItemGetItemPromotion: {
+        requiredItemId: purchasedItemId,
+        requiredQuantity: purchasedQuantity
+      }
+    },
+    include: {
+      buyItemGetItemPromotion: true
+    }
+  })
+
+  if (!promotion) {
+    return {
+      isValid: false
+    }
+  }
+  console.log(promotion)
+  const productId: string = promotion.buyItemGetItemPromotion?.rewardItemId || "";
+  const quantity: number = promotion.buyItemGetItemPromotion?.rewardQuantity || 1;
+  const product = await prisma.productVariation.findFirst({
+    where: {
+      productId: productId,
+      stock: {
+        gte: quantity
+      }
+    }
+  })
+  return {
+    isValid: true,
+    product: product
+  }
+
+}
+
+const isExist = async (promoCode: string) => {
+  try {
+    const promotion = await prisma.promotion.findUnique({
+      where: { promoCode: promoCode }
+    })
+    return promotion ? true : false
+  }
+  catch (err) {
+    console.log("Error in isExist service: ", err)
+    throw new ApiError(httpStatus.BAD_REQUEST, "Failed to check existance of promo code!")
+  }
+}
 export const PromoCodeService = {
   createPromotion,
   updatePromotion,
@@ -204,5 +233,6 @@ export const PromoCodeService = {
   deletePromotion,
   getPromotions,
   applyPromoCode,
+  isExist
 
 };

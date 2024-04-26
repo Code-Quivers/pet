@@ -54,20 +54,19 @@ const deletePromotion = catchAsync(async (req: Request, res: Response) => {
 
 const applyPromoCode = catchAsync(async (req: Request, res: Response) => {
   const { promoCode } = req.params;
-  const { requiredItemId, requiredQuantity } = req.body;
-  const result = await PromoCodeService.applyPromoCode(promoCode, requiredItemId, requiredQuantity);
+  const { purchasedItemId, purchasedQuantity } = req.body;
+  const result = await PromoCodeService.applyPromoCode(promoCode, purchasedItemId, purchasedQuantity);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Deleted successfully !',
+    message: 'Promotion applied successfully !',
     data: result,
   });
 });
 
 const createPromotion = catchAsync(async (req: Request, res: Response) => {
   const { buyItemGetItemPromotion, ...promotionInfo } = req.body;
-  // const { requiredItemId, requiredQuantity } = req.body;
   const result = await PromoCodeService.createPromotion(promotionInfo, buyItemGetItemPromotion);
 
   sendResponse(res, {
@@ -93,6 +92,20 @@ const getPromotions = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const isExist = catchAsync(async (req: Request, res: Response) => {
+  const { promoCode } = req.params;
+
+  const result = await PromoCodeService.isExist(promoCode);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Checking Successful !',
+    data: result,
+  });
+});
+
+
 
 export const PromoCodeController = {
   createPromotion,
@@ -100,5 +113,6 @@ export const PromoCodeController = {
   deletePromotion,
   getPromotions,
   applyPromoCode,
+  isExist,
 
 };
