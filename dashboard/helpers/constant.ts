@@ -21,10 +21,10 @@ const promos = [
     label: "Buy & Get Offer",
     value: "BUY_ONE_GET_ONE",
   },
-  {
-    label: "Discount on Order",
-    value: "DISCOUNT_BASED_ON_AMOUNT",
-  },
+  // {
+  //   label: "Discount on Order",
+  //   value: "DISCOUNT_BASED_ON_AMOUNT",
+  // },
 ];
 
 export const promoTypeEnums = promos?.map((promo: any) => {
