@@ -14,27 +14,26 @@ import { isValid } from 'zod';
 import { getDateISODateWithoutTimestamp } from '../../../shared/utils';
 // modules
 
-
 // !----------------------------------Update Courier---------------------------------------->>>
 const updatePromotion = async (promotionId: string, pormotionInfo: any, buyItemGetItemPromotionInfo: any): Promise<Promotion> => {
   const result = await prisma.$transaction(async transactionClient => {
     let dataToUpdate = {
       ...pormotionInfo,
-    }
+    };
     if (pormotionInfo.startDate) dataToUpdate['startDate'] = new Date(pormotionInfo.startDate).toISOString();
     if (pormotionInfo.endDate) dataToUpdate['endDate'] = new Date(pormotionInfo.endDate).toISOString();
     if (buyItemGetItemPromotionInfo) {
       dataToUpdate['buyItemGetItemPromotion'] = {
         update: {
-          ...buyItemGetItemPromotionInfo
-        }
-      }
+          ...buyItemGetItemPromotionInfo,
+        },
+      };
     }
     const updatedData = transactionClient.promotion.update({
       where: { promotionId: promotionId },
-      data: dataToUpdate
-    })
-    return updatedData
+      data: dataToUpdate,
+    });
+    return updatedData;
   });
 
   if (!result) {
@@ -48,14 +47,14 @@ const updateBuyItemGetItemPromotion = async (promotionId: string, infoToUpdate: 
   try {
     const updatedInfo = prisma.buyItemGetItemPromotion.update({
       where: { promotionId: promotionId },
-      data: infoToUpdate
-    })
-    return updatedInfo
+      data: infoToUpdate,
+    });
+    return updatedInfo;
   } catch (err) {
-    console.log("Error in updateBuyItemGetItemPromotion service: ", err)
-    throw new ApiError(httpStatus.BAD_REQUEST, "Failed to update the info!")
+    console.log('Error in updateBuyItemGetItemPromotion service: ', err);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update the info!');
   }
-}
+};
 
 const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any): Promise<any> => {
   try {
@@ -65,19 +64,19 @@ const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any)
         startDate: new Date(promotionInfo.startDate).toISOString(),
         endDate: new Date(promotionInfo.endDate).toISOString(),
         buyItemGetItemPromotion: {
-          create: buyItemGetItemPromotion
-        }
-      }
-      const promotion = await transactionClient.promotion.create({ data: promotionData })
-      return promotion
-    })
+          create: buyItemGetItemPromotion,
+        },
+      };
+      const promotion = await transactionClient.promotion.create({ data: promotionData });
+      return promotion;
+    });
 
-    return { promotion: result }
+    return { promotion: result };
   } catch (err) {
-    console.log("Error in create promotion service:", err)
-    throw new ApiError(httpStatus.BAD_REQUEST, "Failed to create promotion!")
+    console.log('Error in create promotion service:', err);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create promotion!');
   }
-}
+};
 
 const deletePromotion = async (promotionId: string): Promise<Promotion> => {
   try {
@@ -86,7 +85,7 @@ const deletePromotion = async (promotionId: string): Promise<Promotion> => {
     });
     return result;
   } catch (err) {
-    console.log("Error in delete promo service: ", err)
+    console.log('Error in delete promo service: ', err);
     throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to remove the Promotion!');
   }
 };
@@ -167,65 +166,62 @@ const getPromotions = async (filters: IPromoFilterRequest, options: IPaginationO
   };
 };
 
-
 const applyPromoCode = async (promoCode: string, purchasedItemId: string, purchasedQuantity: number) => {
-  const currentDate = new Date(getDateISODateWithoutTimestamp(new Date())).toISOString()
-  console.log(currentDate)
+  const currentDate = new Date(getDateISODateWithoutTimestamp(new Date())).toISOString();
+  console.log(currentDate);
   const promotion = await prisma.promotion.findUnique({
     where: {
       promoCode: promoCode,
       isActive: true,
       startDate: {
-        lte: currentDate
+        lte: currentDate,
       },
       endDate: {
-        gte: currentDate
+        gte: currentDate,
       },
       buyItemGetItemPromotion: {
         requiredItemId: purchasedItemId,
-        requiredQuantity: purchasedQuantity
-      }
+        requiredQuantity: purchasedQuantity,
+      },
     },
     include: {
-      buyItemGetItemPromotion: true
-    }
-  })
+      buyItemGetItemPromotion: true,
+    },
+  });
 
   if (!promotion) {
     return {
-      isValid: false
-    }
+      isValid: false,
+    };
   }
-  console.log(promotion)
-  const productId: string = promotion.buyItemGetItemPromotion?.rewardItemId || "";
+  console.log(promotion);
+  const productId: string = promotion.buyItemGetItemPromotion?.rewardItemId || '';
   const quantity: number = promotion.buyItemGetItemPromotion?.rewardQuantity || 1;
   const product = await prisma.productVariation.findFirst({
     where: {
       productId: productId,
       stock: {
-        gte: quantity
-      }
-    }
-  })
+        gte: quantity,
+      },
+    },
+  });
   return {
     isValid: true,
-    product: product
-  }
-
-}
+    product: product,
+  };
+};
 
 const isExist = async (promoCode: string) => {
   try {
     const promotion = await prisma.promotion.findUnique({
-      where: { promoCode: promoCode }
-    })
-    return promotion ? true : false
+      where: { promoCode: promoCode },
+    });
+    return promotion ? { isExist: true } : { isExist: false };
+  } catch (err) {
+    console.log('Error in isExist service: ', err);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to check existance of promo code!');
   }
-  catch (err) {
-    console.log("Error in isExist service: ", err)
-    throw new ApiError(httpStatus.BAD_REQUEST, "Failed to check existance of promo code!")
-  }
-}
+};
 export const PromoCodeService = {
   createPromotion,
   updatePromotion,
@@ -233,6 +229,5 @@ export const PromoCodeService = {
   deletePromotion,
   getPromotions,
   applyPromoCode,
-  isExist
-
+  isExist,
 };
