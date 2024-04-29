@@ -25,7 +25,7 @@ type ICreateKid = {
   kidImage: FileType;
   relations: IRelations[];
 };
-
+//From component
 const CreateKidForm = ({ tag }: { tag: string }) => {
   const {
     handleSubmit,
@@ -191,7 +191,8 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           {/* last name */}
           <div className="md:col-span-4 flex flex-col w-full gap-2">
             <label htmlFor="lastName" className="text-start block ">
-              Last name <span className="text-sm text-slate-500">(optional)</span>
+              Last name{" "}
+              <span className="text-sm text-slate-500">(optional)</span>
             </label>
             <Controller
               name="lastName"
