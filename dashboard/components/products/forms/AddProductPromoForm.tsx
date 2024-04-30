@@ -24,6 +24,7 @@ import {
 
 import { useAddPromoMutation } from "@/redux/features/promoCodeApi";
 import { promoTypeEnums } from "@/helpers/constant";
+import { useGetProductQuery } from "@/redux/features/productsApi";
 
 const AddProductPromoForm = () => {
   const [orderDiscount, setOrderDiscount] = useState(false);
@@ -42,29 +43,10 @@ const AddProductPromoForm = () => {
     watch,
   } = useForm<ICreateProductPromo>();
 
-  const { categoryHref } = watch();
+  const { data: allProducts } = useGetProductQuery(null);
 
-  //Get All Category
-  const {
-    data: categoryResponse,
-    isLoading: subCategoryLoading,
-    isFetching: subCategoryFetching,
-  } = useGetCategoryQuery({ ...subCategoryQuery });
-
-  const categoryEnums = categoryResponse?.data?.map((single: any) => {
-    return {
-      label: single?.categoryName,
-      value: single?.categoryHref,
-    };
-  });
-
-  const { data: categoriesWiseProduct, isLoading: productLoading } =
-    useGetSingleCategoryQuery(categoryHref, {
-      skip: !categoryHref,
-    });
-
-  const productEnum = categoriesWiseProduct?.data?.product?.length
-    ? categoriesWiseProduct?.data?.product?.map((single: any) => {
+  const productEnum = allProducts?.data?.length
+    ? allProducts?.data?.map((single: any) => {
         return {
           label: single?.productName,
           value: single?.productId,
@@ -72,25 +54,19 @@ const AddProductPromoForm = () => {
       })
     : [];
 
+  console.log("productEnum", productEnum);
+
   const [addPromoCode, { data, isLoading, isSuccess, isError, error, reset }] =
     useAddPromoMutation();
 
   const handleAddPromoCode = async (newData: ICreateProductPromo) => {
     const objData = {
-      type: newData.type,
-      productId: newData.productId,
-      promotionName: newData.promoName,
-      promoCode: newData.promoCode,
-      expireDate: newData.expireDate,
-      threshold: newData.threshold ? Number(newData.threshold) : undefined,
-      discount: newData.discount ? Number(newData.discount) : undefined,
-      buy: newData.buy ? Number(newData.buy) : undefined,
-      get: newData.get ? Number(newData.get) : undefined,
+      undefined,
     };
 
     console.log("objData", objData);
 
-    await addPromoCode(objData);
+    // await addPromoCode(objData);
   };
 
   useEffect(() => {
@@ -104,19 +80,19 @@ const AddProductPromoForm = () => {
         { placement: "topEnd", duration: 2000 }
       );
       reset();
-      formReset({
-        type: "",
-        productId: "",
-        promoName: "",
-        promoCode: "",
-        //@ts-ignore
-        expireDate: "",
-        threshold: "",
-        discount: "",
-        buy: "",
-        get: "",
-        categoryHref: "",
-      });
+      // formReset({
+      //   type: "",
+      //   productId: "",
+      //   promoName: "",
+      //   promoCode: "",
+      //   //@ts-ignore
+      //   expireDate: "",
+      //   threshold: "",
+      //   discount: "",
+      //   buy: "",
+      //   get: "",
+      //   categoryHref: "",
+      // });
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
@@ -158,7 +134,7 @@ const AddProductPromoForm = () => {
                 Promotion Name
               </label>
               <Controller
-                name="promoName"
+                name="promotionName"
                 control={control}
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
@@ -169,13 +145,14 @@ const AddProductPromoForm = () => {
                     />
                     <Form.ErrorMessage
                       show={
-                        (!!errors?.promoName && !!errors?.promoName?.message) ||
+                        (!!errors?.promotionName &&
+                          !!errors?.promotionName?.message) ||
                         false
                       }
                       placement="topEnd"
                     >
                       <span className="font-semibold">
-                        {errors?.promoName?.message}
+                        {errors?.promotionName?.message}
                       </span>
                     </Form.ErrorMessage>
                   </div>
@@ -220,7 +197,7 @@ const AddProductPromoForm = () => {
               <Controller
                 name="type"
                 control={control}
-                rules={{ required: "PromoOffer is required" }}
+                rules={{ required: "Promo Type is required" }}
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <SelectPicker
@@ -241,7 +218,7 @@ const AddProductPromoForm = () => {
                       style={{
                         width: "100%",
                       }}
-                      placeholder="Select Promo Offer"
+                      placeholder="Select Promo Type"
                       searchable={false}
                     />
                     <Form.ErrorMessage
@@ -258,15 +235,15 @@ const AddProductPromoForm = () => {
                 )}
               />
             </div>
-            {/* Expire Date */}
+            {/* Start Date */}
             <div className="col-span-6 space-y-1">
               <label className="block font-medium text-[15px] text-graydark ">
-                Expire Date
+                Start Date
               </label>
               <Controller
-                name="expireDate"
+                name="startDate"
                 control={control}
-                rules={{ required: "Date is required" }}
+                rules={{ required: " Start Date is required" }}
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper w-full">
                     <DatePicker
@@ -287,14 +264,55 @@ const AddProductPromoForm = () => {
                     />
                     <Form.ErrorMessage
                       show={
-                        (!!errors?.expireDate &&
-                          !!errors?.expireDate?.message) ||
+                        (!!errors?.startDate && !!errors?.startDate?.message) ||
                         false
                       }
                       placement="topEnd"
                     >
                       <span className="font-semibold">
-                        {errors?.expireDate?.message as string}
+                        {errors?.startDate?.message as string}
+                      </span>
+                    </Form.ErrorMessage>
+                  </div>
+                )}
+              />
+            </div>
+            {/* End Date */}
+            <div className="col-span-6 space-y-1">
+              <label className="block font-medium text-[15px] text-graydark ">
+                End Date
+              </label>
+              <Controller
+                name="endDate"
+                control={control}
+                rules={{ required: " End Date is required" }}
+                render={({ field }) => (
+                  <div className="rs-form-control-wrapper w-full">
+                    <DatePicker
+                      block
+                      placement="bottom"
+                      size="lg"
+                      editable={false}
+                      className="!w-full"
+                      value={field.value ? new Date(field.value) : null}
+                      onChange={(value: Date | null): void => {
+                        if (value) {
+                          const isoString = value.toISOString();
+                          field.onChange(isoString);
+                        } else {
+                          field.onChange(null);
+                        }
+                      }}
+                    />
+                    <Form.ErrorMessage
+                      show={
+                        (!!errors?.endDate && !!errors?.endDate?.message) ||
+                        false
+                      }
+                      placement="topEnd"
+                    >
+                      <span className="font-semibold">
+                        {errors?.endDate?.message as string}
                       </span>
                     </Form.ErrorMessage>
                   </div>
@@ -307,7 +325,7 @@ const AddProductPromoForm = () => {
                 Purchase product
               </label>
               <Controller
-                name="productId"
+                name="buyItemGetItemPromotion.requiredItemId"
                 control={control}
                 rules={{ required: "Product is required" }}
                 render={({ field }) => (
@@ -322,22 +340,27 @@ const AddProductPromoForm = () => {
                       }}
                       placeholder="Select Product "
                       searchable={false}
-                      renderMenu={(menu) =>
-                        renderLoading(
-                          menu,
-                          productLoading || subCategoryFetching
-                        )
-                      }
+                      // renderMenu={(menu) =>
+                      //   renderLoading(
+                      //     menu,
+                      //     productLoading || subCategoryFetching
+                      //   )
+                      // }
                     />
                     <Form.ErrorMessage
                       show={
-                        (!!errors?.productId && !!errors?.productId?.message) ||
+                        (!!errors?.buyItemGetItemPromotion?.requiredItemId &&
+                          !!errors?.buyItemGetItemPromotion?.requiredItemId
+                            ?.message) ||
                         false
                       }
                       placement="topEnd"
                     >
                       <span className="font-semibold">
-                        {errors?.productId?.message}
+                        {
+                          errors?.buyItemGetItemPromotion?.requiredItemId
+                            ?.message
+                        }
                       </span>
                     </Form.ErrorMessage>
                   </div>
@@ -350,7 +373,7 @@ const AddProductPromoForm = () => {
                 Purchase Quantity
               </label>
               <Controller
-                name="purchaseQuantity"
+                name="buyItemGetItemPromotion.requiredQuantity"
                 control={control}
                 rules={{ required: "Purchase Quantity is required" }}
                 render={({ field }) => (
@@ -383,7 +406,7 @@ const AddProductPromoForm = () => {
                 Get free product
               </label>
               <Controller
-                name="productId"
+                name="buyItemGetItemPromotion.rewardItemId"
                 control={control}
                 rules={{ required: "Product is required" }}
                 render={({ field }) => (
@@ -398,22 +421,18 @@ const AddProductPromoForm = () => {
                       }}
                       placeholder="Select Product "
                       searchable={false}
-                      renderMenu={(menu) =>
-                        renderLoading(
-                          menu,
-                          productLoading || subCategoryFetching
-                        )
-                      }
                     />
                     <Form.ErrorMessage
                       show={
-                        (!!errors?.productId && !!errors?.productId?.message) ||
+                        (!!errors?.buyItemGetItemPromotion?.rewardItemId &&
+                          !!errors?.buyItemGetItemPromotion?.rewardItemId
+                            ?.message) ||
                         false
                       }
                       placement="topEnd"
                     >
                       <span className="font-semibold">
-                        {errors?.productId?.message}
+                        {errors?.buyItemGetItemPromotion?.rewardItemId?.message}
                       </span>
                     </Form.ErrorMessage>
                   </div>
@@ -423,10 +442,10 @@ const AddProductPromoForm = () => {
             {/* free quantity  */}
             <div className="space-y-1 col-span-2">
               <label className="block font-medium text-[15px] text-graydark ">
-                Free quantity
+                Free Quantity
               </label>
               <Controller
-                name="purchaseQuantity"
+                name="buyItemGetItemPromotion.rewardQuantity"
                 control={control}
                 rules={{ required: "Purchase Quantity is required" }}
                 render={({ field }) => (

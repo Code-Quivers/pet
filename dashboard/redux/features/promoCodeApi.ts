@@ -1,14 +1,14 @@
 import { baseApi } from "../api/baseApi";
 import { tagTypes } from "../tag-types/tag-types";
 
-const PROMO_CODE_API = "/promo-code";
+const PROMO_CODE_API = "/promotion";
 const PROMOTION_OFFER_API = "/promo-code/promotionalOffer";
 
 export const promoApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addPromo: build.mutation({
       query: (data: any) => ({
-        url: `${PROMO_CODE_API}`,
+        url: `${PROMO_CODE_API}/create`,
         method: "POST",
         data: data,
       }),
