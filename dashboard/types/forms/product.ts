@@ -76,17 +76,20 @@ type buyItemGetItemPromotion = {
   rewardQuantity: number;
 };
 
+
 export type IUpdateProductPromo = {
-  type?: string;
-  productId?: string;
   promotionName?: string;
   promoCode?: string;
-  expireDate?: Date;
-  threshold?: string;
-  discount?: string;
-  buy?: string;
-  get?: string;
-  categoryHref?: string;
+  isActive?: boolean;
+  startDate?: Date;
+  endDate?: Date;
+  type?: string;
+  buyItemGetItemPromotion?: {
+    requiredItemId?: string;
+    requiredQuantity?: number;
+    rewardItemId?: string;
+    rewardQuantity?: number;
+  };
 };
 
 export type ICreateTestimonial = {

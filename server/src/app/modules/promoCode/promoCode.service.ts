@@ -7,10 +7,9 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IGenericResponse } from '../../../interfaces/common';
-import { IPromoFilterRequest, IPromoRequest, IPromoUpdateRequest } from './promoCode.interface';
+
+import { IPromoFilterRequest } from './promoCode.interface';
 import { PromoCodeRelationalFields, PromoCodeRelationalFieldsMapper, PromoCodeSearchableFields } from './promoCode.constants';
-import { isValid } from 'zod';
 import { getDateISODateWithoutTimestamp } from '../../../shared/utils';
 // modules
 
@@ -61,12 +60,15 @@ const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any)
     const result = await prisma.$transaction(async transactionClient => {
       const promotionData = {
         ...promotionInfo,
-        startDate: new Date(promotionInfo.startDate).toISOString(),
-        endDate: new Date(promotionInfo.endDate).toISOString(),
+        // startDate: new Date(promotionInfo.startDate).toISOString(),
+        // endDate: new Date(promotionInfo.endDate).toISOString(),
         buyItemGetItemPromotion: {
           create: buyItemGetItemPromotion,
         },
       };
+
+      console.log('promotionInfo', promotionInfo);
+
       const promotion = await transactionClient.promotion.create({ data: promotionData });
       return promotion;
     });
@@ -141,7 +143,16 @@ const getPromotions = async (filters: IPromoFilterRequest, options: IPaginationO
 
   const promotions = await prisma.promotion.findMany({
     where: whereConditions,
-    include: { buyItemGetItemPromotion: true },
+    include: {
+      buyItemGetItemPromotion: {
+        select: {
+          rewardItem: true,
+          rewardQuantity: true,
+          requiredItem: true,
+          requiredQuantity: true,
+        },
+      },
+    },
     skip,
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'desc' },
