@@ -1,6 +1,5 @@
 "use client";
 
-import { IUpdateProductPromo, IUpdateProductQA } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -14,21 +13,18 @@ import {
   useToaster,
 } from "rsuite";
 
-import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
 import { useEffect, useState } from "react";
-import { useUpdateProductQAMutation } from "@/redux/features/productQAApi";
-import { promoTypeEnums } from "@/helpers/constant";
-import { watch } from "fs";
-import {
-  useGetCategoryQuery,
-  useGetSingleCategoryQuery,
-} from "@/redux/features/categoryApi";
+
+import { isActiveBoolean, promoTypeEnums } from "@/helpers/constant";
+
 import { useGetProductQuery } from "@/redux/features/productsApi";
 import { useUpdatePromoMutation } from "@/redux/features/promoCodeApi";
+import { IUpdateProductPromo } from "@/types/forms/product";
 
 const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
+  console.log("editData", editData);
+
   const query: Record<string, any> = {};
-  const [orderDiscount, setOrderDiscount] = useState(false);
 
   const {
     control,
@@ -55,25 +51,16 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
 
   const handleUpdateProductPromo = async (updatedData: IUpdateProductPromo) => {
     const objData = {
-      productId: updatedData.productId,
       promotionName: updatedData.promotionName,
-      promoCode: updatedData.promoCode,
-      expireDate: updatedData.expireDate,
-      type: updatedData.type,
-      threshold: updatedData.threshold
-        ? Number(updatedData.threshold)
-        : undefined,
-      discount: updatedData.discount ? Number(updatedData.discount) : undefined,
-      buy: updatedData.buy ? Number(updatedData.buy) : undefined,
-      get: updatedData.get ? Number(updatedData.get) : undefined,
+      
     };
 
     console.log("objData", objData);
 
-    await updateProductPromo({
-      data: objData,
-      id: editData?.id,
-    });
+    // await updateProductPromo({
+    //   data: objData,
+    //   id: editData?.id,
+    // });
   };
 
   useEffect(() => {
@@ -134,10 +121,10 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
               onSubmit={handleSubmit(handleUpdateProductPromo)}
               className="px-1"
             >
-              <div className="my-3">
+              <div className="my-3 grid grid-cols-3 items-center gap-3">
                 <div>
                   <label className="block font-medium text-black ">
-                    Select Promo Offer
+                    Select Promo Type
                   </label>
                   <Controller
                     name="type"
@@ -146,18 +133,11 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                       <div className="rs-form-control-wrapper">
                         <SelectPicker
                           size="lg"
-                          defaultValue={editData?.promotion?.type}
+                          defaultValue={editData?.type}
                           data={promoTypeEnums}
                           value={field.value}
                           // onChange={(value: string | null) => field.onChange(value)}
                           onChange={(value: string | null) => {
-                            // Update orderDiscount based on the selected value
-                            if (value === "DISCOUNT_BASED_ON_AMOUNT") {
-                              setOrderDiscount(true);
-                            } else {
-                              setOrderDiscount(false);
-                            }
-                            // Update the field value
                             field.onChange(value);
                           }}
                           style={{
@@ -180,60 +160,11 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                     )}
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1  items-center gap-3 my-3">
-                {/* Product Name */}
-                <div className="space-y-1">
-                  <label className="block font-medium text-black ">
-                    Product
-                  </label>
-                  <Controller
-                    name="productId"
-                    control={control}
-                    render={({ field }) => (
-                      <div className="rs-form-control-wrapper">
-                        <TagPicker
-                          size="lg"
-                          defaultValue={
-                            editData?.promotion?.products?.map(
-                              (product: any) => product.productId
-                            ) || []
-                          }
-                          data={productEnum || []}
-                          value={field.value}
-                          onChange={(value: string | null) =>
-                            field.onChange(value)
-                          }
-                          style={{
-                            width: "100%",
-                          }}
-                          placeholder="Select Product "
-                          searchable={false}
-                        />
-                        <Form.ErrorMessage
-                          show={
-                            (!!errors?.productId &&
-                              !!errors?.productId?.message) ||
-                            false
-                          }
-                          placement="topEnd"
-                        >
-                          <span className="font-semibold">
-                            {errors?.productId?.message}
-                          </span>
-                        </Form.ErrorMessage>
-                      </div>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-3 my-3">
                 {/* Promo Name */}
-                <div className="space-y-1">
+                <div>
                   <label className="block font-medium text-black ">
-                    Promo Name
+                    Promotion Name
                   </label>
                   <Controller
                     name="promotionName"
@@ -242,7 +173,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                       <div className="rs-form-control-wrapper">
                         <Input
                           {...field}
-                          defaultValue={editData?.promotion.promotionName}
+                          defaultValue={editData?.promotionName}
                           placeholder="Write promo Name"
                           className="!w-full !text-capitalize"
                         />
@@ -263,7 +194,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                   />
                 </div>
 
-                <div className="space-y-1">
+                <div>
                   <label className="block font-medium text-black ">
                     Promo Code
                   </label>
@@ -274,7 +205,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                       <div className="rs-form-control-wrapper">
                         <Input
                           {...field}
-                          defaultValue={editData?.promotion?.promoCode}
+                          defaultValue={editData?.promoCode}
                           placeholder="Write promo Code like ET2024"
                           className="!w-full !text-capitalize"
                         />
@@ -294,20 +225,197 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                     )}
                   />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-4  items-center gap-3 my-3">
+                {/* Product Name */}
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Purchase Product
+                  </label>
+                  <Controller
+                    name="buyItemGetItemPromotion.requiredItemId"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <SelectPicker
+                          size="lg"
+                          defaultValue={
+                            editData?.buyItemGetItemPromotion?.requiredItem
+                              ?.productId
+                          }
+                          data={productEnum || []}
+                          onChange={(value: string | null) =>
+                            field.onChange(value)
+                          }
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Select Product "
+                          searchable={false}
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            (!!errors?.buyItemGetItemPromotion
+                              ?.requiredItemId &&
+                              !!errors?.buyItemGetItemPromotion?.requiredItemId
+                                ?.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {
+                              errors?.buyItemGetItemPromotion?.requiredItemId
+                                ?.message
+                            }
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Required Qty
+                  </label>
+                  <Controller
+                    name="buyItemGetItemPromotion.requiredQuantity"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <Input
+                          {...field}
+                          defaultValue={
+                            editData?.buyItemGetItemPromotion?.requiredQuantity
+                          }
+                          placeholder="Number of get"
+                          className="!w-full"
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            (!!errors?.buyItemGetItemPromotion
+                              ?.requiredQuantity &&
+                              !!errors?.buyItemGetItemPromotion
+                                ?.requiredQuantity.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {
+                              errors?.buyItemGetItemPromotion?.requiredQuantity
+                                ?.message
+                            }
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+
+                {/* Product Name */}
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Reward Product
+                  </label>
+                  <Controller
+                    name="buyItemGetItemPromotion.rewardItemId"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <SelectPicker
+                          size="lg"
+                          defaultValue={
+                            editData?.buyItemGetItemPromotion?.rewardItem
+                              ?.productId
+                          }
+                          data={productEnum || []}
+                          value={field.value}
+                          onChange={(value: string | null) =>
+                            field.onChange(value)
+                          }
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Select Product "
+                          searchable={false}
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            (!!errors?.buyItemGetItemPromotion?.rewardItemId &&
+                              !!errors?.buyItemGetItemPromotion?.rewardItemId
+                                ?.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {
+                              errors?.buyItemGetItemPromotion?.rewardItemId
+                                ?.message
+                            }
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Reward Qty
+                  </label>
+                  <Controller
+                    name="buyItemGetItemPromotion.rewardQuantity"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <Input
+                          {...field}
+                          defaultValue={
+                            editData?.buyItemGetItemPromotion?.rewardQuantity
+                          }
+                          placeholder="Order Amount "
+                          className="!w-full"
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            (!!errors?.buyItemGetItemPromotion
+                              ?.rewardQuantity &&
+                              !!errors?.buyItemGetItemPromotion?.rewardQuantity
+                                ?.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {
+                              errors?.buyItemGetItemPromotion?.rewardQuantity
+                                ?.message
+                            }
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-3 items-center gap-3 my-3">
                 {/* Expire Date */}
                 <div className="space-y-1">
                   <label className="block font-medium text-black ">
-                    Expire Date
+                    Start Date
                   </label>
                   <Controller
-                    name="expireDate"
+                    name="startDate"
                     control={control}
                     render={({ field }) => (
                       <div className="rs-form-control-wrapper w-full">
                         <DatePicker
-                          defaultValue={
-                            new Date(editData?.promotion?.expireDate)
-                          }
+                          defaultValue={new Date(editData?.startDate)}
                           block
                           placement="auto"
                           size="lg"
@@ -324,152 +432,103 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                         />
                         <Form.ErrorMessage
                           show={
-                            (!!errors?.expireDate &&
-                              !!errors?.expireDate?.message) ||
+                            (!!errors?.startDate &&
+                              !!errors?.startDate?.message) ||
                             false
                           }
                           placement="topEnd"
                         >
                           <span className="font-semibold">
-                            {errors?.expireDate?.message as string}
+                            {errors?.startDate?.message as string}
                           </span>
                         </Form.ErrorMessage>
                       </div>
                     )}
                   />
                 </div>
-              </div>
-
-              <div className="my-3">
-                {orderDiscount ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-3">
-                    <div className="space-y-1">
-                      <label className="block font-medium text-black ">
-                        Order Amount
-                      </label>
-                      <Controller
-                        name="threshold"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="rs-form-control-wrapper">
-                            <Input
-                              {...field}
-                              defaultValue={editData?.threshold}
-                              placeholder="Order Amount "
-                              className="!w-full"
-                            />
-                            <Form.ErrorMessage
-                              show={
-                                (!!errors?.threshold &&
-                                  !!errors?.threshold?.message) ||
-                                false
-                              }
-                              placement="topEnd"
-                            >
-                              <span className="font-semibold">
-                                {errors?.threshold?.message}
-                              </span>
-                            </Form.ErrorMessage>
-                          </div>
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="block font-medium text-black ">
-                        Discount %
-                      </label>
-                      <Controller
-                        name="discount"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="rs-form-control-wrapper">
-                            <Input
-                              {...field}
-                              defaultValue={editData?.discount}
-                              placeholder="Write discount as % "
-                              className="!w-full"
-                            />
-                            <Form.ErrorMessage
-                              show={
-                                (!!errors?.discount &&
-                                  !!errors?.discount?.message) ||
-                                false
-                              }
-                              placement="topEnd"
-                            >
-                              <span className="font-semibold">
-                                {errors?.discount?.message}
-                              </span>
-                            </Form.ErrorMessage>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-3">
-                    <div className="space-y-1">
-                      <label className="block font-medium text-black ">
-                        Number of Buy
-                      </label>
-                      <Controller
-                        name="buy"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="rs-form-control-wrapper">
-                            <Input
-                              {...field}
-                              defaultValue={editData?.buy}
-                              placeholder="Number of Buy "
-                              className="!w-full"
-                            />
-                            <Form.ErrorMessage
-                              show={
-                                (!!errors?.buy && !!errors?.buy?.message) ||
-                                false
-                              }
-                              placement="topEnd"
-                            >
-                              <span className="font-semibold">
-                                {errors?.buy?.message}
-                              </span>
-                            </Form.ErrorMessage>
-                          </div>
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="block font-medium text-black ">
-                        Number of Get
-                      </label>
-                      <Controller
-                        name="get"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="rs-form-control-wrapper">
-                            <Input
-                              {...field}
-                              defaultValue={editData?.get}
-                              placeholder="Number of get"
-                              className="!w-full"
-                            />
-                            <Form.ErrorMessage
-                              show={
-                                (!!errors?.get && !!errors?.get?.message) ||
-                                false
-                              }
-                              placement="topEnd"
-                            >
-                              <span className="font-semibold">
-                                {errors?.get?.message}
-                              </span>
-                            </Form.ErrorMessage>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                )}
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    End Date
+                  </label>
+                  <Controller
+                    name="endDate"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper w-full">
+                        <DatePicker
+                          defaultValue={new Date(editData?.endDate)}
+                          block
+                          placement="auto"
+                          size="lg"
+                          editable={false}
+                          className="!w-full"
+                          onChange={(value: Date | null): void => {
+                            if (value) {
+                              const isoString = value.toISOString();
+                              field.onChange(isoString);
+                            } else {
+                              field.onChange(null);
+                            }
+                          }}
+                        />
+                        <Form.ErrorMessage
+                          show={
+                            (!!errors?.endDate && !!errors?.endDate?.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {errors?.endDate?.message as string}
+                          </span>
+                        </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Active
+                  </label>
+                  <Controller
+                    name="isActive"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <SelectPicker
+                          size="lg"
+                          defaultValue={editData?.isActive}
+                          data={isActiveBoolean}
+                          onChange={(value: string | null) =>
+                            field.onChange(value)
+                          }
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Select Product "
+                          searchable={false}
+                        />
+                        {/* <Form.ErrorMessage
+                          show={
+                            (!!errors?.buyItemGetItemPromotion?.requiredItem
+                              ?.productName &&
+                              !!errors?.buyItemGetItemPromotion?.requiredItem
+                                ?.productName?.message) ||
+                            false
+                          }
+                          placement="topEnd"
+                        >
+                          <span className="font-semibold">
+                            {
+                              errors?.buyItemGetItemPromotion?.requiredItem
+                                ?.productName?.message
+                            }
+                          </span>
+                        </Form.ErrorMessage> */}
+                      </div>
+                    )}
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end mt-5">

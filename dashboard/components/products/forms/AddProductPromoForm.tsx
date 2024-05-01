@@ -54,19 +54,32 @@ const AddProductPromoForm = () => {
       })
     : [];
 
-  console.log("productEnum", productEnum);
+  // console.log("productEnum", productEnum);
 
   const [addPromoCode, { data, isLoading, isSuccess, isError, error, reset }] =
     useAddPromoMutation();
 
   const handleAddPromoCode = async (newData: ICreateProductPromo) => {
     const objData = {
-      undefined,
+      promotionName: newData.promotionName,
+      promoCode: newData.promoCode,
+      type: newData.type,
+      startDate: newData.startDate,
+      endDate: newData.endDate,
+      isActive: newData.isActive,
+      buyItemGetItemPromotion: {
+        requiredItemId: newData.buyItemGetItemPromotion.requiredItemId,
+        requiredQuantity: Number(
+          newData.buyItemGetItemPromotion.requiredQuantity
+        ),
+        rewardItemId: newData.buyItemGetItemPromotion.rewardItemId,
+        rewardQuantity: Number(newData.buyItemGetItemPromotion.rewardQuantity),
+      },
     };
 
     console.log("objData", objData);
 
-    // await addPromoCode(objData);
+    await addPromoCode({ data: objData });
   };
 
   useEffect(() => {
@@ -80,19 +93,7 @@ const AddProductPromoForm = () => {
         { placement: "topEnd", duration: 2000 }
       );
       reset();
-      // formReset({
-      //   type: "",
-      //   productId: "",
-      //   promoName: "",
-      //   promoCode: "",
-      //   //@ts-ignore
-      //   expireDate: "",
-      //   threshold: "",
-      //   discount: "",
-      //   buy: "",
-      //   get: "",
-      //   categoryHref: "",
-      // });
+      formReset();
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
@@ -204,17 +205,7 @@ const AddProductPromoForm = () => {
                       size="lg"
                       data={promoTypeEnums}
                       value={field.value}
-                      // onChange={(value: string | null) => field.onChange(value)}
-                      onChange={(value: string | null) => {
-                        // Update orderDiscount based on the selected value
-                        if (value === "DISCOUNT_BASED_ON_AMOUNT") {
-                          setOrderDiscount(true);
-                        } else {
-                          setOrderDiscount(false);
-                        }
-                        // Update the field value
-                        field.onChange(value);
-                      }}
+                      onChange={(value: string | null) => field.onChange(value)}
                       style={{
                         width: "100%",
                       }}
@@ -480,7 +471,15 @@ const AddProductPromoForm = () => {
               <Controller
                 control={control}
                 name="isActive"
-                render={({ field }) => <Toggle size="md" />}
+                render={({ field }) => (
+                  <Toggle
+                    checked={field.value}
+                    onChange={() => {
+                      field.onChange(!field.value);
+                    }}
+                    size="md"
+                  />
+                )}
               />
             </div>
           </div>

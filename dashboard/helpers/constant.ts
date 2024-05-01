@@ -18,18 +18,36 @@ export const predefinedRanges = [
 
 const promos = [
   {
-    label: "Buy & Get Offer",
-    value: "BUY_ONE_GET_ONE",
+    label: "BUY_ITEM_GET_ITEM",
+    value: "BUY_ITEM_GET_ITEM",
   },
-  // {
-  //   label: "Discount on Order",
-  //   value: "DISCOUNT_BASED_ON_AMOUNT",
-  // },
+  {
+    label: "DISCOUNT_BASED_ON_AMOUNT",
+    value: "DISCOUNT_BASED_ON_AMOUNT",
+  },
 ];
 
 export const promoTypeEnums = promos?.map((promo: any) => {
   return {
     label: promo.label,
     value: promo.value,
+  };
+});
+
+const isActive = [
+  {
+    label: "True",
+    value: true,
+  },
+  {
+    label: "False",
+    value: false,
+  },
+];
+
+export const isActiveBoolean = isActive.map((active: any) => {
+  return {
+    label: active.label,
+    value: active.value,
   };
 });

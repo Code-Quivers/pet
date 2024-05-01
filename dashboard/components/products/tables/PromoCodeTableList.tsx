@@ -59,9 +59,11 @@ const PromoCodeTableList = () => {
     data: allPromo,
     isLoading,
     isFetching,
-  } = useGetPromotionalOfferQuery({
+  } = useGetPromoQuery({
     ...query,
   });
+
+  console.log("allPromo", allPromo?.data?.data?.promotions);
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -118,7 +120,7 @@ const PromoCodeTableList = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={allPromo?.data}
+            data={allPromo?.data?.data?.promotions}
           >
             {/*img*/}
             {/* <Column flexGrow={1}>
@@ -163,9 +165,9 @@ const PromoCodeTableList = () => {
               </Cell>
             </Column> */}
             {/* Item Description */}
-            <Column width={250}>
+            <Column width={140}>
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Name
+                Promotion Name
               </HeaderCell>
               <Cell
                 className="m-2"
@@ -174,82 +176,86 @@ const PromoCodeTableList = () => {
                 dataKey="clientName"
               >
                 {(rowData: any) => {
-                  return (
-                    <TagGroup className="grid grid-cols-2 items-center gap-3">
-                      {rowData?.promotion?.products?.map(
-                        (product: any, index: number) => (
-                          <Tag key={index} size="lg">
-                            {" "}
-                            {product.productName}{" "}
-                          </Tag>
-                        )
-                      )}
-                    </TagGroup>
-                  );
+                  return rowData.promotionName;
                 }}
               </Cell>
             </Column>
 
-            {/* category */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Promo Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="promotion.promotionName"
-              />
-            </Column>
             {/* category */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Promo Code</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="promotion.promoCode"
+                dataKey="promoCode"
               />
             </Column>
+            {/* category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Expire Date</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="promotion.expireDate"
-              >
+              <HeaderCell style={headerCss}>Promo Type</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="type" />
+            </Column>
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Start Date</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="startDate">
                 {(rowData: any) => {
-                  return new Date(rowData.promotion.expireDate).toDateString();
+                  return new Date(rowData.startDate).toDateString();
                 }}
               </Cell>
             </Column>
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Number of Buy</HeaderCell>
+              <HeaderCell style={headerCss}>End Date</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="endDate">
+                {(rowData: any) => {
+                  return new Date(rowData.endDate).toDateString();
+                }}
+              </Cell>
+            </Column>
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Purchase Product</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="buy">
                 {(rowData: any) => {
-                  return rowData.buy ? rowData.buy : "N/A";
+                  return rowData.buyItemGetItemPromotion
+                    ? rowData.buyItemGetItemPromotion?.requiredItem?.productName
+                    : "N/A";
                 }}
               </Cell>
             </Column>
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Number of Get</HeaderCell>
+              <HeaderCell style={headerCss}>Purchase Product Qty</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="buy">
+                {(rowData: any) => {
+                  return rowData.buyItemGetItemPromotion
+                    ? rowData.buyItemGetItemPromotion?.requiredQuantity
+                    : "N/A";
+                }}
+              </Cell>
+            </Column>
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Reward Product</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="get">
                 {(rowData: any) => {
-                  return rowData.get ? rowData.get : "N/A";
+                  return rowData.buyItemGetItemPromotion
+                    ? rowData.buyItemGetItemPromotion?.rewardItem?.productName
+                    : "N/A";
                 }}
               </Cell>
             </Column>
-
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Order Amount</HeaderCell>
+              <HeaderCell style={headerCss}>Reward Product Qty</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="buy">
+                {(rowData: any) => {
+                  return rowData.buyItemGetItemPromotion
+                    ? rowData.buyItemGetItemPromotion?.rewardQuantity
+                    : "N/A";
+                }}
+              </Cell>
+            </Column>
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Active</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="threshold">
                 {(rowData: any) => {
-                  return rowData.threshold ? `$ ${rowData.threshold}` : "N/A";
-                }}
-              </Cell>
-            </Column>
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Discount Amount</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="discount">
-                {(rowData: any) => {
-                  return rowData.discount ? `${rowData.discount}%` : "N/A";
+                  return rowData.isActive === true ? "True" : "False";
                 }}
               </Cell>
             </Column>

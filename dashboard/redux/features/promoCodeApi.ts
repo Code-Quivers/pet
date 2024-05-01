@@ -7,7 +7,7 @@ const PROMOTION_OFFER_API = "/promo-code/promotionalOffer";
 export const promoApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addPromo: build.mutation({
-      query: (data: any) => ({
+      query: ({ data }: any) => ({
         url: `${PROMO_CODE_API}/create`,
         method: "POST",
         data: data,
