@@ -22,8 +22,6 @@ import { useUpdatePromoMutation } from "@/redux/features/promoCodeApi";
 import { IUpdateProductPromo } from "@/types/forms/product";
 
 const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
-  console.log("editData", editData);
-
   const query: Record<string, any> = {};
 
   const {
@@ -52,15 +50,29 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
   const handleUpdateProductPromo = async (updatedData: IUpdateProductPromo) => {
     const objData = {
       promotionName: updatedData.promotionName,
-      
+      promoCode: updatedData.promoCode,
+      type: updatedData.type,
+      startDate: updatedData.startDate,
+      endDate: updatedData.endDate,
+      isActive: updatedData.isActive,
+      buyItemGetItemPromotionInfo: {
+        requiredItemId: updatedData.buyItemGetItemPromotion?.requiredItemId,
+        requiredQuantity: updatedData.buyItemGetItemPromotion?.requiredQuantity
+          ? Number(updatedData.buyItemGetItemPromotion?.requiredQuantity)
+          : undefined,
+        rewardItemId: updatedData.buyItemGetItemPromotion?.rewardItemId,
+        rewardQuantity: updatedData.buyItemGetItemPromotion?.rewardQuantity
+          ? Number(updatedData.buyItemGetItemPromotion?.rewardQuantity)
+          : undefined,
+      },
     };
 
     console.log("objData", objData);
 
-    // await updateProductPromo({
-    //   data: objData,
-    //   id: editData?.id,
-    // });
+    await updateProductPromo({
+      data: objData,
+      id: editData?.promotionId,
+    });
   };
 
   useEffect(() => {
@@ -244,6 +256,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                             editData?.buyItemGetItemPromotion?.requiredItem
                               ?.productId
                           }
+                          value={field.value}
                           data={productEnum || []}
                           onChange={(value: string | null) =>
                             field.onChange(value)
@@ -290,6 +303,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                           defaultValue={
                             editData?.buyItemGetItemPromotion?.requiredQuantity
                           }
+                          value={field.value}
                           placeholder="Number of get"
                           className="!w-full"
                         />
@@ -377,6 +391,7 @@ const PromoCodeEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                           defaultValue={
                             editData?.buyItemGetItemPromotion?.rewardQuantity
                           }
+                          value={field.value}
                           placeholder="Order Amount "
                           className="!w-full"
                         />

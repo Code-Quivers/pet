@@ -15,18 +15,13 @@ import {
   TagGroup,
   Whisper,
 } from "rsuite";
-import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
-import noImage from "@/public/images/no-image.png";
 import { RiDeleteBinFill } from "react-icons/ri";
-import { useGetTestimonialQuery } from "@/redux/features/testimonialApi";
-import {
-  useGetPromoQuery,
-  useGetPromotionalOfferQuery,
-} from "@/redux/features/promoCodeApi";
+
+import { useGetPromoQuery } from "@/redux/features/promoCodeApi";
 import PromoCodeDeleteConfirmationModal from "../modal/PromoCodeDeleteConfirmationModal";
 import PromoCodeEditModal from "../modal/PromoCodeEditModal";
 
