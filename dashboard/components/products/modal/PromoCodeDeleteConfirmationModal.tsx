@@ -20,7 +20,7 @@ const PromoCodeDeleteConfirmationModal = ({
   const toaster = useToaster();
 
   const handleDelete = async () => {
-    await deletePromo({ id: deleteData?.id });
+    await deletePromo({ id: deleteData?.promotionId });
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const PromoCodeDeleteConfirmationModal = ({
           <h4 className="font-semibold ">
             {
               // @ts-ignore
-              error?.message || "Product QA Delete Failed"
+              error?.message || "Promo Delete Failed"
             }
           </h4>
         </Message>,
@@ -96,7 +96,7 @@ const PromoCodeDeleteConfirmationModal = ({
               </p>
             </div>
             <div className="mt-5 border p-5 border-black/10 rounded-lg">
-              <h2>Promotion Name : {deleteData?.promotion?.promotionName}</h2>
+              <h2>Promotion Name : {deleteData?.promotionName}</h2>
             </div>
             <div className="p-3  mt-5 bg-[#feeddd] rounded-lg ">
               <p className="flex items-center gap-3 font-semibold text-lg text-[#b53a07]">

@@ -7,28 +7,30 @@ import sendResponse from '../../../shared/sendResponse';
 import { PromoCodeFilterableFields } from './promoCode.constants';
 import { PromoCodeService } from './promoCode.service';
 
-
 // !----------------------------------get all Hall---------------------------------------->>>
-const getPromotion = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, PromoCodeFilterableFields);
+// const getPromotion = catchAsync(async (req: Request, res: Response) => {
+//   const filters = pick(req.query, PromoCodeFilterableFields);
 
-  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+//   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await PromoCodeService.getPromotions(filters, options);
+//   const result = await PromoCodeService.getPromotions(filters, options);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'fetched successfully',
-    meta: result.meta,
-    data: result.data,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'fetched successfully',
+//     meta: result.meta,
+//     data: result.data,
+//   });
+// });
 
 // !----------------------------------Update Slot---------------------------------------->>>
 const updatePromotion = catchAsync(async (req: Request, res: Response) => {
   const { promotionId } = req.params;
   const { buyItemGetItemPromotionInfo, ...promotionInfo } = req.body;
+
+  console.log('promotionInfo........................', req.body);
+
   const result = await PromoCodeService.updatePromotion(promotionId, promotionInfo, buyItemGetItemPromotionInfo);
 
   sendResponse(res, {
@@ -50,7 +52,6 @@ const deletePromotion = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
 
 const applyPromoCode = catchAsync(async (req: Request, res: Response) => {
   const { promoCode } = req.params;
@@ -105,8 +106,6 @@ const isExist = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
-
 export const PromoCodeController = {
   createPromotion,
   updatePromotion,
@@ -114,5 +113,4 @@ export const PromoCodeController = {
   getPromotions,
   applyPromoCode,
   isExist,
-
 };

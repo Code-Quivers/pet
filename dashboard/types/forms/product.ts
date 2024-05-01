@@ -76,20 +76,21 @@ type buyItemGetItemPromotion = {
   rewardQuantity: number;
 };
 
-
 export type IUpdateProductPromo = {
-  promotionName?: string;
-  promoCode?: string;
-  isActive?: boolean;
-  startDate?: Date;
-  endDate?: Date;
+  promotionName?: string | undefined;
+  promoCode?: string | undefined;
+  isActive?: boolean | undefined;
+  startDate?: Date | undefined;
+  endDate?: Date | undefined;
   type?: string;
-  buyItemGetItemPromotion?: {
-    requiredItemId?: string;
-    requiredQuantity?: number;
-    rewardItemId?: string;
-    rewardQuantity?: number;
-  };
+  buyItemGetItemPromotion?:
+    | {
+        requiredItemId?: string | undefined;
+        requiredQuantity?: number | undefined;
+        rewardItemId?: string | undefined;
+        rewardQuantity?: number | undefined;
+      }
+    | undefined;
 };
 
 export type ICreateTestimonial = {
