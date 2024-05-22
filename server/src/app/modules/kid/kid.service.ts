@@ -49,7 +49,8 @@ const addKid = async (req: Request): Promise<KidDetails> => {
     const newObjData: ICreateKidDetails = {
       kidImage: filePath,
       barcodeId: isProductExist.barcodeId,
-      kidName: data.kidName,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
       kidAge: data.kidAge,
       relations: relationDetails,
     };

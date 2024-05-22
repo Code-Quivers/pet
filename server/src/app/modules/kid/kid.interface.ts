@@ -3,7 +3,8 @@ export type IProductFilterRequest = {
 };
 
 export type IKidRequest = {
-  kidName: string;
+  firstName: string;
+  lastName?: string;
   email: string;
   password: string;
   kidAge: Date;
@@ -35,7 +36,8 @@ export type IRequestUser = {
 export type ICreateKidDetails = {
   kidImage?: string;
   barcodeId: string;
-  kidName: string;
+  firstName: string;
+  lastName?: string;
   userId?: string;
   kidAge: Date;
   relations: IRelation[];

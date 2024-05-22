@@ -37,9 +37,9 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
                 First Name
               </label>
               <Controller
-                name={`relations[${index}].name`}
+                name={`relations[${index}].firstName`}
                 control={control}
-                rules={{ required: "Name is Required !!" }}
+                rules={{ required: "First Name is Required !!" }}
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper ">
                     <input
@@ -51,13 +51,13 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
                     <Form.ErrorMessage
                       show={
                         errors?.relations?.length &&
-                        !!errors?.relations[index]?.name
+                        !!errors?.relations[index]?.firstName
                       }
                       placement="topEnd"
                     >
                       <span>
                         {errors?.relations?.length &&
-                          ((errors?.relations[index]?.name
+                          ((errors?.relations[index]?.firstName
                             ?.message as string) ||
                             "Required")}
                       </span>
@@ -181,7 +181,8 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
           type="button"
           onClick={() => {
             append({
-              name: "",
+              firstName: "",
+              lastName: "",
               relation: "",
               phoneNo: "",
             });

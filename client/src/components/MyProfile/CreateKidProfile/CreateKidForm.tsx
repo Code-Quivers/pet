@@ -11,14 +11,15 @@ import { useRouter } from "next/navigation";
 
 // type definition
 type IRelations = {
-  name: string;
+  firstName: string;
+  lastName?: string;
   relation: string;
   phoneNo: string;
 };
 
 type ICreateKid = {
-  name: string;
-  lastName: string;
+  firstName: string;
+  lastName?: string;
   age: Date;
   email: string;
   password: string;
@@ -36,7 +37,8 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
     defaultValues: {
       relations: [
         {
-          name: "",
+          firstName: "",
+          lastName: "",
           relation: "",
           phoneNo: "",
         },
@@ -59,7 +61,8 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
     // Construct the  object
     const kidData = {
       code: tag,
-      kidName: kidInfo?.name,
+      firstName: kidInfo?.firstName,
+      lastName: kidInfo?.lastName,
       email: kidInfo?.email,
       password: kidInfo?.password,
       kidAge: kidInfo?.age,
@@ -163,9 +166,9 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
           <div className="md:col-span-4 flex flex-col w-full gap-2">
             <label className="text-start block ">First name</label>
             <Controller
-              name="name"
+              name="firstName"
               control={control}
-              rules={{ required: "Kid Name is Required !!" }}
+              rules={{ required: "First Name is Required !!" }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
                   <input
@@ -176,10 +179,13 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                     placeholder="Enter kid name"
                   />
                   <Form.ErrorMessage
-                    show={(!!errors?.name && !!errors?.name?.message) || false}
+                    show={
+                      (!!errors?.firstName && !!errors?.firstName?.message) ||
+                      false
+                    }
                     placement="topEnd"
                   >
-                    <span>{errors?.name?.message as string}</span>
+                    <span>{errors?.firstName?.message as string}</span>
                   </Form.ErrorMessage>
                 </div>
               )}
@@ -194,7 +200,6 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
             <Controller
               name="lastName"
               control={control}
-              rules={{ required: "Kid Name is Required !!" }}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
                   <input
@@ -205,10 +210,13 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                     placeholder="Enter kid name"
                   />
                   <Form.ErrorMessage
-                    show={(!!errors?.name && !!errors?.name?.message) || false}
+                    show={
+                      (!!errors?.lastName && !!errors?.lastName?.message) ||
+                      false
+                    }
                     placement="topEnd"
                   >
-                    <span>{errors?.name?.message as string}</span>
+                    <span>{errors?.lastName?.message as string}</span>
                   </Form.ErrorMessage>
                 </div>
               )}
@@ -328,8 +336,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
             disabled={!relations?.length}
             type="submit"
             className="!bg-primary !text-white
-          px-4 py-2 font-bold transition-all duration-300 ease-in-out delay-0`}
-          "
+          px-4 py-2 font-bold transition-all duration-300 ease-in-out delay-0"
           >
             Submit
           </Button>

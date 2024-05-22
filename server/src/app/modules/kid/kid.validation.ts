@@ -1,13 +1,15 @@
 import { z } from 'zod';
 
 export const IRelationSchema = z.object({
-  name: z.string().optional(),
-  relation: z.string().optional(),
-  phoneNo: z.string().optional(),
+  firstName: z.string(),
+  lastName: z.string().optional(),
+  relation: z.string(),
+  phoneNo: z.string(),
 });
 
 export const addKid = z.object({
-  kidName: z.string(),
+  firstName: z.string(),
+  lastName: z.string().optional(),
   email: z.string(),
   password: z.string(),
   kidAge: z.string(),
@@ -17,7 +19,7 @@ export const addKid = z.object({
 export const updateKid = z.object({
   kidName: z.string().optional(),
   kidAge: z.string().optional(),
-  relations: z.array(IRelationSchema).optional(),
+  relations: z.array(IRelationSchema),
 });
 
 export const KidValidation = {
