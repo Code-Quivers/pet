@@ -136,12 +136,12 @@ model Order {
 model KidDetails {
   kidId     String   @id @default(uuid())
   firstName   String
-  lastName   String
+  lastName   String?
   kidImage  String?
   kidAge    DateTime
   relations Json[]
   barcodeId String?  @unique
-  barCode   BarCode? @relation(fields: [barcodeId], references: [barcodeId])
+  barCode   BarCode? @relation(fields: [barcodeId], references: [barcodeId], onDelete: SetNull)
   userId    String?
   user      User?    @relation(fields: [userId], references: [userId], onDelete: SetNull)
   createdAt DateTime @default(now()) @db.Timestamptz(0)
