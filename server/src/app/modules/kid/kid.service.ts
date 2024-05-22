@@ -29,9 +29,10 @@ const addKid = async (req: Request): Promise<KidDetails> => {
 
   const relationDetails: IRelation[] = data?.relations?.map((relation: any) => {
     return {
-      name: relation.name,
-      relation: relation.relation,
-      phoneNo: relation.phoneNo,
+      firstName: relation?.firstName,
+      lastName: relation?.lastName,
+      relation: relation?.relation,
+      phoneNo: relation?.phoneNo,
     };
   });
 
