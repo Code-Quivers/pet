@@ -146,7 +146,7 @@ const MyPetPage = ({ params }: Props) => {
                 <div className="flex flex-col justify-center items-center pt-4 z-20">
                   <div className="md:pt-2">
                     <h2 className="text-3xl font-bold">
-                      {kidDetails?.data?.kidName}
+                      {kidDetails?.data?.firstName} {kidDetails?.data?.lastName}
                     </h2>
                   </div>
                   <div>
@@ -185,7 +185,9 @@ const MyPetPage = ({ params }: Props) => {
                       kidDetails?.data?.relations?.map(
                         (relation: any, idx: number) => (
                           <>
-                            <p className="col-span-3 py-2">{relation?.name}</p>
+                            <p className="col-span-3 py-2">
+                              {relation?.firstName} {relation?.lastName}
+                            </p>
                             <p className="col-span-3 py-2">
                               {relation?.relation}
                             </p>
