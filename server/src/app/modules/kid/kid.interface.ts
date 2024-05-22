@@ -20,7 +20,8 @@ export type IKidUpdateRequest = {
 };
 
 export type IRelation = {
-  name: string;
+  firstName: string;
+  lastName?: string;
   relation: string;
   phoneNo: string;
 };
