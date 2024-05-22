@@ -135,7 +135,8 @@ model Order {
 
 model KidDetails {
   kidId     String   @id @default(uuid())
-  kidName   String
+  firstName   String
+  lastName   String
   kidImage  String?
   kidAge    DateTime
   relations Json[]
