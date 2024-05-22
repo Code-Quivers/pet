@@ -126,7 +126,7 @@ const MyPetPage = ({ params }: Props) => {
             <CreateKidForm tag={params.code} />
           ) : (
             <div className="md:max-w-2xl md:mx-auto">
-              <div className="bg-primary px-10 py-[30px] md:pb-20 flex justify-center items-center">
+              <div className="bg-primary px-10 py-[30px] pb-20 md:pb-20 flex justify-center items-center">
                 <div className="bg-white inline-block p-2 rounded-full">
                   <Image
                     className="rounded-full w-32 h-32 object-cover"
@@ -154,31 +154,14 @@ const MyPetPage = ({ params }: Props) => {
                     <h2>{formatDuration(kidDetails?.data?.kidAge, endDate)}</h2>
                   </div>
                 </div>
-                {/* <div className="grid grid-cols-5 p-5 text-center items-center">
-                  <div className="text-lg md:text-xl text-gray-700 font-bold">
-                    Name
-                  </div>
-                  <div className="text-lg md:text-xl text-gray-700 font-bold">
-                    Relation
-                  </div>
-                  <div className="text-lg md:text-xl text-gray-700 font-bold">
-                    Call
-                  </div>
-                  <div className="text-lg md:text-xl text-gray-700 font-bold">
-                    Text
-                  </div>
-                  <div className="text-lg md:text-xl text-gray-700 font-bold">
-                    GPS
-                  </div>
-                </div> */}
 
                 <section className="mt-5">
                   <div className="grid grid-cols-12 px-3 text-sm font-bold">
-                    <p className="col-span-3">Name</p>
-                    <p className="col-span-3">Relationship</p>
-                    <p className="col-span-2 text-center">Call</p>
-                    <p className="col-span-2 text-center">Text</p>
-                    <p className="col-span-2 text-center">Share Gps</p>
+                    <h4 className="col-span-3">Name</h4>
+                    <h4 className="col-span-3">Relationship</h4>
+                    <h4 className="col-span-2 text-center">Call</h4>
+                    <h4 className="col-span-2 text-center">Text</h4>
+                    <h4 className="col-span-2 text-center">Share Gps</h4>
                   </div>
                   <div className="grid grid-cols-12 px-3 text-sm mt-2 items-center gap-x-2">
                     {kidDetails?.data?.relations?.length > 0 &&
@@ -191,15 +174,25 @@ const MyPetPage = ({ params }: Props) => {
                             <p className="col-span-3 py-2">
                               {relation?.relation}
                             </p>
-                            <div className="col-span-2 text-center py-2">
-                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
-                                <span className="flex justify-center text-primary">
-                                  <FiPhone size={20} />
-                                </span>
-                              </button>
+                            <div className="col-span-2 text-center py-2 flex flex-col justify-center items-center">
+                              <a
+                                href="tel:+1234567890"
+                                className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out flex justify-center items-center"
+                              >
+                                <FiPhone size={20} className="text-primary" />
+                              </a>
                             </div>
                             <div className="py-2 col-span-2 text-center">
-                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
+                              <button
+                                onClick={() => {
+                                  // This URL scheme works for both Android and iOS
+                                  const url = `sms:${relation?.phoneNo}`;
+
+                                  // Open the messaging app
+                                  window.location.href = url;
+                                }}
+                                className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out"
+                              >
                                 <span className="flex justify-center text-primary">
                                   <IoChatboxEllipsesOutline size={20} />
                                 </span>
