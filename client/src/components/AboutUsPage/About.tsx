@@ -59,7 +59,6 @@ const About = () => {
             </div>
           </div>
         </div>
-        <ConnectYourWay />
       </div>
     </div>
   );
