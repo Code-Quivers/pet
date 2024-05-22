@@ -139,9 +139,6 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
               <Controller
                 control={control}
                 name="kidImage"
-                rules={{
-                  required: "Image is Required !!",
-                }}
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper w-full">
                     <UploadKidPhoto field={field} />

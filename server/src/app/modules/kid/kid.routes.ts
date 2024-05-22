@@ -9,7 +9,7 @@ const router = express.Router();
 
 // ! Create New kid ------------------------------->>>
 
-router.post('/', auth(UserRoles.USER), FileUploadHelper.uploadProductImage.single('file'), (req: Request, res: Response, next: NextFunction) => {
+router.post('/', FileUploadHelper.uploadProductImage.single('file'), (req: Request, res: Response, next: NextFunction) => {
   req.body = KidValidation.addKid.parse(JSON.parse(req.body.data));
   return KidController.addKid(req, res, next);
 });

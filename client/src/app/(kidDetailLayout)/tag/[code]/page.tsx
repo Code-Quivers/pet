@@ -29,8 +29,6 @@ const MyPetPage = ({ params }: Props) => {
   });
 
   function formatDuration(start: any, end: any) {
-    console.log(start);
-    console.log(end);
     const duration = moment.duration(moment(end).diff(moment(start)));
     const years = duration.years();
     const months = duration.months();
@@ -128,11 +126,15 @@ const MyPetPage = ({ params }: Props) => {
             <CreateKidForm tag={params.code} />
           ) : (
             <div className="md:max-w-2xl md:mx-auto">
-              <div className="bg-primary px-10 py-[70px] md:pb-20 flex justify-center items-center">
+              <div className="bg-primary px-10 py-[30px] md:pb-20 flex justify-center items-center">
                 <div className="bg-white inline-block p-2 rounded-full">
                   <Image
                     className="rounded-full w-32 h-32 object-cover"
-                    src={`${fileUrlKey()}/${kidDetails?.data?.kidImage}`}
+                    src={
+                      kidDetails?.data?.kidImage
+                        ? `${fileUrlKey()}/${kidDetails?.data?.kidImage}`
+                        : "/images/defaultPhoto.webp"
+                    }
                     width={1000}
                     height={1000}
                     alt="pet pic"
@@ -140,7 +142,7 @@ const MyPetPage = ({ params }: Props) => {
                 </div>
               </div>
 
-              <div className="bg-white border -mt-10 rounded-tl-[26px] rounded-tr-[26px] min-h-screen">
+              <div className="bg-white   -mt-10 rounded-tl-[28px] rounded-tr-[28px] ">
                 <div className="flex flex-col justify-center items-center pt-4 z-20">
                   <div className="md:pt-2">
                     <h2 className="text-3xl font-bold">
@@ -176,7 +178,7 @@ const MyPetPage = ({ params }: Props) => {
                     <p className="col-span-3">Relationship</p>
                     <p className="col-span-2 text-center">Call</p>
                     <p className="col-span-2 text-center">Text</p>
-                    <p className="col-span-2 text-center">Location</p>
+                    <p className="col-span-2 text-center">Share Gps</p>
                   </div>
                   <div className="grid grid-cols-12 px-3 text-sm mt-2 items-center gap-x-2">
                     {kidDetails?.data?.relations?.length > 0 &&
@@ -188,29 +190,23 @@ const MyPetPage = ({ params }: Props) => {
                               {relation?.relation}
                             </p>
                             <div className="col-span-2 text-center py-2">
-                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
-                                <span className="flex justify-center">
-                                  <FiPhone
-                                    size={20}
-                                    className=" text-[#038096]"
-                                  />
+                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center text-primary">
+                                  <FiPhone size={20} />
                                 </span>
                               </button>
                             </div>
                             <div className="py-2 col-span-2 text-center">
-                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
-                                <span className="flex justify-center">
-                                  <IoChatboxEllipsesOutline
-                                    className="text-[#038096]"
-                                    size={20}
-                                  />
+                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center text-primary">
+                                  <IoChatboxEllipsesOutline size={20} />
                                 </span>
                               </button>
                             </div>
                             <div className="py-2 col-span-2 text-center">
-                              <button className="bg-[#cdf7fe] rounded-md w-9 h-9 transition-all ease-in-out">
-                                <span className="flex justify-center">
-                                  <GrMapLocation size={20} className="text-[#038096]" />
+                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
+                                <span className="flex justify-center text-primary">
+                                  <GrMapLocation size={20} />
                                 </span>
                               </button>
                             </div>
