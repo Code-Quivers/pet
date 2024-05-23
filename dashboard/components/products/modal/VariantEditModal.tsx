@@ -16,20 +16,10 @@ import { renderLoading } from "@/components/animation/form/SelectPicker/renderLo
 import { useUpdateProductMutation } from "@/redux/features/productsApi";
 import UpdateProductImageUpload from "../forms/UpdateProductImageUpload";
 import { useEffect } from "react";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 
-const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
-  //Category
 
-  const { data: categoryResponse, isLoading: categoryLoading } =
-    useGetCategoryQuery({});
+const VariantEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
 
-  const categoryEnums = categoryResponse?.data?.map((single: any) => {
-    return {
-      label: single?.categoryName,
-      value: single?.categoryId,
-    };
-  });
 
   const {
     control,
@@ -389,4 +379,4 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
   );
 };
 
-export default ProductEditModal;
+export default VariantEditModal;

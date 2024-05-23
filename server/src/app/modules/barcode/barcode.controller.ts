@@ -81,10 +81,27 @@ const getSingleVariant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const singleBarcodeUpdate = catchAsync(async (req: Request, res: Response) => {
+  const { barcodeId } = req.params;
+  const data = req.body;
+
+  console.log(data, 'req.body');
+
+  const result = await BarcodeService.singleBarcodeUpdate(barcodeId, data);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Updated successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAllBarCodeForPrint,
   getAvailableBarCode,
   getSingleVariant,
+  singleBarcodeUpdate,
 };

@@ -29,7 +29,10 @@ import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
-import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
+import {
+  useGetBarcodeForPrintQuery,
+  useUpdateBarcodeStatusMutation,
+} from "@/redux/features/barCodeApi";
 import { FiEdit2 } from "react-icons/fi";
 
 const ProductBarcode = () => {
@@ -299,10 +302,21 @@ const ProductBarcode = () => {
     };
   });
 
-  const barCodeStatusChange = (eventKey: string, eventName: any) => {
-    console.log(eventKey);
+  //BarCode Status Change
 
+  const [barcodeStatusChange] = useUpdateBarcodeStatusMutation();
 
+  const barCodeStatusChange = async (eventKey: string, rowData: any) => {
+    const objData = {
+      barcodeStatus: eventKey,
+    };
+
+    console.log("objData", objData);
+
+    await barcodeStatusChange({
+      barcodeId: rowData?.barcodeId,
+      data: objData,
+    });
   };
 
   return (
@@ -548,7 +562,11 @@ const ProductBarcode = () => {
                         trigger="click"
                         speaker={
                           <Popover full>
-                            <Dropdown.Menu onSelect={barCodeStatusChange}>
+                            <Dropdown.Menu
+                              onSelect={(eventKey) =>
+                                barCodeStatusChange(eventKey as string, rowData)
+                              }
+                            >
                               <Dropdown.Item eventKey={"ACTIVE"}>
                                 ACTIVE
                               </Dropdown.Item>

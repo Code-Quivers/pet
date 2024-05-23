@@ -56,6 +56,7 @@ const AllProductList = () => {
     isLoading,
     isFetching,
   } = useGetProductQuery({ ...query });
+
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   // close modal
@@ -66,12 +67,12 @@ const AllProductList = () => {
 
   const { data: allCategories } = useGetCategoryQuery({});
 
-  const categoryFilterForProduct = allCategories?.data?.map(
-    (category: any) => ({
-      label: category.categoryName,
-      value: category.categoryName,
-    })
-  );
+  // const categoryFilterForProduct = allCategories?.data?.map(
+  //   (category: any) => ({
+  //     label: category.categoryName,
+  //     value: category.categoryName,
+  //   })
+  // );
 
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
@@ -155,79 +156,6 @@ const AllProductList = () => {
             data={singleProduct?.data?.productVariations}
           >
             {/*img*/}
-            {/* <Column width={70}>
-              <HeaderCell style={headerCss}>Image</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <Whisper
-                    placement="auto"
-                    speaker={
-                      <Popover>
-                        <div>
-                          <Image
-                            width={270}
-                            height={270}
-                            alt=""
-                            src={
-                              rowData?.productImage
-                                ? `${fileUrlKey()}/${rowData?.productImage}`
-                                : noImage
-                            }
-                            className="object-cover"
-                          />
-                        </div>
-                      </Popover>
-                    }
-                  >
-                    <div>
-                      <Image
-                        width={120}
-                        height={120}
-                        alt=""
-                        src={
-                          rowData?.productImage
-                            ? `${fileUrlKey()}/${rowData?.productImage}`
-                            : noImage
-                        }
-                        className="object-center  object-cover"
-                      />
-                    </div>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column> */}
-            {/* product name */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productName"
-              />
-            </Column> */}
-
-            {/* Item Description */}
-            {/* <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Description
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
-            </Column> */}
-
-            {/* category */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="category.categoryName"
-              />
-            </Column> */}
-            {/*img*/}
             <Column width={70}>
               <HeaderCell style={headerCss}>Image</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
@@ -277,13 +205,7 @@ const AllProductList = () => {
                 {(rowData) => `${rowData.color.name}`}
               </Cell>
             </Column>
-            {/* Size */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Size</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => `${rowData.size}`}
-              </Cell>
-            </Column> */}
+  
             {/* price */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Price</HeaderCell>
@@ -323,43 +245,6 @@ const AllProductList = () => {
                 )}
               </Cell>
             </Column>
-
-            {/* Product Status */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Status</HeaderCell>
-
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.productStatus} `}
-              </Cell>
-            </Column> */}
-
-            {/* Product variant */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Variant</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData: any) => (
-                  <ButtonToolbar>
-                    <Button
-                      size="lg"
-                      onClick={() => {
-                        handleOpen("full");
-                        setProductVariant(rowData);
-                      }}
-                    >
-                      See Variant
-                    </Button>
-                  </ButtonToolbar>
-                )}
-              </Cell>
-            </Column> */}
 
             {/* Action */}
 
