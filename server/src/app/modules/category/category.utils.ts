@@ -17,3 +17,7 @@ export const updateCategoryData = (updates: UpdateDataObject): Partial<ICategory
     ...filteredUpdates,
   };
 };
+
+//
+
+export const getDynamicHref = (categoryName: string) => categoryName?.replace(/[^a-z0-9]+/gi, '-').toLowerCase();

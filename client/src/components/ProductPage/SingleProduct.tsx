@@ -10,8 +10,8 @@ import { fileUrlKey } from "@/helpers/config/envConfig";
 
 const SingleProduct = ({ params }: any) => {
   console.log(params, "params");
-  const { data, isLoading } = useGetSingleProductQuery(params, {
-    skip: !params.id,
+  const { data, isLoading } = useGetSingleProductQuery(params?.categoryHref, {
+    skip: !params?.categoryHref,
   });
   const singleProduct = data?.data;
   console.log(singleProduct, "singleProduct");
