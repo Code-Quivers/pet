@@ -10,7 +10,6 @@ import {
   Checkbox,
   DateRangePicker,
   Dropdown,
-  IconButton,
   Input,
   InputGroup,
   Pagination,
@@ -31,6 +30,7 @@ import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
 import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
+import { FiEdit2 } from "react-icons/fi";
 
 const ProductBarcode = () => {
   const router = useRouter();
@@ -299,6 +299,12 @@ const ProductBarcode = () => {
     };
   });
 
+  const barCodeStatusChange = (eventKey: string, eventName: any) => {
+    console.log(eventKey);
+
+
+  };
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -530,8 +536,40 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="barcodeStatus"
-              ></Cell>
+                // dataKey="barcodeStatus"
+              >
+                {(rowData) => (
+                  <div className="flex items-center gap-3">
+                    {rowData.barcodeStatus}{" "}
+                    <span>
+                      <Whisper
+                        placement="bottomStart"
+                        controlId="control-id-with-dropdown"
+                        trigger="click"
+                        speaker={
+                          <Popover full>
+                            <Dropdown.Menu onSelect={barCodeStatusChange}>
+                              <Dropdown.Item eventKey={"ACTIVE"}>
+                                ACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"INACTIVE"}>
+                                INACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"AVAILABLE"}>
+                                AVAILABLE
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Popover>
+                        }
+                      >
+                        <Button>
+                          <FiEdit2 />
+                        </Button>
+                      </Whisper>
+                    </span>
+                  </div>
+                )}
+              </Cell>
             </Column>
 
             {/* Crated At */}
