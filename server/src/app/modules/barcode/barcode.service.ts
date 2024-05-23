@@ -338,10 +338,38 @@ const getSingleVariant = async (variantId: string): Promise<any | null> => {
   return result;
 };
 
+// Barcode Update
+
+const singleBarcodeUpdate = async (barcodeId: string, data: any): Promise<BarCode | null> => {
+  if (!barcodeId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeId is required');
+  }
+
+  const findBarcode = await prisma.barCode.findUnique({
+    where: {
+      barcodeId,
+    },
+  });
+
+  if (!findBarcode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
+  }
+
+  const result = await prisma.barCode.update({
+    where: {
+      barcodeId,
+    },
+    data,
+  });
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAvailableBarCode,
   getAllBarCodeForPrint,
   getSingleVariant,
+  singleBarcodeUpdate,
 };
