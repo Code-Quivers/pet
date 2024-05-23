@@ -178,7 +178,7 @@ const getPromotions = async (filters: IPromoFilterRequest, options: IPaginationO
   };
 };
 
-const applyPromoCode = async (promoCode: string, purchasedItemId: string, purchasedQuantity: number) => {
+const applyPromoCode = async (promoCode: string, cartData:any) => {
   const currentDate = new Date(getDateISODateWithoutTimestamp(new Date())).toISOString();
   console.log(currentDate);
   const promotion = await prisma.promotion.findUnique({
@@ -191,12 +191,12 @@ const applyPromoCode = async (promoCode: string, purchasedItemId: string, purcha
       endDate: {
         gte: currentDate,
       },
-      buyItemGetItemPromotion: {
-        requiredItemId: purchasedItemId,
-        requiredQuantity: purchasedQuantity,
-      },
+      // buyItemGetItemPromotion: {
+      //   requiredItemId: purchasedItemId,
+      //   requiredQuantity: purchasedQuantity,
+      // },
     },
-    include: {
+    sellect: {
       buyItemGetItemPromotion: true,
     },
   });
@@ -207,19 +207,33 @@ const applyPromoCode = async (promoCode: string, purchasedItemId: string, purcha
     };
   }
   console.log(promotion);
-  const productId: string = promotion.buyItemGetItemPromotion?.rewardItemId || '';
-  const quantity: number = promotion.buyItemGetItemPromotion?.rewardQuantity || 1;
+  const {
+    requiredItemId = "",
+    rewardItemId = "",
+    rewardQuantity = 0,
+    requiredQuantity = 0,
+  } = promotion.buyItemGetItemPromotion;
+  const cartItem = cartData.find((item:any) => item.productId === requiredItemId && item.quantity >= requiredQuantity);
+  if (!cartItem) {
+    return { isValid: false };
+  }
+
+  // Calculate how many will get as free
+  const quantityWillGet:number= Math.floor(cartItem.quantity/requiredQuantity) * rewardQuantity;
+
   const product = await prisma.productVariation.findFirst({
     where: {
-      productId: productId,
+      productId: rewardItemId,
       stock: {
-        gte: quantity,
+        gte: quantityWillGet,
       },
     },
   });
+  
   return {
     isValid: true,
     product: product,
+    quantity: quantityWillGet
   };
 };
 
