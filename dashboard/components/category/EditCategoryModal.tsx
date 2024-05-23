@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import UpdateCategoryImageUpload from "./UpdateCategoryImageUpload";
 
 const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
+  console.log("editData", editData);
+
   const [
     updateCategory,
     { data, isSuccess, isError, isLoading, error, reset },
@@ -182,7 +184,7 @@ const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <UpdateCategoryImageUpload
-                            defaultImage={editData.categoryImg}
+                            defaultImage={editData.categoryImage}
                             field={field as any}
                           />
                           <Form.ErrorMessage
