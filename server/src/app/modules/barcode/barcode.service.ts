@@ -107,7 +107,7 @@ const getProductBarcodeVarientWise = async (
     },
     skip,
     take: limit,
-    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'asc' },
   });
 
   const variants = result
@@ -341,6 +341,8 @@ const getSingleVariant = async (variantId: string): Promise<any | null> => {
 // Barcode Update
 
 const singleBarcodeUpdate = async (barcodeId: string, data: any): Promise<BarCode | null> => {
+  console.log(data, 'data');
+
   if (!barcodeId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeId is required');
   }

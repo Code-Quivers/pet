@@ -1,6 +1,4 @@
 import express from 'express';
-import validateRequest from '../../middlewares/validateRequest';
-import { PromoCodeValidation } from './promoCode.validations';
 import { UserRoles } from '@prisma/client';
 import auth from '../../middlewares/auth';
 import { PromoCodeController } from './promoCode.controller';

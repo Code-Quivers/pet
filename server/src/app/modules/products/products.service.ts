@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
-import { Prisma, Product } from '@prisma/client';
+import { Prisma, Product, ProductVariation } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -11,7 +11,7 @@ import ApiError from '../../../errors/ApiError';
 import { IUploadFile } from '../../../interfaces/file';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { IProductFilterRequest, IProductRequest, IProductUpdateRequest, IProductVariant } from './products.interface';
+import { IProductFilterRequest, IProductRequest, IProductUpdateRequest, IProductVariant, IProductVariantUpdateRequest } from './products.interface';
 import { generateBarCode } from './products.utils';
 import { ProductRelationalFields, ProductRelationalFieldsMapper, ProductSearchableFields } from './product.constants';
 
@@ -321,10 +321,61 @@ const deleteProduct = async (productId: string): Promise<Product> => {
   return result;
 };
 
+const updateProductVariation = async (variantId: string, req: Request): Promise<ProductVariation> => {
+  console.log('variantId', variantId);
+
+  const file = req.file as IUploadFile;
+  const filePath = file?.path?.substring(8);
+
+  const { color, stock, variantPrice, oldFilePath } = req.body as IProductVariantUpdateRequest;
+
+  // deleting old style Image
+  const oldFilePaths = 'uploads/' + oldFilePath;
+  if (oldFilePath !== undefined && filePath !== undefined) {
+    // @ts-ignore
+    fs.unlink(oldFilePaths, err => {
+      if (err) {
+        errorLogger.error('Error deleting old file');
+      }
+    });
+  }
+
+  if (!variantId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+  }
+
+  const productVariant = await prisma.productVariation.findUnique({
+    where: {
+      variantId,
+    },
+  });
+
+  if (!productVariant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product Variation Not Found');
+  }
+
+  const updateObj = {
+    color,
+    stock,
+    variantPrice,
+    image: filePath,
+  };
+
+  const result = await prisma.productVariation.update({
+    where: {
+      variantId,
+    },
+    data: updateObj,
+  });
+
+  return result;
+};
+
 export const ProductService = {
   createProduct,
   getProducts,
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  updateProductVariation,
 };

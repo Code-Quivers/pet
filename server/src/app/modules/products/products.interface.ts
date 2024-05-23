@@ -1,3 +1,4 @@
+import { IProductVariant } from './products.interface';
 import { ProductStatus } from '@prisma/client';
 
 export type IProductFilterRequest = {
@@ -37,5 +38,12 @@ export type IProductUpdateRequest = {
   productStock?: number;
   categoryId?: string;
   productStatus?: ProductStatus;
+  oldFilePath?: string;
+};
+
+export type IProductVariantUpdateRequest = {
+  variantPrice?: number;
+  color?: IColor;
+  stock?: number;
   oldFilePath?: string;
 };

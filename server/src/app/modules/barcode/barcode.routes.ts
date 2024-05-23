@@ -13,4 +13,6 @@ router.get('/:code', BarcodeController.getSingleBarCodeDetailsForKid);
 
 router.get('/get-single-variant/:variantId', BarcodeController.getSingleVariant);
 
+router.patch('/status/:barcodeId', BarcodeController.singleBarcodeUpdate);
+
 export const BarcodeRoutes = router;
