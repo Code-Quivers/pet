@@ -87,9 +87,9 @@ const RecentProducts = () => {
                                     height={300}
                                     alt=""
                                     src={
-                                      singleProduct?.productImage?.length
+                                      singleProduct?.featuredImage
                                         ? `${fileUrlKey()}/${
-                                            singleProduct?.productImage[0]
+                                            singleProduct?.featuredImage
                                           }`
                                         : noImage
                                     }
@@ -105,9 +105,9 @@ const RecentProducts = () => {
                                 height={70}
                                 alt=""
                                 src={
-                                  singleProduct?.productImage?.length
+                                  singleProduct?.featuredImage
                                     ? `${fileUrlKey()}/${
-                                        singleProduct?.productImage[0]
+                                        singleProduct?.featuredImage
                                       }`
                                     : noImage
                                 }
