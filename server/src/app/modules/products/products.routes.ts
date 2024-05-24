@@ -40,10 +40,6 @@ router.patch(
   }
 );
 
-router.delete(
-  '/:productId',
-  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  ProductController.deleteProduct
-);
+router.delete('/:productId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductController.deleteProduct);
 
 export const ProductRoutes = router;

@@ -160,9 +160,9 @@ const ProductQATable = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.product?.productImage
+                              rowData?.product?.featuredImage
                                 ? `${fileUrlKey()}/${
-                                    rowData?.product?.productImage
+                                    rowData?.product?.featuredImage
                                   }`
                                 : noImage
                             }
@@ -178,9 +178,9 @@ const ProductQATable = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.product?.productImage
+                          rowData?.product?.featuredImage
                             ? `${fileUrlKey()}/${
-                                rowData?.product?.productImage
+                                rowData?.product?.featuredImage
                               }`
                             : noImage
                         }

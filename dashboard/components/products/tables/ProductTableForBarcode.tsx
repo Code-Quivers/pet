@@ -70,13 +70,8 @@ const ProductBarcode = () => {
     isFetching,
   } = useGetBarcodeForPrintQuery({ ...query });
 
-  // const [editData, setEditData] = useState(null);
-  // const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
-  // const handleCloseEdit = () => {
-  //   setIsOpenEdit(false);
-  //   setEditData(null);
-  // };
+  console.log("allBarCodeList", allBarCodeList);
+
   // Filter date
   const handleFilterDate = (date: Date[] | null) => {
     if (!date?.length) {

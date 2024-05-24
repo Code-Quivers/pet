@@ -21,8 +21,6 @@ import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
   //Category
 
-  console.log(editData, "editData");
-
   const { data: categoryResponse, isLoading: categoryLoading } =
     useGetCategoryQuery({});
 
@@ -64,8 +62,6 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
       categoryId: updatedData?.categoryId,
       productStatus: updatedData?.productStatus,
     };
-
-    console.log(obj, "obj");
 
     const productData = JSON.stringify(obj);
     formData.append("data", productData);
