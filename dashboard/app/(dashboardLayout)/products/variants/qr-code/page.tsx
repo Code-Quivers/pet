@@ -179,7 +179,7 @@ const AllProductList = () => {
 
             {/* Action */}
 
-            <Column width={70}>
+            {/* <Column width={70}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
@@ -205,7 +205,7 @@ const AllProductList = () => {
                   </Whisper>
                 )}
               </Cell>
-            </Column>
+            </Column> */}
           </Table>
 
           <div style={{ padding: 20 }}>

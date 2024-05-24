@@ -46,6 +46,16 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.product],
     }),
+
+    updateProductVariation: builder.mutation({
+      query: ({ data, variantId }) => ({
+        url: `${PRODUCT_API}/variant/${variantId}`,
+        method: "PATCH",
+        data: data,
+        contentType: "multipart/form-data",
+      }),
+      invalidatesTags: [tagTypes.product],
+    }),
   }),
 });
 
@@ -55,4 +65,5 @@ export const {
   useGetSingleProductQuery,
   useUpdateProductMutation,
   useGetSingleVariantQuery,
+  useUpdateProductVariationMutation,
 } = productApi;

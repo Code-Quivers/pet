@@ -1,3 +1,5 @@
+import { Image } from "next/image";
+import { IUpdateProduct } from "@/types/forms/product";
 import { FileType } from "rsuite/esm/Uploader";
 
 export type ICreateProduct = {
@@ -19,8 +21,6 @@ export type IUpdateProduct = {
   productStock?: string;
   categoryId?: string;
   productStatus?: string;
-  colorVarientId?: string;
-  sizeVarientId?: string;
   productImage?: FileType;
 };
 export type ICreateBatchProduct = {
@@ -118,4 +118,14 @@ export type ICreateTaxSetting = {
 export type IUpdateTaxSetting = {
   state?: string;
   tax?: string;
+};
+
+export type IUpdateProductVariation = {
+  stock?: string;
+  variantPrice?: string;
+  color?: {
+    name?: string;
+    code?: string;
+  };
+  image?: FileType;
 };
