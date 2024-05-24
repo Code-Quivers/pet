@@ -21,7 +21,7 @@ export type IUpdateProduct = {
   productStock?: string;
   categoryId?: string;
   productStatus?: string;
-  productImage?: FileType;
+  featuredImage?: FileType;
 };
 export type ICreateBatchProduct = {
   productVat: string;

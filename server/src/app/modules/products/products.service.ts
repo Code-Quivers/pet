@@ -287,7 +287,7 @@ const updateProduct = async (productId: string, req: Request): Promise<Product> 
       productStock,
       categoryId,
       productStatus,
-      productImage: filePath,
+      featuredImage: filePath,
     };
 
     const updatedProduct = await transactionClient.product.update({
