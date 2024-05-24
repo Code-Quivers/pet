@@ -29,6 +29,7 @@ import { FaPlus } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import Link from "next/link";
+import VariantEditDrawer from "@/components/products/modal/VariantEditDrawer";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -58,28 +59,20 @@ const AllProductList = () => {
   } = useGetProductQuery({ ...query });
 
   const [editData, setEditData] = useState(null);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
-  const handleCloseEdit = () => {
-    setIsOpenEdit(false);
-    setEditData(null);
-  };
-
-  const { data: allCategories } = useGetCategoryQuery({});
-
-  // const categoryFilterForProduct = allCategories?.data?.map(
-  //   (category: any) => ({
-  //     label: category.categoryName,
-  //     value: category.categoryName,
-  //   })
-  // );
 
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
-  console.log("productId", productId);
 
   const { data: singleProduct } = useGetSingleProductQuery(productId as string);
   console.log("singleProduct", singleProduct);
+
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState();
+
+  const VariantEdit = (key: any) => {
+    setOpen(true);
+    setPlacement(key);
+  };
 
   return (
     <>
@@ -97,50 +90,7 @@ const AllProductList = () => {
             {singleProduct?.data?.productName}
           </span>
         </p>
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          {/* <div>
-            <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
-            </h2>
-          </div> */}
-
-          {/* <div className="flex max-md:justify-between gap-10 items-center">
-            <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
-              />
-            </div>
-
-            <div>
-              <InputGroup
-                inside
-                style={{
-                  width: 300,
-                }}
-              >
-                <Input
-                  style={{
-                    width: 300,
-                  }}
-                  onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
-                />
-                <InputGroup.Addon>
-                  <BiSearch />
-                </InputGroup.Addon>
-              </InputGroup>
-            </div>
-          </div> */}
-        </div>
+        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5"></div>
 
         {/*  */}
         <div className="rounded-sm bg-white">
@@ -205,7 +155,7 @@ const AllProductList = () => {
                 {(rowData) => `${rowData.color.name}`}
               </Cell>
             </Column>
-  
+
             {/* price */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Price</HeaderCell>
@@ -265,8 +215,8 @@ const AllProductList = () => {
                   >
                     <IconButton
                       onClick={() => {
-                        setIsOpenEdit(true);
                         setEditData(rowData);
+                        VariantEdit("right");
                       }}
                       circle
                       icon={<MdModeEdit size={20} />}
@@ -277,15 +227,15 @@ const AllProductList = () => {
             </Column>
           </Table>
 
-          {/* <div>
-            <ProductVariantTable
-              productVariant={productVariant}
-              size={drawerSize}
+          <div>
+            <VariantEditDrawer
               open={open}
               setOpen={setOpen}
+              // onClose={handleCloseEdit}
+              editData={editData}
               placement={placement}
             />
-          </div> */}
+          </div>
           <div style={{ padding: 20 }}>
             <Pagination
               total={singleProduct?.data?.productVariations?.length || 0}
