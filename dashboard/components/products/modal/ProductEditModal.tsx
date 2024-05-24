@@ -21,6 +21,8 @@ import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
   //Category
 
+  console.log(editData, "editData");
+
   const { data: categoryResponse, isLoading: categoryLoading } =
     useGetCategoryQuery({});
 
@@ -46,8 +48,8 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
   const handleUpdateProduct = async (updatedData: IUpdateProduct) => {
     const formData = new FormData();
 
-    if (updatedData?.productImage?.blobFile) {
-      formData.append("file", updatedData?.productImage?.blobFile);
+    if (updatedData?.featuredImage?.blobFile) {
+      formData.append("file", updatedData?.featuredImage?.blobFile);
     }
 
     const obj = {
@@ -244,24 +246,24 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                       Product Image
                     </label>
                     <Controller
-                      name="productImage"
+                      name="featuredImage"
                       control={control}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
                           <UpdateProductImageUpload
                             field={field}
-                            defaultImage={editData?.productImage}
+                            defaultImage={editData?.featuredImage}
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.productImage &&
-                                !!errors?.productImage?.message) ||
+                              (!!errors?.featuredImage &&
+                                !!errors?.featuredImage?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.productImage?.message}
+                              {errors?.featuredImage?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
@@ -355,14 +357,14 @@ const ProductEditModal = ({ isOpenEdit, handleCloseEdit, editData }: any) => {
                           />
                           <Form.ErrorMessage
                             show={
-                              (!!errors?.categoryId &&
-                                !!errors?.sizeVarientId?.message) ||
+                              (!!errors?.productStatus &&
+                                !!errors?.productStatus?.message) ||
                               false
                             }
                             placement="topEnd"
                           >
                             <span className="font-semibold">
-                              {errors?.sizeVarientId?.message}
+                              {errors?.productStatus?.message}
                             </span>
                           </Form.ErrorMessage>
                         </div>
