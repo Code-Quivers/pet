@@ -29,6 +29,7 @@ import { FaPlus } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import Link from "next/link";
+import VariantEditDrawer from "@/components/products/modal/VariantEditDrawer";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -56,29 +57,22 @@ const AllProductList = () => {
     isLoading,
     isFetching,
   } = useGetProductQuery({ ...query });
+
   const [editData, setEditData] = useState(null);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
-  const handleCloseEdit = () => {
-    setIsOpenEdit(false);
-    setEditData(null);
-  };
-
-  const { data: allCategories } = useGetCategoryQuery({});
-
-  const categoryFilterForProduct = allCategories?.data?.map(
-    (category: any) => ({
-      label: category.categoryName,
-      value: category.categoryName,
-    })
-  );
 
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
-  console.log("productId", productId);
 
   const { data: singleProduct } = useGetSingleProductQuery(productId as string);
   console.log("singleProduct", singleProduct);
+
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState();
+
+  const VariantEdit = (key: any) => {
+    setOpen(true);
+    setPlacement(key);
+  };
 
   return (
     <>
@@ -96,50 +90,7 @@ const AllProductList = () => {
             {singleProduct?.data?.productName}
           </span>
         </p>
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          {/* <div>
-            <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
-            </h2>
-          </div> */}
-
-          {/* <div className="flex max-md:justify-between gap-10 items-center">
-            <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
-              />
-            </div>
-
-            <div>
-              <InputGroup
-                inside
-                style={{
-                  width: 300,
-                }}
-              >
-                <Input
-                  style={{
-                    width: 300,
-                  }}
-                  onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
-                />
-                <InputGroup.Addon>
-                  <BiSearch />
-                </InputGroup.Addon>
-              </InputGroup>
-            </div>
-          </div> */}
-        </div>
+        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5"></div>
 
         {/*  */}
         <div className="rounded-sm bg-white">
@@ -154,79 +105,6 @@ const AllProductList = () => {
             autoHeight={true}
             data={singleProduct?.data?.productVariations}
           >
-            {/*img*/}
-            {/* <Column width={70}>
-              <HeaderCell style={headerCss}>Image</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <Whisper
-                    placement="auto"
-                    speaker={
-                      <Popover>
-                        <div>
-                          <Image
-                            width={270}
-                            height={270}
-                            alt=""
-                            src={
-                              rowData?.productImage
-                                ? `${fileUrlKey()}/${rowData?.productImage}`
-                                : noImage
-                            }
-                            className="object-cover"
-                          />
-                        </div>
-                      </Popover>
-                    }
-                  >
-                    <div>
-                      <Image
-                        width={120}
-                        height={120}
-                        alt=""
-                        src={
-                          rowData?.productImage
-                            ? `${fileUrlKey()}/${rowData?.productImage}`
-                            : noImage
-                        }
-                        className="object-center  object-cover"
-                      />
-                    </div>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column> */}
-            {/* product name */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productName"
-              />
-            </Column> */}
-
-            {/* Item Description */}
-            {/* <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Description
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
-            </Column> */}
-
-            {/* category */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="category.categoryName"
-              />
-            </Column> */}
             {/*img*/}
             <Column width={70}>
               <HeaderCell style={headerCss}>Image</HeaderCell>
@@ -277,13 +155,7 @@ const AllProductList = () => {
                 {(rowData) => `${rowData.color.name}`}
               </Cell>
             </Column>
-            {/* Size */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Size</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => `${rowData.size}`}
-              </Cell>
-            </Column> */}
+
             {/* price */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Price</HeaderCell>
@@ -324,43 +196,6 @@ const AllProductList = () => {
               </Cell>
             </Column>
 
-            {/* Product Status */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Status</HeaderCell>
-
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.productStatus} `}
-              </Cell>
-            </Column> */}
-
-            {/* Product variant */}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Variant</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData: any) => (
-                  <ButtonToolbar>
-                    <Button
-                      size="lg"
-                      onClick={() => {
-                        handleOpen("full");
-                        setProductVariant(rowData);
-                      }}
-                    >
-                      See Variant
-                    </Button>
-                  </ButtonToolbar>
-                )}
-              </Cell>
-            </Column> */}
-
             {/* Action */}
 
             <Column width={70}>
@@ -380,8 +215,8 @@ const AllProductList = () => {
                   >
                     <IconButton
                       onClick={() => {
-                        setIsOpenEdit(true);
                         setEditData(rowData);
+                        VariantEdit("right");
                       }}
                       circle
                       icon={<MdModeEdit size={20} />}
@@ -392,15 +227,15 @@ const AllProductList = () => {
             </Column>
           </Table>
 
-          {/* <div>
-            <ProductVariantTable
-              productVariant={productVariant}
-              size={drawerSize}
+          <div>
+            <VariantEditDrawer
               open={open}
               setOpen={setOpen}
+              // onClose={handleCloseEdit}
+              editData={editData}
               placement={placement}
             />
-          </div> */}
+          </div>
           <div style={{ padding: 20 }}>
             <Pagination
               total={singleProduct?.data?.productVariations?.length || 0}

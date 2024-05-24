@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import ProductVariantTable from "./ProductVariantTable";
 import Link from "next/link";
+import ProductEditModal from "../modal/ProductEditModal";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -345,13 +346,13 @@ const AllProductList = () => {
           </div>
         </div>
       </div>
-      {/* 
+      
       <ProductEditModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}
         editData={editData}
         handleCloseEdit={handleCloseEdit}
-      /> */}
+      />
     </>
   );
 };
