@@ -100,6 +100,18 @@ const updateProductVariation = catchAsync(async (req: Request, res: Response) =>
   });
 });
 
+const deleteProductVariant = catchAsync(async (req: Request, res: Response) => {
+  const { variantId } = req.params;
+  const result = await ProductService.deleteProductVariant(variantId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product Variation Deleted successfully !',
+    data: result,
+  });
+});
+
 export const ProductController = {
   addProductsController,
   getProductsController,
@@ -107,4 +119,5 @@ export const ProductController = {
   updateProduct,
   deleteProduct,
   updateProductVariation,
+  deleteProductVariant,
 };

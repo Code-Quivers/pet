@@ -97,6 +97,18 @@ const singleBarcodeUpdate = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteBarcode = catchAsync(async (req: Request, res: Response) => {
+  const { barcodeId } = req.params;
+  const result = await BarcodeService.deleteBarcode(barcodeId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Deleted successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
@@ -104,4 +116,5 @@ export const BarcodeController = {
   getAvailableBarCode,
   getSingleVariant,
   singleBarcodeUpdate,
+  deleteBarcode,
 };

@@ -41,5 +41,6 @@ router.patch(
 );
 
 router.delete('/:productId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductController.deleteProduct);
+router.delete('/variant/:variantId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductController.deleteProductVariant);
 
 export const ProductRoutes = router;
