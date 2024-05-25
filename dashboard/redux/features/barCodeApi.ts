@@ -39,6 +39,14 @@ export const barCodeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.tag],
     }),
+
+    deleteBarcode: builder.mutation({
+      query: ({ barcodeId }: any) => ({
+        url: `${BARCODE_API}/${barcodeId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [tagTypes.tag],
+    }),
   }),
 });
 
@@ -47,4 +55,5 @@ export const {
   useGetSingleBarcodeQuery,
   useGetBarcodeForPrintQuery,
   useUpdateBarcodeStatusMutation,
+  useDeleteBarcodeMutation,
 } = barCodeApi;

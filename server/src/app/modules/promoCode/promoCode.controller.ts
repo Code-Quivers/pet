@@ -55,8 +55,8 @@ const deletePromotion = catchAsync(async (req: Request, res: Response) => {
 
 const applyPromoCode = catchAsync(async (req: Request, res: Response) => {
   const { promoCode } = req.params;
-  const { purchasedItemId, purchasedQuantity } = req.body;
-  const result = await PromoCodeService.applyPromoCode(promoCode, purchasedItemId, purchasedQuantity);
+  const { cartData } = req.body;
+  const result = await PromoCodeService.applyPromoCode(promoCode, cartData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
