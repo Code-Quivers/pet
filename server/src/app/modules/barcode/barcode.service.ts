@@ -367,6 +367,30 @@ const singleBarcodeUpdate = async (barcodeId: string, data: any): Promise<BarCod
   return result;
 };
 
+const deleteBarcode = async (barcodeId: string): Promise<BarCode | null> => {
+  if (!barcodeId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeId is required');
+  }
+
+  const findBarcode = await prisma.barCode.findUnique({
+    where: {
+      barcodeId,
+    },
+  });
+
+  if (!findBarcode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
+  }
+
+  const result = await prisma.barCode.delete({
+    where: {
+      barcodeId,
+    },
+  });
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
@@ -374,4 +398,5 @@ export const BarcodeService = {
   getAllBarCodeForPrint,
   getSingleVariant,
   singleBarcodeUpdate,
+  deleteBarcode,
 };
