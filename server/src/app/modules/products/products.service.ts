@@ -371,6 +371,20 @@ const updateProductVariation = async (variantId: string, req: Request): Promise<
   return result;
 };
 
+const deleteProductVariant = async (variantId: string): Promise<ProductVariation> => {
+  if (!variantId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+  }
+
+  const result = await prisma.productVariation.delete({
+    where: {
+      variantId,
+    },
+  });
+
+  return result;
+};
+
 export const ProductService = {
   createProduct,
   getProducts,
@@ -378,4 +392,5 @@ export const ProductService = {
   updateProduct,
   deleteProduct,
   updateProductVariation,
+  deleteProductVariant,
 };
