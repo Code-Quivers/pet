@@ -26,7 +26,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Bar Chart",
+      text: "Monthly Total Order",
     },
   },
 };
@@ -50,9 +50,13 @@ export const data = {
   labels,
   datasets: [
     {
-      label: "Dataset 1",
+      label: "Order",
       data: [300, 450, 200, 500, 700, 400, 600],
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      backgroundColor: "black",
+      borderRadius: 10,
+      barThickness: 40,
+      borderColor: "white",
+      borderWidth: 4,
     },
   ],
 };
