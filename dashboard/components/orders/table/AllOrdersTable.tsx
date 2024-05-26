@@ -324,53 +324,53 @@ const AllOrderList = () => {
                                 Name:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.firstName}
+                                  {order?.firstName}
                                 </span>
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.lastName}
+                                  {order?.lastName}
                                 </span>
                               </p>
                               <p>
                                 email:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.email}
+                                  {order?.email}
                                 </span>
                               </p>
                               <p>
                                 phone:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.phone}
+                                  {order?.phone}
                                 </span>
                               </p>
                               <p>
                                 Address:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.address}
+                                  {order?.address}
                                 </span>
                               </p>
                               <p>
                                 City:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.city}
+                                  {order?.city}
                                 </span>
                               </p>
                               <p>
                                 State:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.state}
+                                  {order?.state}
                                 </span>
                               </p>
                               <p>
                                 Postal Code:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.shippingInformation?.postcode}
+                                  {order?.zip}
                                 </span>
                               </p>
                               <p>
@@ -383,77 +383,6 @@ const AllOrderList = () => {
                             </div>
                           </div>
                         </section>
-                        {/* <div className="bg-gray-3 shadow-2 rounded-md p-4">
-                          <div className="mb-2">
-                            <p>Customer Information:</p>
-                          </div>
-                          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Company Name:</span>{" "}
-                              <span>{order?.user?.profile?.companyName}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Full Name:</span>{" "}
-                              <span>{order?.user?.profile?.fullName}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Phone Number:</span>{" "}
-                              <span>{order?.user?.profile?.phoneNumber}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Email:</span>{" "}
-                              <span>{order?.user?.profile?.email}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Address:</span>{" "}
-                              <span>{order?.user?.profile?.addressLine1}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">City:</span>{" "}
-                              <span>{order?.user?.profile?.city}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Postal Code:</span>{" "}
-                              <span>{order?.user?.profile?.postalCode}</span>{" "}
-                            </p>
-                          </div>
-                        </div> */}
-                        {/* Shipping Info */}
-                        {/* <div className="bg-gray-3 shadow-2 rounded-md p-4">
-                          <div className="mb-2 flex items-center gap-5">
-                            <p>Shipping Information:</p>
-                            <span
-                              className="!text-primary underline cursor-pointer"
-                              onClick={handleOpenShipping}
-                            >
-                              {" "}
-                              Edit Shipping Information
-                            </span>
-                            <OrderEditShippingInformation
-                              openShipping={openShipping}
-                              handleCloseShipping={handleCloseShipping}
-                              order={order}
-                            />
-                          </div>
-                          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Address :</span>{" "}
-                              <span>{order?.shippingAddress}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">City:</span>{" "}
-                              <span>{order?.city}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Postal Code :</span>{" "}
-                              <span>{order?.postalCode}</span>{" "}
-                            </p>
-                            <p className="border p-1 rounded-md">
-                              <span className="font-bold">Note :</span>{" "}
-                              <span>{order?.note}</span>{" "}
-                            </p>
-                          </div>
-                        </div> */}
                         {/* Delivery & Product */}
                         <div className=" border-[#CBD5E1] border-2 shadow-2 rounded-md my-4">
                           <div className="flex flex-col gap-1">
@@ -471,12 +400,6 @@ const AllOrderList = () => {
                                                 className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
                                               >
                                                 Product Name
-                                              </th>
-                                              <th
-                                                scope="col"
-                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                              >
-                                                Color
                                               </th>
                                               <th
                                                 scope="col"
