@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Order, Prisma, Tax } from '@prisma/client';
+import { Order, OrderStatus, Prisma, Tax } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
@@ -15,17 +15,6 @@ import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFiel
 
 // !----------------------------------Create New Event------------------------------------->>>
 const addOrder = async (data: IOrderRequest): Promise<any> => {
-  const shippingInfo = {
-    firstName: data.shippingInformation.firstName,
-    lastName: data.shippingInformation.lastName,
-    address: data.shippingInformation.address,
-    city: data.shippingInformation.city,
-    state: data.shippingInformation.state,
-    postcode: data.shippingInformation.postcode,
-    email: data.shippingInformation.email,
-    phone: data.shippingInformation.phone,
-  };
-
   const cartItems = data.cartItems.map(item => {
     return {
       productName: item.productName,
@@ -33,10 +22,10 @@ const addOrder = async (data: IOrderRequest): Promise<any> => {
       variantId: item.variantId,
       price: item.price,
       quantity: item.quantity,
-      color: {
-        name: item.color.name,
-        code: item.color.code,
-      },
+      // color: {
+      //   name: item.color.name,
+      //   code: item.color.code,
+      // },
     };
   });
 
@@ -46,14 +35,28 @@ const addOrder = async (data: IOrderRequest): Promise<any> => {
     total: data.paymentInformation.total,
   };
 
+  const orderObj = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    address: data.address,
+    city: data.city,
+    state: data.state,
+    zip: data.zip,
+    email: data.email,
+    phone: data.phone,
+    orderStatus: data.orderStatus as OrderStatus,
+    paymentInformation: paymentInfo,
+    cartItems: cartItems,
+  };
+
   const result = await prisma.$transaction(async transactionClient => {
     const newOrder = await transactionClient.order.create({
-      data: {
-        shippingInformation: shippingInfo,
-        paymentInformation: paymentInfo,
-        cartItems: cartItems,
-      },
+      data: orderObj,
       select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
         cartItems: true,
       },
     });
