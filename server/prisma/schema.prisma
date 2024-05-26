@@ -123,8 +123,8 @@ model Order {
   orderId             String      @id @default(uuid())
   orderStatus         OrderStatus @default(PENDING)
   email               String
-  firstname          String
-  lastname           String
+  firstName          String
+  lastName           String
   address             String
   city                String
   state               String

@@ -26,7 +26,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Monthly Total Order",
+      text: "Last 12 Month Orders",
     },
   },
 };

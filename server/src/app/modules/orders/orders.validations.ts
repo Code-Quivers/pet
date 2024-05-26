@@ -7,16 +7,16 @@ import { z } from 'zod';
 //   }),
 // });
 
-const shippingInformationSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  address: z.string(),
-  city: z.string(),
-  state: z.string(),
-  postcode: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-});
+// const shippingInformationSchema = z.object({
+//   firstName: z.string(),
+//   lastName: z.string(),
+//   address: z.string(),
+//   city: z.string(),
+//   state: z.string(),
+//   postcode: z.string(),
+//   email: z.string().email(),
+//   phone: z.string(),
+// });
 
 const paymentInformationSchema = z.object({
   subtotal: z.number(),
@@ -24,10 +24,10 @@ const paymentInformationSchema = z.object({
   total: z.number(),
 });
 
-const colorSchema = z.object({
-  name: z.string(),
-  code: z.string(),
-});
+// const colorSchema = z.object({
+//   name: z.string(),
+//   code: z.string(),
+// });
 
 const cartItemSchema = z.object({
   productName: z.string(),
@@ -35,11 +35,19 @@ const cartItemSchema = z.object({
   variantId: z.string(),
   price: z.number(),
   quantity: z.number().int().min(1),
-  color: colorSchema,
+  // color: colorSchema,
 });
 
 const orderRequestSchema = z.object({
-  shippingInformation: shippingInformationSchema,
+  firstName: z.string(),
+  lastName: z.string(),
+  address: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zip: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  orderStatus: z.string(),
   paymentInformation: paymentInformationSchema,
   cartItems: z.array(cartItemSchema),
 });
