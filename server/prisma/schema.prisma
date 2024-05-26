@@ -122,7 +122,14 @@ model ProductReview {
 model Order {
   orderId             String      @id @default(uuid())
   orderStatus         OrderStatus @default(PENDING)
-  shippingInformation Json
+  email               String
+  firstname          String
+  lastname           String
+  address             String
+  city                String
+  state               String
+  zip                 String
+  phone              String
   paymentInformation  Json
   cartItems           Json[]
   // productId       String
