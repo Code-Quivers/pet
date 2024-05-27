@@ -25,9 +25,32 @@ const editProduct = z.object({
   productPrice: z.number().optional(),
   categoryId: z.string().optional(),
   productStatus: z.string().optional(),
+  // productVariations: z.array(
+  //   z.object({
+  //     id: z.string(),
+  //     variantPrice: z.number().optional(),
+  //     color: z.object({
+  //       code: z.string().optional(),
+  //       name: z.string().optional(),
+  //     }),
+  //     stock: z.number().optional(),
+  //   })
+  // ),
+});
+
+const editProductVariation = z.object({
+  variantPrice: z.number().optional(),
+  color: z
+    .object({
+      code: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
+  stock: z.number().optional(),
 });
 
 export const ProductZodValidation = {
   addProducts,
   editProduct,
+  editProductVariation,
 };

@@ -107,7 +107,7 @@ const getProductBarcodeVarientWise = async (
     },
     skip,
     take: limit,
-    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'asc' },
   });
 
   const variants = result
@@ -338,10 +338,65 @@ const getSingleVariant = async (variantId: string): Promise<any | null> => {
   return result;
 };
 
+// Barcode Update
+
+const singleBarcodeUpdate = async (barcodeId: string, data: any): Promise<BarCode | null> => {
+  console.log(data, 'data');
+
+  if (!barcodeId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeId is required');
+  }
+
+  const findBarcode = await prisma.barCode.findUnique({
+    where: {
+      barcodeId,
+    },
+  });
+
+  if (!findBarcode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
+  }
+
+  const result = await prisma.barCode.update({
+    where: {
+      barcodeId,
+    },
+    data,
+  });
+
+  return result;
+};
+
+const deleteBarcode = async (barcodeId: string): Promise<BarCode | null> => {
+  if (!barcodeId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeId is required');
+  }
+
+  const findBarcode = await prisma.barCode.findUnique({
+    where: {
+      barcodeId,
+    },
+  });
+
+  if (!findBarcode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
+  }
+
+  const result = await prisma.barCode.delete({
+    where: {
+      barcodeId,
+    },
+  });
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
   getAvailableBarCode,
   getAllBarCodeForPrint,
   getSingleVariant,
+  singleBarcodeUpdate,
+  deleteBarcode,
 };

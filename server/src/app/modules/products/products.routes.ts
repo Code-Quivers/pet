@@ -30,10 +30,17 @@ router.patch(
   }
 );
 
-router.delete(
-  '/:productId',
-  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  ProductController.deleteProduct
+router.patch(
+  '/variant/:variantId',
+  auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  FileUploadHelper.uploadProductImage.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = ProductZodValidation.editProductVariation.parse(JSON.parse(req.body.data));
+    return ProductController.updateProductVariation(req, res, next);
+  }
 );
+
+router.delete('/:productId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductController.deleteProduct);
+router.delete('/variant/:variantId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductController.deleteProductVariant);
 
 export const ProductRoutes = router;

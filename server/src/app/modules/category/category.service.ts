@@ -13,7 +13,7 @@ import { IUploadFile } from '../../../interfaces/file';
 import { CategoryRelationalFields, CategoryRelationalFieldsMapper, CategorySearchableFields } from './category.constants';
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { updateCategoryData } from './category.utils';
+import { getDynamicHref, updateCategoryData } from './category.utils';
 
 // modules
 // !----------------------------------Create New Category--------------------------------------->>>
@@ -25,13 +25,13 @@ const addCategory = async (req: Request): Promise<Category> => {
   const data = req.body as ICategoryRequest;
 
   // Replace spaces with dashes in categoryName
-  const categoryNameWithDashes = data?.categoryName.replace(/[,\s&]+/g, '-').toLowerCase();
+  const newCategoryHref = getDynamicHref(data?.categoryName);
 
   const newCategory = {
     categoryName: data?.categoryName,
     description: data?.description,
     categoryImage: filePath,
-    categoryHref: categoryNameWithDashes,
+    categoryHref: newCategoryHref,
   };
 
   const result = await prisma.$transaction(async transactionClient => {
@@ -43,7 +43,7 @@ const addCategory = async (req: Request): Promise<Category> => {
             categoryName: data?.categoryName,
           },
           {
-            categoryHref: categoryNameWithDashes,
+            categoryHref: newCategoryHref,
           },
         ],
       },
@@ -187,7 +187,7 @@ const updateCategory = async (categoryId: string, req: Request): Promise<Categor
     categoryImage: filePath,
   };
 
-  if (categoryName) updatedDetails['categoryHref'] = categoryName.replace(/[,\s&]+/g, '-').toLowerCase();
+  if (categoryName) updatedDetails['categoryHref'] = getDynamicHref(categoryName);
 
   // Updated data from request
   const newCategoryData: Partial<ICategoryUpdateRequest> = updateCategoryData(updatedDetails);

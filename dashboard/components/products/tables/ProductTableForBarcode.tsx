@@ -10,7 +10,6 @@ import {
   Checkbox,
   DateRangePicker,
   Dropdown,
-  IconButton,
   Input,
   InputGroup,
   Pagination,
@@ -30,7 +29,13 @@ import DocPassIcon from "@rsuite/icons/DocPass";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import { predefinedRanges } from "@/helpers/constant";
-import { useGetBarcodeForPrintQuery } from "@/redux/features/barCodeApi";
+import {
+  useGetBarcodeForPrintQuery,
+  useUpdateBarcodeStatusMutation,
+} from "@/redux/features/barCodeApi";
+import { FiEdit2 } from "react-icons/fi";
+import { RiDeleteBinFill } from "react-icons/ri";
+import BarcodeDeleteModal from "../modal/BarcodeDeleteModal";
 
 const ProductBarcode = () => {
   const router = useRouter();
@@ -67,13 +72,8 @@ const ProductBarcode = () => {
     isFetching,
   } = useGetBarcodeForPrintQuery({ ...query });
 
-  // const [editData, setEditData] = useState(null);
-  // const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
-  // const handleCloseEdit = () => {
-  //   setIsOpenEdit(false);
-  //   setEditData(null);
-  // };
+  console.log("allBarCodeList", allBarCodeList);
+
   // Filter date
   const handleFilterDate = (date: Date[] | null) => {
     if (!date?.length) {
@@ -298,6 +298,29 @@ const ProductBarcode = () => {
       value: item.value,
     };
   });
+
+  //BarCode Status Change
+
+  const [barcodeStatusChange] = useUpdateBarcodeStatusMutation();
+
+  const barCodeStatusChange = async (eventKey: string, rowData: any) => {
+    const objData = {
+      barcodeStatus: eventKey,
+    };
+
+    console.log("objData", objData);
+
+    await barcodeStatusChange({
+      barcodeId: rowData?.barcodeId,
+      data: objData,
+    });
+  };
+
+  //Delete Modal
+
+  const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const [deleteData, setDeleteData] = useState<any | null>(null);
+  const handleCloseDelete = () => setIsOpenDelete(false);
 
   return (
     <>
@@ -530,8 +553,44 @@ const ProductBarcode = () => {
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
-                dataKey="barcodeStatus"
-              ></Cell>
+                // dataKey="barcodeStatus"
+              >
+                {(rowData) => (
+                  <div className="flex items-center gap-3">
+                    {rowData.barcodeStatus}{" "}
+                    <span>
+                      <Whisper
+                        placement="bottomStart"
+                        controlId="control-id-with-dropdown"
+                        trigger="click"
+                        speaker={
+                          <Popover full>
+                            <Dropdown.Menu
+                              onSelect={(eventKey) =>
+                                barCodeStatusChange(eventKey as string, rowData)
+                              }
+                            >
+                              <Dropdown.Item eventKey={"ACTIVE"}>
+                                ACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"INACTIVE"}>
+                                INACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"AVAILABLE"}>
+                                AVAILABLE
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Popover>
+                        }
+                      >
+                        <Button>
+                          <FiEdit2 />
+                        </Button>
+                      </Whisper>
+                    </span>
+                  </div>
+                )}
+              </Cell>
             </Column>
 
             {/* Crated At */}
@@ -548,7 +607,7 @@ const ProductBarcode = () => {
 
             {/* Action */}
 
-            {/* <Column width={70}>
+            <Column width={70}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
@@ -556,26 +615,36 @@ const ProductBarcode = () => {
                     placement="topEnd"
                     speaker={
                       <Popover
-                        className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
+                        className=" font-semibold rounded-full !py-1.5 "
                         arrow={false}
                       >
-                        Edit
+                        Delete
                       </Popover>
                     }
                   >
-                    <IconButton
+                    <button
+                      className="  hover:text-[#eb0712db] "
                       onClick={() => {
-                        setIsOpenEdit(true);
-                        setEditData(rowData);
+                        setIsOpenDelete(true);
+                        setDeleteData(rowData);
                       }}
-                      circle
-                      icon={<MdModeEdit size={20} />}
-                    />
+                    >
+                      <RiDeleteBinFill size={20} />
+                    </button>
                   </Whisper>
                 )}
               </Cell>
-            </Column> */}
+            </Column>
           </Table>
+
+          <div>
+            <BarcodeDeleteModal
+              isOpenDelete={isOpenDelete}
+              handleCloseDelete={handleCloseDelete}
+              deleteData={deleteData}
+            />
+          </div>
+
           <div style={{ padding: 20 }}>
             <Pagination
               total={allBarCodeList?.meta?.total}
@@ -597,13 +666,6 @@ const ProductBarcode = () => {
           </div>
         </div>
       </div>
-      {/* 
-      <ProductEditModal
-        isOpenEdit={isOpenEdit}
-        setIsOpenEdit={setIsOpenEdit}
-        editData={editData}
-        handleCloseEdit={handleCloseEdit}
-      /> */}
     </>
   );
 };

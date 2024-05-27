@@ -1,6 +1,23 @@
-import React from "react";
+import { fileUrlKey, getBaseUrl } from "@/helpers/config/envConfig";
+import Image from "next/image";
+import Link from "next/link";
 
-const OurRange = () => {
+/* eslint-disable @next/next/no-img-element */
+async function getData() {
+  const url = getBaseUrl();
+  const res = await fetch(`${url}/category`, {
+    next: {
+      tags: ["categories"],
+      revalidate: 100,
+    },
+  });
+
+  return res.json();
+}
+
+const OurRange = async () => {
+  const allCategories = await getData();
+
   return (
     <div className="pt-10">
       <div className="max-w-xl mx-auto">
@@ -28,66 +45,34 @@ const OurRange = () => {
       </div>
       {/* Categories started */}
       <div className="grid grid-cols-1 md:grid-cols-3 justify-center  gap-5">
-        <div className="relative flex flex-row overflow-hidden  ">
-          <div className="absolute  bg-center  "></div>
-          <div className="group relative m-0 flex h-72 w-96 rounded-xl shadow-xl ring-gray-900/5 sm:mx-auto sm:max-w-lg">
-            <div className="z-10 h-full w-full overflow-hidden rounded-xl border border-gray-200 opacity-80 transition duration-300 ease-in-out group-hover:opacity-100    ">
-              <img
-                src="https://images.unsplash.com/photo-1506187334569-7596f62cf93f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3149&q=80"
-                className="animate-fade-in block h-full w-full scale-100 transform object-cover object-center opacity-100 transition duration-300 group-hover:scale-110"
-                alt=""
-              />
-            </div>
-            <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
-              <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                Backup Buddy
-              </h1>
-              <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                Ages 3-11
-              </h1>
-            </div>
-          </div>
-        </div>
-        <div className="relative flex flex-row overflow-hidden  ">
-          <div className="absolute  bg-center  "></div>
-          <div className="group relative m-0 flex h-72 w-96 rounded-xl shadow-xl ring-gray-900/5 sm:mx-auto sm:max-w-lg">
-            <div className="z-10 h-full w-full overflow-hidden rounded-xl border border-gray-200 opacity-80 transition duration-300 ease-in-out group-hover:opacity-100    ">
-              <img
-                src="https://images.unsplash.com/photo-1506187334569-7596f62cf93f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3149&q=80"
-                className="animate-fade-in block h-full w-full scale-100 transform object-cover object-center opacity-100 transition duration-300 group-hover:scale-110"
-                alt=""
-              />
-            </div>
-            <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
-              <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                Active
-              </h1>
-              <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                Ages 3+
-              </h1>
-            </div>
-          </div>
-        </div>
-        <div className="relative flex flex-row overflow-hidden  ">
-          <div className="absolute  bg-center  "></div>
-          <div className="group relative m-0 flex h-72 w-96 rounded-xl shadow-xl ring-gray-900/5 sm:mx-auto sm:max-w-lg">
-            <div className="z-10 h-full w-full overflow-hidden rounded-xl border border-gray-200 opacity-80 transition duration-300 ease-in-out group-hover:opacity-100    ">
-              <img
-                src="https://images.unsplash.com/photo-1506187334569-7596f62cf93f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3149&q=80"
-                className="animate-fade-in block h-full w-full scale-100 transform object-cover object-center opacity-100 transition duration-300 group-hover:scale-110"
-                alt=""
-              />
-            </div>
-            <div className="absolute bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
-              <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
-                I.C.E
-              </h1>
-              <h1 className="text-sm font-light text-gray-200 shadow-xl">
-                Age 12+
-              </h1>
-            </div>
-          </div>
-        </div>
+        {allCategories?.data?.length > 0 &&
+          allCategories?.data?.map((singleCategory: any) => (
+            <Link
+              href={`/shop/${singleCategory?.categoryHref}`}
+              key={singleCategory?.categoryId}
+              className="relative flex flex-row overflow-hidden  "
+            >
+              <div className="group relative m-0 flex h-72 w-96 rounded-xl shadow-xl ring-gray-900/5 sm:mx-auto sm:max-w-lg">
+                <div className="z-10 h-full w-full overflow-hidden rounded-xl border border-gray-200 opacity-80 transition duration-300 ease-in-out group-hover:opacity-100    ">
+                  <Image
+                    src={`${fileUrlKey()}/${singleCategory?.categoryImage}`}
+                    width={1000}
+                    height={1000}
+                    className="animate-fade-in block h-full w-full scale-100 transform object-cover object-center opacity-100 transition duration-300 group-hover:scale-110"
+                    alt=""
+                  />
+                </div>
+                <div className="absolute  w-full bottom-0 z-20 m-0 pb-4 ps-4 transition duration-300 ease-in-out group-hover:-translate-y-1 group-hover:translate-x-3 group-hover:scale-110">
+                  <h1 className="font-serif text-2xl font-bold text-white shadow-xl">
+                    {singleCategory?.categoryName}
+                  </h1>
+                  <h1 className="text-sm   text-gray-100 font-semibold shadow-xl">
+                    Ages 3-11
+                  </h1>
+                </div>
+              </div>
+            </Link>
+          ))}
       </div>
     </div>
   );

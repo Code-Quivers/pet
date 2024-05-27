@@ -4,11 +4,10 @@ import CardDataStats from "../CardDataStats";
 import { RiCalendarEventLine } from "react-icons/ri";
 
 import RecentProducts from "../Tables/RecentProducts";
+import ChartSection from "../orders/chart/ChartSection";
 
 const ECommerce = () => {
   const { data, isLoading } = useGetAllCountsQuery({});
-
-  console.log(data, "..............................");
 
   return (
     <>
@@ -106,7 +105,9 @@ const ECommerce = () => {
           </svg>
         </CardDataStats>
       </div>
-
+      <div className="bg-white rounded-md p-5 mt-5 shadow-3">
+        <ChartSection />
+      </div>
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <div className="col-span-12 xl:col-span-12">
           <RecentProducts />
