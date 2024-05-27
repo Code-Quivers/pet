@@ -1,12 +1,15 @@
 import { useUpdateOrderMutation } from "@/redux/features/orderApi";
 import { Controller, Form, SubmitHandler, useForm } from "react-hook-form";
-import { Button, Input, Modal } from "rsuite";
+import { Button, Drawer, Input, Modal } from "rsuite";
 
 const OrderEditShippingInformation = ({
-  openShipping,
-  handleCloseShipping,
+  placement,
+  openDrawer,
+  setOpenDrawer,
   order,
 }: any) => {
+  console.log(order, "order");
+
   const {
     control,
     handleSubmit,
@@ -31,34 +34,125 @@ const OrderEditShippingInformation = ({
 
   return (
     <div>
-      <Modal
-        size="md"
-        open={openShipping}
-        onClose={handleCloseShipping}
-        backdrop="static"
+      <Drawer
+        placement={placement}
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
       >
-        <Modal.Header>
-          <Modal.Title className="!font-extrabold">
+        <Drawer.Header>
+          <Drawer.Title className="!font-extrabold">
             Shipping Information
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+          </Drawer.Title>
+        </Drawer.Header>
+        <Drawer.Body>
           <div>
             <form onSubmit={handleSubmit(handleChangeShippingInformation)}>
-              <div className="grid grid-cols-2 items-center gap-4">
+              <div className="grid grid-cols-1 items-center gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 w-full">
+                  <div>
+                    <label className="block font-medium text-black ">
+                      First Name{" "}
+                    </label>
+                    <Controller
+                      defaultValue={order?.firstName}
+                      name="firstName"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <Input
+                            {...field}
+                            placeholder="First Name"
+                            className="!w-full"
+                          />
+                          {/* <Form.ErrorMessage
+                        show={
+                          (!!errors?.address &&
+                            !!errors?.address?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.address?.message}
+                        </span>
+                      </Form.ErrorMessage> */}
+                        </div>
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-medium text-black ">
+                      Last Name{" "}
+                    </label>
+                    <Controller
+                      defaultValue={order?.lastName}
+                      name="lastName"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <Input
+                            {...field}
+                            placeholder="Last Name"
+                            className="!w-full"
+                          />
+                          {/* <Form.ErrorMessage
+                        show={
+                          (!!errors?.address &&
+                            !!errors?.address?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.address?.message}
+                        </span>
+                      </Form.ErrorMessage> */}
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
                 <div>
-                  <label className="block font-medium text-black ">
-                    Address
-                  </label>
+                  <label className="block font-medium text-black ">Email</label>
                   <Controller
-                    defaultValue={order?.shippingAddress}
-                    name="shippingAddress"
+                    defaultValue={order?.email}
+                    name="email"
                     control={control}
                     render={({ field }) => (
                       <div className="rs-form-control-wrapper">
                         <Input
                           {...field}
-                          placeholder="Address"
+                          placeholder="Email..."
+                          className="!w-full"
+                        />
+                        {/* <Form.ErrorMessage
+                        show={
+                          (!!errors?.address &&
+                            !!errors?.address?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.address?.message}
+                        </span>
+                      </Form.ErrorMessage> */}
+                      </div>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-black ">Phone</label>
+                  <Controller
+                    defaultValue={order?.phone}
+                    name="phone"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <Input
+                          {...field}
+                          placeholder="Phone..."
                           className="!w-full"
                         />
                         {/* <Form.ErrorMessage
@@ -106,16 +200,42 @@ const OrderEditShippingInformation = ({
                     )}
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 items-center gap-4">
                 <div>
-                  <label className="block font-medium text-black ">
-                    Postal Code
-                  </label>
+                  <label className="block font-medium text-black ">State</label>
                   <Controller
-                    defaultValue={order?.postalCode}
-                    name="postalCode"
+                    defaultValue={order?.state}
+                    name="state"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <Input
+                          {...field}
+                          placeholder="state..."
+                          className="!w-full"
+                        />
+                        {/* <Form.ErrorMessage
+                        show={
+                          (!!errors?.address &&
+                            !!errors?.address?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.address?.message}
+                        </span>
+                      </Form.ErrorMessage> */}
+                      </div>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-black ">Zip</label>
+                  <Controller
+                    defaultValue={order?.zip}
+                    name="zip"
                     control={control}
                     render={({ field }) => (
                       <div className="rs-form-control-wrapper">
@@ -140,6 +260,41 @@ const OrderEditShippingInformation = ({
                     )}
                   />
                 </div>
+
+                <div>
+                  <label className="block font-medium text-black ">
+                    Address
+                  </label>
+                  <Controller
+                    defaultValue={order?.address}
+                    name="shippingAddress"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper">
+                        <Input
+                          as="textarea"
+                          rows={3}
+                          {...field}
+                          placeholder="Address"
+                          className="!w-full"
+                        />
+                        {/* <Form.ErrorMessage
+                        show={
+                          (!!errors?.address &&
+                            !!errors?.address?.message) ||
+                          false
+                        }
+                        placement="topEnd"
+                      >
+                        <span className="font-semibold">
+                          {errors?.address?.message}
+                        </span>
+                      </Form.ErrorMessage> */}
+                      </div>
+                    )}
+                  />
+                </div>
+
                 <div>
                   <label className="block font-medium text-black ">Note </label>
                   <Controller
@@ -170,6 +325,7 @@ const OrderEditShippingInformation = ({
                   />
                 </div>
               </div>
+
               <Button
                 loading={isLoading}
                 className="!bg-primary !text-white mt-4"
@@ -179,8 +335,8 @@ const OrderEditShippingInformation = ({
               </Button>
             </form>
           </div>
-        </Modal.Body>
-      </Modal>
+        </Drawer.Body>
+      </Drawer>
     </div>
   );
 };
