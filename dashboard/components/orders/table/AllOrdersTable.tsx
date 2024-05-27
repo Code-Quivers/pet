@@ -85,9 +85,15 @@ const AllOrderList = () => {
 
   // Shipping Information Modal
 
-  const [openShipping, setOpenShipping] = useState<any>(false);
-  const handleOpenShipping = () => setOpenShipping(true);
-  const handleCloseShipping = () => setOpenShipping(false);
+  const [shippingInfo, setShippingInfo] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [placement, setPlacement] = useState();
+
+  const shippingEdit = (key: any) => {
+    setOpenDrawer(true);
+    setPlacement(key);
+    console.log("key", key);
+  };
 
   return (
     <>
@@ -189,11 +195,6 @@ const AllOrderList = () => {
                         </div>
                       }
                     >
-                      <OrderEditShippingInformation
-                        openShipping={openShipping}
-                        handleCloseShipping={handleCloseShipping}
-                        order={order}
-                      />
                       <div className="">
                         <div>
                           <div className="mb-5">
@@ -215,89 +216,9 @@ const AllOrderList = () => {
                               handleClose={handleClose}
                             />
                           </div>
-                          {/* <div className="flex items-center w-full gap-5">
-                            <div>
-                              <span className="bg-gradient-to-b bg-stroke p-1 rounded-md">
-                                <span className="font-bold">Event Name:</span>{" "}
-                                <span>{order?.eventName}</span>{" "}
-                              </span>
-                            </div>
-                          </div> */}
                         </div>
                         {/* Client Info */}
                         <section className="md:flex gap-3 max-md:space-y-3">
-                          {/*  */}
-                          {/* <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
-                            <h1 className="text-xl font-semibold">
-                              Event Information
-                            </h1>
-                            <div>
-                              <p>
-                                Event Name:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.eventName}
-                                </span>
-                              </p>
-                            </div>
-                          </div> */}
-                          {/* customers information */}
-                          {/* <div className="md:w-1/3 w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
-                            <h1 className="text-xl font-semibold">
-                              Customer Information
-                            </h1>
-                            <div>
-                              <p>
-                                Name:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.fullName}
-                                </span>
-                              </p>
-                              <p>
-                                Company Name:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.companyName}
-                                </span>
-                              </p>
-                              <p>
-                                Phone Number:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.phoneNumber}
-                                </span>
-                              </p>
-                              <p>
-                                Email:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.email}
-                                </span>
-                              </p>
-                              <p>
-                                Address:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.addressLine1}
-                                </span>
-                              </p>
-                              <p>
-                                City:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.city}
-                                </span>
-                              </p>
-                              <p>
-                                Postal Code:
-                                <span className="font-medium text-black">
-                                  {" "}
-                                  {order?.user?.profile?.postalCode}
-                                </span>
-                              </p>
-                            </div>
-                          </div> */}
                           {/* shipping information */}
                           <div className=" w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
                             <div className="flex items-center justify-between">
@@ -306,7 +227,10 @@ const AllOrderList = () => {
                               </h1>
                               <div
                                 className="flex gap-[2px] cursor-pointer"
-                                onClick={handleOpenShipping}
+                                onClick={() => {
+                                  shippingEdit("right");
+                                  setShippingInfo(order);
+                                }}
                               >
                                 <Image
                                   src={icons8Edit}
@@ -479,6 +403,15 @@ const AllOrderList = () => {
               <h1>No Orders Found</h1>
             </div>
           )}
+        </div>
+
+        <div>
+          <OrderEditShippingInformation
+            placement={placement}
+            openDrawer={openDrawer}
+            setOpenDrawer={setOpenDrawer}
+            order={shippingInfo}
+          />
         </div>
         <div style={{ padding: 20 }}>
           <Pagination
