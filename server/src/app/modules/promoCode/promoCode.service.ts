@@ -178,9 +178,9 @@ const getPromotions = async (filters: IPromoFilterRequest, options: IPaginationO
   };
 };
 
-const applyPromoCode = async (promoCode: string, cartData:any) => {
+const applyPromoCode = async (promoCode: string, cartData: any) => {
   const currentDate = new Date(getDateISODateWithoutTimestamp(new Date())).toISOString();
-  console.log(currentDate);
+  // console.log(currentDate);
   const promotion = await prisma.promotion.findUnique({
     where: {
       promoCode: promoCode,
@@ -196,7 +196,7 @@ const applyPromoCode = async (promoCode: string, cartData:any) => {
       //   requiredQuantity: purchasedQuantity,
       // },
     },
-    sellect: {
+    select: {
       buyItemGetItemPromotion: true,
     },
   });
@@ -207,19 +207,14 @@ const applyPromoCode = async (promoCode: string, cartData:any) => {
     };
   }
   console.log(promotion);
-  const {
-    requiredItemId = "",
-    rewardItemId = "",
-    rewardQuantity = 0,
-    requiredQuantity = 0,
-  } = promotion.buyItemGetItemPromotion;
-  const cartItem = cartData.find((item:any) => item.productId === requiredItemId && item.quantity >= requiredQuantity);
+  const { requiredItemId = '', rewardItemId = '', rewardQuantity = 0, requiredQuantity = 0 } = promotion.buyItemGetItemPromotion;
+  const cartItem = cartData?.find((item: any) => item.productId === requiredItemId && item.quantity >= requiredQuantity);
   if (!cartItem) {
     return { isValid: false };
   }
 
   // Calculate how many will get as free
-  const quantityWillGet:number= Math.floor(cartItem.quantity/requiredQuantity) * rewardQuantity;
+  const quantityWillGet: number = Math.floor(cartItem.quantity / requiredQuantity) * rewardQuantity;
 
   const product = await prisma.productVariation.findFirst({
     where: {
@@ -229,11 +224,11 @@ const applyPromoCode = async (promoCode: string, cartData:any) => {
       },
     },
   });
-  
+
   return {
     isValid: true,
     product: product,
-    quantity: quantityWillGet
+    quantity: quantityWillGet,
   };
 };
 

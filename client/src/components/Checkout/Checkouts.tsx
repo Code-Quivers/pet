@@ -11,13 +11,11 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { RxValue } from "react-icons/rx";
-import { useGetPromoQuery } from "@/redux/api/features/promoCodeApi";
 import PromoCode from "./CheckoutComponents/PromoCode";
 
 const Checkouts = ({ params }: any) => {
   const { data: stateTax } = useGetTaxQuery({});
-  const { data: promo } = useGetPromoQuery({});
-  console.log(promo, "promo");
+  // console.log(promo, "promo");
 
   const cart = useSelector((state: any) => state.cart.cart);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
@@ -32,7 +30,6 @@ const Checkouts = ({ params }: any) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [promoCode, setPromoCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [stateTaxValue, setStateTaxValue] = useState(0);
 
@@ -77,8 +74,8 @@ const Checkouts = ({ params }: any) => {
           onSubmit={handleSubmit(handleCheckout)}
           className="max-w-6xl mx-auto"
         >
-          <section className="grid grid-cols-12 min-h-[200vh]">
-            <div className="col-span-7 pt-10 mr-10">
+          <section className="md:grid md:grid-cols-12 min-h-[200vh]">
+            <div className="col-span-7 pt-10 md:mr-10">
               {/* Email */}
               <div>
                 <h3 className="font-bold text-xl mb-2">CONTACT</h3>
@@ -472,10 +469,10 @@ const Checkouts = ({ params }: any) => {
               </div>
             </div>
 
-            <div className="col-span-5 border-l pt-10 pl-10 space-y-3.5">
+            <div className="col-span-5 border-l pt-10 md:pl-10 ">
               {cart?.length > 0 &&
                 cart?.map((item: any, index: number) => (
-                  <div className="flex items-center gap-5" key={index}>
+                  <div className="flex items-center gap-5 mb-3" key={index}>
                     <div className="relative">
                       <Image
                         className="w-16 h-16 rounded border"
@@ -506,7 +503,7 @@ const Checkouts = ({ params }: any) => {
                   </div>
                 ))}
               {/* promo code apply  */}
-              <PromoCode />
+              <PromoCode cart={cart} />
               <div>
                 <div className="flex justify-between mt-5">
                   <p>Subtotal</p>

@@ -3,7 +3,7 @@ import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { CarouselThumbsButton } from "./CarouselThumbsButton";
 import Image from "next/image";
-import { fileUrlKey } from "@/utils/envConfig";
+import { fileUrlKey } from "@/helpers/config/envConfig";
 
 type PropType = {
   slides: any[];

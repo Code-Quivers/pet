@@ -1,4 +1,5 @@
-import { fileUrlKey } from "@/utils/envConfig";
+// import { fileUrlKey } from "@/utils/envConfig";
+import { fileUrlKey } from "@/helpers/config/envConfig";
 import Image from "next/image";
 
 type PropType = {
