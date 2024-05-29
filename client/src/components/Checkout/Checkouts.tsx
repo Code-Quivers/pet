@@ -503,7 +503,7 @@ const Checkouts = ({ params }: any) => {
                   </div>
                 ))}
               {/* promo code apply  */}
-              <PromoCode />
+              <PromoCode cart={cart} />
               <div>
                 <div className="flex justify-between mt-5">
                   <p>Subtotal</p>

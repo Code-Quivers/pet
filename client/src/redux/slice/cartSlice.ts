@@ -26,11 +26,14 @@ export const cartSlice = createSlice({
       );
       if (itemInCart) {
         itemInCart.quantity = itemInCart.quantity + action?.payload?.quantity;
+        itemInCart.totalPrice = itemInCart?.quantity * itemInCart?.price;
         setToLocalStorage("cart", JSON.stringify(state.cart));
       } else {
         state.cart.push({
           ...action?.payload?.product,
           quantity: action?.payload?.quantity,
+          totalPrice:
+            action?.payload?.quantity * action?.payload?.product?.price,
         });
         setToLocalStorage("cart", JSON.stringify(state.cart));
       }
@@ -68,10 +71,29 @@ export const cartSlice = createSlice({
       state.payAmount = action.payload;
       setToLocalStorage("payAmount", JSON.stringify(state.payAmount));
     },
+    applyPromoCode: (state: any, action: any) => {
+      const itemInCart = state.cart.find(
+        (item: any) => item.productId === action.payload.productId
+      );
+      if (itemInCart) {
+        itemInCart.quantity = itemInCart.quantity + action.payload.quantity;
+        itemInCart.totalPrice =
+          itemInCart?.totalPrice + action?.payload?.offerPrice;
+        // (itemInCart?.quantity - action?.payload?.quantity) *
+        // itemInCart?.price;
+      } else {
+        state.cart.push({
+          ...action.payload,
+          quantity: action.payload.quantity,
+          totalPrice: action.payload.quantity * action.payload.offerPrice,
+        });
+      }
+    },
   },
 });
 export const {
   addToCart,
+  applyPromoCode,
   incrementQuantity,
   decrementQuantity,
   removeItem,
