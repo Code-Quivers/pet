@@ -15,10 +15,10 @@ export const promoApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.promo],
     }),
     applyPromotionalOffer: build.mutation({
-      query: ({ code, body }) => ({
+      query: ({ code, data }) => ({
         url: `${PROMOTION_OFFER_API}/${code}`,
         method: "POST",
-        body,
+        data: data,
       }),
       invalidatesTags: [tagTypes.promo, tagTypes.promotionalOffer],
     }),

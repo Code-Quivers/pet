@@ -2,40 +2,71 @@ import {
   useApplyPromotionalOfferMutation,
   useLazyGetPromoQuery,
 } from "@/redux/api/features/promoCodeApi";
+import { applyPromoCode } from "@/redux/slice/cartSlice";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
+import { useDispatch } from "react-redux";
 
-const PromoCode = () => {
+const PromoCode = ({ cart }: { cart: any }) => {
+  const dispatch = useDispatch();
   const { control } = useForm();
   const [promoCode, setPromoCode] = useState("");
-  const [promoCodeError, setPromoCodeError] = useState(false);
+  const [promoCodeMessage, setPromoCodeMessage] = useState(false);
   const [promoCodeApplied, setPromoCodeApplied] = useState("");
-  const [triggerPromoCheck, { isLoading, isFetching }] = useLazyGetPromoQuery();
-  const [applyPromotionalOffer, { data }] = useApplyPromotionalOfferMutation();
+  const [applyPromotionalOffer, { isLoading }] =
+    useApplyPromotionalOfferMutation();
+  // console.log(data, "data");
+  console.log(isLoading, "isLoading");
+  // console.log(data, "data");
+  const cartDataForApi = cart?.map((item: any) => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }));
 
   const handleApplyPromo = async () => {
     // reset error and promo code
-    setPromoCodeError(false);
+    setPromoCodeMessage(false);
     setPromoCode("");
-    // check if promo code is valid
     if (promoCode) {
-      const result = await triggerPromoCheck({ promoCode });
-      // check promo code from api if promo code is valid, apply it
-      console.log(result, "result");
-      if (result?.data?.data?.isExist) {
-        const promoCodeData = {
-          purchasedItemId: "53010baa-1f8f-4c48-bd24-a469f76ab96b",
-          purchasedQuantity: 1,
+      // console.log(cartDataForApi, "cartDataForApi");
+      const forBody = {
+        cartData: cartDataForApi,
+      };
+      // const forBodyJson = JSON.stringify(forBody);
+      console.log(forBody, "forBody.................");
+      console.log(promoCode, "promoCode");
+      const result = await applyPromotionalOffer({
+        code: promoCode,
+        data: forBody,
+      });
+      const { data } = result as { data: any };
+      // console.log(isLoading, "isLoading");
+      if (data?.data?.isValid && data?.data?.product?.variantId) {
+        // setPromoCodeMessage(true);
+        const product = data?.data?.product;
+        const freeQuantity = data?.data?.quantity;
+        setPromoCodeApplied(promoCode);
+
+        console.log(data?.data, "product........");
+        const freeProduct = {
+          productId: product?.productId,
+          // productName: product?.productName
+          image: product?.image,
+          color: {
+            code: product?.color?.code,
+            name: product?.color?.name,
+          },
+          price: product?.variantPrice,
+          variantId: product?.variantId,
+          quantity: freeQuantity,
+          offerPrice: 0,
         };
-        applyPromotionalOffer({ code: promoCode, body: promoCodeData });
-        console.log(result?.data?.data?.isExist, "result");
-        setPromoCodeApplied(result?.originalArgs?.promoCode);
-      } else if (promoCode && !result?.data?.data?.isExist) {
-        // if promo code is invalid
-        setPromoCodeError(true);
-        setPromoCode("");
+        dispatch(applyPromoCode(freeProduct as any));
       }
+
+      // console.log(data, "data");
+      // console.log(data, "result..........");
     }
   };
 
@@ -66,16 +97,17 @@ const PromoCode = () => {
           disabled={promoCode.length === 0}
           className="py-2.5 px-6 rounded-lg bg-[#0495af] text-white font-semibold disabled:bg-gray-200 disabled:text-white disabled:cursor-not-allowed"
         >
-          {isLoading || isFetching ? "Applying..." : "Apply"}
+          Apply
+          {/* {isLoading || isFetching ? "Applying..." : "Apply"} */}
         </button>
       </div>
 
       <div className="h-10">
-        {promoCodeError && <p className="h-7">Enter a valid promo code</p>}
+        {promoCodeMessage && <p className="h-7">Enter a valid promo code</p>}
         {promoCodeApplied && (
           <div className="flex items-center">
             <span className="bg-gray-200 text-black flex text-sm font-bold px-3 rounded-md">
-              {promoCodeApplied}{" "}
+              {promoCodeApplied}
               <IoIosClose
                 onClick={() => setPromoCodeApplied("")}
                 size={18}
@@ -90,3 +122,43 @@ const PromoCode = () => {
 };
 
 export default PromoCode;
+
+// const orderData = {
+//   cartData: [
+//     {
+//       categoryId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       productId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       variantId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       quantity: 1,
+//     },
+//     {
+//       categoryId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       productId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       variantId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       quantity: 1,
+//     },
+//   ],
+//   payAmount: {
+//     subTotal: 100,
+//     tax: 10,
+//     total: 110,
+//   },
+//   promoOffer: {
+//     promoCode: "string",
+//     product: {
+//       variantId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       productId: "4d50fa39-271a-4266-b071-d78a3296783a",
+//       quantity: 1,
+//     },
+//   },
+//   email: "",
+//   firstName: "",
+//   lastName: "",
+//   address: "",
+//   city: "",
+//   state: "",
+//   postalCode: "",
+//   phone: "",
+
+//   // if promoCode isn't apply or not available then it will be product null
+// };
