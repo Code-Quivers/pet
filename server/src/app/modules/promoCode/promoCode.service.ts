@@ -223,6 +223,9 @@ const applyPromoCode = async (promoCode: string, cartData: any) => {
         gte: quantityWillGet,
       },
     },
+    select: {
+      product: true,
+    },
   });
 
   return {
