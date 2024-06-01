@@ -23,7 +23,7 @@ RUN yarn install
 # Copy everything 
 COPY . .
 
-EXPOSE 7000
+EXPOSE 9000
 
 
 RUN yarn build

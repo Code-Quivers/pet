@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - 7000:7000
+      - 9000:9000
     volumes:
       - type: bind
         source: /root/volumes/kid/data
@@ -50,4 +50,4 @@ services:
     depends_on:
       - client
     ports:
-      - 3200:3200
+      - 4000:4000
