@@ -207,6 +207,7 @@ const applyPromoCode = async (promoCode: string, cartData: any) => {
     };
   }
   console.log(promotion);
+  // @ts-ignore
   const { requiredItemId = '', rewardItemId = '', rewardQuantity = 0, requiredQuantity = 0 } = promotion.buyItemGetItemPromotion;
   const cartItem = cartData?.find((item: any) => item.productId === requiredItemId && item.quantity >= requiredQuantity);
   if (!cartItem) {

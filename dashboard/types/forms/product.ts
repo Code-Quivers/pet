@@ -1,5 +1,3 @@
-import { Image } from "next/image";
-import { IUpdateProduct } from "@/types/forms/product";
 import { FileType } from "rsuite/esm/Uploader";
 
 export type ICreateProduct = {

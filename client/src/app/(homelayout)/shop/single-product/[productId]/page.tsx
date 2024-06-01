@@ -8,7 +8,6 @@ import { Loader, Tooltip, Whisper } from "rsuite";
 import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 import { v4 as uuIdv4 } from "uuid";
 import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/CarouselThumbsButton";
-import { fileUrlKey } from "@/utils/envConfig";
 import { addToCart } from "@/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import Cart from "@/components/ProductsPage/Cart/Cart";
@@ -464,10 +463,10 @@ const SingleProductPage = ({ params }: any) => {
             </div>
             <div className="">
               <div className="flex items-start">
-                <img
+                {/* <img
                   src="https://readymadeui.com/team-2.webp"
                   className="w-12 h-12 rounded-full border-2 border-white"
-                />
+                /> */}
                 <div className="ml-3">
                   <h4 className="text-sm font-bold text-[#333]">John Doe</h4>
                   <div className="flex space-x-1 mt-1">

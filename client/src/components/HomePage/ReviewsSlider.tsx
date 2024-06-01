@@ -34,7 +34,7 @@ const ReviewsSlider = () => {
           </div>
         </div>
         <Divider vertical />
-        <Carousel key={`${shape}`} shape={shape} className="custom-slider">
+        <Carousel key={`${shape}`} shape="bar" className="custom-slider">
           {testimonials?.data?.map((rev: any) => (
             <>
               <div className="flex justify-center items-center ">

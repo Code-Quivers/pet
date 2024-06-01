@@ -850,7 +850,9 @@ const ReviewsPage = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-2xl font-bold sm:text-3xl">Stayin' Alive</p>
+                <p className="text-2xl font-bold sm:text-3xl">
+                  {`Stayin'`} Alive
+                </p>
 
                 <p className="mt-4 leading-relaxed text-gray-700">
                   No, Rose, they are not breathing. And they have no arms or
@@ -916,7 +918,9 @@ const ReviewsPage = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-2xl font-bold sm:text-3xl">Stayin' Alive</p>
+                <p className="text-2xl font-bold sm:text-3xl">
+                  {`Stayin'`} Alive
+                </p>
 
                 <p className="mt-4 leading-relaxed text-gray-700">
                   No, Rose, they are not breathing. And they have no arms or

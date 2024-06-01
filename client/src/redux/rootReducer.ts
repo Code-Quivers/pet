@@ -1,6 +1,4 @@
 import { baseApi } from "./api/baseApi";
-import { addDeliverySlice } from "./slice/addDeliverySlice";
-import { employeeFiledSlice } from "./slice/addEmployeeFieldSlice";
 import { cartSlice } from "./slice/cartSlice";
 
 export const reducer = {

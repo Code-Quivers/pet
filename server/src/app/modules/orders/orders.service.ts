@@ -10,6 +10,7 @@ import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IOrderFilterRequest, IOrderRequest } from './orders.interface';
 import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFields } from './orders.constants';
+import { ITaxUpdateRequest } from '../tax/tax.interface';
 
 // modules
 
