@@ -16,7 +16,6 @@ const ProductPage = () => {
   const toaster = useToaster();
   const [start, setStart] = useState(false);
   const [productId, setProductId] = useState(null);
-  console.log(products, "productList");
   const message = (
     <Message
       showIcon

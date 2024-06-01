@@ -3,20 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 /* eslint-disable @next/next/no-img-element */
-async function getData() {
-  const url = getBaseUrl();
-  const res = await fetch(`${url}/category`, {
-    next: {
-      tags: ["categories"],
-      revalidate: 100,
-    },
-  });
+// async function getData() {
+//   const url = getBaseUrl();
+//   const res = await fetch(`${url}/category`, {
+//     next: {
+//       tags: ["categories"],
+//       revalidate: 100,
+//     },
+//   });
 
-  return res.json();
-}
+//   return res.json();
+// }
 
 const OurRange = async () => {
-  const allCategories = await getData();
+  // const allCategories = await getData();
+  const allCategories: any = {};
 
   return (
     <div className="pt-10">
