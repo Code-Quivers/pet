@@ -22,7 +22,6 @@ import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
-import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import DocPassIcon from "@rsuite/icons/DocPass";
@@ -473,7 +472,7 @@ const ProductBarcode = () => {
                             src={
                               rowData?.variant?.image
                                 ? `${fileUrlKey()}/${rowData?.variant?.image}`
-                                : noImage
+                                : "/images/no-image.png"
                             }
                             className="object-cover"
                           />
@@ -489,7 +488,7 @@ const ProductBarcode = () => {
                         src={
                           rowData?.variant?.image
                             ? `${fileUrlKey()}/${rowData?.variant?.image}`
-                            : noImage
+                            : "/images/no-image.png"
                         }
                         className="object-center  object-cover"
                       />

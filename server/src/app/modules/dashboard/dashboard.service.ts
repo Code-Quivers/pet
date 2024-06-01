@@ -16,15 +16,9 @@ const getTotalCount = async () => {
     // ! total products
     const totalProducts = await transactionClient.product.count();
 
-    // ! total orders
-    // const totalOrders = await transactionClient.order.count()
-    // ! total
-    // const totalEvents = await transactionClient.event.count()
     return {
       totalUsers,
       totalProducts,
-      // totalOrders,
-      // totalEvents
     };
   });
   return result;

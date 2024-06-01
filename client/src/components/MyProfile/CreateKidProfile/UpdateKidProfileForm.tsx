@@ -221,7 +221,7 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
         <div>
           <MyContacts
             errors={errors}
-            relations={kidDetails?.relations}
+            // relations={kidDetails?.relations}
             control={control}
           />
         </div>

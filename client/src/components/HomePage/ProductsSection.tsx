@@ -9,7 +9,6 @@ import { useGetCategoryQuery } from "@/redux/api/features/categoryApi";
 import { useGetProductQuery } from "@/redux/api/features/productApi";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import Link from "next/link";
-import { set } from "rsuite/esm/utils/dateUtils";
 import { Loader, Message, useToaster } from "rsuite";
 
 const ProductsSection = () => {
@@ -77,7 +76,6 @@ const ProductsSection = () => {
         <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 max-w-4xl">
           {products?.map((product: any) => (
             <div key={product.id} className="shadow-lg">
-              {console.log(product, "product")}
               <div className="">
                 <Link href={`/shop/single-product/${product?.productId}`}>
                   <div className="w-full h-full">

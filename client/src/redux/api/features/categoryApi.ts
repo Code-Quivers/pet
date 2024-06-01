@@ -34,8 +34,4 @@ const categoryApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useAddCategoryMutation,
-  useGetCategoryQuery,
-  useGetSingleCategoryQuery,
-} = categoryApi;
+export const { useGetCategoryQuery } = categoryApi;

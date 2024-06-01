@@ -43,7 +43,7 @@ const AddProductPromoForm = () => {
     watch,
   } = useForm<ICreateProductPromo>();
 
-  const { data: allProducts } = useGetProductQuery(null);
+  const { data: allProducts } = useGetProductQuery({});
 
   const productEnum = allProducts?.data?.length
     ? allProducts?.data?.map((single: any) => {
