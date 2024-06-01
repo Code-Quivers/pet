@@ -18,7 +18,7 @@ import {
   Table,
   Whisper,
 } from "rsuite";
-import { fileUrlKey } from "@/helpers/envConfig";
+import { fileUrlKey, getClientUrl } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
@@ -542,7 +542,7 @@ const ProductBarcode = () => {
             <Column flexGrow={3}>
               <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="code">
-                {(rowData) => `http:localhost:3000/tag/${rowData.code}`}
+                {(rowData) => `${getClientUrl()}/tag/${rowData.code}`}
               </Cell>
             </Column>
 
