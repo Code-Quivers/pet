@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: masportal
+      POSTGRES_DB: kid
+    volumes:
+      - type: bind
+        source: /root/volumes/kid/db
+        target: /var/lib/postgresql/db
+    restart: unless-stopped
+
+  server:
+    stdin_open: true
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server-container
+    depends_on:
+      - postgres
+    ports:
+      - 7000:7000
+    volumes:
+      - type: bind
+        source: /root/volumes/kid/data
+        target: /app/uploads
+
+  client:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client-container
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+
+  dashboard:
+    stdin_open: true
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: dashboard-container
+    depends_on:
+      - client
+    ports:
+      - 3200:3200
