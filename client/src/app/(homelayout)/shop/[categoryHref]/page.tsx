@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-async function getData(categoryHref: string) {
-  const url = getBaseUrl();
-  const res = await fetch(`${url}/category/${categoryHref}`, {
-    next: {
-      tags: ["category"],
-      revalidate: 60,
-    },
-  });
+// async function getData(categoryHref: string) {
+//   const url = getBaseUrl();
+//   const res = await fetch(`${url}/category/${categoryHref}`, {
+//     next: {
+//       tags: ["category"],
+//       revalidate: 60,
+//     },
+//   });
 
-  return res.json();
-}
+//   return res.json();
+// }
 
 import Image from "next/image";
 import { fileUrlKey, getBaseUrl } from "@/helpers/config/envConfig";
@@ -21,7 +21,8 @@ const CategoryPage = async ({
 }: {
   params: { categoryHref: string };
 }) => {
-  const singleCategory = await getData(params?.categoryHref);
+  // const singleCategory = await getData(params?.categoryHref);
+  const singleCategory: any = {};
   // console.log(singleCategory);
   return (
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
