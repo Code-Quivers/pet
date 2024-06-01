@@ -23,31 +23,6 @@ const UpdateKidPage = ({ params }: Props) => {
     code: params?.code,
   });
 
-  // function formatDuration(start: any, end: any) {
-  //   console.log(start);
-  //   console.log(end);
-  //   const duration = moment.duration(moment(end).diff(moment(start)));
-  //   const years = duration.years();
-  //   const months = duration.months();
-  //   const days = duration.days();
-
-  //   let formattedString = "";
-
-  //   if (years > 0) {
-  //     formattedString += `${years} year${years > 1 ? "s" : ""} `;
-  //   }
-
-  //   if (months > 0) {
-  //     formattedString += `${months} month${months > 1 ? "s" : ""} `;
-  //   }
-
-  //   if (days > 0 && years === 0 && months === 0) {
-  //     formattedString += `${days} day${days > 1 ? "s" : ""}`;
-  //   }
-
-  //   return formattedString.trim();
-  // }
-
   return (
     <div className="mx-auto max-w-screen-xl   sm:px-6 lg:px-8">
       {isLoading && (
@@ -58,7 +33,7 @@ const UpdateKidPage = ({ params }: Props) => {
 
       {/* if Error occurred */}
       {!isLoading && isError && !isSuccess && (
-        <div className="max-w-2xl mx-auto px-5 max-md:px-3">
+        <div className="max-w-2xl mx-auto px-5 min-h-[50vh] max-md:px-3">
           <div className="my-6  flex justify-center">
             <h2 className="text-3xl sm:text-4xl font-extrabold">
               E.T. Phone Home
