@@ -38,6 +38,15 @@ const orderApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.orders],
     }),
+
+    getMonthWiseOrders: builder.query({
+      query: (arg: Record<string, any>) => ({
+        url: `${ORDER_API}/monthWise`,
+        method: "GET",
+        params: arg,
+      }),
+      providesTags: [tagTypes.orders],
+    }),
   }),
 });
 
@@ -46,4 +55,5 @@ export const {
   useUpdateOrderMutation,
   useUpdateOrderStatusMutation,
   useGetAllOrdersQuery,
+  useGetMonthWiseOrdersQuery,
 } = orderApi;

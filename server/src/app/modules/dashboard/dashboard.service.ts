@@ -13,12 +13,21 @@ const getTotalCount = async () => {
         },
       },
     });
+
+    console.log('totalUsers', totalUsers);
+
     // ! total products
     const totalProducts = await transactionClient.product.count();
-
+    // ! total orders
+    const totalOrders = await transactionClient.order.count();
+    // ! total
+    const totalCategory = await transactionClient.category.count();
+    
     return {
       totalUsers,
       totalProducts,
+      totalOrders,
+      totalCategory,
     };
   });
   return result;

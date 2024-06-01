@@ -12,7 +12,10 @@ const router = express.Router();
 router.post('/', validateRequest(OrderValidation.addOrder), OrderController.addOrder);
 
 // ! Get all List----------------------------------->>>
+
 router.get('/', OrderController.getOrder);
+
+router.get('/monthWise', OrderController.monthWiseOrder);
 
 router.patch('/:orderId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), OrderController.updateOrder);
 
