@@ -10,7 +10,9 @@ import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IOrderFilterRequest, IOrderRequest } from './orders.interface';
 import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFields } from './orders.constants';
+import { format, subMonths } from 'date-fns';
 import { ITaxUpdateRequest } from '../tax/tax.interface';
+
 
 // modules
 
@@ -220,9 +222,53 @@ const deleteOrder = async (taxId: string): Promise<Tax> => {
   return result;
 };
 
+const monthWiseOrder = async (): Promise<any> => {
+  const currentDate = new Date();
+
+  // Create an array of the last 12 months
+  const last12Months = Array.from({ length: 12 }, (_, i) => {
+    const date = subMonths(currentDate, i);
+    return format(date, 'MMMM yyyy');
+  }).reverse();
+
+  const monthMap: { [key: string]: number } = last12Months.reduce((acc, month) => {
+    acc[month] = 0;
+    return acc;
+  }, {} as { [key: string]: number });
+
+  const result = await prisma.order.findMany({
+    select: {
+      createdAt: true,
+    },
+  });
+
+  result.forEach(order => {
+    const date = new Date(order.createdAt);
+    const monthYear = format(date, 'MMMM yyyy');
+    if (monthMap[monthYear] !== undefined) {
+      monthMap[monthYear] += 1;
+    }
+  });
+
+  const formattedResult = Object.keys(monthMap).map(month => ({
+    month,
+    order: monthMap[month],
+  }));
+
+  return formattedResult;
+};
+
+monthWiseOrder()
+  .then(data => console.log('data', data))
+  .catch(error => console.error('Error:', error))
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
 export const OrderService = {
   addOrder,
   getOrder,
   updateOrder,
   deleteOrder,
+  monthWiseOrder,
 };
