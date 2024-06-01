@@ -23,6 +23,7 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
               onClick={() => {
                 remove(index);
               }}
+              type="button"
               className="text-[#f14e4e]   border px-2 border-red-600 hover:bg-red-600 hover:text-white duration-300 "
             >
               Remove
