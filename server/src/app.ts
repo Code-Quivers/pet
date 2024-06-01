@@ -42,6 +42,9 @@ app.use(
       'http://localhost:3003',
       'http://localhost:3004',
       'http://localhost:3005',
+      'http://85.239.232.185:3000',
+      'http://85.239.232.185:4000',
+      
     ],
     credentials: true,
     // methods: ['GET', 'POST', 'PATCH', 'DELETE'],

@@ -1,4 +1,3 @@
-import { IProductVariant } from './products.interface';
 import { ProductStatus } from '@prisma/client';
 
 export type IProductFilterRequest = {

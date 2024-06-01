@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IQARequest } from './promoCode.interface';
 import prisma from '../../../shared/prisma';
+import { IQARequest } from '../productQA/productQA.interface';
 
 export const productQAValidation = async (data: IQARequest) => {
   if (!data.productId) {
@@ -26,7 +26,3 @@ export const productQAValidation = async (data: IQARequest) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Question is required');
   }
 };
-
-
-
-

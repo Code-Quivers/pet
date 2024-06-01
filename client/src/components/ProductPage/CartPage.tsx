@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react";
 
 const CartPage = () => {
@@ -10,6 +12,7 @@ const CartPage = () => {
               <img
                 src="https://readymadeui.com/images/product11.webp"
                 className="w-full h-full object-contain rounded-md"
+                alt="a"
               />
             </div>
             <div>
@@ -83,6 +86,7 @@ const CartPage = () => {
               <img
                 src="https://readymadeui.com/images/product14.webp"
                 className="w-full h-full object-contain rounded-md"
+                alt="a"
               />
             </div>
             <div>
@@ -156,6 +160,7 @@ const CartPage = () => {
               <img
                 src="https://readymadeui.com/images/product13.webp"
                 className="w-full h-full object-contain rounded-md"
+                alt="a"
               />
             </div>
             <div>

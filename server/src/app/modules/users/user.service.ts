@@ -229,12 +229,12 @@ const getAllClients = async (filters: IUserFilterRequest, options: IPaginationOp
       profile: true,
       userId: true,
       updatedAt: true,
-      _count: {
-        select: {
-          order: true,
-        },
-      },
-      order: true,
+      // _count: {
+      //   select: {
+      //     order: true,
+      //   },
+      // },
+      // order: true,
     },
     skip,
     take: limit,
@@ -284,24 +284,24 @@ const getSingleUser = async (userId: string): Promise<IUsersResponse | null> => 
     select: {
       userId: true,
       email: true,
-
-      profile: {
-        select: {
-          profileId: true,
-          fullName: true,
-          addressLine1: true,
-          addressLine2: true,
-          city: true,
-          companyName: true,
-          country: true,
-          phoneNumber: true,
-          postalCode: true,
-          state: true,
-          role: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
+      profile: true,
+      // profile: {
+      //   select: {
+      //     profileId: true,
+      //     fullName: true,
+      //     addressLine1: true,
+      //     addressLine2: true,
+      //     city: true,
+      //     companyName: true,
+      //     country: true,
+      //     phoneNumber: true,
+      //     postalCode: true,
+      //     state: true,
+      //     role: true,
+      //     createdAt: true,
+      //     updatedAt: true,
+      //   },
+      // },
       createdAt: true,
       updatedAt: true,
     },

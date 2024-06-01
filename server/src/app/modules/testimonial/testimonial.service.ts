@@ -13,7 +13,6 @@ import { IUploadFile } from '../../../interfaces/file';
 
 import { Request } from 'express';
 import { errorLogger } from '../../../shared/logger';
-import { updateCategoryData } from './testimonial.utils';
 import { TestimonialRelationalFields, TestimonialRelationalFieldsMapper, TestimonialSearchableFields } from './testimonial.constants';
 
 // modules
@@ -143,7 +142,7 @@ const updateTestimonial = async (testimonialId: string, req: Request): Promise<T
   };
 
   // Updated data from request
-  const newData: Partial<ITestimonialUpdateRequest> = updateCategoryData(updatedDetails);
+  const newData: Partial<ITestimonialUpdateRequest> = { ...updatedDetails };
 
   const result = await prisma.testimonial.update({
     where: {
