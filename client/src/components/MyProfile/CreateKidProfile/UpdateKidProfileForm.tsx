@@ -8,6 +8,7 @@ import { FileType } from "rsuite/esm/Uploader";
 import { useUpdateKidMutation } from "@/redux/api/features/kids/kidApi";
 import { useRouter } from "next/navigation";
 import UpdateKidPhoto from "./UpdateKidPhoto";
+import moment from "moment";
 
 // type definition
 type IRelations = {
@@ -17,7 +18,8 @@ type IRelations = {
 };
 
 type ICreateKid = {
-  name?: string;
+  firstName: string;
+  lastName?: string;
   age?: Date;
   kidImage?: FileType;
   relations?: IRelations[];
@@ -49,7 +51,8 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
 
     // Construct the  object
     const kidData = {
-      kidName: kidInfo?.name,
+      firstName: kidInfo?.firstName,
+      lastName: kidInfo?.lastName,
       kidAge: kidInfo?.age,
       relations: kidInfo?.relations,
     };
@@ -63,7 +66,6 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
 
     // appending all data to formData
     formData.append("data", kidJSON);
-
     await updateKid({ data: formData, kidId: kidDetails?.kidId });
   };
   // ! side effect
@@ -151,37 +153,72 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
           </div>
         </div>
         {/* name and age */}
-        <div className="grid md:grid-cols-2 gap-3  ">
-          {/* name */}
+        <div className="grid md:grid-cols-3 gap-3  ">
+          {/* first name */}
           <div className="flex flex-col w-full gap-2">
-            <label className="text-start block ">Enter name</label>
+            <label className="text-start block">First name</label>
             <Controller
-              name="name"
+              name="firstName"
               control={control}
               render={({ field }) => (
                 <div className="rs-form-control-wrapper ">
                   <input
                     {...field}
-                    name="name"
-                    defaultValue={kidDetails?.kidName}
+                    name="firstName"
+                    defaultValue={kidDetails?.firstName}
                     type="text"
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-[11px] outline-none rounded-lg "
                     placeholder="Enter kid name"
                   />
                   <Form.ErrorMessage
-                    show={(!!errors?.name && !!errors?.name?.message) || false}
+                    show={
+                      (!!errors?.firstName && !!errors?.firstName?.message) ||
+                      false
+                    }
                     placement="topEnd"
                   >
-                    <span>{errors?.name?.message as string}</span>
+                    <span>{errors?.firstName?.message as string}</span>
+                  </Form.ErrorMessage>
+                </div>
+              )}
+            />
+          </div>
+          {/* last Name */}
+          <div className="flex flex-col w-full gap-2">
+            <label className="text-start block">
+              Last Name{" "}
+              <span className="text-xs  text-gray-600">(Optional)</span>
+            </label>
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field }) => (
+                <div className="rs-form-control-wrapper ">
+                  <input
+                    {...field}
+                    name="lastName"
+                    defaultValue={kidDetails?.lastName}
+                    type="text"
+                    className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:border-cyan-400 px-2 py-[11px] outline-none rounded-lg "
+                    placeholder="Enter kid name"
+                  />
+                  <Form.ErrorMessage
+                    show={
+                      (!!errors?.lastName && !!errors?.lastName?.message) ||
+                      false
+                    }
+                    placement="topEnd"
+                  >
+                    <span>{errors?.lastName?.message as string}</span>
                   </Form.ErrorMessage>
                 </div>
               )}
             />
           </div>
 
-          {/* Kid Age */}
+          {/* Kid date of birth Age */}
           <div className="flex flex-col w-full gap-2">
-            <label className="text-base text-start block ">Kid Age</label>
+            <label className="text-base text-start block">Date of Birth</label>
             <Controller
               name="age"
               control={control}
@@ -195,6 +232,9 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
                     onChange={(e) => {
                       field.onChange(e);
                     }}
+                    shouldDisableDate={(date) =>
+                      moment(date).isAfter(moment(), "day")
+                    }
                     size="lg"
                     className="w-full bg-transparent text-sm border shadow-sm border-gray-400 focus:!border-cyan-400 !outline-none !ring-0  focus:!ring-0 focus:!outline-none rounded-lg "
                     placeholder="Kid Age"
@@ -213,9 +253,7 @@ const UpdateKidProfileForm = ({ kidDetails }: { kidDetails: any }) => {
         {/* Contact person Information */}
         <div className="text-center py-10">
           <h2 className="text-xl font-semibold pb-2">My Contacts</h2>
-          <p className="text-sm text-gray-500">
-            Add your contact Information as much as you want
-          </p>
+          <p className="text-sm text-gray-500">Add unlimited contacts</p>
         </div>
         {/* contacts */}
         <div>

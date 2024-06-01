@@ -19,14 +19,15 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
         >
           <div className="mb-3 flex justify-between">
             <h1 className="text-xl">Contact {index + 1}</h1>
-            <span
+            <button
               onClick={() => {
                 remove(index);
               }}
-              className="cursor-pointer hover:text-[#ef4444]"
+              type="button"
+              className="text-[#f14e4e]   border px-2 border-red-600 hover:bg-red-600 hover:text-white duration-300 "
             >
               Remove
-            </span>
+            </button>
           </div>
           <div className="grid md:grid-cols-4 text-start  gap-3">
             {/* input form  */}
@@ -69,7 +70,8 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
             {/* Last Name (Optional) */}
             <div className="w-full">
               <label htmlFor="color" className="font-medium text-sm">
-                Last Name (Optional)
+                Last Name{" "}
+                <span className="text-xs  text-gray-600">(Optional)</span>
               </label>
               <Controller
                 name={`relations[${index}].lastName`}

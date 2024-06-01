@@ -194,6 +194,7 @@ const updateKid = async (kidId: string, req: Request): Promise<KidDetails> => {
       ...(req.body as IKidUpdateRequest),
     };
     const updatedDetails = filterNonNull(updatedReq);
+    console.log('kid update req', updatedReq);
 
     const updatedProduct = await transactionClient.kidDetails.update({
       where: {

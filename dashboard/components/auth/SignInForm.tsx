@@ -6,7 +6,14 @@ import { IDashboardLogin } from "@/types/forms/auth.types";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Form, Input, InputGroup, Message, useToaster } from "rsuite";
+import {
+  Button,
+  Form,
+  Input,
+  InputGroup,
+  Notification,
+  useToaster,
+} from "rsuite";
 
 const SignInForm = () => {
   const toaster = useToaster();
@@ -38,24 +45,24 @@ const SignInForm = () => {
 
     if (isSuccess && !isLoading && !isError && !error && data) {
       toaster.push(
-        <Message bordered centered showIcon type="success" closable>
-          <h4 className="font-semibold text-2xl"> Logged in success</h4>
-        </Message>,
-        { placement: "topEnd", duration: 2000 }
+        <Notification header="Success" type="success" closable>
+          <h4 className="font-semibold xl:text-2xl"> Logged in success</h4>
+        </Notification>,
+        { placement: "bottomStart", duration: 2000 }
       );
       formReset();
     }
     if (!isSuccess && !isLoading && isError && error) {
       toaster.push(
-        <Message bordered centered showIcon type="error" closable>
-          <h4 className="font-semibold text-2xl">
+        <Notification header="Error" type="error" closable>
+          <h4 className="font-semibold xl:text-2xl">
             {
               // @ts-ignore
               error?.message ?? "Login Failed. try again !"
             }
           </h4>
-        </Message>,
-        { placement: "topEnd", duration: 2000 }
+        </Notification>,
+        { placement: "bottomStart", duration: 4000 }
       );
       reset();
     }
