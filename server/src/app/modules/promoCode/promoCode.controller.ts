@@ -106,6 +106,12 @@ const isExist = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+
+
+
+
+
 export const PromoCodeController = {
   createPromotion,
   updatePromotion,

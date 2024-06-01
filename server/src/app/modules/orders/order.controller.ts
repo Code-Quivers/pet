@@ -62,9 +62,21 @@ const deleteOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const monthWiseOrder = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderService.monthWiseOrder(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'fetched successfully',
+    data: result,
+  });
+});
+
 export const OrderController = {
   addOrder,
   getOrder,
   updateOrder,
   deleteOrder,
+  monthWiseOrder,
 };
