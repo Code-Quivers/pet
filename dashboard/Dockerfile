@@ -11,7 +11,7 @@ RUN yarn build
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
 # CMD ["nginx", "-g", "daemon off;"]
 
-EXPOSE 3200  
+EXPOSE 4000  
 
 # Start the app  
 CMD ["yarn", "start"] 
