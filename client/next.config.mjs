@@ -14,6 +14,16 @@ const nextConfig = {
         protocol: "http",
         pathname: "/**",
       },
+      {
+        hostname: "http://etphonehomebands.com",
+        protocol: "http",
+        pathname: "/**",
+      },
+      {
+        hostname: "https://etphonehomebands.com",
+        protocol: "https",
+        pathname: "/**",
+      },
     ],
   },
 };
