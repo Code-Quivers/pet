@@ -17,7 +17,8 @@ export const addKid = z.object({
   relations: z.array(IRelationSchema).optional(),
 });
 export const updateKid = z.object({
-  kidName: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
   kidAge: z.string().optional(),
   relations: z.array(IRelationSchema),
 });

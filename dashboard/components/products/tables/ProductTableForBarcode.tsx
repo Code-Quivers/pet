@@ -71,7 +71,7 @@ const ProductBarcode = () => {
     isFetching,
   } = useGetBarcodeForPrintQuery({ ...query });
 
-  console.log("allBarCodeList", allBarCodeList);
+  // console.log("allBarCodeList", allBarCodeList);
 
   // Filter date
   const handleFilterDate = (date: Date[] | null) => {
@@ -407,7 +407,7 @@ const ProductBarcode = () => {
             </ButtonToolbar>
             <button
               onClick={() => {
-                router.push("/products/add-product");
+                router.push("/products/add-products");
               }}
               className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
             >
