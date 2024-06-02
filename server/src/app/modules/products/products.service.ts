@@ -39,6 +39,7 @@ const createProduct = async (req: Request): Promise<Product> => {
       // stock: variant.stock,
     };
   });
+
   // making stock variant
   const variantStock = data?.productVariations?.map(({ stock }: IProductVariant) => ({ stock }));
 
