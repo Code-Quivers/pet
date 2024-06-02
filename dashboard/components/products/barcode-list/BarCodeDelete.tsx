@@ -1,79 +1,85 @@
 "use client";
-import { Button, Message, Modal, useToaster } from "rsuite";
-import { useEffect } from "react";
-import { TiWarning } from "react-icons/ti";
+
+import { useDeleteMultipleBarcodeMutation } from "@/redux/features/barCodeApi";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { useDeleteCategoryMutation } from "@/redux/features/categoryApi";
-import { useDeleteProductQAMutation } from "@/redux/features/productQAApi";
-import { useDeleteProductMutation } from "@/redux/features/productsApi";
-import { useDeleteBarcodeMutation } from "@/redux/features/barCodeApi";
+import { TiWarning } from "react-icons/ti";
+import { Button, Modal, Notification, useToaster } from "rsuite";
 
-// ! isOpenDelete={isOpenDelete}
+const BarCodeDelete = ({
+  barcodeIds,
+  cleanSelectedKeys,
+}: {
+  barcodeIds: string[];
+  cleanSelectedKeys: any;
+}) => {
+  const [isDeleteOpen, setIsOpenDelete] = useState(false);
+  const handleModalClose = () => {
+    setIsOpenDelete(false);
+  };
+  //
+  const [
+    deleteMultipleBarcode,
+    { data, isLoading, isSuccess, isError, error },
+  ] = useDeleteMultipleBarcodeMutation({});
+  //
+  const handleDeleteAllBarcode = async () => {
+    //
 
-const BarcodeDeleteModal = ({
-  isOpenDelete,
-  handleCloseDelete,
-  deleteData,
-}: any) => {
-  const [deleteBarcode, { data, isSuccess, isError, isLoading, error, reset }] =
-    useDeleteBarcodeMutation();
-
-  const toaster = useToaster();
-
-  const handleDeleteProduct = async () => {
-    await deleteBarcode({ barcodeId: deleteData?.barcodeId });
+    await deleteMultipleBarcode({
+      data: barcodeIds,
+    });
   };
 
+  // !
+  const toaster = useToaster();
   useEffect(() => {
-    if (isSuccess && !isError && !isLoading) {
+    if (isSuccess && !isLoading && !isError && !error && data) {
       toaster.push(
-        <Message bordered showIcon type="success" closable>
-          <h4 className="font-semibold ">
-            {data?.message || "Successfully Deleted"}
+        <Notification header="Success" type="success" closable>
+          <h4 className="font-semibold xl:text-2xl">
+            {data?.message || "Barcode Deleted"}
           </h4>
-        </Message>,
-        { placement: "topEnd", duration: 2000 }
+        </Notification>,
+        { placement: "bottomStart", duration: 2000 }
       );
-      reset();
-      handleCloseDelete();
+      handleModalClose();
+      cleanSelectedKeys();
     }
-    if (!isSuccess && isError && !isLoading && error) {
+    if (!isSuccess && !isLoading && isError && error) {
       toaster.push(
-        <Message bordered showIcon type="error" closable>
-          <h4 className="font-semibold ">
+        <Notification header="Error" type="error" closable>
+          <h4 className="font-semibold xl:text-2xl">
             {
               // @ts-ignore
-              error?.message || "Product QA Delete Failed"
+              error?.message ?? "Delete Failed. try again !"
             }
           </h4>
-        </Message>,
-        { placement: "topEnd", duration: 2000 }
+        </Notification>,
+        { placement: "bottomStart", duration: 4000 }
       );
     }
-  }, [
-    data?.message,
-    error,
-    handleCloseDelete,
-    isError,
-    isLoading,
-    isSuccess,
-    reset,
-    toaster,
-  ]);
+  }, [isSuccess, isLoading, isError, data, error, toaster, cleanSelectedKeys]);
 
-  const handleModalClose = () => {
-    handleCloseDelete();
-    reset();
-  };
   return (
     <div>
+      <div>
+        <Button
+          onClick={() => setIsOpenDelete(true)}
+          loading={isLoading}
+          className="!bg-primary !text-white border p-1 "
+        >
+          Delete All
+        </Button>
+      </div>
+
       <Modal
         overflow={false}
         size="xs"
         backdrop="static"
         dialogAs="div"
         className="bg-white mx-auto mt-20  rounded-xl"
-        open={isOpenDelete}
+        open={isDeleteOpen}
         onClose={handleModalClose}
       >
         <Modal.Body className="p-3 ">
@@ -97,7 +103,7 @@ const BarcodeDeleteModal = ({
               </p>
             </div>
             <div className="mt-5 border p-5 border-black/10 rounded-lg">
-              <h2>Code Name : {deleteData?.code}</h2>
+              {/* <h2>Code Name : {deleteData?.code}</h2> */}
             </div>
             <div className="p-3  mt-5 bg-[#feeddd] rounded-lg ">
               <p className="flex items-center gap-3 font-semibold text-lg text-[#b53a07]">
@@ -119,7 +125,7 @@ const BarcodeDeleteModal = ({
               <Button
                 loading={isLoading}
                 type="button"
-                onClick={handleDeleteProduct}
+                onClick={handleDeleteAllBarcode}
                 className="!bg-[#c81e1f] hover:!bg-[#fe0303] !text-white !font-medium"
               >{` Yes, I'm Sure`}</Button>
             </div>
@@ -130,4 +136,4 @@ const BarcodeDeleteModal = ({
   );
 };
 
-export default BarcodeDeleteModal;
+export default BarCodeDelete;

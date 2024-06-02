@@ -35,6 +35,8 @@ import {
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBinFill } from "react-icons/ri";
 import BarcodeDeleteModal from "../modal/BarcodeDeleteModal";
+import { barCodeStatus } from "@/helpers/selectPickerVars/ProductSelectVars";
+import BarCodeDelete from "../barcode-list/BarCodeDelete";
 
 const ProductBarcode = () => {
   const router = useRouter();
@@ -43,13 +45,15 @@ const ProductBarcode = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [barcodeStatus, setBarcodeStatus] = useState<string>("");
-  const [checkedKeys, setCheckedKeys] = useState<any>([]);
+  const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
+  const cleanSelectedKeys = () => setCheckedKeys([]);
+
+  // !
+
   const [selectedDate, setSelectedDate] = useState({
     startDate: "",
     endDate: "",
   });
-
-  // console.log("checkedKeys", checkedKeys);
 
   query["barcodeStatus"] = barcodeStatus;
   query["startDate"] = selectedDate.startDate;
@@ -70,8 +74,6 @@ const ProductBarcode = () => {
     isLoading,
     isFetching,
   } = useGetBarcodeForPrintQuery({ ...query });
-
-  // console.log("allBarCodeList", allBarCodeList);
 
   // Filter date
   const handleFilterDate = (date: Date[] | null) => {
@@ -276,28 +278,6 @@ const ProductBarcode = () => {
     );
   };
 
-  const barcodeAllStatus = [
-    {
-      label: "AVAILABLE",
-      value: "AVAILABLE",
-    },
-    {
-      label: "ACTIVE",
-      value: "ACTIVE",
-    },
-    {
-      label: "INACTIVE",
-      value: "INACTIVE",
-    },
-  ];
-
-  const enumStatus = barcodeAllStatus.map((item) => {
-    return {
-      label: item.label,
-      value: item.value,
-    };
-  });
-
   //BarCode Status Change
 
   const [barcodeStatusChange] = useUpdateBarcodeStatusMutation();
@@ -306,8 +286,6 @@ const ProductBarcode = () => {
     const objData = {
       barcodeStatus: eventKey,
     };
-
-    console.log("objData", objData);
 
     await barcodeStatusChange({
       barcodeId: rowData?.barcodeId,
@@ -321,15 +299,26 @@ const ProductBarcode = () => {
   const [deleteData, setDeleteData] = useState<any | null>(null);
   const handleCloseDelete = () => setIsOpenDelete(false);
 
+  //
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between items-center mb-5">
           <div className="flex justify-center items-center gap-3">
             <div>
-              <h2 className="text-lg font-semibold ">
+              <h2 className="text-sm font-semibold ">
                 Barcode List | {allBarCodeList?.meta?.total}
               </h2>
+
+              <div>
+                {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
+                  <BarCodeDelete
+                    barcodeIds={checkedKeys}
+                    cleanSelectedKeys={cleanSelectedKeys}
+                  />
+                )}
+              </div>
             </div>
             <div>
               <InputGroup
@@ -351,10 +340,11 @@ const ProductBarcode = () => {
               </InputGroup>
             </div>
 
+            {/* status filter */}
             <div>
               <SelectPicker
                 placeholder="Product Filter By Status"
-                data={enumStatus}
+                data={barCodeStatus}
                 className="w-60"
                 searchable={false}
                 onChange={(value: any) => {

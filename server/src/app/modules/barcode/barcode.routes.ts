@@ -15,7 +15,7 @@ router.get('/get-single-variant/:variantId', BarcodeController.getSingleVariant)
 
 router.patch('/status/:barcodeId', BarcodeController.singleBarcodeUpdate);
 
-router.delete('/deleteAll', BarcodeController.deleteMultipleBarcode);
+router.delete('/delete-multiple-barcode', BarcodeController.deleteMultipleBarcode);
 
 router.delete('/:barcodeId', BarcodeController.deleteBarcode);
 
