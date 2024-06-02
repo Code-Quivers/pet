@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import paypalLogo from "../../../public/images/checkout/checkout-paypal.svg";
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { SelectPicker, Form } from "rsuite";
@@ -12,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { RxValue } from "react-icons/rx";
 import PromoCode from "./CheckoutComponents/PromoCode";
+import PaymentMethod from "./CheckoutComponents/PaymentMethod";
 
 const Checkouts = ({ params }: any) => {
   const { data: stateTax } = useGetTaxQuery({});
@@ -30,7 +30,6 @@ const Checkouts = ({ params }: any) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [paymentMethod, setPaymentMethod] = useState("");
   const [stateTaxValue, setStateTaxValue] = useState(0);
 
   const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
@@ -339,134 +338,7 @@ const Checkouts = ({ params }: any) => {
                 </div>
               </div>
               {/* PAYMENT METHOD */}
-              <div className="mt-5">
-                <h3 className="font-bold text-xl">PAYMENT METHOD</h3>
-                <p className="text-sm text-gray-500 mb-3 mt-1">
-                  All transactions are secure and encrypted.
-                </p>
-
-                <section>
-                  <div>
-                    <div
-                      className={`relative cursor-pointer border border-b-0 py-6 rounded-t-md ${
-                        paymentMethod == "card" &&
-                        "border-black !border-b bg-[#F4F4F4]"
-                      }`}
-                      onClick={() => setPaymentMethod("card")}
-                    >
-                      {/* <label
-                        onClick={() => setPaymentMethod("card")}
-                        htmlFor="card"
-                        className="border border-b-0 py-6 block rounded-t-md"
-                      ></label> */}
-                      <div className="absolute top-1/2 transform -translate-y-1/2 flex gap-3 items-center pl-5">
-                        <input
-                          onClick={() => setPaymentMethod("card")}
-                          type="radio"
-                          name="paymentMethod"
-                          id="card"
-                          className="w-5 h-5 text-red-500 cursor-pointer"
-                          checked={paymentMethod == "card"}
-                        />
-                        <div>
-                          <label
-                            className="cursor-pointer"
-                            htmlFor="card"
-                            onClick={() => setPaymentMethod("card")}
-                          >
-                            Card
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={` ${
-                        paymentMethod == "card"
-                          ? "max-h-[100px] opacity-100 bg-[#F4F4F4] p-6 border border-b-0 transition-all"
-                          : "max-h-0 opacity-0 overflow-hidden"
-                      }`}
-                    >
-                      <p>
-                        {`After clicking "Pay with PayPal", you will be redirected
-                        to PayPal to complete your purchase securely.`}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div
-                      className={`relative border py-6 cursor-pointer ${
-                        paymentMethod == "paypal" && "border-black bg-[#F4F4F4]"
-                      }`}
-                      onClick={() => setPaymentMethod("paypal")}
-                    >
-                      {/* <label
-                        onClick={() => setPaymentMethod("paypal")}
-                        htmlFor="paypal"
-                        className="border py-6 block"
-                      ></label> */}
-                      <div className="absolute top-1/2 transform -translate-y-1/2 flex gap-3 justify-between w-full items-center pl-5">
-                        <div className="flex items-center">
-                          <input
-                            onClick={() => setPaymentMethod("paypal")}
-                            type="radio"
-                            name="paymentMethod"
-                            id="paypal"
-                            className="w-5 h-5 text-red-500 cursor-pointer"
-                            checked={paymentMethod == "paypal"}
-                          />
-                          <label
-                            className="cursor-pointer pl-3"
-                            htmlFor="paypal"
-                            onClick={() => setPaymentMethod("paypal")}
-                          >
-                            Paypal
-                          </label>
-                        </div>
-                        <div className="flex items-center pr-3">
-                          <Image
-                            className="w-20 h-20"
-                            src={paypalLogo}
-                            alt="Paypal Logo"
-                            width={500}
-                            height={500}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`${
-                        paymentMethod == "paypal"
-                          ? "h-auto opacity-100 bg-[#F4F4F4] p-6 border rounded-b-md border-t-0 transition-all"
-                          : "max-h-0 opacity-0 overflow-hidden"
-                      }`}
-                    >
-                      <p>
-                        {` After clicking "Pay with PayPal", you will be redirected
-                        to PayPal to complete your purchase securely.`}
-                      </p>
-                    </div>
-                  </div>
-                </section>
-                <div className="mt-10">
-                  {paymentMethod == "card" && (
-                    <button
-                      className="w-full bg-black text-white py-[18px] rounded-full text-xl font-bold"
-                      type="submit"
-                    >
-                      Pay now
-                    </button>
-                  )}
-                  {paymentMethod == "paypal" && (
-                    <button
-                      className="w-full bg-black text-white py-[18px] rounded-full text-xl font-bold"
-                      type="submit"
-                    >
-                      Pay with PayPal
-                    </button>
-                  )}
-                </div>
-              </div>
+              <PaymentMethod />
             </div>
 
             <div className="col-span-5 border-l pt-10 md:pl-10 ">
@@ -485,10 +357,11 @@ const Checkouts = ({ params }: any) => {
                         {item?.quantity}
                       </div>
                     </div>
-                    <div className="text-sm w-2/3">
+                    <div className="text-sm w-2/3 space-y-0.5">
                       <p className="font-semibold">
                         {`${item?.productName} - ${item?.color?.name}`}
                       </p>
+                      <p>{`$${item?.price?.toFixed(2)}`}</p>
                       <p className="flex items-center gap-1">
                         Color:{" "}
                         <span
@@ -498,14 +371,14 @@ const Checkouts = ({ params }: any) => {
                       </p>
                     </div>
                     <div>
-                      <p>{`$${item?.price.toFixed(2)}`}</p>
+                      <p>{`$${item?.totalPrice?.toFixed(2)}`}</p>
                     </div>
                   </div>
                 ))}
               {/* promo code apply  */}
               <PromoCode cart={cart} />
               <div>
-                <div className="flex justify-between mt-5">
+                <div className="flex justify-between mt-10">
                   <p>Subtotal</p>
                   <p>{`$${payAmount?.subtotal?.toFixed(2)}`}</p>
                 </div>
