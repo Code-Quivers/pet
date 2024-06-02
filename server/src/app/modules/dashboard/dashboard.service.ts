@@ -22,7 +22,7 @@ const getTotalCount = async () => {
     const totalOrders = await transactionClient.order.count();
     // ! total
     const totalCategory = await transactionClient.category.count();
-    
+
     return {
       totalUsers,
       totalProducts,

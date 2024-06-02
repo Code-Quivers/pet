@@ -109,6 +109,20 @@ const deleteBarcode = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteMultipleBarcode = catchAsync(async (req: Request, res: Response) => {
+  const { barcodeIds } = req.body;
+  console.log(barcodeIds, 'barcodeIds');
+
+  const result = await BarcodeService.deleteMultipleBarcode(barcodeIds);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Deleted successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
@@ -117,4 +131,5 @@ export const BarcodeController = {
   getSingleVariant,
   singleBarcodeUpdate,
   deleteBarcode,
+  deleteMultipleBarcode,
 };
