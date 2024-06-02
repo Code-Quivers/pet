@@ -391,6 +391,36 @@ const deleteBarcode = async (barcodeId: string): Promise<BarCode | null> => {
   return result;
 };
 
+const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: number }> => {
+  console.log('barcodeIds', barcodeIds);
+
+  if (!barcodeIds || barcodeIds.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeIds are required');
+  }
+
+  const findBarcode = await prisma.barCode.findMany({
+    where: {
+      barcodeId: {
+        in: barcodeIds,
+      },
+    },
+  });
+
+  if (findBarcode.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Barcodes Not Found');
+  }
+
+  const result = await prisma.barCode.deleteMany({
+    where: {
+      barcodeId: {
+        in: barcodeIds,
+      },
+    },
+  });
+
+  return result;
+};
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
@@ -399,4 +429,5 @@ export const BarcodeService = {
   getSingleVariant,
   singleBarcodeUpdate,
   deleteBarcode,
+  deleteMultipleBarcode,
 };

@@ -111,8 +111,8 @@ model ProductReview {
   review          String
   rating          Int
   reviewImage     String
-  productId       String
-  product         Product  @relation(fields: [productId], references: [productId])
+  productId       String?
+  product         Product?  @relation(fields: [productId], references: [productId],onDelete: SetNull)
   userId          String
   user            User     @relation(fields: [userId], references: [userId])
   createdAt       DateTime @default(now()) @db.Timestamptz(0)
