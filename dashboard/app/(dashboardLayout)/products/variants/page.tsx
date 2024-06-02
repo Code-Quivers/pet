@@ -178,12 +178,8 @@ const AllProductList = () => {
             {/* stock */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Stock</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `${rowData.stock}`}
+              <Cell style={cellCss} verticalAlign="middle" dataKey="stock">
+                {(rowData) => ` ${rowData?.stock}`}
               </Cell>
             </Column>
             {/* Qr Code */}
