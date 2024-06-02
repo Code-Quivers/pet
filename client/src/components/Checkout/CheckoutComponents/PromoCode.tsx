@@ -2,7 +2,7 @@ import {
   useApplyPromotionalOfferMutation,
   useLazyGetPromoQuery,
 } from "@/redux/api/features/promoCodeApi";
-import { applyPromoCode } from "@/redux/slice/cartSlice";
+import { applyPromoCode, removeFreeProduct } from "@/redux/slice/cartSlice";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
@@ -12,8 +12,11 @@ const PromoCode = ({ cart }: { cart: any }) => {
   const dispatch = useDispatch();
   const { control } = useForm();
   const [promoCode, setPromoCode] = useState("");
-  const [promoCodeMessage, setPromoCodeMessage] = useState(false);
-  const [promoCodeApplied, setPromoCodeApplied] = useState("");
+  const [promoCodeMessage, setPromoCodeMessage] = useState("");
+  const [freeProductVariantId, setFeeProductVariantId] = useState<any | null>(
+    null
+  );
+  const [promoCodeApplied, setPromoCodeApplied] = useState<string | null>(null);
   const [applyPromotionalOffer, { isLoading }] =
     useApplyPromotionalOfferMutation();
   // console.log(data, "data");
@@ -26,15 +29,21 @@ const PromoCode = ({ cart }: { cart: any }) => {
 
   const handleApplyPromo = async () => {
     // reset error and promo code
-    setPromoCodeMessage(false);
-    setPromoCode("");
+    setPromoCodeMessage("");
+    // setPromoCode("");
+    // check if promo code is already applied
+    if (promoCode && promoCodeApplied === promoCode) {
+      console.log("This promo code has already been applied.");
+      setPromoCodeMessage("This promo code has already been applied.");
+      return;
+    }
+
     if (promoCode) {
       // console.log(cartDataForApi, "cartDataForApi");
       const forBody = {
         cartData: cartDataForApi,
       };
-      // const forBodyJson = JSON.stringify(forBody);
-      console.log(forBody, "forBody.................");
+
       console.log(promoCode, "promoCode");
       const result = await applyPromotionalOffer({
         code: promoCode,
@@ -43,6 +52,9 @@ const PromoCode = ({ cart }: { cart: any }) => {
       const { data } = result as { data: any };
       // console.log(isLoading, "isLoading");
       if (data?.data?.isValid && data?.data?.product?.variantId) {
+        if (promoCodeApplied) {
+          setPromoCodeApplied("");
+        }
         // setPromoCodeMessage(true);
         const product = data?.data?.product;
         const freeQuantity = data?.data?.quantity;
@@ -51,7 +63,7 @@ const PromoCode = ({ cart }: { cart: any }) => {
         console.log(data?.data, "product........");
         const freeProduct = {
           productId: product?.productId,
-          // productName: product?.productName
+          productName: product?.product?.productName,
           image: product?.image,
           color: {
             code: product?.color?.code,
@@ -63,10 +75,11 @@ const PromoCode = ({ cart }: { cart: any }) => {
           offerPrice: 0,
         };
         dispatch(applyPromoCode(freeProduct as any));
-      }
 
-      // console.log(data, "data");
-      // console.log(data, "result..........");
+        setFeeProductVariantId(freeProduct?.variantId);
+      } else {
+        setPromoCodeMessage("Enter a valid promo code");
+      }
     }
   };
 
@@ -103,15 +116,18 @@ const PromoCode = ({ cart }: { cart: any }) => {
       </div>
 
       <div className="h-10">
-        {promoCodeMessage && <p className="h-7">Enter a valid promo code</p>}
+        {promoCodeMessage && <p className="h-7">{promoCodeMessage}</p>}
         {promoCodeApplied && (
-          <div className="flex items-center">
-            <span className="bg-gray-200 text-black flex text-sm font-bold px-3 rounded-md">
+          <div className="flex items-center gap-2 mt-3">
+            <span className="bg-gray-200 text-black flex items-center text-[13px] font-bold px-3 py-1 rounded-sm">
               {promoCodeApplied}
               <IoIosClose
-                onClick={() => setPromoCodeApplied("")}
-                size={18}
-                className="ml-1"
+                onClick={() => {
+                  setPromoCodeApplied("");
+                  dispatch(removeFreeProduct(freeProductVariantId as any));
+                }}
+                size={20}
+                className="ml-1 text text-gray-600 hover:text-black cursor-pointer "
               />
             </span>
           </div>

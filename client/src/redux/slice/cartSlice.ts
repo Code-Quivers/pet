@@ -89,6 +89,13 @@ export const cartSlice = createSlice({
         });
       }
     },
+    removeFreeProduct: (state: any, action: any) => {
+      const removeItem = state.cart.filter(
+        (item: any) => item.variantId !== action.payload
+      );
+      state.cart = removeItem;
+      setToLocalStorage("cart", JSON.stringify(state.cart));
+    },
   },
 });
 export const {
@@ -97,6 +104,7 @@ export const {
   incrementQuantity,
   decrementQuantity,
   removeItem,
+  removeFreeProduct,
   addPayAmount,
   setCartFromLocalStorage,
 } = cartSlice.actions;
