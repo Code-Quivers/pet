@@ -382,6 +382,10 @@ const deleteBarcode = async (barcodeId: string): Promise<BarCode | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Barcode Not Found');
   }
 
+  if (findBarcode.barcodeStatus !== 'INACTIVE') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Only INACTIVE barcodes can be deleted');
+  }
+
   const result = await prisma.barCode.delete({
     where: {
       barcodeId,
@@ -392,8 +396,6 @@ const deleteBarcode = async (barcodeId: string): Promise<BarCode | null> => {
 };
 
 const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: number }> => {
-  console.log('barcodeIds', barcodeIds);
-
   if (!barcodeIds || barcodeIds.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'barcodeIds are required');
   }
@@ -406,8 +408,16 @@ const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: num
     },
   });
 
+  console.log(findBarcode, 'findBarcode');
+
   if (findBarcode.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Barcodes Not Found');
+  }
+
+  const invalidBarcodes = findBarcode.filter(barcode => barcode.barcodeStatus !== 'INACTIVE');
+
+  if (invalidBarcodes.length > 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Only INACTIVE barcodes can be deleted');
   }
 
   const result = await prisma.barCode.deleteMany({

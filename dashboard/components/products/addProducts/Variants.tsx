@@ -220,7 +220,7 @@ const Variants = ({ control, basePrice, errors }: any) => {
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper  w-full">
                           <InputNumber
-                            max={100}
+                            // max={100}
                             min={1}
                             value={field.value}
                             className="!w-full mt-1"
