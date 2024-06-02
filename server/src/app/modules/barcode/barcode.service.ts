@@ -431,6 +431,17 @@ const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: num
   return result;
 };
 
+
+// const addBarCode = async (data: any): Promise<BarCode> => { 
+
+// }
+
+
+
+
+
+
+
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
