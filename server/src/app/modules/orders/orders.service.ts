@@ -10,11 +10,8 @@ import ApiError from '../../../errors/ApiError';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IOrderFilterRequest, IOrderRequest } from './orders.interface';
 import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFields } from './orders.constants';
-<<<<<<< HEAD
-import { ITaxUpdateRequest } from '../tax/tax.interface';
-=======
 import { format, subMonths } from 'date-fns';
->>>>>>> 0343734 ([DONE] Month Wise Order)
+import { ITaxUpdateRequest } from '../tax/tax.interface';
 
 // modules
 
