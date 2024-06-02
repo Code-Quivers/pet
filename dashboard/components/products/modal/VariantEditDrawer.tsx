@@ -50,7 +50,7 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
       variantPrice: updatedData?.variantPrice
         ? parseInt(updatedData?.variantPrice)
         : undefined,
-      stock: updatedData?.stock ? parseInt(updatedData?.stock) : undefined,
+      // stock: updatedData?.stock ? parseInt(updatedData?.stock) : undefined,
     };
 
     console.log(obj, "obj");
@@ -187,7 +187,9 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
 
                 {/* Product Stock */}
                 <div className="space-y-1">
-                  <label className="block font-medium text-black ">Stock</label>
+                  <label className="block font-medium text-black ">
+                    Stock (Not Editable)
+                  </label>
                   <Controller
                     name="stock"
                     control={control}
@@ -196,10 +198,10 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
                         <Input
                           defaultValue={editData?.stock}
                           {...field}
-                          placeholder="Write product Stock..."
-                          className="!w-full"
+                          readOnly
+                          className="!w-full !bg-gray-3"
                         />
-                        <Form.ErrorMessage
+                        {/* <Form.ErrorMessage
                           show={
                             (!!errors?.stock && !!errors?.stock?.message) ||
                             false
@@ -209,7 +211,7 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
                           <span className="font-semibold">
                             {errors?.stock?.message}
                           </span>
-                        </Form.ErrorMessage>
+                        </Form.ErrorMessage> */}
                       </div>
                     )}
                   />
@@ -253,6 +255,13 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
                 >
                   Update Variant Information
                 </Button>
+              </div>
+
+              <div className="text-danger mt-5">
+                <p>
+                  ***To decrease the stock, delete the barcode from the Barcode
+                  Table; to increase the stock, use the Add Stock function.***
+                </p>
               </div>
             </form>
           </div>
