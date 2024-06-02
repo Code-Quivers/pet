@@ -443,6 +443,8 @@ const addBarCode = async (data: IBarCodeStockRequest): Promise<number> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Variant Not Found');
   }
 
+
+
   const codes = Array.from({ length: data.stock }, () => ({
     code: generateBarCode(),
     variantId: findVariant.variantId,
