@@ -7,31 +7,18 @@ import {
 } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
-import {
-  Button,
-  ButtonToolbar,
-  IconButton,
-  Input,
-  InputGroup,
-  Pagination,
-  Popover,
-  SelectPicker,
-  Table,
-  Whisper,
-} from "rsuite";
+import { IconButton, Pagination, Popover, Table, Whisper } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdKeyboardArrowRight, MdModeEdit } from "react-icons/md";
-import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
-import { FaPlus } from "react-icons/fa";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import VariantEditDrawer from "@/components/products/modal/VariantEditDrawer";
 import { RiDeleteBinFill } from "react-icons/ri";
 import ProductVariantDeleteModal from "@/components/products/modal/ProductVariantDeleteModal";
+import VariantStockAddPopOver from "@/components/products/variants-list/VariantStockAddPopOver";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -39,10 +26,8 @@ const AllProductList = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-
+  //
   query["categoryName"] = categoryFilter;
-
-  const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -54,18 +39,22 @@ const AllProductList = () => {
     query["searchTerm"] = debouncedTerm;
   }
 
-  const {
-    data: allProductsList,
-    isLoading,
-    isFetching,
-  } = useGetProductQuery({ ...query });
+  // const {
+  //   data: allProductsList,
+  //   isLoading,
+  //   isFetching,
+  // } = useGetProductQuery({ ...query });
 
   const [editData, setEditData] = useState(null);
 
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
 
-  const { data: singleProduct } = useGetSingleProductQuery(productId as string);
+  const {
+    data: singleProduct,
+    isLoading,
+    isFetching,
+  } = useGetSingleProductQuery(productId as string);
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
@@ -178,7 +167,18 @@ const AllProductList = () => {
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Stock</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => `${rowData?._count?.barCodes}`}
+                {(rowData) => (
+                  <div>
+                    <div className="flex gap-5 justify-around items-center w-full">
+                      <div>
+                        <p>{rowData?._count?.barCodes}</p>
+                      </div>
+                      <div>
+                        <VariantStockAddPopOver rowData={rowData} />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </Cell>
             </Column>
             {/* Qr Code */}
@@ -192,6 +192,7 @@ const AllProductList = () => {
                 {(rowData) => (
                   <Link
                     href={`/products/variants/qr-code/?variantId=${rowData?.variantId}`}
+                    className="px-2 py-1 border border-stroke rounded-md"
                   >
                     Qr Code List
                   </Link>
