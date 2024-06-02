@@ -36,9 +36,12 @@ const createProduct = async (req: Request): Promise<Product> => {
       variantPrice: variant.variantPrice,
       color: variant.color,
       // size: variant.size,
-      stock: variant.stock,
+      // stock: variant.stock,
     };
   });
+  // making stock variant
+  const variantStock = data?.productVariations?.map(({ stock }: IProductVariant) => ({ stock }));
+
   // prisma transaction
   const result = await prisma.$transaction(async transactionClient => {
     const productInfo = {
@@ -64,7 +67,7 @@ const createProduct = async (req: Request): Promise<Product> => {
     //
     const productId = createdProduct.productId;
     //
-    for (const variant of variants) {
+    for (const variant of variantStock) {
       const pv = await transactionClient.productVariation.findFirst({
         where: {
           productId: productId,
@@ -76,7 +79,7 @@ const createProduct = async (req: Request): Promise<Product> => {
         throw new ApiError(httpStatus.NOT_FOUND, 'Product variation not found');
       }
 
-      const codes = Array.from({ length: variant.stock }, () => ({
+      const codes = Array.from({ length: variant?.stock }, () => ({
         code: generateBarCode(),
         variantId: pv.variantId,
       }));
@@ -179,10 +182,17 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
         select: {
           variantId: true,
           color: true,
-
-          stock: true,
           variantPrice: true,
           image: true,
+          _count: {
+            select: {
+              barCodes: {
+                where: {
+                  barcodeStatus: 'INACTIVE',
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -225,10 +235,17 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
         select: {
           variantId: true,
           color: true,
-
-          stock: true,
           variantPrice: true,
           image: true,
+          _count: {
+            select: {
+              barCodes: {
+                where: {
+                  barcodeStatus: 'INACTIVE',
+                },
+              },
+            },
+          },
         },
       },
     },

@@ -66,7 +66,6 @@ const AllProductList = () => {
   const productId = searchParams.get("productId");
 
   const { data: singleProduct } = useGetSingleProductQuery(productId as string);
-  console.log("singleProduct", singleProduct);
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
@@ -172,14 +171,14 @@ const AllProductList = () => {
                 verticalAlign="middle"
                 dataKey="productPrice"
               >
-                {(rowData) => `$ ${rowData.variantPrice}`}
+                {(rowData) => `$${rowData.variantPrice}`}
               </Cell>
             </Column>
             {/* stock */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Stock</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="stock">
-                {(rowData) => ` ${rowData?.stock}`}
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => `${rowData?._count?.barCodes}`}
               </Cell>
             </Column>
             {/* Qr Code */}
