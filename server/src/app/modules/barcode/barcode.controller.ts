@@ -123,6 +123,17 @@ const deleteMultipleBarcode = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
+const addBarCode = catchAsync(async (req: Request, res: Response) => {
+  const data = req?.body;
+  const result = await BarcodeService.addBarCode(data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Barcode Added successfully',
+    data: result,
+  });
+});
+
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
   getProductBarcodeVarientWise,
@@ -132,4 +143,5 @@ export const BarcodeController = {
   singleBarcodeUpdate,
   deleteBarcode,
   deleteMultipleBarcode,
+  addBarCode,
 };

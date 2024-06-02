@@ -1,4 +1,4 @@
-import { IBarCodeFilterRequest } from './barcode.interface';
+import { IBarCodeFilterRequest, IBarCodeStockRequest } from './barcode.interface';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -11,6 +11,7 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { BarcodeRelationalFields, BarcodeRelationalFieldsMapper, BarcodeSearchableFields } from './barcode.constant';
+import { generateBarCode } from '../products/products.utils';
 
 // !----------------------------------get Single barcode ---------------------------------------->>>
 
@@ -431,16 +432,26 @@ const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: num
   return result;
 };
 
+const addBarCode = async (data: IBarCodeStockRequest): Promise<number> => {
+  const findVariant = await prisma.productVariation.findUnique({
+    where: {
+      variantId: data.variantId,
+    },
+  });
 
-// const addBarCode = async (data: any): Promise<BarCode> => { 
+  if (!findVariant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Variant Not Found');
+  }
 
-// }
+  const codes = Array.from({ length: data.stock }, () => ({
+    code: generateBarCode(),
+    variantId: findVariant.variantId,
+  }));
 
+  const createdBarCodes = await prisma.barCode.createMany({ data: codes });
 
-
-
-
-
+  return createdBarCodes.count;
+};
 
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
@@ -451,4 +462,5 @@ export const BarcodeService = {
   singleBarcodeUpdate,
   deleteBarcode,
   deleteMultipleBarcode,
+  addBarCode,
 };
