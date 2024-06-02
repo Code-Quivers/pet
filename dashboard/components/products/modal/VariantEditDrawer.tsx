@@ -196,7 +196,7 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
                     render={({ field }) => (
                       <div className="rs-form-control-wrapper">
                         <Input
-                          defaultValue={editData?.stock}
+                          defaultValue={editData?._count?.barCodes}
                           {...field}
                           readOnly
                           className="!w-full !bg-gray-3"
