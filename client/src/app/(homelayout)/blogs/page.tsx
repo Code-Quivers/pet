@@ -1,14 +1,14 @@
-async function getData() {
-  const url = getBaseUrl();
-  const res = await fetch(`${url}/blogs/all-blogs`, {
-    next: {
-      tags: ["blogs"],
-      revalidate: 100,
-    },
-  });
+// async function getData() {
+//   const url = getBaseUrl();
+//   const res = await fetch(`${url}/blogs/all-blogs`, {
+//     next: {
+//       tags: ["blogs"],
+//       revalidate: 100,
+//     },
+//   });
 
-  return res.json();
-}
+//   return res.json();
+// }
 //
 import { fileUrlKey, getBaseUrl } from "@/helpers/config/envConfig";
 import moment from "moment";
@@ -16,7 +16,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BlogPage = async () => {
-  const allBlogs = await getData();
+  // const allBlogs = await getData();
+  const allBlogs = { data: [] };
   return (
     <div
       suppressHydrationWarning={true}

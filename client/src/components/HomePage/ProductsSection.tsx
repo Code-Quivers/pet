@@ -22,7 +22,6 @@ const ProductsSection = () => {
     index: 0,
   });
   const [productId, setProductId] = useState(null);
-  console.log(products, "productList");
   const message = (
     <Message
       showIcon

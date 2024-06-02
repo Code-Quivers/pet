@@ -1,5 +1,5 @@
-export const getBaseUrl  = () :string  => {
-  return process.env.NEXT_PUBLIC_API_BASE_URL as string ;
+export const getBaseUrl = (): string => {
+  return process.env.NEXT_PUBLIC_API_BASE_URL as string;
 };
 export const getAuthKey = () => {
   return process.env.NEXT_PUBLIC_API_AUTH_KEY as string;
@@ -7,4 +7,8 @@ export const getAuthKey = () => {
 
 export const fileUrlKey = () => {
   return process.env.NEXT_PUBLIC_FILE_URL_KEY as string;
+};
+
+export const getClientUrl = () => {
+  return process.env.NEXT_PUBLIC_CLIENT_URL as string;
 };

@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 services:
   postgres:
     image: postgres:latest
@@ -20,6 +20,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    image: server:latest29
+    
     container_name: server-container
     depends_on:
       - postgres
@@ -35,6 +37,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+    image: client:latest
     container_name: client-container
     depends_on:
       - server
@@ -46,6 +49,7 @@ services:
     build:
       context: ./dashboard
       dockerfile: Dockerfile
+    image: dashboard:latest
     container_name: dashboard-container
     depends_on:
       - client
