@@ -3,7 +3,7 @@ import { BarcodeController } from './barcode.controller';
 
 const router = express.Router();
 
-router.post('/addBarCode', BarcodeController.addBarCode);
+router.post('/add-more-barcode-stock', BarcodeController.addBarCode);
 
 router.get('/', BarcodeController.getProductBarcodeVarientWise);
 
