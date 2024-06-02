@@ -62,3 +62,8 @@ export type IBarCodeFilterRequest = {
   endDate?: string | undefined;
   barcodeStatus?: BarcodeStatus | undefined;
 };
+
+export type IBarCodeStockRequest = {
+  variantId: string;
+  stock: number;
+};
