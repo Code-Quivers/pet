@@ -119,7 +119,7 @@ export type IUpdateTaxSetting = {
 };
 
 export type IUpdateProductVariation = {
-  stock?: string;
+  // stock?: string;
   variantPrice?: string;
   color?: {
     name?: string;
