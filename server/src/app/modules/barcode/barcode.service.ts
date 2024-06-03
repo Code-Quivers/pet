@@ -84,7 +84,7 @@ const getProductBarcodeVarientWise = async (
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.ProductVariationWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Retrieve product vriants with filtering and pagination
+  // Retrieve product variants with filtering and pagination
   const result = await prisma.productVariation.findMany({
     where: whereConditions,
     include: {
@@ -265,7 +265,7 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
   // Create a whereConditions object with AND conditions
   const whereConditions: Prisma.BarCodeWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Retrieve product vriants with filtering and pagination
+  // Retrieve product variants with filtering and pagination
   const result = await prisma.barCode.findMany({
     include: {
       variant: {

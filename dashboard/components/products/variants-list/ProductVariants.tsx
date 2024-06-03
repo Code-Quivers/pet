@@ -1,47 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useGetProductQuery } from "@/redux/features/productsApi";
+import { useGetSingleProductQuery } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
-import {
-  Button,
-  ButtonToolbar,
-  IconButton,
-  Input,
-  InputGroup,
-  Pagination,
-  Popover,
-  SelectPicker,
-  Table,
-  Whisper,
-} from "rsuite";
+import { IconButton, Pagination, Popover, Table, Whisper } from "rsuite";
 import { fileUrlKey } from "@/helpers/envConfig";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdKeyboardArrowRight, MdModeEdit } from "react-icons/md";
-import { BiSearch } from "react-icons/bi";
 const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
-import { FaPlus } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import ProductEditModal from "../modal/ProductEditModal";
+import VariantEditDrawer from "@/components/products/modal/VariantEditDrawer";
 import { RiDeleteBinFill } from "react-icons/ri";
-import ProductDeleteModal from "../modal/ProductDeleteModal";
+import ProductVariantDeleteModal from "@/components/products/modal/ProductVariantDeleteModal";
+import VariantStockAddPopOver from "@/components/products/variants-list/VariantStockAddPopOver";
 
-const AllProductList = () => {
-  const router = useRouter();
+const ProductVariants = () => {
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  // Drawer
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [editData, setEditData] = useState(null);
-
-  // for queries
+  //
   query["categoryName"] = categoryFilter;
   query["limit"] = size;
   query["page"] = page;
@@ -54,27 +36,24 @@ const AllProductList = () => {
     query["searchTerm"] = debouncedTerm;
   }
 
-  // fetching all products
+  const [editData, setEditData] = useState(null);
+
+  const searchParams = useSearchParams();
+  const productId = searchParams.get("productId");
+
   const {
-    data: allProductsList,
+    data: singleProduct,
     isLoading,
     isFetching,
-  } = useGetProductQuery({ ...query });
-  // fetching all categories
-  const { data: allCategories } = useGetCategoryQuery({});
+  } = useGetSingleProductQuery(productId as string);
 
-  // close modal function
-  const handleCloseEdit = () => {
-    setIsOpenEdit(false);
-    setEditData(null);
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState();
+
+  const VariantEdit = (key: any) => {
+    setOpen(true);
+    setPlacement(key);
   };
-
-  const categoryFilterForProduct = allCategories?.data?.map(
-    (category: any) => ({
-      label: category.categoryName,
-      value: category.categoryName,
-    })
-  );
 
   //Delete Modal
 
@@ -85,71 +64,23 @@ const AllProductList = () => {
   return (
     <>
       <div className="flex items-center mb-2 text-sm text-[#2563eb]">
-        <Link href={"/"} className="underline">
-          Dashboard
-        </Link>
-
+        <Link href={"/"}>Dashboard</Link>
         <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-
-        <p className="font-bold">All products</p>
+        <Link href={`/products`}>All products</Link>
+        <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
+        <p className="font-bold">Variants</p>
       </div>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          <div>
-            <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
-            </h2>
-          </div>
-
-          <div className="flex max-md:justify-between gap-10 items-center">
-            <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
-              />
-            </div>
-
-            <div>
-              <InputGroup
-                inside
-                style={{
-                  width: 300,
-                }}
-              >
-                <Input
-                  style={{
-                    width: 300,
-                  }}
-                  onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
-                />
-                <InputGroup.Addon>
-                  <BiSearch />
-                </InputGroup.Addon>
-              </InputGroup>
-            </div>
-
-            <button
-              onClick={() => {
-                router.push("/products/add-products");
-              }}
-              className="  px-3 py-2 rounded-xl  flex items-center gap-2 bg-primary text-sm text-white"
-            >
-              <FaPlus /> Add Product
-            </button>
-          </div>
-        </div>
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default   sm:px-7.5 xl:pb-1">
+        <p>
+          Product Name:{" "}
+          <span className="font-semibold">
+            {singleProduct?.data?.productName}
+          </span>
+        </p>
+        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5"></div>
 
         {/*  */}
-        <div className="rounded-sm bg-white      ">
+        <div className="rounded-sm bg-white">
           <Table
             bordered={true}
             cellBordered={true}
@@ -157,9 +88,9 @@ const AllProductList = () => {
             loading={isLoading || isFetching}
             rowHeight={70}
             headerHeight={50}
-            shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
+            shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the
             autoHeight={true}
-            data={allProductsList?.data || []}
+            data={singleProduct?.data?.productVariations}
           >
             {/*img*/}
             <Column width={70}>
@@ -176,8 +107,8 @@ const AllProductList = () => {
                             height={270}
                             alt=""
                             src={
-                              rowData?.featuredImage
-                                ? `${fileUrlKey()}/${rowData?.featuredImage}`
+                              rowData?.image
+                                ? `${fileUrlKey()}/${rowData?.image}`
                                 : noImage
                             }
                             className="object-cover"
@@ -192,8 +123,8 @@ const AllProductList = () => {
                         height={120}
                         alt=""
                         src={
-                          rowData?.featuredImage
-                            ? `${fileUrlKey()}/${rowData?.featuredImage}`
+                          rowData?.image
+                            ? `${fileUrlKey()}/${rowData?.image}`
                             : noImage
                         }
                         className="object-center  object-cover"
@@ -203,90 +134,69 @@ const AllProductList = () => {
                 )}
               </Cell>
             </Column>
-            {/* product name */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productName"
-              />
-            </Column>
 
-            {/* Item Description */}
-            <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Product Description
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
-            </Column>
-
-            {/* category */}
+            {/* color */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Category Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="category.categoryName"
-              />
-            </Column>
-
-            {/* Price */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Price</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData) => `$ ${rowData.productPrice}`}
+              <HeaderCell style={headerCss}>Color</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => `${rowData.color.name}`}
               </Cell>
             </Column>
 
-            {/* Product Status */}
+            {/* price */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Status</HeaderCell>
-
+              <HeaderCell style={headerCss}>Price</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
                 dataKey="productPrice"
               >
-                {(rowData) => `${rowData.productStatus} `}
+                {(rowData) => `$${rowData.variantPrice}`}
               </Cell>
             </Column>
-
-            {/* Product variant */}
+            {/* stock */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Variant</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productPrice"
-              >
-                {(rowData: any) => (
+              <HeaderCell style={headerCss}>Stock</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => (
                   <div>
-                    <Link
-                      href={`/products/variants?productId=${rowData?.productId}`}
-                    >
-                      See Variant
-                    </Link>
+                    <div className="flex gap-5 justify-around items-center w-full">
+                      <div>
+                        <p>{rowData?._count?.barCodes}</p>
+                      </div>
+                      <div>
+                        <VariantStockAddPopOver rowData={rowData} />
+                      </div>
+                    </div>
                   </div>
+                )}
+              </Cell>
+            </Column>
+            {/* Qr Code */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Qr Code</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="productPrice"
+              >
+                {(rowData) => (
+                  <Link
+                    href={`/products/variants/qr-code/?variantId=${rowData?.variantId}`}
+                    className="px-2 py-1 border border-stroke rounded-md"
+                  >
+                    Qr Code List
+                  </Link>
                 )}
               </Cell>
             </Column>
 
             {/* Action */}
-
             <Column width={100}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
-                  <div className="flex items-center gap-1 ">
+                  <div className="flex items-center gap-1">
                     <Whisper
                       placement="topEnd"
                       speaker={
@@ -300,8 +210,8 @@ const AllProductList = () => {
                     >
                       <IconButton
                         onClick={() => {
-                          setIsOpenEdit(true);
                           setEditData(rowData);
+                          VariantEdit("right");
                         }}
                         circle
                         icon={<MdModeEdit size={20} />}
@@ -334,20 +244,27 @@ const AllProductList = () => {
             </Column>
           </Table>
 
-          {/* product delete confirmation modal */}
           <div>
-            <ProductDeleteModal
+            <VariantEditDrawer
+              open={open}
+              setOpen={setOpen}
+              // onClose={handleCloseEdit}
+              editData={editData}
+              placement={placement}
+            />
+          </div>
+
+          <div>
+            <ProductVariantDeleteModal
               isOpenDelete={isOpenDelete}
               handleCloseDelete={handleCloseDelete}
               deleteData={deleteData}
             />
           </div>
-
           {/* pagination */}
-
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allProductsList?.meta?.total}
+              total={singleProduct?.data?.productVariations?.length || 0}
               prev
               next
               first
@@ -366,15 +283,8 @@ const AllProductList = () => {
           </div>
         </div>
       </div>
-      {/* product edit modal */}
-      <ProductEditModal
-        isOpenEdit={isOpenEdit}
-        setIsOpenEdit={setIsOpenEdit}
-        editData={editData}
-        handleCloseEdit={handleCloseEdit}
-      />
     </>
   );
 };
 
-export default AllProductList;
+export default ProductVariants;
