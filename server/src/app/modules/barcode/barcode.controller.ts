@@ -129,7 +129,7 @@ const addBarCode = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Barcode Added successfully',
+    message: 'Stock Added Successfully',
     data: result,
   });
 });

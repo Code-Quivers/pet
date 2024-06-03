@@ -1,20 +1,14 @@
 import React from "react";
 import { Button, Drawer } from "rsuite";
 
-const ProductVariantTable = ({
-  productVariant,
-  size,
-  open,
-  setOpen,
-  placement,
-}: any) => {
+const ProductVariantTable = ({ productVariant, size, open, setOpen }: any) => {
   console.log("productVariant", productVariant);
 
   return (
     <div>
       <Drawer
-        size={size}
-        placement={placement}
+        size="md"
+        placement="bottom"
         open={open}
         onClose={() => setOpen(false)}
       >

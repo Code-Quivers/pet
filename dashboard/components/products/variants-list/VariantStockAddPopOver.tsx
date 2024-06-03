@@ -56,7 +56,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
     if (isSuccess && !isLoading && !isError && !error && data) {
       toaster.push(
         <Notification header="Success" type="success" closable>
-          <h4 className="font-semibold xl:text-2xl">
+          <h4 className="font-semibold xl:text-xl">
             {data?.message || "Stock Added"}
           </h4>
         </Notification>,
@@ -68,7 +68,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
     if (!isSuccess && !isLoading && isError && error) {
       toaster.push(
         <Notification header="Error" type="error" closable>
-          <h4 className="font-semibold xl:text-2xl">
+          <h4 className="font-semibold xl:text-xl">
             {
               // @ts-ignore
               error?.message ?? "Adding Failed. try again !"
@@ -93,6 +93,10 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
                     name="stock"
                     control={control}
                     rules={{
+                      max: {
+                        value: 10000,
+                        message: "Stock max 10000",
+                      },
                       required: "Stock is Required",
                     }}
                     render={({ field }) => (
@@ -100,7 +104,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
                         <div>
                           <InputNumber
                             min={1}
-                            max={5000}
+                            max={10000}
                             {...field}
                             size="lg"
                             placeholder="Enter Stock..."
@@ -133,6 +137,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
                       Close
                     </Button>
                     <Button
+                      loading={isLoading}
                       type="submit"
                       className="!bg-primary !px-5 !text-white"
                     >
