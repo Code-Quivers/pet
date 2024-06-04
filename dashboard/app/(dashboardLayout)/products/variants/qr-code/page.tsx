@@ -1,14 +1,16 @@
 "use client";
 import { useGetSingleVariantQuery } from "@/redux/features/productsApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
   Checkbox,
+  Input,
   InputGroup,
   Pagination,
   Popover,
   SelectPicker,
   Table,
+  Tooltip,
   Whisper,
 } from "rsuite";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
@@ -19,6 +21,7 @@ import Link from "next/link";
 import { RiDeleteBinFill } from "react-icons/ri";
 import BarCodeDeleteModal from "@/components/products/barcode-list/BarCodeDeleteModal";
 import BarCodeDelete from "@/components/products/barcode-list/BarCodeDelete";
+import InfoIcon from "@rsuite/icons/legacy/Info";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -35,6 +38,8 @@ const AllProductList = () => {
     delay: 300,
   });
 
+  console.log("page", page);
+
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
@@ -44,13 +49,14 @@ const AllProductList = () => {
 
   const searchParams = useSearchParams();
   const variantId = searchParams.get("variantId");
-  console.log("variantId", variantId);
 
   const {
     data: singleVariant,
     isLoading,
     isFetching,
-  } = useGetSingleVariantQuery(variantId as string);
+  } = useGetSingleVariantQuery(variantId ? { variantId, ...query } : null);
+
+  console.log("singleVariant", singleVariant);
 
   const cleanSelectedKeys = () => setCheckedKeys([]);
 
@@ -65,20 +71,20 @@ const AllProductList = () => {
   let checked = false;
   let indeterminate = false;
 
-  if (checkedKeys?.length === singleVariant?.data?.barCodes?.length) {
+  if (checkedKeys?.length === singleVariant?.data?.data?.length) {
     checked = true;
   } else if (checkedKeys?.length === 0) {
     checked = false;
   } else if (
     checkedKeys?.length > 0 &&
-    checkedKeys?.length < singleVariant?.data?.barCodes?.length
+    checkedKeys?.length < singleVariant?.data?.data?.length
   ) {
     indeterminate = true;
   }
 
   const handleCheckAll = (value: any, checked: any) => {
     const keys = checked
-      ? singleVariant?.data?.barCodes?.map((item: any) => item.barcodeId)
+      ? singleVariant?.data?.data?.map((item: any) => item.barcodeId)
       : [];
     setCheckedKeys(keys);
   };
@@ -152,13 +158,39 @@ const AllProductList = () => {
             ) : null}
           </div>
 
-          <div>
-            {checkedKeys?.length > 0 && (
-              <BarCodeDelete
-                barcodeIds={checkedKeys}
-                cleanSelectedKeys={cleanSelectedKeys}
-              />
-            )}
+          <div className="flex items-center gap-3 w-[500px]">
+            <div>
+              <InputGroup
+                inside
+                style={{
+                  width: 400,
+                }}
+              >
+                <Input
+                  style={{
+                    width: 300,
+                  }}
+                  onChange={(e) => setSearchTerm(e)}
+                  placeholder="Search by barcode..."
+                />
+                <InputGroup.Addon>
+                  <Whisper
+                    placement="top"
+                    speaker={<Tooltip> Barcode Search</Tooltip>}
+                  >
+                    <InfoIcon />
+                  </Whisper>
+                </InputGroup.Addon>
+              </InputGroup>
+            </div>
+            <div>
+              {checkedKeys?.length > 0 && (
+                <BarCodeDelete
+                  barcodeIds={checkedKeys}
+                  cleanSelectedKeys={cleanSelectedKeys}
+                />
+              )}
+            </div>
           </div>
         </div>
 
@@ -173,7 +205,7 @@ const AllProductList = () => {
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
-            data={singleVariant?.data?.barCodes || []}
+            data={singleVariant?.data?.data || []}
           >
             <Column width={50} align="center" verticalAlign="middle">
               <HeaderCell style={{ padding: 0 }}>
@@ -265,7 +297,7 @@ const AllProductList = () => {
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={singleVariant?.data?.barCodes?.length || 0}
+              total={singleVariant?.data?.meta?.total || 0}
               prev
               next
               first
