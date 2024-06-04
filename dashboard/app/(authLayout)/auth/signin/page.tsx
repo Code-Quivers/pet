@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Metadata } from "next";
 import SignInForm from "@/components/auth/SignInForm";
 
@@ -15,22 +14,6 @@ const SignIn: React.FC = () => {
           <div className="md:flex flex-wrap items-center">
             <div className="hidden w-full xl:block xl:w-1/2">
               <div className="md:py-17.5 md:px-26 text-center">
-                {/* <div className="flex justify-center">
-                  <Image
-                    className="hidden dark:block"
-                    src={"/images/logo/Catering-Logo.png"}
-                    alt="Logo"
-                    width={176}
-                    height={32}
-                  />
-                  <Image
-                    className="dark:hidden"
-                    src={"/images/logo/party_couture_black.png"}
-                    alt="Logo"
-                    width={200}
-                    height={200}
-                  />
-                </div> */}
                 <span className="mt-15 inline-block">
                   <svg
                     width="350"
