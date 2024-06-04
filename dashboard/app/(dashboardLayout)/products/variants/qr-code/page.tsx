@@ -38,6 +38,8 @@ const AllProductList = () => {
     delay: 300,
   });
 
+  console.log("page", page);
+
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
@@ -295,7 +297,7 @@ const AllProductList = () => {
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={singleVariant?.data?.data?.length || 0}
+              total={singleVariant?.data?.meta?.total || 0}
               prev
               next
               first
