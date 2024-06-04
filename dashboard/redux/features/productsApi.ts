@@ -40,10 +40,15 @@ const productApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.product, tagTypes.tag, tagTypes.categories],
     }),
     getSingleVariant: builder.query({
-      query: (variantId: string) => ({
-        url: `/tag/get-single-variant/${variantId}`,
-        method: "GET",
-      }),
+      query: (arg: { variantId: string } | null) => {
+        if (!arg) return { url: "/tag/get-single-variant", method: "GET" };
+        const { variantId, ...rest } = arg;
+        return {
+          url: `/tag/get-single-variant/${variantId}`,
+          method: "GET",
+          params: rest,
+        };
+      },
       providesTags: [tagTypes.product, tagTypes.tag, tagTypes.categories],
     }),
 
