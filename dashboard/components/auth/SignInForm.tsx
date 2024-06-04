@@ -1,6 +1,6 @@
 "use client";
 
-import { isLoggedIn, storeUserInfo } from "@/helpers/hooks/auth.helpers";
+import { storeUserInfo } from "@/helpers/hooks/auth.helpers";
 import { useDashboardLoginMutation } from "@/redux/features/authApi";
 import { IDashboardLogin } from "@/types/forms/auth.types";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,6 @@ const SignInForm = () => {
     dashboardLogin,
     { isLoading, data, isError, isSuccess, error, reset },
   ] = useDashboardLoginMutation();
-  const userLoggedIn = isLoggedIn();
 
   const {
     control,
@@ -38,11 +37,9 @@ const SignInForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (userLoggedIn) {
-      (router.back() as any) || router.push("/");
-    }
+  // ! side effect
 
+  useEffect(() => {
     if (isSuccess && !isLoading && !isError && !error && data) {
       toaster.push(
         <Notification header="Success" type="success" closable>
@@ -51,6 +48,7 @@ const SignInForm = () => {
         { placement: "bottomStart", duration: 2000 }
       );
       formReset();
+      router.push("/");
     }
     if (!isSuccess && !isLoading && isError && error) {
       toaster.push(
@@ -67,16 +65,15 @@ const SignInForm = () => {
       reset();
     }
   }, [
-    isSuccess,
-    isLoading,
-    isError,
     data,
-    toaster,
-    formReset,
     error,
+    formReset,
+    isError,
+    isLoading,
+    isSuccess,
     reset,
-    userLoggedIn,
     router,
+    toaster,
   ]);
 
   return (
@@ -95,8 +92,7 @@ const SignInForm = () => {
                 <InputGroup size="lg" className="!py-3" inside>
                   <Input
                     size="lg"
-                    autoComplete="false"
-                    autoSave="false"
+                    autoComplete="nope"
                     {...field}
                     placeholder="Enter your email..."
                     className="!w-full !py-3 "
