@@ -1,14 +1,9 @@
 "use client";
-import {
-  useGetProductQuery,
-  useGetSingleProductQuery,
-  useGetSingleVariantQuery,
-} from "@/redux/features/productsApi";
+import { useGetSingleVariantQuery } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
-  IconButton,
-  Input,
+  Checkbox,
   InputGroup,
   Pagination,
   Popover,
@@ -20,8 +15,10 @@ import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
 import { MdKeyboardArrowRight, MdModeEdit } from "react-icons/md";
 const { Column, HeaderCell, Cell } = Table;
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGetCategoryQuery } from "@/redux/features/categoryApi";
 import Link from "next/link";
+import { RiDeleteBinFill } from "react-icons/ri";
+import BarCodeDeleteModal from "@/components/products/barcode-list/BarCodeDeleteModal";
+import BarCodeDelete from "@/components/products/barcode-list/BarCodeDelete";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -29,10 +26,8 @@ const AllProductList = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-
+  const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
   query["categoryName"] = categoryFilter;
-
-  const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -46,11 +41,6 @@ const AllProductList = () => {
 
   const [editData, setEditData] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
-  const handleCloseEdit = () => {
-    setIsOpenEdit(false);
-    setEditData(null);
-  };
 
   const searchParams = useSearchParams();
   const variantId = searchParams.get("variantId");
@@ -61,7 +51,63 @@ const AllProductList = () => {
     isLoading,
     isFetching,
   } = useGetSingleVariantQuery(variantId as string);
-  console.log("singleProduct", singleVariant);
+
+  const cleanSelectedKeys = () => setCheckedKeys([]);
+
+  //Delete Modal
+
+  const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const [deleteData, setDeleteData] = useState<any | null>(null);
+  const handleCloseDelete = () => setIsOpenDelete(false);
+
+  //checked box
+
+  let checked = false;
+  let indeterminate = false;
+
+  if (checkedKeys?.length === singleVariant?.data?.barCodes?.length) {
+    checked = true;
+  } else if (checkedKeys?.length === 0) {
+    checked = false;
+  } else if (
+    checkedKeys?.length > 0 &&
+    checkedKeys?.length < singleVariant?.data?.barCodes?.length
+  ) {
+    indeterminate = true;
+  }
+
+  const handleCheckAll = (value: any, checked: any) => {
+    const keys = checked
+      ? singleVariant?.data?.barCodes?.map((item: any) => item.barcodeId)
+      : [];
+    setCheckedKeys(keys);
+  };
+
+  const handleCheck = (value: any, check: any) => {
+    const keys = check
+      ? [...checkedKeys, value]
+      : checkedKeys.filter((item: any) => item !== value);
+    setCheckedKeys(keys);
+  };
+
+  const CheckCell = ({
+    rowData,
+    onChange,
+    checkedKeys,
+    dataKey,
+    ...props
+  }: any) => {
+    return (
+      <div style={{ lineHeight: "46px" }}>
+        <Checkbox
+          value={rowData[dataKey]}
+          inline
+          onChange={onChange}
+          checked={checkedKeys.some((item: any) => item === rowData[dataKey])}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -80,68 +126,40 @@ const AllProductList = () => {
         <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
         <p className="font-bold">Qr Code</p>
       </div>
+
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <p>
-          Product Name:{" "}
-          <span className="font-semibold">
-            {singleVariant?.data?.product?.productName}
-          </span>
-        </p>
-        <p>
-          Color:{" "}
-          <span className="font-semibold">
-            {singleVariant?.data?.color?.name}
-          </span>
-        </p>
-        {singleVariant?.data?.size ? (
-          <p>
-            Size:{" "}
-            <span className="font-semibold">{singleVariant?.data?.size}</span>
-          </p>
-        ) : null}
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
-          {/* <div>
-            <h2 className="text-lg font-semibold ">
-              All Products | {allProductsList?.meta?.total}
-            </h2>
-          </div> */}
+        <div className="flex justify-between items-center">
+          <div>
+            <p>
+              Product Name:{" "}
+              <span className="font-semibold">
+                {singleVariant?.data?.product?.productName}
+              </span>
+            </p>
+            <p>
+              Color:{" "}
+              <span className="font-semibold">
+                {singleVariant?.data?.color?.name}
+              </span>
+            </p>
+            {singleVariant?.data?.size ? (
+              <p>
+                Size:{" "}
+                <span className="font-semibold">
+                  {singleVariant?.data?.size}
+                </span>
+              </p>
+            ) : null}
+          </div>
 
-          {/* <div className="flex max-md:justify-between gap-10 items-center">
-            <div>
-              <SelectPicker
-                placeholder="Product Filter By Category"
-                data={categoryFilterForProduct}
-                className="w-60"
-                searchable={false}
-                onChange={(value: any) => {
-                  setCategoryFilter(value);
-                }}
-                style={{
-                  width: 300,
-                }}
+          <div>
+            {checkedKeys?.length > 0 && (
+              <BarCodeDelete
+                barcodeIds={checkedKeys}
+                cleanSelectedKeys={cleanSelectedKeys}
               />
-            </div>
-
-            <div>
-              <InputGroup
-                inside
-                style={{
-                  width: 300,
-                }}
-              >
-                <Input
-                  style={{
-                    width: 300,
-                  }}
-                  onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by product name..."
-                />
-                <InputGroup.Addon>
-                  <BiSearch />
-                </InputGroup.Addon>
-              </InputGroup>
-            </div>
-          </div> */}
+            )}
+          </div>
         </div>
 
         {/*  */}
@@ -157,6 +175,32 @@ const AllProductList = () => {
             autoHeight={true}
             data={singleVariant?.data?.barCodes || []}
           >
+            <Column width={50} align="center" verticalAlign="middle">
+              <HeaderCell style={{ padding: 0 }}>
+                <div style={{ lineHeight: "40px" }}>
+                  <Checkbox
+                    inline
+                    checked={checked}
+                    indeterminate={indeterminate}
+                    onChange={handleCheckAll}
+                  />
+                </div>
+              </HeaderCell>
+
+              <Cell>
+                {(rowData) => (
+                  <div>
+                    <CheckCell
+                      dataKey="barcodeId"
+                      rowData={rowData}
+                      checkedKeys={checkedKeys}
+                      onChange={handleCheck}
+                    />
+                  </div>
+                )}
+              </Cell>
+            </Column>
+
             {/* Qr Code */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Qr Code</HeaderCell>
@@ -179,34 +223,45 @@ const AllProductList = () => {
 
             {/* Action */}
 
-            {/* <Column width={70}>
+            <Column width={100}>
               <HeaderCell style={headerCss}>Action</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" align="center">
                 {(rowData: any) => (
-                  <Whisper
-                    placement="topEnd"
-                    speaker={
-                      <Popover
-                        className="border !bg-[#614ae4] text-white font-semibold rounded-full !py-1.5 !px-5"
-                        arrow={false}
+                  <div className="flex items-center gap-1">
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className=" font-semibold rounded-full !py-1.5 "
+                          arrow={false}
+                        >
+                          Delete
+                        </Popover>
+                      }
+                    >
+                      <button
+                        className="  hover:text-[#eb0712db] "
+                        onClick={() => {
+                          setIsOpenDelete(true);
+                          setDeleteData(rowData);
+                        }}
                       >
-                        Edit
-                      </Popover>
-                    }
-                  >
-                    <IconButton
-                      onClick={() => {
-                        setIsOpenEdit(true);
-                        setEditData(rowData);
-                      }}
-                      circle
-                      icon={<MdModeEdit size={20} />}
-                    />
-                  </Whisper>
+                        <RiDeleteBinFill size={20} />
+                      </button>
+                    </Whisper>
+                  </div>
                 )}
               </Cell>
-            </Column> */}
+            </Column>
           </Table>
+
+          <div>
+            <BarCodeDeleteModal
+              isOpenDelete={isOpenDelete}
+              handleCloseDelete={handleCloseDelete}
+              deleteData={deleteData}
+            />
+          </div>
 
           <div style={{ padding: 20 }}>
             <Pagination
