@@ -52,7 +52,7 @@ const RecentProducts = () => {
             <div>
               {!isLoading && !recentProducts?.data?.length && (
                 <div className="flex justify-center items-center h-[40vh]">
-                  <h2 className="text-3xl font-medium font-satoshi">
+                  <h2 className="text-3xl font-medium ">
                     No Product Available !
                   </h2>
                 </div>
