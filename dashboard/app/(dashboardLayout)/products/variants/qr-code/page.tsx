@@ -1,5 +1,8 @@
 "use client";
-import { useGetSingleVariantQuery } from "@/redux/features/productsApi";
+import {
+  useGetSingleVariantQuery,
+  useGetVariantQuery,
+} from "@/redux/features/productsApi";
 import { useEffect, useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
@@ -71,14 +74,19 @@ const AllProductList = () => {
 
   const cleanSelectedKeys = () => setCheckedKeys([]);
 
-  //Delete Modal
+  //Variant Select As per Product
+  const { data: allVariant } = useGetVariantQuery({});
 
+  const findVariant = allVariant?.data?.find(
+    (item: any) => item?.variantId === variantId
+  );
+
+  //Delete Modal
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const [deleteData, setDeleteData] = useState<any | null>(null);
   const handleCloseDelete = () => setIsOpenDelete(false);
 
   //checked box
-
   let checked = false;
   let indeterminate = false;
 
@@ -158,9 +166,7 @@ const AllProductList = () => {
   };
 
   //BarCode Status Change
-
   const [barcodeStatusChange] = useUpdateBarcodeStatusMutation();
-
   const barCodeStatusChange = async (eventKey: string, rowData: any) => {
     const objData = {
       barcodeStatus: eventKey,
@@ -182,9 +188,7 @@ const AllProductList = () => {
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
           <Link href={`/products`}>All products</Link>
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-          <Link
-            href={`/products/variants?productId=${singleVariant?.data?.productId}`}
-          >
+          <Link href={`/products/variants?productId=${findVariant?.productId}`}>
             Variants
           </Link>
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />

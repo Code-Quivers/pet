@@ -32,6 +32,16 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
     }),
+
+    getVariant: builder.query({
+      query: (arg: Record<string, any>) => ({
+        url: `${PRODUCT_API}/variant`,
+        method: "GET",
+        params: arg,
+      }),
+      providesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
+    }),
+
     getSingleProduct: builder.query({
       query: (productId: string) => ({
         url: `${PRODUCT_API}/${productId}`,
@@ -89,4 +99,5 @@ export const {
   useUpdateProductVariationMutation,
   useDeleteProductMutation,
   useDeleteProductVariantMutation,
+  useGetVariantQuery,
 } = productApi;
