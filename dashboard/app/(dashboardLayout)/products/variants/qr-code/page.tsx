@@ -3,7 +3,10 @@ import { useGetSingleVariantQuery } from "@/redux/features/productsApi";
 import { useEffect, useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
+  Button,
   Checkbox,
+  DateRangePicker,
+  Dropdown,
   Input,
   InputGroup,
   Pagination,
@@ -22,6 +25,11 @@ import { RiDeleteBinFill } from "react-icons/ri";
 import BarCodeDeleteModal from "@/components/products/barcode-list/BarCodeDeleteModal";
 import BarCodeDelete from "@/components/products/barcode-list/BarCodeDelete";
 import InfoIcon from "@rsuite/icons/legacy/Info";
+import moment from "moment";
+import { predefinedRanges } from "@/helpers/constant";
+import { barCodeStatus } from "@/helpers/selectPickerVars/ProductSelectVars";
+import { FiEdit2 } from "react-icons/fi";
+import { useUpdateBarcodeStatusMutation } from "@/redux/features/barCodeApi";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -30,6 +38,13 @@ const AllProductList = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState({
+    startDate: "",
+    endDate: "",
+  });
+  const [barcodeStatus, setBarcodeStatus] = useState<string>("");
+
+  query["barcodeStatus"] = barcodeStatus;
   query["categoryName"] = categoryFilter;
   query["limit"] = size;
   query["page"] = page;
@@ -38,14 +53,12 @@ const AllProductList = () => {
     delay: 300,
   });
 
-  console.log("page", page);
+  query["startDate"] = selectedDate.startDate;
+  query["endDate"] = selectedDate.endDate;
 
   if (!!debouncedTerm) {
     query["searchTerm"] = debouncedTerm;
   }
-
-  const [editData, setEditData] = useState(null);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
 
   const searchParams = useSearchParams();
   const variantId = searchParams.get("variantId");
@@ -55,8 +68,6 @@ const AllProductList = () => {
     isLoading,
     isFetching,
   } = useGetSingleVariantQuery(variantId ? { variantId, ...query } : null);
-
-  console.log("singleVariant", singleVariant);
 
   const cleanSelectedKeys = () => setCheckedKeys([]);
 
@@ -115,22 +126,76 @@ const AllProductList = () => {
     );
   };
 
+  // Filter date
+  const handleFilterDate = (date: Date[] | null) => {
+    if (!date?.length) {
+      setSelectedDate({
+        startDate: "",
+        endDate: "",
+      });
+    }
+
+    if (date) {
+      const startDate = new Date(date[0]);
+      const endDate = new Date(date[1]);
+
+      // Set the start time to 00:00:00 (12:00 AM)
+      startDate.setHours(0, 0, 0, 0);
+
+      // Set the end time to 23:59:59 (11:59 PM)
+      endDate.setHours(23, 59, 59, 999);
+
+      const formattedStartDate = startDate.toISOString();
+      const formattedEndDate = endDate.toISOString();
+
+      if (startDate !== null && endDate !== null) {
+        setSelectedDate({
+          startDate: formattedStartDate,
+          endDate: formattedEndDate,
+        });
+      }
+    }
+  };
+
+  //BarCode Status Change
+
+  const [barcodeStatusChange] = useUpdateBarcodeStatusMutation();
+
+  const barCodeStatusChange = async (eventKey: string, rowData: any) => {
+    const objData = {
+      barcodeStatus: eventKey,
+    };
+
+    await barcodeStatusChange({
+      barcodeId: rowData?.barcodeId,
+      data: objData,
+    });
+  };
+
   return (
     <>
-      <div className="flex items-center mb-2 text-sm text-[#2563eb]">
-        <Link href={"/"} className="underline-offset-8">
-          Dashboard
-        </Link>
-        <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-        <Link href={`/products`}>All products</Link>
-        <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-        <Link
-          href={`/products/variants?productId=${singleVariant?.data?.productId}`}
-        >
-          Variants
-        </Link>
-        <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-        <p className="font-bold">Qr Code</p>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center mb-2 text-sm text-[#2563eb]">
+          <Link href={"/"} className="underline-offset-8">
+            Dashboard
+          </Link>
+          <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
+          <Link href={`/products`}>All products</Link>
+          <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
+          <Link
+            href={`/products/variants?productId=${singleVariant?.data?.productId}`}
+          >
+            Variants
+          </Link>
+          <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
+          <p className="font-bold">Qr Code</p>
+        </div>
+
+        <div>
+          <p className="text-danger">
+            {`*** Multiple deletes will work after choosing the product status 'INACTIVE' and checking the keys. ***`}
+          </p>
+        </div>
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -158,7 +223,50 @@ const AllProductList = () => {
             ) : null}
           </div>
 
-          <div className="flex items-center gap-3 w-[500px]">
+          <div className="flex items-center gap-3 ">
+            <div>
+              {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
+                <BarCodeDelete
+                  barcodeIds={checkedKeys}
+                  cleanSelectedKeys={cleanSelectedKeys}
+                />
+              )}
+            </div>
+
+            {/* status filter */}
+            <div>
+              <SelectPicker
+                placeholder="Product Filter By Status"
+                data={barCodeStatus}
+                searchable={false}
+                onChange={(value: any) => {
+                  setBarcodeStatus(value);
+                }}
+                style={{
+                  width: 300,
+                }}
+              />
+            </div>
+
+            <div>
+              <DateRangePicker
+                // @ts-ignore
+                ranges={predefinedRanges}
+                placement="bottomEnd"
+                onChange={(value: Date[] | null): void => {
+                  handleFilterDate(value);
+                }}
+                onClean={() =>
+                  setSelectedDate({
+                    startDate: "",
+                    endDate: "",
+                  })
+                }
+                size="md"
+                // style={{ width: "30%" }}
+                placeholder="Filter By Product Created Date"
+              />
+            </div>
             <div>
               <InputGroup
                 inside
@@ -182,14 +290,6 @@ const AllProductList = () => {
                   </Whisper>
                 </InputGroup.Addon>
               </InputGroup>
-            </div>
-            <div>
-              {checkedKeys?.length > 0 && (
-                <BarCodeDelete
-                  barcodeIds={checkedKeys}
-                  cleanSelectedKeys={cleanSelectedKeys}
-                />
-              )}
             </div>
           </div>
         </div>
@@ -244,12 +344,54 @@ const AllProductList = () => {
             {/* Qr Code */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Status</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => (
+                  <div className="flex items-center justify-between   gap-3 !w-full">
+                    <div className="w-[80px]">{rowData.barcodeStatus} </div>
+                    <div>
+                      <Whisper
+                        placement="bottomStart"
+                        controlId="control-id-with-dropdown"
+                        trigger="click"
+                        speaker={
+                          <Popover full>
+                            <Dropdown.Menu
+                              onSelect={(eventKey) =>
+                                barCodeStatusChange(eventKey as string, rowData)
+                              }
+                            >
+                              <Dropdown.Item eventKey={"ACTIVE"}>
+                                ACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"INACTIVE"}>
+                                INACTIVE
+                              </Dropdown.Item>
+                              <Dropdown.Item eventKey={"AVAILABLE"}>
+                                AVAILABLE
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Popover>
+                        }
+                      >
+                        <Button>
+                          <FiEdit2 />
+                        </Button>
+                      </Whisper>
+                    </div>
+                  </div>
+                )}
+              </Cell>
+            </Column>
+
+            {/* Created At */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Created</HeaderCell>
               <Cell
-                style={cellCss}
+                // style={cellCss}
                 verticalAlign="middle"
-                dataKey="barcodeStatus"
+                dataKey="createdAt"
               >
-                {(rowData) => `${rowData.barcodeStatus}`}
+                {(rowData) => ` ${moment(rowData.createdAt).format("ll")}`}
               </Cell>
             </Column>
 
