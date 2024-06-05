@@ -349,7 +349,7 @@ const getSingleVariant = async (
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
-  const { searchTerm, barcodeStatus, ...filterData } = filters;
+  const { searchTerm, barcodeStatus, startDate, endDate, ...filterData } = filters;
 
   // Define an array to hold filter conditions
   const andConditions: Prisma.BarCodeWhereInput[] = [];
@@ -392,6 +392,15 @@ const getSingleVariant = async (
     andConditions.push({
       barcodeStatus: {
         equals: barcodeStatus,
+      },
+    });
+  }
+
+  if (startDate && endDate) {
+    andConditions.push({
+      createdAt: {
+        gte: startDate, // Greater than or equal to startDate
+        lte: endDate, // Less than or equal to endDate
       },
     });
   }

@@ -339,6 +339,16 @@ const deleteProduct = async (productId: string): Promise<Product> => {
   return result;
 };
 
+const getAllVariant = async (): Promise<ProductVariation[]> => {
+  const result = await prisma.productVariation.findMany({});
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product Variation Not Found');
+  }
+
+  return result;
+};
+
 const updateProductVariation = async (variantId: string, req: Request): Promise<ProductVariation> => {
   console.log('variantId', variantId);
 
@@ -411,4 +421,5 @@ export const ProductService = {
   deleteProduct,
   updateProductVariation,
   deleteProductVariant,
+  getAllVariant,
 };
