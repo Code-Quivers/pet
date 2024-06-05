@@ -26,16 +26,19 @@ const KidLayoutNavbar = () => {
   );
 
   return (
-    <div className="flex max-w-2xl mx-auto justify-between w-full items-center  h-10     px-4 sm:px-6 lg:px-8">
+    <div className="flex max-w-screen-xl mx-auto justify-between w-full items-center my-2 md:my-5 2xl:my-10">
+      {/* left content */}
       <div className="">
-        <Dropdown suppressHydrationWarning renderToggle={renderIconButton}>
+        <Dropdown
+          size="lg"
+          suppressHydrationWarning
+          renderToggle={renderIconButton}
+        >
           {!isLoading && data && (
             <>
               <Dropdown.Item panel style={{ padding: 10, width: 170 }}>
                 <p>Signed in as</p>
-                <strong className="text-wrap">
-                  {data?.data?.profile?.fullName}
-                </strong>
+                <strong className="text-wrap">{data?.data?.email}</strong>
               </Dropdown.Item>
               <Dropdown.Separator />
               <Dropdown.Item onClick={() => router.push("/my-account")}>
@@ -71,7 +74,8 @@ const KidLayoutNavbar = () => {
           )}
         </Dropdown>
       </div>
-      {!isLoading && data && <div className=""> hello</div>}
+      {/* right content */}
+      {!isLoading && data && <div className="text-xl font-bold ">ET. HOME</div>}
     </div>
   );
 };

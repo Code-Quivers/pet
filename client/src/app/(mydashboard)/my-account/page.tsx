@@ -7,9 +7,9 @@ export const metadata: Metadata = {
 
 const MyKidsPage = () => {
   return (
-    <section className=" max-w-7xl mx-auto my-10">
-      <div>
-        <h2 className="text-2xl font-semibold">My All Kids</h2>
+    <section className="mx-auto my-2">
+      <div className="text-center">
+        <h2 className="text-lg font-semibold">My All Bands | 5</h2>
       </div>
       <div>
         <MyAllKids />

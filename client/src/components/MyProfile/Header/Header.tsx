@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import logo from "../../../../public/images/logo/E.T.-Logo.png";
 import Link from "next/link";
 import { RiMenu2Line } from "react-icons/ri";
-import Cart from "../../ProductsPage/Cart/Cart";
 import HeaderDrawer from "./HeaderDrawer";
 
 const Header = () => {
