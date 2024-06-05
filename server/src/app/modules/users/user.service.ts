@@ -8,9 +8,8 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IUpdateProfileReqAndResponse, IUserFilterRequest, IUsersResponse } from './user.interface';
+import { IUpdateProfileReq, IUserFilterRequest, IUsersResponse } from './user.interface';
 import { userRelationalFields, userRelationalFieldsMapper, userSearchableFields } from './users.constants';
-import { updateMyProfileDataValue } from './user.utils';
 
 // ! getting all users ----------------------------------------------------------------------->>>
 const getAllUserService = async (filters: IUserFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<IUsersResponse[]>> => {
@@ -315,7 +314,7 @@ const getSingleUser = async (userId: string): Promise<IUsersResponse | null> => 
 };
 
 // ! update Profile info -------------------------------------------------------->>>
-const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReqAndResponse) => {
+const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReq) => {
   // Check if the user exists
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -335,39 +334,26 @@ const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReqAnd
     throw new ApiError(httpStatus.NOT_FOUND, 'Profile not Found !!');
   }
 
-  const { fullName, addressLine1, addressLine2, city, companyName, country, email, password, phoneNumber, postalCode, state } = payload;
-
-  const updatedUserDetails: any = {
-    email,
-  };
+  const { fullName, address, mobileNumber, password } = payload;
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password as string, Number(config.bcrypt_salt_rounds));
-    updatedUserDetails['password'] = hashedPassword;
-  }
-
-  if (updatedUserDetails?.email || updatedUserDetails?.password) {
     await prisma.user.update({
       where: {
         userId,
       },
-      data: updatedUserDetails,
+      data: {
+        password: hashedPassword,
+      },
     });
   }
 
-  const updatedDetailsReq = {
+  const updatedDetails: IUpdateProfileReq = {
     fullName,
-    addressLine1,
-    addressLine2,
-    city,
-    companyName,
-    country,
-    phoneNumber,
-    postalCode,
-    state,
+    address,
+    mobileNumber,
   };
-  const updatedDetails: IUpdateProfileReqAndResponse = updateMyProfileDataValue(updatedDetailsReq);
-
+  //
   const result = await prisma.profile.update({
     where: {
       profileId: existingUser?.profile?.profileId as string,

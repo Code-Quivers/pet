@@ -64,18 +64,18 @@ const addOrder = async (data: IOrderRequest): Promise<any> => {
     });
 
     // Update stock for each variant product
-    for (const item of cartItems) {
-      await transactionClient.productVariation.update({
-        where: {
-          variantId: item.variantId,
-        },
-        data: {
-          stock: {
-            decrement: item.quantity,
-          },
-        },
-      });
-    }
+    // for (const item of cartItems) {
+    //   await transactionClient.productVariation.update({
+    //     where: {
+    //       variantId: item.variantId,
+    //     },
+    //     data: {
+    //       stock: {
+    //         decrement: item.quantity,
+    //       },
+    //     },
+    //   });
+    // }
 
     return newOrder;
   });
@@ -258,7 +258,7 @@ const monthWiseOrder = async (): Promise<any> => {
 };
 
 monthWiseOrder()
-  .then(data => console.log('data', data))
+  .then(() => console.log('data'))
   .catch(error => console.error('Error:', error))
   .finally(async () => {
     await prisma.$disconnect();

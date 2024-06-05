@@ -94,8 +94,8 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
                     control={control}
                     rules={{
                       max: {
-                        value: 10000,
-                        message: "Stock max 10000",
+                        value: 500,
+                        message: "Stock max 500",
                       },
                       required: "Stock is Required",
                     }}

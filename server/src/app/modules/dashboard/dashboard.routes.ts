@@ -6,7 +6,7 @@ import { DashboardController } from './dashboard.controller';
 
 const router = express.Router();
 
-// ! Get all List----------------------------------->>>
+// ! Get dashboard info----------------------------------->>>
 router.get('/get-total-counts', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), DashboardController.getTotalCount);
 
 export const DashboardRoutes = router;

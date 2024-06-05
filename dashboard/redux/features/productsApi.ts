@@ -21,7 +21,7 @@ const productApi = baseApi.injectEndpoints({
         data: data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.product, tagTypes.categories],
+      invalidatesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
     }),
 
     getProduct: builder.query({
@@ -30,21 +30,26 @@ const productApi = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: [tagTypes.product, tagTypes.categories],
+      providesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
     }),
     getSingleProduct: builder.query({
       query: (productId: string) => ({
         url: `${PRODUCT_API}/${productId}`,
         method: "GET",
       }),
-      providesTags: [tagTypes.product, tagTypes.tag],
+      providesTags: [tagTypes.product, tagTypes.tag, tagTypes.categories],
     }),
     getSingleVariant: builder.query({
-      query: (variantId: string) => ({
-        url: `/tag/get-single-variant/${variantId}`,
-        method: "GET",
-      }),
-      providesTags: [tagTypes.product],
+      query: (arg: { variantId: string } | null) => {
+        if (!arg) return { url: "/tag/get-single-variant", method: "GET" };
+        const { variantId, ...rest } = arg;
+        return {
+          url: `/tag/get-single-variant/${variantId}`,
+          method: "GET",
+          params: rest,
+        };
+      },
+      providesTags: [tagTypes.product, tagTypes.tag, tagTypes.categories],
     }),
 
     updateProductVariation: builder.mutation({
@@ -54,7 +59,7 @@ const productApi = baseApi.injectEndpoints({
         data: data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.product],
+      invalidatesTags: [tagTypes.product, tagTypes.tag, tagTypes.categories],
     }),
 
     deleteProduct: builder.mutation({
@@ -62,7 +67,7 @@ const productApi = baseApi.injectEndpoints({
         url: `${PRODUCT_API}/${productId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.product, tagTypes.categories],
+      invalidatesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
     }),
 
     deleteProductVariant: builder.mutation({
@@ -70,7 +75,7 @@ const productApi = baseApi.injectEndpoints({
         url: `${PRODUCT_API}/variant/${variantId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.product, tagTypes.categories],
+      invalidatesTags: [tagTypes.product, tagTypes.categories, tagTypes.tag],
     }),
   }),
 });
