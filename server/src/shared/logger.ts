@@ -14,7 +14,6 @@ const myFormat = printf(({ level, message, timestamp }) => {
 
   return `📅${date.toDateString()}  ⏲${formattedTime} ▶ ${level}: ${message} `;
 });
-
 const errorFormat = printf(({ level, message, timestamp, ...srv }) => {
   const date = new Date(timestamp);
   const formattedTime = new Date(timestamp).toLocaleTimeString('en-US', {
@@ -24,13 +23,13 @@ const errorFormat = printf(({ level, message, timestamp, ...srv }) => {
   return `📅${date.toDateString()}  ⏲${formattedTime} ▶ ${level}: ${message} 😟 statusCode: ${srv?.statusCode || '400'}`;
 });
 
-const logger = createLogger({
+const successLogger = createLogger({
   level: 'info',
-  format: combine(label({ label: 'HR' }), timestamp(), myFormat),
+  format: combine(label({ label: 'ET-HOME' }), timestamp(), myFormat),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
-      filename: path.join(process.cwd(), 'logs', 'winston', 'successes', 'HR-%DATE%-success.log'),
+      filename: path.join(process.cwd(), 'logs', 'winston', 'successes', 'ET-HOME-%DATE%-success.log'),
       datePattern: 'YYYY-DD-MM-HH',
       zippedArchive: true,
       maxSize: '20m',
@@ -41,11 +40,11 @@ const logger = createLogger({
 
 const infoLogger = createLogger({
   level: 'info',
-  format: combine(label({ label: 'HR' }), timestamp(), myFormat),
+  format: combine(label({ label: 'ET-HOME' }), timestamp(), myFormat),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
-      filename: path.join(process.cwd(), 'logs', 'winston', 'info', 'HR-%DATE%-info.log'),
+      filename: path.join(process.cwd(), 'logs', 'winston', 'info', 'ET-HOME-%DATE%-info.log'),
       datePattern: 'YYYY-DD-MM-HH',
       zippedArchive: true,
       maxSize: '20m',
@@ -56,11 +55,11 @@ const infoLogger = createLogger({
 
 const errorLogger = createLogger({
   level: 'error',
-  format: combine(label({ label: 'HR' }), timestamp(), errorFormat),
+  format: combine(label({ label: 'ET-HOME' }), timestamp(), errorFormat),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
-      filename: path.join(process.cwd(), 'logs', 'winston', 'errors', 'HR-%DATE%-error.log'),
+      filename: path.join(process.cwd(), 'logs', 'winston', 'errors', 'ET-HOME-%DATE%-error.log'),
       datePattern: 'YYYY-DD-MM-HH',
       zippedArchive: true,
       maxSize: '20m',
@@ -69,4 +68,4 @@ const errorLogger = createLogger({
   ],
 });
 
-export { logger, errorLogger, infoLogger };
+export { successLogger, errorLogger, infoLogger };

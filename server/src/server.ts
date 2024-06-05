@@ -1,17 +1,17 @@
 import { Server } from 'http';
 import app from './app';
 import config from './config';
-import { errorLogger, logger } from './shared/logger';
+import { errorLogger, infoLogger, successLogger } from './shared/logger';
 
 async function bootstrap() {
   const server: Server = app.listen(config.port, () => {
-    logger.info(`Server running on port ${config.port}`);
+    successLogger.info(`Server running on port ${config.port}`);
   });
 
   const exitHandler = () => {
     if (server) {
       server.close(() => {
-        logger.info('Server closed');
+        infoLogger.info('Server closed');
       });
     }
     process.exit(1);
@@ -24,13 +24,6 @@ async function bootstrap() {
 
   process.on('uncaughtException', unexpectedErrorHandler);
   process.on('unhandledRejection', unexpectedErrorHandler);
-
-  process.on('SIGTERM', () => {
-    console.info('SIGTERM received');
-    if (server) {
-      server.close();
-    }
-  });
 }
 
 bootstrap();
