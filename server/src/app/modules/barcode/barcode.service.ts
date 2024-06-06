@@ -299,12 +299,111 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
   };
 };
 
-const getSingleVariant = async (variantId: string): Promise<any | null> => {
+// const getSingleVariant = async (variantId: string): Promise<any | null> => {
+//   if (!variantId) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
+//   }
+
+//   // Find the product using the productCode
+//   const result = await prisma.productVariation.findUnique({
+//     where: {
+//       variantId,
+//     },
+//     select: {
+//       variantId: true,
+//       productId: true,
+//       color: true,
+//       product: {
+//         select: {
+//           productName: true,
+//         },
+//       },
+//       _count: true,
+//       barCodes: {
+//         select: {
+//           barcodeId: true,
+//           code: true,
+//           barcodeStatus: true,
+//         },
+//       },
+//       // product: true,
+//     },
+//   });
+
+//   if (!result) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
+//   }
+
+//   // console.log('product', result);
+
+//   return result;
+// };
+
+// Barcode Update
+
+const getSingleVariant = async (
+  variantId: string,
+  filters: IBarCodeFilterRequest,
+  options: IPaginationOptions
+): Promise<IGenericResponse<BarCode[]>> => {
+  // Calculate pagination options
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+
+  const { searchTerm, barcodeStatus, ...filterData } = filters;
+
+  // Define an array to hold filter conditions
+  const andConditions: Prisma.BarCodeWhereInput[] = [];
+
+  // Add search term condition if provided
+  if (searchTerm) {
+    andConditions.push({
+      OR: BarcodeSearchableFields.map((field: any) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  // Add filterData conditions if filterData is provided
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => {
+        if (BarcodeRelationalFields.includes(key)) {
+          return {
+            [BarcodeRelationalFieldsMapper[key]]: {
+              subCategoryName: (filterData as any)[key],
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: (filterData as any)[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  // Add barcodeStatus condition if provided
+  if (barcodeStatus) {
+    andConditions.push({
+      barcodeStatus: {
+        equals: barcodeStatus,
+      },
+    });
+  }
+
+  // This Code is not necessary
+  // const whereConditions: Prisma.BarCodeWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
+
   if (!variantId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'variantId is required');
   }
 
-  // Find the product using the productCode
+  // Find the product variation using the variantId
   const result = await prisma.productVariation.findUnique({
     where: {
       variantId,
@@ -318,15 +417,22 @@ const getSingleVariant = async (variantId: string): Promise<any | null> => {
           productName: true,
         },
       },
-      _count: true,
       barCodes: {
+        where: {
+          AND: [
+            { variantId }, // Assuming `variantId` is the correct field
+            ...andConditions,
+          ],
+        },
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
         select: {
           barcodeId: true,
           code: true,
           barcodeStatus: true,
         },
       },
-      // product: true,
     },
   });
 
@@ -334,12 +440,29 @@ const getSingleVariant = async (variantId: string): Promise<any | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Variation Not Found');
   }
 
-  // console.log('product', result);
+  // Count total matching barcodes for pagination
+  const total = await prisma.barCode.count({
+    where: {
+      AND: [
+        { variantId }, // Assuming `variantId` is the correct field
+        ...andConditions,
+      ],
+    },
+  });
 
-  return result;
+  // Return the paginated response
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      //@ts-ignore
+      totalPages: Math.ceil(total / limit),
+    },
+    //@ts-ignore
+    data: result.barCodes,
+  };
 };
-
-// Barcode Update
 
 const singleBarcodeUpdate = async (barcodeId: string, data: any): Promise<BarCode | null> => {
   console.log(data, 'data');
@@ -442,8 +565,6 @@ const addBarCode = async (data: IBarCodeStockRequest): Promise<number> => {
   if (!findVariant) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Variant Not Found');
   }
-
-
 
   const codes = Array.from({ length: data.stock }, () => ({
     code: generateBarCode(),
