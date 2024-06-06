@@ -1,32 +1,48 @@
 import Link from "next/link";
 import React from "react";
+import Marquee from "react-fast-marquee";
+import { LuDot } from "react-icons/lu";
 
 const PromoBanner = () => {
   return (
     <div className="">
       <div className="bg-gray-950">
-        <div className="mx-auto max-w-7xl py-1 px-3 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between lg:flex-row lg:justify-center">
-            <div className="flex  items-center lg:mr-3 lg:flex-none">
-              <p className="ml-3 text-center font-medium text-white">
+        <div className=" py-1">
+          <Marquee className="text-white" autoFill pauseOnHover>
+            <div>
+              <p className="ml-3 md:text-center font-medium text-white">
                 Buy a<span className="font-semibold"> Backup Buddy</span> and
                 use code
                 <span className="font-black"> 2FOR1</span> to get a free{" "}
                 <span className="font-black">Active band</span>
+                <Link href={"/"} className="underline text-white ml-3">
+                  Buy Now
+                </Link>
+                <LuDot size={25} className="inline mx-10" />
               </p>
             </div>
-            <div className="mt-2 w-full flex-shrink-0 lg:mt-0 lg:w-auto">
-              <Link href={"/"} className="underline text-white text-sm">
+          </Marquee>
+          {/* <div className="md:flex sm:justify-center sm:items-center md:gap-3 text-xs sm:text-base">
+            <div>
+              <p className="ml-3 md:text-center font-medium text-white">
+                Buy a<span className="font-semibold"> Backup Buddy</span> and
+                use code
+                <span className="font-black"> 2FOR1</span> to get a free{" "}
+                <span className="font-black">Active band</span>
+                <Link
+                  href={"/"}
+                  className="underline text-white md:hidden ml-3"
+                >
+                  Buy Now
+                </Link>
+              </p>
+            </div>
+            <button className="max-md:hidden">
+              <Link href={"/"} className="underline text-white">
                 Buy Now
               </Link>
-              {/* <a
-                className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-teal-600 shadow-sm hover:bg-teal-50"
-                href="#pricing"
-              >
-                Buy now
-              </a> */}
-            </div>
-          </div>
+            </button>
+          </div> */}
         </div>
       </div>
     </div>

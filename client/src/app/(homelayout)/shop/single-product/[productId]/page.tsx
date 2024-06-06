@@ -130,7 +130,7 @@ const SingleProductPage = ({ params }: any) => {
     <>
       <Cart cartOpen={cartOpen} setCartOpen={setCartOpen} />
       <div>
-        <div className="max-w-7xl mx-auto mt-5">
+        <div className="max-w-7xl xl:mx-auto md:mx-10 mx-0 md:mt-5">
           <div className="md:grid md:grid-cols-2 gap-10 ">
             {/* product slider */}
             <div className="">
@@ -144,7 +144,7 @@ const SingleProductPage = ({ params }: any) => {
               />
             </div>
             {/* product variant and title */}
-            <div className="md:flex-1 px-4 md:mt-0">
+            <div className="md:flex-1 md:mt-0  max-md:mx-4">
               <div>
                 {/* Title and Price  */}
                 <div className="mt-5">
@@ -160,7 +160,7 @@ const SingleProductPage = ({ params }: any) => {
                     <div className="h-7 w-1/3 animate-pulse bg-gray-300 mt-5"></div>
                   ) : (
                     <p className="text-gray-600 text-xl">
-                      $ {singleProduct?.data?.productPrice}
+                      ${singleProduct?.data?.productPrice?.toFixed(2)}
                     </p>
                   )}
                 </div>

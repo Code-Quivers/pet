@@ -25,7 +25,7 @@ export const CarouselThumbsButton: React.FC<PropType> = (props) => {
         <Image
           src={`${fileUrlKey()}/${slide?.src}`}
           alt="Product Image"
-          className=" w-full"
+          className=" w-full rounded-lg h-[4rem] p-1  md:h-[78px] object-cover"
           width={200}
           height={200}
         />

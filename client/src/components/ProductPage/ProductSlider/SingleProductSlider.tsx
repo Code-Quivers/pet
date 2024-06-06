@@ -89,9 +89,9 @@ const SingleProductSlider: React.FC<PropType> = (props) => {
                   <Image
                     src={`${fileUrlKey()}/${slide?.src}`}
                     alt="Product Image"
-                    className="object-cover"
-                    width={300}
-                    height={300}
+                    className="object-cover w-full h-full"
+                    width={1000}
+                    height={1000}
                   />
                 </div>
               </div>
