@@ -94,7 +94,7 @@ const ProductsSection = () => {
                     className="h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110 rounded-t-lg"
                   />
                 </div>
-                <div className="py-2">
+                <div className="py-2 px-2">
                   <h2 className="text-xl font-bold text-black ">
                     {product?.productName}
                   </h2>
@@ -105,7 +105,7 @@ const ProductsSection = () => {
                   <p className="line-clamp-2">{product?.productDescription}</p>
                 </div>
               </Link>
-              <div className="pb-2">
+              <div className="pb-2 px-2">
                 {product?.productVariations?.map(
                   (variation: any, index: number) => (
                     <button

@@ -90,7 +90,12 @@ const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
   };
   return (
     <div>
-      <Modal backdrop="static" open={isOpenEdit} onClose={handleModalClose}>
+      <Modal
+        backdrop="static"
+        open={isOpenEdit}
+        onClose={handleModalClose}
+        overflow={false}
+      >
         <Modal.Header>
           <Modal.Title>Edit Category Information</Modal.Title>
         </Modal.Header>
@@ -151,7 +156,7 @@ const EditCategoryModal = ({ isOpenEdit, handleClose, editData }: any) => {
                             defaultValue={editData?.description}
                             {...field}
                             placeholder="Description..."
-                            className="!w-full !h-60"
+                            className="!w-full !h-30"
                           />
                           <Form.ErrorMessage
                             show={

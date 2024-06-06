@@ -3,6 +3,7 @@
 import { useAddMoreStockMutation } from "@/redux/features/barCodeApi";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { RiAddLine } from "react-icons/ri";
 import {
   Button,
   Form,
@@ -104,7 +105,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
                         <div>
                           <InputNumber
                             min={1}
-                            max={10000}
+                            // max={500}
                             {...field}
                             size="lg"
                             placeholder="Enter Stock..."
@@ -154,9 +155,11 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
       >
         <button
           onClick={open}
-          className="bg-primary text-white flex justify-between w-full px-3 rounded-md"
+          className="bg-[#f1f5f9] flex justify-between w-full px-1 rounded-md hover:text-primary hover:bg-[#e2e8f0]"
         >
-          <span>Add</span>
+          <span>
+            <RiAddLine size={20} className="" />
+          </span>
         </button>
       </Whisper>
     </div>

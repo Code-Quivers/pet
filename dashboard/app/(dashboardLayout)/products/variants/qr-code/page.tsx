@@ -73,13 +73,15 @@ const AllProductList = () => {
   } = useGetSingleVariantQuery(variantId ? { variantId, ...query } : null);
 
   const cleanSelectedKeys = () => setCheckedKeys([]);
-
+  console.log(singleVariant, "singleVariant");
   //Variant Select As per Product
   const { data: allVariant } = useGetVariantQuery({});
 
   const findVariant = allVariant?.data?.find(
     (item: any) => item?.variantId === variantId
   );
+  console.log(allVariant, "allVariant");
+  console.log(findVariant, "findVariant");
 
   //Delete Modal
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
@@ -180,7 +182,7 @@ const AllProductList = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div>
         <div className="flex items-center mb-2 text-sm text-[#2563eb]">
           <Link href={"/"} className="underline-offset-8">
             Dashboard
@@ -188,45 +190,36 @@ const AllProductList = () => {
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
           <Link href={`/products`}>All products</Link>
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-          <Link href={`/products/variants?productId=${findVariant?.productId}`}>
+          <Link
+            href={`/products/variants?productId=${findVariant?.product?.productId}`}
+          >
             Variants
           </Link>
           <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
           <p className="font-bold">Qr Code</p>
         </div>
 
-        <div>
+        {/* <div>
           <p className="text-danger">
             {`*** Multiple deletes will work after choosing the product status 'INACTIVE' and checking the keys. ***`}
           </p>
-        </div>
+        </div> */}
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="flex items-center gap-5">
+          <p>
+            Product Name:{" "}
+            <span className="font-semibold">
+              {findVariant?.product?.productName}
+            </span>
+          </p>
+          <p>
+            Color:{" "}
+            <span className="font-semibold">{findVariant?.color?.name}</span>
+          </p>
+        </div>
         <div className="flex justify-between items-center">
-          <div>
-            <p>
-              Product Name:{" "}
-              <span className="font-semibold">
-                {singleVariant?.data?.product?.productName}
-              </span>
-            </p>
-            <p>
-              Color:{" "}
-              <span className="font-semibold">
-                {singleVariant?.data?.color?.name}
-              </span>
-            </p>
-            {singleVariant?.data?.size ? (
-              <p>
-                Size:{" "}
-                <span className="font-semibold">
-                  {singleVariant?.data?.size}
-                </span>
-              </p>
-            ) : null}
-          </div>
-
           <div className="flex items-center gap-3 ">
             <div>
               {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
