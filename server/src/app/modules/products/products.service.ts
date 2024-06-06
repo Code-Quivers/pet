@@ -339,8 +339,19 @@ const deleteProduct = async (productId: string): Promise<Product> => {
   return result;
 };
 
-const getAllVariant = async (): Promise<ProductVariation[]> => {
-  const result = await prisma.productVariation.findMany({});
+const getAllVariant = async (): Promise<any[]> => {
+  const result = await prisma.productVariation.findMany({
+    select: {
+      variantId: true,
+      color: true,
+      product: {
+        select: {
+          productName: true,
+          productId: true,
+        },
+      },
+    },
+  });
 
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product Variation Not Found');

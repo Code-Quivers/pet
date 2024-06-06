@@ -83,6 +83,7 @@ const ProductVariants = () => {
         <div className="rounded-sm bg-white">
           <Table
             bordered={true}
+            hover={false}
             cellBordered={true}
             wordWrap="break-word"
             loading={isLoading || isFetching}
@@ -159,14 +160,12 @@ const ProductVariants = () => {
               <HeaderCell style={headerCss}>Stock</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle">
                 {(rowData) => (
-                  <div>
-                    <div className="flex gap-5 justify-around items-center w-full">
-                      <div>
-                        <p>{rowData?._count?.barCodes}</p>
-                      </div>
-                      <div>
-                        <VariantStockAddPopOver rowData={rowData} />
-                      </div>
+                  <div className="flex gap-5 items-center">
+                    <div>
+                      <p>{rowData?._count?.barCodes}</p>
+                    </div>
+                    <div>
+                      <VariantStockAddPopOver rowData={rowData} />
                     </div>
                   </div>
                 )}
@@ -183,7 +182,7 @@ const ProductVariants = () => {
                 {(rowData) => (
                   <Link
                     href={`/products/variants/qr-code/?variantId=${rowData?.variantId}`}
-                    className="px-2 py-1 border border-stroke rounded-md"
+                    className="font-bold text-primary hover:underline hover:underline-offset-4"
                   >
                     Qr Code List
                   </Link>

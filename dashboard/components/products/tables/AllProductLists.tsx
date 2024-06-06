@@ -218,11 +218,11 @@ const AllProductList = () => {
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 Product Description
               </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => (
+                  <p className="line-clamp-3"> {rowData.productDescription}</p>
+                )}
+              </Cell>
             </Column>
 
             {/* category */}
@@ -237,7 +237,7 @@ const AllProductList = () => {
 
             {/* Price */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Price</HeaderCell>
+              <HeaderCell style={headerCss}>Price</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
@@ -271,6 +271,7 @@ const AllProductList = () => {
                 {(rowData: any) => (
                   <div>
                     <Link
+                      className="font-bold text-primary hover:underline-offset-4 hover:underline"
                       href={`/products/variants?productId=${rowData?.productId}`}
                     >
                       See Variant
