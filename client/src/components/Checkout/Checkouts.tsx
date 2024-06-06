@@ -338,7 +338,7 @@ const Checkouts = ({ params }: any) => {
                 </div>
               </div>
               {/* PAYMENT METHOD */}
-              <PaymentMethod />
+              <PaymentMethod cartData={{cart, totalAmount}} />
             </div>
 
             <div className="col-span-5 border-l pt-10 md:pl-10 ">

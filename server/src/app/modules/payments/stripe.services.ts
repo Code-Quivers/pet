@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Stripe from "stripe";
-import httpStatus from "http-status";
-import config from "../../../config";
-import ApiError from "../../../errors/ApiError";
-
+import Stripe from 'stripe';
+import httpStatus from 'http-status';
+import config from '../../../config';
+import ApiError from '../../../errors/ApiError';
 
 /**
  * Creates a PayPal order for processing payment.
@@ -12,11 +11,11 @@ import ApiError from "../../../errors/ApiError";
 // This is your test secret API key.
 const stripe = new Stripe(config.stripe_secret_key);
 
-class PropertyOwnerPaymentProcessor {
+class StripePaymentProcessor {
   private static intentObject = {
     amount: 0.0,
-    currency: "usd",
-    payment_method_types: ["card"],
+    currency: 'usd',
+    payment_method_types: ['card'],
   };
 
   private static fixAmountToTwoDecimal = (amount: number) => {
@@ -32,7 +31,7 @@ class PropertyOwnerPaymentProcessor {
       });
 
       if (!paymentIntent?.client_secret) {
-        throw new ApiError(httpStatus.BAD_REQUEST, "Failed to get client secret from Stripe!!!");
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to get client secret from Stripe!!!');
       }
 
       return {
@@ -41,14 +40,14 @@ class PropertyOwnerPaymentProcessor {
       };
     } catch (err) {
       console.log(err);
-      throw new ApiError(httpStatus.BAD_REQUEST, "Failed to get client secret from Stripe!!!");
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to get client secret from Stripe!!!');
     }
   };
 
   static retriveStripePaymentInfo = async (paymentIntentId: string) => {
     const paymentIntentInfo = await stripe.paymentIntents.retrieve(paymentIntentId);
     if (!paymentIntentInfo) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Payment information retrivation failed!!!");
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Payment information retrivation failed!!!');
     }
     return {
       jsonResponse: paymentIntentInfo,
@@ -57,4 +56,4 @@ class PropertyOwnerPaymentProcessor {
   };
 }
 
-export default PropertyOwnerPaymentProcessor;
+export default StripePaymentProcessor;
