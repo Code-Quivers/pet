@@ -167,7 +167,7 @@ body {
   --slide-height: 20rem;
 
   @media (min-width: 640px) {
-    --slide-height: 22rem;
+    --slide-height: 25rem;
   }
 
   --slide-spacing: 1rem;
@@ -198,7 +198,8 @@ body {
     border-radius: 8px;
   }
 
-  background-color: #e8e8e6;
+  /* background-color: #e8e8e6; */
+  /* border: #089eae 1px solid; */
   font-size: 4rem;
   font-weight: 600;
   display: flex;
@@ -212,7 +213,7 @@ body {
   --thumbs-slide-height: 4rem;
 
   @media (min-width: 768px) {
-    --thumbs-slide-height: 6rem;
+    --thumbs-slide-height: 5rem;
   }
 
   margin-top: var(--thumbs-slide-spacing);
@@ -245,13 +246,13 @@ body {
   -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
   -webkit-appearance: none;
   appearance: none;
-  /* background-color: transparent; */
-  background-color: whitesmoke;
+  background-color: transparent;
+  /* background-color: whitesmoke; */
   touch-action: manipulation;
   display: inline-flex;
   text-decoration: none;
   cursor: pointer;
-  border: 0;
+  border: #d1d1d4 1px solid;
   padding: 0;
   margin: 0;
   box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
@@ -266,7 +267,8 @@ body {
 }
 
 .embla-thumbs__slide--selected .embla-thumbs__slide__number {
-  border: #8e8e93 1px solid;
+  border: #1D9ECD 1px solid;
+  z-index: 9999;
 }
 
 /* rsuite css override */
