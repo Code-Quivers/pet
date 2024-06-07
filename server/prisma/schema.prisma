@@ -25,15 +25,16 @@ model User {
 }
 
 model Profile {
-  profileId    String    @id @default(uuid())
-  firstName    String?
-  lastName     String?
-  mobileNumber String?
-  address      String?
-  role         UserRoles @default(USER)
-  createdAt    DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
-  user         User?
+  profileId          String    @id @default(uuid())
+  firstName          String?
+  lastName           String?
+  mobileNumber       String?
+  displayContactInfo Boolean?  @default(true)
+  address            String?
+  role               UserRoles @default(USER)
+  createdAt          DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt          DateTime  @updatedAt @db.Timestamptz(0)
+  user               User?
 }
 
 // Product Part 
@@ -87,13 +88,13 @@ model ProductVariation {
 }
 
 model BarCode {
-  barcodeId     String           @id @default(uuid())
-  code          String           @unique
-  barcodeStatus BarcodeStatus    @default(INACTIVE)
+  barcodeId     String            @id @default(uuid())
+  code          String            @unique
+  barcodeStatus BarcodeStatus     @default(INACTIVE)
   variantId     String?
   variant       ProductVariation? @relation(fields: [variantId], references: [variantId], onDelete: SetNull)
-  createdAt     DateTime         @default(now()) @db.Timestamptz(0)
-  updatedAt     DateTime         @updatedAt @db.Timestamptz(0)
+  createdAt     DateTime          @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime          @updatedAt @db.Timestamptz(0)
   kidDetails    KidDetails?
 }
 
@@ -113,7 +114,7 @@ model ProductReview {
   rating          Int
   reviewImage     String
   productId       String?
-  product         Product?  @relation(fields: [productId], references: [productId],onDelete: SetNull)
+  product         Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
   userId          String
   user            User     @relation(fields: [userId], references: [userId])
   createdAt       DateTime @default(now()) @db.Timestamptz(0)
@@ -121,30 +122,30 @@ model ProductReview {
 }
 
 model Order {
-  orderId             String      @id @default(uuid())
-  orderStatus         OrderStatus @default(PENDING)
-  email               String
+  orderId            String      @id @default(uuid())
+  orderStatus        OrderStatus @default(PENDING)
+  email              String
   firstName          String
   lastName           String
-  address             String
-  city                String
-  state               String
-  zip                 String
+  address            String
+  city               String
+  state              String
+  zip                String
   phone              String
-  paymentInformation  Json
-  cartItems           Json[]
+  paymentInformation Json
+  cartItems          Json[]
   // productId       String
   // product         Product     @relation(fields: [productId], references: [productId])
   // promoCodeId     String?
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
-  createdAt           DateTime    @default(now()) @db.Timestamptz(0)
-  updatedAt           DateTime    @updatedAt @db.Timestamptz(0)
+  createdAt          DateTime    @default(now()) @db.Timestamptz(0)
+  updatedAt          DateTime    @updatedAt @db.Timestamptz(0)
 }
 
 model KidDetails {
   kidId     String   @id @default(uuid())
-  firstName   String
-  lastName   String?
+  firstName String
+  lastName  String?
   kidImage  String?
   kidAge    DateTime
   relations Json[]

@@ -11,12 +11,10 @@ const SettingPage = () => {
   const { data } = useGetMyProfileQuery({});
   const [isOpenEmailEdit, setIsOpenEmailEdit] = useState(false);
   const [isOpenNameEdit, setIsOpenNameEdit] = useState(false);
-  const [isOpenPhoneEdit, setIsOpenPhoneEdit] = useState(false);
   const [isOpenPasswordEdit, setIsOpenPasswordEdit] = useState(false);
   //
   const handleCloseEmailEdit = () => setIsOpenEmailEdit(false);
   const handleCloseNameEdit = () => setIsOpenNameEdit(false);
-  const handleClosePhoneEdit = () => setIsOpenPhoneEdit(false);
   const handlePasswordEdit = () => setIsOpenPasswordEdit(false);
   return (
     <>
@@ -74,12 +72,13 @@ const SettingPage = () => {
               <h4 className="text-xl font-bold text-pure_black">
                 Phone Number
               </h4>
-              <p className="text-[#898c90]">+1 (555) 555-5555</p>
+              <p className="text-[#898c90]">+1 (000) 000-0000</p>
             </div>
             <div>
               <button
+                disabled
                 type="button"
-                className="p-4 hover:bg-gray-200 duration-300 transition-all   rounded-full"
+                className="cursor-help p-4  duration-300 transition-all   rounded-full"
               >
                 <FaPencil size={30} />
               </button>
@@ -91,7 +90,7 @@ const SettingPage = () => {
           <div>
             <h1 className="text-2xl font-bold text-pure_black">Security</h1>
           </div>
-          {/* Phone Number */}
+          {/* Password */}
           <div className="border-b border-t mt-3 py-3 flex justify-between  items-center">
             <div>
               <h4 className="text-xl font-bold text-pure_black">Password</h4>

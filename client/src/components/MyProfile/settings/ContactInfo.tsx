@@ -1,8 +1,35 @@
 "use client";
 
-import { Toggle } from "rsuite";
+import {
+  useGetMyProfileQuery,
+  useUpdateMyProfileMutation,
+} from "@/redux/api/features/userApi";
+import { Controller, useForm } from "react-hook-form";
+import { Form, Toggle } from "rsuite";
+
+type IUpdateContactInfo = {
+  displayContactInfo: boolean;
+};
 
 const ContactInfo = () => {
+  const { data } = useGetMyProfileQuery({});
+
+  const {
+    control,
+    formState: { errors },
+  } = useForm<IUpdateContactInfo>();
+
+  const [updateMyProfile, { data: updatedResData, isLoading }] =
+    useUpdateMyProfileMutation();
+
+  const handleUpdateContactInfo = async (updatedData: IUpdateContactInfo) => {
+    await updateMyProfile({
+      data: {
+        displayContactInfo: updatedData.displayContactInfo,
+      },
+    });
+  };
+
   return (
     <div className="mt-10">
       <div className="space-y-2 md:space-y-3">
@@ -12,10 +39,8 @@ const ContactInfo = () => {
           profiles.
         </p>
       </div>
-      {/*   */}
       <div className="mt-10">
-        {/* privacy control */}
-        <div className="mt-3  border-t  border-b py-3 flex justify-between  items-center">
+        <div className="mt-3 border-t border-b py-3 flex justify-between items-center">
           <div>
             <h4 className="text-xl font-bold text-pure_black">
               Privacy Control
@@ -25,12 +50,39 @@ const ContactInfo = () => {
             </p>
           </div>
           <div>
-            <Toggle
-              size="lg"
-              color="cyan"
-              checkedChildren="Shown"
-              unCheckedChildren="Hidden"
-              defaultChecked
+            <Controller
+              name="displayContactInfo"
+              control={control}
+              rules={{
+                required: "Display Contact Info is required",
+              }}
+              render={({ field }) => (
+                <div className="rs-form-control-wrapper">
+                  <Toggle
+                    size="lg"
+                    checked={data?.data?.profile?.displayContactInfo}
+                    color="cyan"
+                    loading={isLoading}
+                    checkedChildren="Shown"
+                    unCheckedChildren="Hidden"
+                    onChange={(checked) => {
+                      field.onChange(checked);
+                      handleUpdateContactInfo({
+                        displayContactInfo: checked,
+                      });
+                    }}
+                  />
+
+                  <Form.ErrorMessage
+                    show={!!errors?.displayContactInfo?.message || false}
+                    placement="topEnd"
+                  >
+                    <span className="font-semibold">
+                      {errors?.displayContactInfo?.message}
+                    </span>
+                  </Form.ErrorMessage>
+                </div>
+              )}
             />
           </div>
         </div>

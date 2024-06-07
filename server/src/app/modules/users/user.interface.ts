@@ -47,6 +47,7 @@ export type IUpdateProfileReq = {
   password?: string;
   newPassword?: string;
   email?: string;
+  displayContactInfo?: boolean;
 };
 
 export type IUserUpdateReqAndResponse = {
