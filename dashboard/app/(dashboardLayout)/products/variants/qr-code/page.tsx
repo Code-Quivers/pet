@@ -206,8 +206,8 @@ const AllProductList = () => {
         </div> */}
       </div>
 
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="flex items-center gap-5">
+      <div className="rounded-sm border border-stroke bg-white px-3 pt-3 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-5 xl:pb-1">
+        <div className="flex items-center gap-5 mb-2">
           <p>
             Product Name:{" "}
             <span className="font-semibold">
@@ -219,16 +219,16 @@ const AllProductList = () => {
             <span className="font-semibold">{findVariant?.color?.name}</span>
           </p>
         </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3 ">
-            <div>
-              {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-4">
+            {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
+              <div>
                 <BarCodeDelete
                   barcodeIds={checkedKeys}
                   cleanSelectedKeys={cleanSelectedKeys}
                 />
-              )}
-            </div>
+              </div>
+            )}
 
             {/* status filter */}
             <div>

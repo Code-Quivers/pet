@@ -98,7 +98,8 @@ export const cartSlice = createSlice({
     removeFreeProduct: (state: any, action: any) => {
       state.promoCode = "";
       const removeItem = state.cart.filter(
-        (item: any) => item.variantId !== action.payload
+        (item: any) =>
+          !(item.variantId === action?.payload?.variantId && item.promoCode)
       );
       state.cart = removeItem;
       setToLocalStorage("cart", JSON.stringify(state.cart));
