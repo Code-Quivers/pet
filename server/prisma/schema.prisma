@@ -26,7 +26,8 @@ model User {
 
 model Profile {
   profileId    String    @id @default(uuid())
-  fullName     String?
+  firstName    String?
+  lastName     String?
   mobileNumber String?
   address      String?
   role         UserRoles @default(USER)

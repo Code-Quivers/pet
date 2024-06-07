@@ -8,16 +8,9 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ImSpinner9 } from "react-icons/im";
 import { IoClose } from "react-icons/io5";
-import {
-  Button,
-  Checkbox,
-  Drawer,
-  Form,
-  Notification,
-  useToaster,
-} from "rsuite";
+import { Button, Drawer, Form, Notification, useToaster } from "rsuite";
 
-const EmailSettingDrawer = ({
+const NameSettingDrawer = ({
   isOpen,
   handleClose,
 }: {
@@ -27,15 +20,17 @@ const EmailSettingDrawer = ({
   const { data } = useGetMyProfileQuery({});
 
   // !
+  type IUpdateName = {
+    firstName?: string;
+    lastName?: string;
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset: formReset,
-  } = useForm<{
-    email: string;
-    isSubscribeToGetEmail: string;
-  }>();
+  } = useForm<IUpdateName>();
 
   //! submit
   const [
@@ -50,10 +45,11 @@ const EmailSettingDrawer = ({
     },
   ] = useUpdateMyProfileMutation();
 
-  const handleUpdateEmail = async (updatedEmail: any) => {
+  const handleUpdateName = async (updatedData: IUpdateName) => {
     await updateMyProfile({
       data: {
-        email: updatedEmail?.email,
+        firstName: updatedData?.firstName,
+        lastName: updatedData?.lastName,
       },
     });
   };
@@ -65,7 +61,7 @@ const EmailSettingDrawer = ({
     if (isSuccess && !isError && !isLoading) {
       toaster.push(
         <Notification header="Success" type="success" closable>
-          <h4 className="font-semibold ">Email Updated</h4>
+          <h4 className="font-semibold ">Name Updated</h4>
         </Notification>,
         { placement: "bottomStart", duration: 2000 }
       );
@@ -102,7 +98,7 @@ const EmailSettingDrawer = ({
               <div className="max-md:hidden"></div>
               <div className="flex-grow text-center">
                 <h2 className="text-2xl font-bold text-pure_black">
-                  Edit Email
+                  Edit Name
                 </h2>
               </div>
               <div className="ml-auto">
@@ -118,46 +114,37 @@ const EmailSettingDrawer = ({
             </div>
             {/* content */}
             <div>
-              <form onSubmit={handleSubmit(handleUpdateEmail)}>
+              <form onSubmit={handleSubmit(handleUpdateName)}>
                 <div className="space-y-5">
-                  {/* email */}
+                  {/* first Name */}
                   <div>
                     <label className="text-md font-medium text-gray-600 block mb-2">
-                      Email
+                      First Name
                     </label>
                     <div className="w-full">
                       <Controller
-                        name="email"
+                        name="firstName"
                         control={control}
-                        rules={{
-                          required: "Email is Required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid email address",
-                          },
-                          validate: (value) =>
-                            value !== data?.data?.email ||
-                            "Email is the same as the current email",
-                        }}
                         render={({ field }) => (
                           <div className="rs-form-control-wrapper">
                             <input
                               {...field}
-                              defaultValue={data?.data?.email}
-                              name="email"
+                              defaultValue={data?.data?.profile?.firstName}
+                              name="firstName"
                               type="text"
                               className="w-full bg-transparent rounded-md text-sm border-2 border-gray-300 focus:border-primary  px-2 py-3 outline-none"
-                              placeholder="Enter Email..."
+                              placeholder="Enter First Name..."
                             />
                             <Form.ErrorMessage
                               show={
-                                (!!errors?.email && !!errors?.email?.message) ||
+                                (!!errors?.firstName &&
+                                  !!errors?.firstName?.message) ||
                                 false
                               }
                               placement="topEnd"
                             >
                               <span className="font-semibold">
-                                {errors?.email?.message}
+                                {errors?.firstName?.message}
                               </span>
                             </Form.ErrorMessage>
                           </div>
@@ -165,30 +152,36 @@ const EmailSettingDrawer = ({
                       />
                     </div>
                   </div>
-                  {/* subscribe */}
+
+                  {/* Last Name */}
                   <div>
+                    <label className="text-md font-medium text-gray-600 block mb-2">
+                      Last Name
+                    </label>
                     <div className="w-full">
                       <Controller
-                        disabled
-                        name="isSubscribeToGetEmail"
+                        name="lastName"
                         control={control}
                         render={({ field }) => (
                           <div className="rs-form-control-wrapper">
-                            <Checkbox {...field} defaultChecked>
-                              Allow to send you email alerts when your kids tag
-                              is scanned.
-                            </Checkbox>
-
+                            <input
+                              {...field}
+                              defaultValue={data?.data?.profile?.lastName}
+                              name="lastName"
+                              type="text"
+                              className="w-full bg-transparent rounded-md text-sm border-2 border-gray-300 focus:border-primary  px-2 py-3 outline-none"
+                              placeholder="Enter First Name..."
+                            />
                             <Form.ErrorMessage
                               show={
-                                (!!errors?.isSubscribeToGetEmail &&
-                                  !!errors?.isSubscribeToGetEmail?.message) ||
+                                (!!errors?.lastName &&
+                                  !!errors?.lastName?.message) ||
                                 false
                               }
                               placement="topEnd"
                             >
                               <span className="font-semibold">
-                                {errors?.isSubscribeToGetEmail?.message}
+                                {errors?.lastName?.message}
                               </span>
                             </Form.ErrorMessage>
                           </div>
@@ -197,25 +190,25 @@ const EmailSettingDrawer = ({
                     </div>
                   </div>
                 </div>
+
                 {/* submit handler */}
                 <div className="mt-12">
                   <Button
-                    // loading={!isLoading}
                     disabled={isLoading}
                     type="submit"
                     size="lg"
-                    className="!bg-primary/90 duration-300 transition-all hover:!bg-primary !text-white  !font-bold !rounded-lg"
+                    className="!bg-primary/90 duration-300 transition-all hover:!bg-primary !text-white !shadow-xl !font-bold !rounded-lg"
                     block
                   >
                     {isLoading ? (
                       <h2 className="flex  justify-center items-center gap-4">
-                        Updating Email{" "}
+                        Updating Name{" "}
                         <span className="animate-spin">
                           <ImSpinner9 />
                         </span>{" "}
                       </h2>
                     ) : (
-                      "Update Email"
+                      "Edit Name"
                     )}
                   </Button>
                 </div>
@@ -228,4 +221,4 @@ const EmailSettingDrawer = ({
   );
 };
 
-export default EmailSettingDrawer;
+export default NameSettingDrawer;
