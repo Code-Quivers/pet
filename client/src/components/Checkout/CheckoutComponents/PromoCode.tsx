@@ -21,9 +21,7 @@ const PromoCode = ({
   const [promoCode, setPromoCode] = useState("");
   const [promoCodeMessage, setPromoCodeMessage] = useState<any>(false);
   const [loader, setLoader] = useState<boolean>(false);
-  const [freeProductVariantId, setFeeProductVariantId] = useState<any | null>(
-    null
-  );
+  const [freeProductVariantId, setFeeProductVariantId] = useState<any>(null);
   const [promoCodeApplied, setPromoCodeApplied] = useState<string | null>(null);
   const [applyPromotionalOffer, { isLoading }] =
     useApplyPromotionalOfferMutation();
@@ -101,7 +99,10 @@ const PromoCode = ({
           // console.log(promoCodeApplied, "promoCodeApplied");
         }, 2000);
 
-        setFeeProductVariantId(freeProduct?.variantId);
+        setFeeProductVariantId({
+          variantId: freeProduct?.variantId,
+          promoCode: freeProduct?.promoCode,
+        });
       } else {
         setTimeout(() => {
           setLoader(false);
@@ -156,7 +157,7 @@ const PromoCode = ({
                   setPromoCodeApplied(null);
                   setTimeout(() => {
                     dispatch(removeFreeProduct(freeProductVariantId as any));
-                  }, 1000);
+                  }, 500);
                 }}
                 size={20}
                 className="ml-1 text text-gray-600 hover:text-black cursor-pointer "
