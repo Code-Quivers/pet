@@ -315,6 +315,7 @@ const getSingleUser = async (userId: string): Promise<IUsersResponse | null> => 
 
 // ! update Profile info -------------------------------------------------------->>>
 const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReq) => {
+  const { firstName, lastName, email, address, mobileNumber, password, newPassword, displayContactInfo } = payload;
   const result = await prisma.$transaction(async transactionClient => {
     // Check if the user exists
     const existingUser = await transactionClient.user.findUnique({
@@ -334,8 +335,6 @@ const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReq) =
     if (!existingUser) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Profile not Found !!');
     }
-
-    const { firstName, lastName, email, address, mobileNumber, password, newPassword } = payload;
     // if new password
     if (password && newPassword) {
       const checkHashedPassword = await bcrypt.compare(password as string, existingUser.password);
@@ -385,7 +384,11 @@ const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReq) =
       address,
       lastName,
       mobileNumber,
+      displayContactInfo,
     };
+
+    console.log(updatedDetails);
+
     //
     const updatedResult = await transactionClient.profile.update({
       where: {

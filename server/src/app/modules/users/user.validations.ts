@@ -32,6 +32,7 @@ const updateMyProfile = z.object({
     email: z.string().optional(),
     password: z.string().optional(),
     newPassword: z.string().optional(),
+    displayContactInfo: z.boolean().optional(),
   }),
 });
 
