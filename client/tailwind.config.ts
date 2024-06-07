@@ -19,6 +19,7 @@ const config: Config = {
         success: "#219653",
         danger: "#D34053",
         warning: "#FFA70B",
+        pure_black: "#040537",
       },
     },
   },
