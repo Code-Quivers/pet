@@ -1,5 +1,6 @@
 "use client";
-import KidLayoutNavbar from "@/components/Navbar/KidLayoutNavbar";
+import MyAccountNavbar from "@/components/Navbar/MyAccountNavbar";
+
 import { isLoggedIn } from "@/hooks/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,7 +32,7 @@ const MyAccountLayout = ({ children }: any) => {
     return (
       <div className="max-xl:px-2  max-w-3xl mx-auto">
         <div>
-          <KidLayoutNavbar />
+          <MyAccountNavbar />
         </div>
         <div>{children}</div>
       </div>

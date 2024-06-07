@@ -20,5 +20,5 @@ export const InternetDisconnectedMessage = () => {
     };
   }, []);
 
-  return !isOnline && <div>Your Internet Line is not connected.</div>;
+  return !isOnline && <div>zzz</div>;
 };
