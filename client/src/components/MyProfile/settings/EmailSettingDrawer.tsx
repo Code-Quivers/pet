@@ -90,6 +90,7 @@ const EmailSettingDrawer = ({
   return (
     <div>
       <Drawer
+        backdrop="static"
         placement="bottom"
         open={isOpen}
         onClose={handleClose}
