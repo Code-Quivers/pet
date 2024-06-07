@@ -68,6 +68,7 @@ const PasswordSettingDrawer = ({
         { placement: "bottomStart", duration: 2000 }
       );
       handleClose();
+      formReset();
       resetReq();
     }
     if (!isSuccess && isError && !isLoading && error) {
@@ -83,19 +84,29 @@ const PasswordSettingDrawer = ({
         { placement: "bottomStart", duration: 4000 }
       );
     }
-  }, [error, handleClose, isError, isLoading, isSuccess, resetReq, toaster]);
+  }, [
+    error,
+    formReset,
+    handleClose,
+    isError,
+    isLoading,
+    isSuccess,
+    resetReq,
+    toaster,
+  ]);
 
   return (
     <div>
       <Drawer
         placement="bottom"
         size="md"
+        backdrop="static"
         open={isOpen}
         onClose={handleClose}
         closeButton={false}
       >
         <Drawer.Body className=" max-md:!w-full max-md:!p-3">
-          <div className="w-full md:max-w-2xl   mx-auto ">
+          <div className="w-full lg:max-w-2xl   mx-auto ">
             {/* header */}
             <div className="flex justify-between items-center px-4 py-1 md:py-2">
               <div className="max-md:hidden"></div>
@@ -107,7 +118,11 @@ const PasswordSettingDrawer = ({
               <div className="ml-auto">
                 <button
                   type="button"
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    formReset();
+                    resetReq();
+                  }}
                   className="p-1.5 rounded-full duration-300 transition-all
                 hover:text-red-600 hover:bg-gray-200"
                 >

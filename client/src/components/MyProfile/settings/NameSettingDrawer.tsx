@@ -86,6 +86,7 @@ const NameSettingDrawer = ({
   return (
     <div>
       <Drawer
+        backdrop="static"
         placement="bottom"
         open={isOpen}
         onClose={handleClose}
