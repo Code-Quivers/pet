@@ -8,16 +8,9 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ImSpinner9 } from "react-icons/im";
 import { IoClose } from "react-icons/io5";
-import {
-  Button,
-  Checkbox,
-  Drawer,
-  Form,
-  Notification,
-  useToaster,
-} from "rsuite";
+import { Button, Drawer, Form, Notification, useToaster } from "rsuite";
 
-const EmailSettingDrawer = ({
+const PasswordSettingDrawer = ({
   isOpen,
   handleClose,
 }: {
@@ -27,15 +20,19 @@ const EmailSettingDrawer = ({
   const { data } = useGetMyProfileQuery({});
 
   // !
+  type IUpdatePassword = {
+    currentPassword?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset: formReset,
-  } = useForm<{
-    email: string;
-    isSubscribeToGetEmail: string;
-  }>();
+    watch,
+  } = useForm<IUpdatePassword>();
 
   //! submit
   const [
@@ -50,10 +47,11 @@ const EmailSettingDrawer = ({
     },
   ] = useUpdateMyProfileMutation();
 
-  const handleUpdateEmail = async (updatedEmail: any) => {
+  const handleUpdateName = async (updatedData: IUpdatePassword) => {
     await updateMyProfile({
       data: {
-        email: updatedEmail?.email,
+        password: updatedData?.currentPassword,
+        newPassword: updatedData?.newPassword,
       },
     });
   };
@@ -65,7 +63,7 @@ const EmailSettingDrawer = ({
     if (isSuccess && !isError && !isLoading) {
       toaster.push(
         <Notification header="Success" type="success" closable>
-          <h4 className="font-semibold ">Email Updated</h4>
+          <h4 className="font-semibold">Password Updated</h4>
         </Notification>,
         { placement: "bottomStart", duration: 2000 }
       );
@@ -82,7 +80,7 @@ const EmailSettingDrawer = ({
             }
           </h4>
         </Notification>,
-        { placement: "bottomCenter", duration: 2000 }
+        { placement: "bottomStart", duration: 4000 }
       );
     }
   }, [error, handleClose, isError, isLoading, isSuccess, resetReq, toaster]);
@@ -91,6 +89,7 @@ const EmailSettingDrawer = ({
     <div>
       <Drawer
         placement="bottom"
+        size="md"
         open={isOpen}
         onClose={handleClose}
         closeButton={false}
@@ -102,7 +101,7 @@ const EmailSettingDrawer = ({
               <div className="max-md:hidden"></div>
               <div className="flex-grow text-center">
                 <h2 className="text-2xl font-bold text-pure_black">
-                  Edit Email
+                  Edit Password
                 </h2>
               </div>
               <div className="ml-auto">
@@ -118,46 +117,39 @@ const EmailSettingDrawer = ({
             </div>
             {/* content */}
             <div>
-              <form onSubmit={handleSubmit(handleUpdateEmail)}>
+              <form onSubmit={handleSubmit(handleUpdateName)}>
                 <div className="space-y-5">
-                  {/* email */}
+                  {/* Current Password */}
                   <div>
                     <label className="text-md font-medium text-gray-600 block mb-2">
-                      Email
+                      Current Password
                     </label>
                     <div className="w-full">
                       <Controller
-                        name="email"
-                        control={control}
+                        name="currentPassword"
                         rules={{
-                          required: "Email is Required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid email address",
-                          },
-                          validate: (value) =>
-                            value !== data?.data?.email ||
-                            "Email is the same as the current email",
+                          required: "Current Password is Required !",
                         }}
+                        control={control}
                         render={({ field }) => (
                           <div className="rs-form-control-wrapper">
                             <input
                               {...field}
-                              defaultValue={data?.data?.email}
-                              name="email"
-                              type="text"
+                              name="currentPassword"
+                              type="password"
                               className="w-full bg-transparent rounded-md text-sm border-2 border-gray-300 focus:border-primary  px-2 py-3 outline-none"
-                              placeholder="Enter Email..."
+                              placeholder="Enter First Name..."
                             />
                             <Form.ErrorMessage
                               show={
-                                (!!errors?.email && !!errors?.email?.message) ||
+                                (!!errors?.currentPassword &&
+                                  !!errors?.currentPassword?.message) ||
                                 false
                               }
                               placement="topEnd"
                             >
                               <span className="font-semibold">
-                                {errors?.email?.message}
+                                {errors?.currentPassword?.message}
                               </span>
                             </Form.ErrorMessage>
                           </div>
@@ -165,30 +157,79 @@ const EmailSettingDrawer = ({
                       />
                     </div>
                   </div>
-                  {/* subscribe */}
+
+                  {/* New Password */}
                   <div>
+                    <label className="text-md font-medium text-gray-600 block mb-2">
+                      New Password
+                    </label>
                     <div className="w-full">
                       <Controller
-                        disabled
-                        name="isSubscribeToGetEmail"
+                        name="newPassword"
+                        rules={{
+                          required: "New Password is Required !",
+                        }}
                         control={control}
                         render={({ field }) => (
                           <div className="rs-form-control-wrapper">
-                            <Checkbox {...field} defaultChecked>
-                              Allow to send you email alerts when your kids tag
-                              is scanned.
-                            </Checkbox>
-
+                            <input
+                              {...field}
+                              name="newPassword"
+                              type="password"
+                              className="w-full bg-transparent rounded-md text-sm border-2 border-gray-300 focus:border-primary  px-2 py-3 outline-none"
+                              placeholder="Enter New Password..."
+                            />
                             <Form.ErrorMessage
                               show={
-                                (!!errors?.isSubscribeToGetEmail &&
-                                  !!errors?.isSubscribeToGetEmail?.message) ||
+                                (!!errors?.newPassword &&
+                                  !!errors?.newPassword?.message) ||
                                 false
                               }
                               placement="topEnd"
                             >
                               <span className="font-semibold">
-                                {errors?.isSubscribeToGetEmail?.message}
+                                {errors?.newPassword?.message}
+                              </span>
+                            </Form.ErrorMessage>
+                          </div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {/* Confirm Password */}
+                  <div>
+                    <label className="text-md font-medium text-gray-600 block mb-2">
+                      Confirm Password
+                    </label>
+                    <div className="w-full">
+                      <Controller
+                        name="confirmPassword"
+                        rules={{
+                          required: "Confirm Password is Required !",
+                          validate: (value) =>
+                            value === watch("newPassword") ||
+                            "Passwords do not match!",
+                        }}
+                        control={control}
+                        render={({ field }) => (
+                          <div className="rs-form-control-wrapper">
+                            <input
+                              {...field}
+                              name="confirmPassword"
+                              type="password"
+                              className="w-full bg-transparent rounded-md text-sm border-2 border-gray-300 focus:border-primary  px-2 py-3 outline-none"
+                              placeholder="Confirm password..."
+                            />
+                            <Form.ErrorMessage
+                              show={
+                                (!!errors?.confirmPassword &&
+                                  !!errors?.confirmPassword?.message) ||
+                                false
+                              }
+                              placement="topEnd"
+                            >
+                              <span className="font-semibold">
+                                {errors?.confirmPassword?.message}
                               </span>
                             </Form.ErrorMessage>
                           </div>
@@ -197,25 +238,25 @@ const EmailSettingDrawer = ({
                     </div>
                   </div>
                 </div>
+
                 {/* submit handler */}
                 <div className="mt-12">
                   <Button
-                    // loading={!isLoading}
                     disabled={isLoading}
                     type="submit"
                     size="lg"
-                    className="!bg-primary/90 duration-300 transition-all hover:!bg-primary !text-white  !font-bold !rounded-lg"
+                    className="!bg-primary/90 duration-300 transition-all hover:!bg-primary !text-white !shadow-xl !font-bold !rounded-lg"
                     block
                   >
                     {isLoading ? (
                       <h2 className="flex  justify-center items-center gap-4">
-                        Updating Email{" "}
+                        Updating Password{" "}
                         <span className="animate-spin">
                           <ImSpinner9 />
                         </span>{" "}
                       </h2>
                     ) : (
-                      "Update Email"
+                      "Edit Password"
                     )}
                   </Button>
                 </div>
@@ -228,4 +269,4 @@ const EmailSettingDrawer = ({
   );
 };
 
-export default EmailSettingDrawer;
+export default PasswordSettingDrawer;
