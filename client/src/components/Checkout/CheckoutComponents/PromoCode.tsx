@@ -6,6 +6,7 @@ import { applyPromoCode, removeFreeProduct } from "@/redux/slice/cartSlice";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
+import { LiaTagSolid } from "react-icons/lia";
 import { useDispatch } from "react-redux";
 import { Loader } from "rsuite";
 
@@ -35,18 +36,15 @@ const PromoCode = ({
 
   // check if promo code is already applied
   const isPromoCodeApplied = cart?.find(
-    (item: any) => item.promoCode === promoCode
+    (item: any) => item.promoCode == promoCode
   );
+  console.log(isPromoCodeApplied, "isPromoCodeApplied");
 
   const handleApplyPromo = async () => {
     // reset error and promo code
     setPromoCode("");
     setPromoCodeMessage(false);
     setLoader(true);
-    // check if promo code is already applied
-    const isPromoCodeApplied = cart?.find(
-      (item: any) => item.promoCode === promoCode
-    );
     if (promoCode && appliedPromoCode === promoCode) {
       // setPromoCodeMessage(false);
       setTimeout(() => {
@@ -99,10 +97,10 @@ const PromoCode = ({
           // console.log(promoCodeApplied, "promoCodeApplied");
         }, 2000);
 
-        setFeeProductVariantId({
-          variantId: freeProduct?.variantId,
-          promoCode: freeProduct?.promoCode,
-        });
+        // setFeeProductVariantId({
+        //   variantId: freeProduct?.variantId,
+        //   promoCode: freeProduct?.promoCode,
+        // });
       } else {
         setTimeout(() => {
           setLoader(false);
@@ -148,21 +146,32 @@ const PromoCode = ({
         <p className="h-7 text-sm">{promoCodeMessage && promoCodeMessage}</p>
 
         {appliedPromoCode && (
-          <div className="flex items-center gap-2 mt-3">
-            <span className="bg-gray-200 text-black flex items-center text-[13px] font-bold px-3 py-1 rounded-sm">
+          <div className="flex">
+            <div className="bg-gray-200 gap-1 border border-[#e6e6e6] text-black flex items-center text-sm font-bold px-2 py-1 rounded-[4px]">
+              <LiaTagSolid size={22} />
               {appliedPromoCode}
               <IoIosClose
                 onClick={() => {
                   setPromoCodeMessage(false);
                   setPromoCodeApplied(null);
                   setTimeout(() => {
-                    dispatch(removeFreeProduct(freeProductVariantId as any));
+                    const itemToRemove = cart?.find(
+                      (item: any) => item.promoCode === appliedPromoCode
+                    );
+                    if (itemToRemove) {
+                      dispatch(
+                        removeFreeProduct({
+                          variantId: itemToRemove.variantId,
+                          promoCode: itemToRemove.promoCode,
+                        } as any)
+                      );
+                    }
                   }, 500);
                 }}
-                size={20}
+                size={22}
                 className="ml-1 text text-gray-600 hover:text-black cursor-pointer "
               />
-            </span>
+            </div>
           </div>
         )}
       </div>
