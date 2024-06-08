@@ -8,12 +8,7 @@ export const metadata: Metadata = {
 const MyKidsPage = () => {
   return (
     <section className="mx-auto max-md:my-2 ">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold">My All Bands | 5</h2>
-      </div>
-      <div>
-        <MyAllKids />
-      </div>
+      <MyAllKids />
     </section>
   );
 };

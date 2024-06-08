@@ -3,7 +3,8 @@ import { UserRoles } from '@prisma/client';
 export type IUserCreate = {
   email: string;
   password: string;
-  fullName: string;
+  firstName?: string;
+  lastName?: string;
   role: UserRoles;
 };
 

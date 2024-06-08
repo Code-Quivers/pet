@@ -6,10 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Form, Message, useToaster } from "rsuite";
+import { Button, Form, Message, Notification, useToaster } from "rsuite";
 
 type ISignUp = {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
@@ -39,25 +40,23 @@ const SignInForm = () => {
   useEffect(() => {
     if (isSuccess && !isError && !isLoading) {
       toaster.push(
-        <Message bordered showIcon type="success" closable>
-          <h4 className="font-semibold ">
-            {data?.message || "Successfully Logged In"}
-          </h4>
-        </Message>,
+        <Notification header="Success" type="success" closable>
+          <h4 className="font-semibold ">{"Successfully Logged In"}</h4>
+        </Notification>,
         { placement: "bottomStart", duration: 2000 }
       );
       router.push("/my-account");
     }
     if (!isSuccess && isError && !isLoading && error) {
       toaster.push(
-        <Message bordered centered showIcon type="error" closable>
+        <Notification header="Error" type="error" closable>
           <h4 className="font-semibold ">
             {
               // @ts-ignore
               error?.message || "Failed to Login"
             }
           </h4>
-        </Message>,
+        </Notification>,
         { placement: "bottomCenter", duration: 2000 }
       );
     }
@@ -176,6 +175,18 @@ const SignInForm = () => {
           </p>
         </div>
       </form>
+      {/*  */}
+      <div className="flex justify-center py-10">
+        <h2 className="flex gap-3 items-center text-xl ">
+          <p className="font-medium">{`Don't`} have an account yet?</p>
+          <Link
+            href="/sign-up"
+            className="underline text-primary font-semibold "
+          >
+            Register here
+          </Link>
+        </h2>
+      </div>
     </div>
   );
 };

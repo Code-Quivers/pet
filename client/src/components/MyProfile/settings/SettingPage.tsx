@@ -6,16 +6,19 @@ import { useState } from "react";
 import NameSettingDrawer from "./NameSettingDrawer";
 import { useGetMyProfileQuery } from "@/redux/api/features/userApi";
 import PasswordSettingDrawer from "./PasswordSettingDrawer";
+import PhoneNumberSettingDrawer from "./PhoneNumberSettingDrawer";
 
 const SettingPage = () => {
   const { data } = useGetMyProfileQuery({});
   const [isOpenEmailEdit, setIsOpenEmailEdit] = useState(false);
   const [isOpenNameEdit, setIsOpenNameEdit] = useState(false);
   const [isOpenPasswordEdit, setIsOpenPasswordEdit] = useState(false);
+  const [isOpenPhoneNumberEdit, setIsOpenPhoneNumberEdit] = useState(false);
   //
   const handleCloseEmailEdit = () => setIsOpenEmailEdit(false);
   const handleCloseNameEdit = () => setIsOpenNameEdit(false);
   const handlePasswordEdit = () => setIsOpenPasswordEdit(false);
+  const handlePhoneNumberEdit = () => setIsOpenPhoneNumberEdit(false);
   return (
     <>
       <div className="mt-10">
@@ -72,13 +75,15 @@ const SettingPage = () => {
               <h4 className="text-xl font-bold text-pure_black">
                 Phone Number
               </h4>
-              <p className="text-[#898c90]">+1 (000) 000-0000</p>
+              <p className="text-[#898c90]">
+                {data?.data?.profile?.mobileNumber || "N/A"}
+              </p>
             </div>
             <div>
               <button
-                disabled
+                onClick={() => setIsOpenPhoneNumberEdit(true)}
                 type="button"
-                className="cursor-help p-4  duration-300 transition-all   rounded-full"
+                className="p-4 outline-none  hover:bg-gray-200 duration-300 transition-all   rounded-full"
               >
                 <FaPencil size={30} />
               </button>
@@ -128,6 +133,12 @@ const SettingPage = () => {
       <PasswordSettingDrawer
         isOpen={isOpenPasswordEdit}
         handleClose={handlePasswordEdit}
+      />
+
+      {/* phone number setting */}
+      <PhoneNumberSettingDrawer
+        isOpen={isOpenPhoneNumberEdit}
+        handleClose={handlePhoneNumberEdit}
       />
     </>
   );

@@ -11,6 +11,7 @@ import { UserRoles } from '@prisma/client';
 import nodemailer from 'nodemailer';
 import { generatePassword } from './auth.utils';
 
+// ! create new user
 const createNewUser = async (data: IUserCreate) => {
   const { password, email } = data;
 
@@ -25,7 +26,8 @@ const createNewUser = async (data: IUserCreate) => {
     if (isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already in use');
 
     const profileData = {
-      fullName: data?.fullName,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
       role: data.role || UserRoles.USER,
     };
 
@@ -65,8 +67,6 @@ const createNewUser = async (data: IUserCreate) => {
         userId: createdUser?.userId,
         role: createdUser?.profile?.role,
         profileId: createdUser?.profile?.profileId,
-        email: createdUser?.email,
-        fullName: createdUser?.profile?.fullName,
       },
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
@@ -77,8 +77,6 @@ const createNewUser = async (data: IUserCreate) => {
         userId: createdUser?.userId,
         role: createdUser?.profile?.role,
         profileId: createdUser?.profile?.profileId,
-        email: createdUser?.email,
-        fullName: createdUser?.profile?.fullName,
       },
       config.jwt.refresh_secret as Secret,
       config.jwt.refresh_expires_in as string
@@ -106,23 +104,22 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
         select: {
           profileId: true,
           role: true,
-          fullName: true,
         },
       },
     },
   });
 
-  /// comment 
+  /// comment
   if (!isUserExist) throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
 
-  // variable 
+  // variable
   const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
   if (isUserExist && !isPasswordValid) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect !!');
   }
 
-  const { userId, profile, email: loggedInEmail } = isUserExist;
+  const { userId, profile } = isUserExist;
 
   // create access token & refresh token
   const accessToken = jwtHelpers.createToken(
@@ -130,8 +127,6 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
       userId,
       role: profile?.role,
       profileId: profile?.profileId,
-      email: loggedInEmail,
-      fullName: profile?.fullName,
     },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -142,8 +137,6 @@ const userLogin = async (loginData: IUserLogin): Promise<ILoginUserResponse> => 
       userId: isUserExist.userId,
       role: profile?.role,
       profileId: profile?.profileId,
-      email: loggedInEmail,
-      fullName: profile?.fullName,
     },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
@@ -278,10 +271,6 @@ const forgetPassword = async (data: { email: string }): Promise<any> => {
   if (!isExistUser) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-
-  // console.log('user.....', isExistUser);
-
-  // console.log('node mailer', config.nodemailer.email, config.nodemailer.password);
 
   // Generate a random password reset token here
 
