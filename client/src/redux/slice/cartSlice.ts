@@ -99,7 +99,10 @@ export const cartSlice = createSlice({
       state.promoCode = "";
       const removeItem = state.cart.filter(
         (item: any) =>
-          !(item.variantId === action?.payload?.variantId && item.promoCode)
+          !(
+            item.variantId === action?.payload?.variantId &&
+            item.promoCode === action?.payload?.promoCode
+          )
       );
       state.cart = removeItem;
       setToLocalStorage("cart", JSON.stringify(state.cart));
