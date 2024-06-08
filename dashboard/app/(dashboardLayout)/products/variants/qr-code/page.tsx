@@ -182,7 +182,7 @@ const AllProductList = () => {
 
   return (
     <>
-      <div>
+      <div className="grid grid-cols-2 mb-2">
         <div className="flex items-center mb-2 text-sm text-[#2563eb]">
           <Link href={"/"} className="underline-offset-8">
             Dashboard
@@ -199,11 +199,11 @@ const AllProductList = () => {
           <p className="font-bold">Qr Code</p>
         </div>
 
-        {/* <div>
-          <p className="text-danger">
-            {`*** Multiple deletes will work after choosing the product status 'INACTIVE' and checking the keys. ***`}
+        <div>
+          <p className="text-green-500 font-semibold text-sm">
+            {`* Multiple deletes will work after choosing the product status 'INACTIVE' and select the checkbox.`}
           </p>
-        </div> */}
+        </div>
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-3 pt-3 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-5 xl:pb-1">
