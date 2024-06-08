@@ -67,7 +67,7 @@ const BarCodeDelete = ({
         <Button
           onClick={() => setIsOpenDelete(true)}
           loading={isLoading}
-          className="!bg-primary !text-white border p-1 "
+          className="!bg-red-600 hover:!bg-red-700  !text-white border p-1 "
         >
           Delete All
         </Button>
