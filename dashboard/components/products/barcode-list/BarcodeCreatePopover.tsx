@@ -80,7 +80,7 @@ const BarcodeCreatePopover = ({ variantId }: { variantId: string }) => {
   return (
     <div>
       <Whisper
-        open
+        // open
         placement="bottomEnd"
         speaker={
           <Popover>
