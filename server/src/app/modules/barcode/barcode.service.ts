@@ -1,4 +1,4 @@
-import { IBarCodeFilterRequest, IBarCodeStockRequest } from './barcode.interface';
+import { IBarCodeFilterRequest, IBarCodeStockRequest, ICreateBarCodeManually } from './barcode.interface';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -564,6 +564,7 @@ const deleteMultipleBarcode = async (barcodeIds: string[]): Promise<{ count: num
   return result;
 };
 
+//! stock increase
 const addBarCode = async (data: IBarCodeStockRequest): Promise<number> => {
   const findVariant = await prisma.productVariation.findUnique({
     where: {
@@ -584,6 +585,40 @@ const addBarCode = async (data: IBarCodeStockRequest): Promise<number> => {
 
   return createdBarCodes.count;
 };
+//! Manually QR Code Create
+const createQrCodeManually = async (data: ICreateBarCodeManually) => {
+  //
+  const findVariant = await prisma.productVariation.findUnique({
+    where: {
+      variantId: data?.variantId,
+    },
+  });
+
+  if (!findVariant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Variant Not Found');
+  }
+  const findQrCode = await prisma.barCode.findUnique({
+    where: {
+      code: data?.code,
+    },
+  });
+
+  if (findQrCode) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Qr Code Already Exist');
+  }
+  // create
+  const newData = {
+    code: data.code,
+    variantId: findVariant.variantId,
+  };
+  const result = await prisma.barCode.create({
+    data: newData,
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'QR Code creating failed');
+  }
+  return result;
+};
 
 export const BarcodeService = {
   getSingleBarCodeDetailsForKid,
@@ -595,4 +630,5 @@ export const BarcodeService = {
   deleteBarcode,
   deleteMultipleBarcode,
   addBarCode,
+  createQrCodeManually,
 };
