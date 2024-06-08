@@ -68,6 +68,19 @@ export const barCodeApi = baseApi.injectEndpoints({
         tagTypes.promotionalOffer,
       ],
     }),
+    createQRCodeManually: builder.mutation({
+      query: ({ data }: any) => ({
+        url: `${BARCODE_API}/create-qr-code-manually`,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: [
+        tagTypes.tag,
+        tagTypes.product,
+        tagTypes.tag,
+        tagTypes.promotionalOffer,
+      ],
+    }),
   }),
 });
 
@@ -79,4 +92,5 @@ export const {
   useDeleteBarcodeMutation,
   useDeleteMultipleBarcodeMutation,
   useAddMoreStockMutation,
+  useCreateQRCodeManuallyMutation,
 } = barCodeApi;

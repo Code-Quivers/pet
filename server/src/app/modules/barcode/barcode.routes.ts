@@ -4,6 +4,7 @@ import { BarcodeController } from './barcode.controller';
 const router = express.Router();
 
 router.post('/add-more-barcode-stock', BarcodeController.addBarCode);
+router.post('/create-qr-code-manually', BarcodeController.createQrCodeManually);
 
 router.get('/', BarcodeController.getProductBarcodeVarientWise);
 

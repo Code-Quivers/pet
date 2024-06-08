@@ -136,6 +136,17 @@ const addBarCode = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// ! create qr code manually
+const createQrCodeManually = catchAsync(async (req: Request, res: Response) => {
+  const data = req?.body;
+  const result = await BarcodeService.createQrCodeManually(data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Qr Code Added Successfully',
+    data: result,
+  });
+});
 
 export const BarcodeController = {
   getSingleBarCodeDetailsForKid,
@@ -147,4 +158,5 @@ export const BarcodeController = {
   deleteBarcode,
   deleteMultipleBarcode,
   addBarCode,
+  createQrCodeManually,
 };

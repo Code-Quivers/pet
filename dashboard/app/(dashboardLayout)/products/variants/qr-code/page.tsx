@@ -33,6 +33,7 @@ import { predefinedRanges } from "@/helpers/constant";
 import { barCodeStatus } from "@/helpers/selectPickerVars/ProductSelectVars";
 import { FiEdit2 } from "react-icons/fi";
 import { useUpdateBarcodeStatusMutation } from "@/redux/features/barCodeApi";
+import BarcodeCreatePopover from "@/components/products/barcode-list/BarcodeCreatePopover";
 
 const AllProductList = () => {
   const query: Record<string, any> = {};
@@ -207,17 +208,22 @@ const AllProductList = () => {
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-3 pt-3 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-5 xl:pb-1">
-        <div className="flex items-center gap-5 mb-2">
-          <p>
-            Product Name:{" "}
-            <span className="font-semibold">
-              {findVariant?.product?.productName}
-            </span>
-          </p>
-          <p>
-            Color:{" "}
-            <span className="font-semibold">{findVariant?.color?.name}</span>
-          </p>
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-5 mb-2">
+            <p>
+              Product Name:{" "}
+              <span className="font-semibold">
+                {findVariant?.product?.productName}
+              </span>
+            </p>
+            <p>
+              Color:{" "}
+              <span className="font-semibold">{findVariant?.color?.name}</span>
+            </p>
+          </div>
+          <div>
+            <BarcodeCreatePopover variantId={findVariant?.variantId} />
+          </div>
         </div>
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-4">

@@ -67,3 +67,8 @@ export type IBarCodeStockRequest = {
   variantId: string;
   stock: number;
 };
+
+export type ICreateBarCodeManually = {
+  variantId: string;
+  code: string;
+};
