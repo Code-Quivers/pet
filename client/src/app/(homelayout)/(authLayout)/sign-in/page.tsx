@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 
 const SignInPage = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center md:py-0 py-5">
-      <div className="w-full md:w-1/2 px-4 md:p-0">
+    <div className="flex flex-col lg:flex-row justify-between items-center lg:py-0 py-5">
+      <div className="w-full lg:w-1/2 px-4 lg:p-0">
         <SignInForm />
       </div>
-      <div className="w-full md:w-1/2 min-h-[90vh] md:flex flex-col justify-center items-center overflow-hidden bg-[url(https://i.ibb.co/QcHxCT2/h1-rev-img-11a.jpg)] bg-cover bg-top bg-no-repeat hidden ">
+      <div className="w-full lg:w-1/2 min-h-[90vh] lg:flex flex-col justify-center items-center overflow-hidden bg-[url(https://i.ibb.co/QcHxCT2/h1-rev-img-11a.jpg)] bg-cover bg-top bg-no-repeat hidden ">
         <div className="text-center pt-12">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white pt-8 text-center">
+          <h2 className="text-3xl lg:text-5xl font-extrabold text-white pt-8 text-center">
             Welcome!
           </h2>
           <p className="pt-4 text-white font-semibold">

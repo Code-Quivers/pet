@@ -30,7 +30,7 @@ const MyAccountLayout = ({ children }: any) => {
 
   if (!!userLoggedIn && !isLoading)
     return (
-      <div className="max-xl:px-2  max-w-3xl mx-auto">
+      <div className="max-xl:px-4  max-w-3xl mx-auto">
         <div>
           <MyAccountNavbar />
         </div>
