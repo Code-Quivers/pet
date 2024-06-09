@@ -41,7 +41,7 @@ const BarcodeCreatePopover = ({ variantId }: { variantId: string }) => {
     //
     await createQRCodeManually({
       data: {
-        code: newData?.code,
+        code: "et" + newData?.code,
         variantId,
       },
     });
@@ -99,6 +99,8 @@ const BarcodeCreatePopover = ({ variantId }: { variantId: string }) => {
                       control={control}
                       rules={{
                         required: "Code is Required",
+                        min: "000001",
+                        max: "999999",
                       }}
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper">
