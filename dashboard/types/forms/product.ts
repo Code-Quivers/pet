@@ -126,4 +126,8 @@ export type IUpdateProductVariation = {
     code?: string;
   };
   image?: FileType;
+  stock?: number;
+};
+export type IAddProductVariation = {
+  productVariants: [];
 };

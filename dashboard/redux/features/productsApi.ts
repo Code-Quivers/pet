@@ -14,6 +14,15 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.product, tagTypes.categories],
     }),
+    addMoreVariant: builder.mutation({
+      query: ({ data, productId }) => ({
+        url: `${PRODUCT_API}/add-more-variants/${productId}`,
+        method: "POST",
+        data: data,
+        contentType: "multipart/form-data",
+      }),
+      invalidatesTags: [tagTypes.product, tagTypes.categories],
+    }),
     updateProduct: builder.mutation({
       query: ({ data, productId }) => ({
         url: `${PRODUCT_API}/${productId}`,
@@ -100,4 +109,5 @@ export const {
   useDeleteProductMutation,
   useDeleteProductVariantMutation,
   useGetVariantQuery,
+  useAddMoreVariantMutation,
 } = productApi;

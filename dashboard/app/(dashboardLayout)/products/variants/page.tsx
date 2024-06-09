@@ -1,7 +1,7 @@
 import ProductVariants from "@/components/products/variants-list/ProductVariants";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Variants",
+  title: "Product Variants",
 };
 
 const VariantPage = () => {

@@ -12,10 +12,12 @@ const { Column, HeaderCell, Cell } = Table;
 import noImage from "@/public/images/no-image.png";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import VariantEditDrawer from "@/components/products/modal/VariantEditDrawer";
+import VariantEditDrawer from "@/components/products/variants-list/VariantEditDrawer";
 import { RiDeleteBinFill } from "react-icons/ri";
 import ProductVariantDeleteModal from "@/components/products/modal/ProductVariantDeleteModal";
 import VariantStockAddPopOver from "@/components/products/variants-list/VariantStockAddPopOver";
+import { FaPlus } from "react-icons/fa";
+import AddVariantDrawer from "./AddVariantDrawer";
 
 const ProductVariants = () => {
   const query: Record<string, any> = {};
@@ -45,7 +47,9 @@ const ProductVariants = () => {
     data: singleProduct,
     isLoading,
     isFetching,
-  } = useGetSingleProductQuery(productId as string);
+  } = useGetSingleProductQuery(productId as string, {
+    skip: !productId,
+  });
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
@@ -55,12 +59,12 @@ const ProductVariants = () => {
     setPlacement(key);
   };
 
-  //Delete Modal
-
+  // Modal
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const [isOpenAddVariant, setIsOpenAddVariant] = useState<boolean>(false);
   const [deleteData, setDeleteData] = useState<any | null>(null);
   const handleCloseDelete = () => setIsOpenDelete(false);
-
+  const handleCloseAddVariant = () => setIsOpenAddVariant(false);
   return (
     <>
       <div className="flex items-center mb-2 text-sm text-[#2563eb]">
@@ -70,14 +74,25 @@ const ProductVariants = () => {
         <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
         <p className="font-bold">Variants</p>
       </div>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default   sm:px-7.5 xl:pb-1">
-        <p>
-          Product Name:{" "}
-          <span className="font-semibold">
-            {singleProduct?.data?.productName}
-          </span>
-        </p>
-        <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5"></div>
+      <div className="rounded-sm border border-stroke bg-white px-5  shadow-default   sm:px-7.5">
+        <div className="py-5 flex justify-between items-center">
+          <div>
+            <h3 className="flex gap-3 items-center">
+              Product Name :{" "}
+              <span className="font-semibold">
+                {singleProduct?.data?.productName}
+              </span>{" "}
+            </h3>
+          </div>
+          <div>
+            <button
+              onClick={() => setIsOpenAddVariant(true)}
+              className="px-3 py-2 rounded-3xl flex items-center gap-2 bg-primary text-sm text-white"
+            >
+              <FaPlus /> Add Variant
+            </button>
+          </div>
+        </div>
 
         {/*  */}
         <div className="rounded-sm bg-white">
@@ -243,23 +258,6 @@ const ProductVariants = () => {
             </Column>
           </Table>
 
-          <div>
-            <VariantEditDrawer
-              open={open}
-              setOpen={setOpen}
-              // onClose={handleCloseEdit}
-              editData={editData}
-              placement={placement}
-            />
-          </div>
-
-          <div>
-            <ProductVariantDeleteModal
-              isOpenDelete={isOpenDelete}
-              handleCloseDelete={handleCloseDelete}
-              deleteData={deleteData}
-            />
-          </div>
           {/* pagination */}
           <div style={{ padding: 20 }}>
             <Pagination
@@ -282,6 +280,32 @@ const ProductVariants = () => {
           </div>
         </div>
       </div>
+      {/*  */}
+      <div>
+        <VariantEditDrawer
+          open={open}
+          setOpen={setOpen}
+          // onClose={handleCloseEdit}
+          editData={editData}
+          placement={placement}
+        />
+      </div>
+
+      <div>
+        <ProductVariantDeleteModal
+          isOpenDelete={isOpenDelete}
+          handleCloseDelete={handleCloseDelete}
+          deleteData={deleteData}
+        />
+      </div>
+
+      {/* add variant drawer */}
+      <AddVariantDrawer
+        open={isOpenAddVariant}
+        handleClose={handleCloseAddVariant}
+        productId={productId as string}
+        basePrice={singleProduct?.data?.productPrice}
+      />
     </>
   );
 };
