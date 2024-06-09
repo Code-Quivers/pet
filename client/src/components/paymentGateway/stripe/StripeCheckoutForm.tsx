@@ -4,37 +4,29 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe("pk_test_51P3kzDBMbxBFdGaf2ImAX1HZlT3qNa2iQMfFrCjCwHEQllcgo92Nr5aFGdpJArxffsEjmUVgn8yCZawyFQbEW0op00XKGrzUfN");
-
-
-const StripeCheckoutForm = ({ clientSecret }) => {
+export default function CheckoutForm({ orderId }) {
   const stripe = useStripe();
   const elements = useElements();
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const appearance = {
-    theme: 'stripe',
-  };
-  const options = {
-    clientSecret,
-    appearance,
-  };
+  const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!stripe) {
       return;
     }
 
+    const clientSecret = new URLSearchParams(window.location.search).get(
+      "payment_intent_client_secret"
+    );
+
     if (!clientSecret) {
       return;
     }
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent?.status) {
+      switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!");
           break;
@@ -51,7 +43,7 @@ const StripeCheckoutForm = ({ clientSecret }) => {
     });
   }, [stripe]);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -66,7 +58,7 @@ const StripeCheckoutForm = ({ clientSecret }) => {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: `http://localhost:3000/payment-done/${orderId}`,
       },
     });
 
@@ -76,7 +68,7 @@ const StripeCheckoutForm = ({ clientSecret }) => {
     // be redirected to an intermediate site first to authorize the payment, then
     // redirected to the `return_url`.
     if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error?.message || "Something wron happened");
+      setMessage(error.message);
     } else {
       setMessage("An unexpected error occurred.");
     }
@@ -89,18 +81,21 @@ const StripeCheckoutForm = ({ clientSecret }) => {
   };
 
   return (
-    <Elements options={options} stripe={stripePromise}>
-          <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+    <form id="payment-form" onSubmit={handleSubmit}>
+      <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <button
+        className="w-full bg-black text-white py-[18px] rounded-full text-xl font-bold"
+        type="submit"
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+      >
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
       </button>
+
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
-        </Elements>
-      
+    </form>
   );
-};
-
-export default StripeCheckoutForm;
+}

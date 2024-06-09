@@ -27,6 +27,7 @@ class StripeController {
     // packageType={activePackagePrice}
 
     const { amountToPaid, orderId, packageType } = req.body;
+    console.log(typeof amountToPaid,'-------------------------------->>>>>>>')
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.createPaymentIntent(amountToPaid);
     // const resp = await OrderServices.updateOrderInfo(orderId, { packageType });
     sendResponse(res, {
@@ -40,31 +41,27 @@ class StripeController {
     });
   });
 
-  // static retriveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
-  //   const { orderId, paymentIntentId } = req.body;
-  //   const userId = (req.user as IRequestUser).userId;
-  //   const profileId = (req.user as IRequestUser).profileId;
-  //   const tenantId: string = req.body?.tenantId || "";
-  //   const propertyId: string = req.body?.propertyId || "";
+  static retriveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
+    const { orderId, paymentIntentId } = req.body;
+    // const userId = (req.user as IRequestUser).userId;
 
-  //   const { jsonResponse, httpStatusCode } =
-  //     await PropertyOwnerPaymentProcessor.retriveStripePaymentInfo(paymentIntentId);
-  //   const paymentReport = StripeController.generatePaymentReport(jsonResponse, orderId, userId);
+    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retriveStripePaymentInfo(paymentIntentId);
+    // const paymentReport = StripeController.generatePaymentReport(jsonResponse, orderId, userId);
 
-  //   // Create payment report in the database
-  //   const result = await PaymentServices.createPaymnentReport(paymentReport);
+    // Create payment report in the database
+    // const result = await PaymentServices.createPaymnentReport(paymentReport);
 
-  //   const dataToUpdate = { orderId, orderStatus: "CONFIRMED", planType: "PREMIUM" };
+    // const dataToUpdate = { orderId, orderStatus: "CONFIRMED", planType: "PREMIUM" };
 
-  //   const updatedOrderData = OrderServices.updateOrderStatusAndPropertyPlanType(dataToUpdate);
+    // const updatedOrderData = OrderServices.updateOrderStatusAndPropertyPlanType(dataToUpdate);
 
-  //   sendResponse(res, {
-  //     statusCode: httpStatusCode,
-  //     success: httpStatusCode === 200 ? true : false,
-  //     message: "Payment information successfully retrived!!!",
-  //     data: jsonResponse,
-  //   });
-  // });
+    sendResponse(res, { 
+      statusCode: httpStatusCode,
+      success: httpStatusCode === 200 ? true : false,
+      message: "Payment information successfully retrived!!!",
+      data: jsonResponse,
+    });
+  });
 
   
 }

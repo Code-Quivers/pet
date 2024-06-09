@@ -13,6 +13,10 @@ router.post(
   StripeController.createPaymentIntent,
 );
 
+router.post(
+  "/retrive-payment-info",
+  StripeController.retriveStripePaymentInformation,
+);
 
 
 export const StripeRoutes = router;

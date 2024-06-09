@@ -70,7 +70,7 @@ const Checkouts = ({ params }: any) => {
         </div>
       </nav>
       {isClient && payAmount?.checkoutId === params.id ? (
-        <form
+        <div
           onSubmit={handleSubmit(handleCheckout)}
           className="max-w-7xl xl:mx-auto md:mx-10 mx-4"
         >
@@ -339,7 +339,7 @@ const Checkouts = ({ params }: any) => {
                 </div>
               </div>
               {/* PAYMENT METHOD */}
-              <PaymentMethod cartData={{cart, totalAmount}} />
+              <PaymentMethod cartData={{cart, amountToPaid:totalAmount}} />
             </div>
 
             <div className="md:col-span-5 md:border-l pt-10 md:pl-10 ">
@@ -394,7 +394,7 @@ const Checkouts = ({ params }: any) => {
               </div>
             </div>
           </section>
-        </form>
+        </div>
       ) : (
         <main className="max-w-6xl mx-auto">
           <section className="grid grid-cols-12 min-h-screen">
