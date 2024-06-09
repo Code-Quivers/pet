@@ -14,6 +14,16 @@ router.post('/', FileUploadHelper.uploadProductImage.array('files'), (req: Reque
   req.body = ProductZodValidation.addProducts.parse(JSON.parse(req.body.data));
   return ProductController.addProductsController(req, res, next);
 });
+// ! add more variant on product
+
+router.post(
+  '/add-more-variants/:productId',
+  FileUploadHelper.uploadProductImage.array('files'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = ProductZodValidation.addMoreVariants.parse(JSON.parse(req.body.data));
+    return ProductController.addMoreVariants(req, res, next);
+  }
+);
 
 // ! Get all Product----------------------------------->>>
 router.get('/', ProductController.getProductsController);

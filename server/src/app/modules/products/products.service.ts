@@ -100,6 +100,77 @@ const createProduct = async (req: Request): Promise<Product> => {
   return result;
 };
 
+// !------------------------- Add More Variant on product ---------------------->>>
+const addMoreVariants = async (req: Request, productId: string): Promise<any> => {
+  const files = req.files as IUploadFile[];
+
+  const productImagesPaths = files?.map(file => {
+    return file.path?.substring(7);
+  });
+
+  const data = req.body as IProductRequest;
+
+  // making variant array with image
+  const variants = data?.productVariations?.map((variant: IProductVariant) => {
+    const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
+    return {
+      productVariant: {
+        image: imagePath,
+        variantPrice: variant.variantPrice,
+        color: variant.color,
+        productId,
+      },
+      otherVariant: {
+        stock: variant.stock,
+      },
+    };
+  });
+  // making variant array with image
+
+  // prisma transaction
+  const result = await prisma.$transaction(async transactionClient => {
+    // adding more  variants on product
+
+    //
+
+    for (const variant of variants) {
+      const createdNewVariant = await transactionClient.productVariation.create({
+        data: variant.productVariant,
+      });
+      if (!createdNewVariant) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Variant Adding failed');
+      }
+
+      // generating new codes
+      const codes = Array.from({ length: variant?.otherVariant?.stock }, () => ({
+        code: generateBarCode(),
+        variantId: createdNewVariant.variantId,
+      }));
+
+      const createdBarCodes = await transactionClient.barCode.createMany({ data: codes });
+
+      if (!createdBarCodes || createdBarCodes.count !== variant.otherVariant.stock) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
+      }
+    }
+    // find latest created
+    const latestData = await transactionClient.productVariation.findMany({
+      where: {
+        productId,
+      },
+      take: variants.length,
+    });
+
+    return latestData;
+
+    //
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to Add Variant, result error');
+  }
+  return result;
+};
+
 // !----------------------------------get all Product---------------------------------------->>>
 const getProducts = async (filters: IProductFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Product[]>> => {
   // Calculate pagination options
@@ -433,4 +504,5 @@ export const ProductService = {
   updateProductVariation,
   deleteProductVariant,
   getAllVariant,
+  addMoreVariants,
 };
