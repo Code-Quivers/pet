@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   cart: [],
   payAmount: {},
+  promoCode: "",
 };
 
 export const cartSlice = createSlice({
@@ -72,26 +73,36 @@ export const cartSlice = createSlice({
       setToLocalStorage("payAmount", JSON.stringify(state.payAmount));
     },
     applyPromoCode: (state: any, action: any) => {
-      const itemInCart = state.cart.find(
-        (item: any) => item.productId === action.payload.productId
-      );
-      if (itemInCart) {
-        itemInCart.quantity = itemInCart.quantity + action.payload.quantity;
-        itemInCart.totalPrice =
-          itemInCart?.totalPrice + action?.payload?.offerPrice;
-        // (itemInCart?.quantity - action?.payload?.quantity) *
-        // itemInCart?.price;
-      } else {
-        state.cart.push({
-          ...action.payload,
-          quantity: action.payload.quantity,
-          totalPrice: action.payload.quantity * action.payload.offerPrice,
-        });
-      }
+      state.promoCode = action.payload.promoCode;
+      state.cart.push({
+        ...action.payload,
+        quantity: action.payload.quantity,
+        totalPrice: action.payload.quantity * action.payload.offerPrice,
+      });
+
+      // const itemInCart = state.cart.find(
+      //   (item: any) => item.productId === action.payload.productId
+      // );
+      // if (itemInCart) {
+      //   itemInCart.quantity = itemInCart.quantity + action.payload.quantity;
+      //   itemInCart.totalPrice =
+      //     itemInCart?.totalPrice + action?.payload?.offerPrice;
+      // } else {
+      //   state.cart.push({
+      //     ...action.payload,
+      //     quantity: action.payload.quantity,
+      //     totalPrice: action.payload.quantity * action.payload.offerPrice,
+      //   });
+      // }
     },
     removeFreeProduct: (state: any, action: any) => {
+      state.promoCode = "";
       const removeItem = state.cart.filter(
-        (item: any) => item.variantId !== action.payload
+        (item: any) =>
+          !(
+            item.variantId === action?.payload?.variantId &&
+            item.promoCode === action?.payload?.promoCode
+          )
       );
       state.cart = removeItem;
       setToLocalStorage("cart", JSON.stringify(state.cart));

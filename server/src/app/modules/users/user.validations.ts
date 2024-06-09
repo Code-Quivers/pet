@@ -25,10 +25,14 @@ const createUser = z.object({
 
 const updateMyProfile = z.object({
   body: z.object({
-    fullName: z.string().optional(),
-    password: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     mobileNumber: z.string().optional(),
     address: z.string().optional(),
+    email: z.string().optional(),
+    password: z.string().optional(),
+    newPassword: z.string().optional(),
+    displayContactInfo: z.boolean().optional(),
   }),
 });
 

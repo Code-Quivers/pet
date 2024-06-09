@@ -18,6 +18,8 @@ router.post('/', FileUploadHelper.uploadProductImage.array('files'), (req: Reque
 // ! Get all Product----------------------------------->>>
 router.get('/', ProductController.getProductsController);
 
+router.get('/variant', ProductController.getAllVariant);
+
 router.get('/:productId', ProductController.getSingleProduct);
 
 router.patch(

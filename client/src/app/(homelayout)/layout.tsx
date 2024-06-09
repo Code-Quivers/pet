@@ -6,12 +6,12 @@ import React from "react";
 
 const layout = ({ children }: any) => {
   return (
-    <>
-    <Script
-          id="tawk"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
+    <div>
+      <Script
+        id="tawk"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: `
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
             (function(){
               var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
@@ -22,22 +22,22 @@ const layout = ({ children }: any) => {
               s0.parentNode.insertBefore(s1,s0);
             })();
           `,
-          }}
-        />
-    
-    <div>
-      <div className="sticky top-0 z-50">
-        <PromoBanner />
-        <Navbar />
-      </div>
-      <div>{children}</div>
-      <div className="bg-primary">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-          <Footer />
+        }}
+      />
+
+      <div>
+        <div className="sticky top-0 z-50">
+          <PromoBanner />
+          <Navbar />
+        </div>
+        <div>{children}</div>
+        <div className="bg-primary">
+          <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
-    </>
   );
 };
 

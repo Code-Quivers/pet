@@ -25,14 +25,16 @@ model User {
 }
 
 model Profile {
-  profileId    String    @id @default(uuid())
-  fullName     String?
-  mobileNumber String?
-  address      String?
-  role         UserRoles @default(USER)
-  createdAt    DateTime  @default(now()) @db.Timestamptz(0)
-  updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
-  user         User?
+  profileId          String    @id @default(uuid())
+  firstName          String?
+  lastName           String?
+  mobileNumber       String?
+  displayContactInfo Boolean?  @default(true)
+  address            String?
+  role               UserRoles @default(USER)
+  createdAt          DateTime  @default(now()) @db.Timestamptz(0)
+  updatedAt          DateTime  @updatedAt @db.Timestamptz(0)
+  user               User?
 }
 
 // Product Part 
@@ -112,7 +114,7 @@ model ProductReview {
   rating          Int
   reviewImage     String
   productId       String?
-  product         Product?  @relation(fields: [productId], references: [productId],onDelete: SetNull)
+  product         Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
   userId          String
   user            User     @relation(fields: [userId], references: [userId])
   createdAt       DateTime @default(now()) @db.Timestamptz(0)
@@ -131,10 +133,12 @@ model Order {
   zip         String
   phone       String
   cartItems   Json[]
+
   // productId       String
   // product         Product     @relation(fields: [productId], references: [productId])
   // promoCodeId     String?
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
+
   createdAt   DateTime      @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime      @updatedAt @db.Timestamptz(0)
   PaymentInfo PaymentInfo[]

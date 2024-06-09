@@ -18,6 +18,7 @@ const Checkouts = ({ params }: any) => {
   // console.log(promo, "promo");
 
   const cart = useSelector((state: any) => state.cart.cart);
+  const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
   console.log(cart, "cart");
   const data = stateTax?.data?.map((item: any) => ({
@@ -53,7 +54,7 @@ const Checkouts = ({ params }: any) => {
   return (
     <section>
       <nav className="bg-[#0BD6FA] py-2">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4 flex items-center justify-between">
           <Image
             src={logo}
             alt="logo"
@@ -71,10 +72,10 @@ const Checkouts = ({ params }: any) => {
       {isClient && payAmount?.checkoutId === params.id ? (
         <form
           onSubmit={handleSubmit(handleCheckout)}
-          className="max-w-6xl mx-auto"
+          className="max-w-7xl xl:mx-auto md:mx-10 mx-4"
         >
           <section className="md:grid md:grid-cols-12 min-h-[200vh]">
-            <div className="col-span-7 pt-10 md:mr-10">
+            <div className="md:col-span-7 pt-10 md:mr-10">
               {/* Email */}
               <div>
                 <h3 className="font-bold text-xl mb-2">CONTACT</h3>
@@ -93,7 +94,7 @@ const Checkouts = ({ params }: any) => {
                           type="text"
                           name="email"
                           id="email"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none bg-chalk border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none bg-chalk border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                             errors?.email &&
                             errors?.email?.message &&
                             "border-red-600"
@@ -129,7 +130,7 @@ const Checkouts = ({ params }: any) => {
                             type="text"
                             name="firstName"
                             id="firstName"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                               errors?.firstName &&
                               errors?.firstName?.message &&
                               "border-red-600"
@@ -159,7 +160,7 @@ const Checkouts = ({ params }: any) => {
                             type="text"
                             name="lastName"
                             id="lastName"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                               errors?.lastName &&
                               errors?.lastName?.message &&
                               "border-red-600"
@@ -191,7 +192,7 @@ const Checkouts = ({ params }: any) => {
                           type="text"
                           name="address"
                           id="address"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                             errors?.address &&
                             errors?.address?.message &&
                             "border-red-600"
@@ -223,7 +224,7 @@ const Checkouts = ({ params }: any) => {
                             type="text"
                             name="city"
                             id="city"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                               errors?.city &&
                               errors?.city?.message &&
                               "border-red-600"
@@ -288,7 +289,7 @@ const Checkouts = ({ params }: any) => {
                             type="text"
                             name="postalCode"
                             id="postalCode"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                               errors?.postalCode &&
                               errors?.postalCode?.message &&
                               "border-red-600"
@@ -321,7 +322,7 @@ const Checkouts = ({ params }: any) => {
                           type="text"
                           name="phone"
                           id="phone"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 sm:text-sm ${
+                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
                             errors?.phone &&
                             errors?.phone?.message &&
                             "border-red-600"
@@ -341,7 +342,7 @@ const Checkouts = ({ params }: any) => {
               <PaymentMethod cartData={{cart, totalAmount}} />
             </div>
 
-            <div className="col-span-5 border-l pt-10 md:pl-10 ">
+            <div className="md:col-span-5 md:border-l pt-10 md:pl-10 ">
               {cart?.length > 0 &&
                 cart?.map((item: any, index: number) => (
                   <div className="flex items-center gap-5 mb-3" key={index}>
@@ -376,7 +377,7 @@ const Checkouts = ({ params }: any) => {
                   </div>
                 ))}
               {/* promo code apply  */}
-              <PromoCode cart={cart} />
+              <PromoCode cart={cart} appliedPromoCode={promoCode} />
               <div>
                 <div className="flex justify-between mt-10">
                   <p>Subtotal</p>

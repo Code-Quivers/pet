@@ -71,6 +71,7 @@ const DeleteKidConfirmationModal = ({
           </div>
           <div className="mt-10 flex justify-end items-center gap-5">
             <button
+              onClick={handleClose}
               type="button"
               className="px-5 bg-slate-400 rounded-2xl py-1.5 text-white"
             >

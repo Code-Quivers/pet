@@ -47,7 +47,7 @@ const ProductsSection = () => {
     }, 1000);
   };
   return (
-    <section className="flex items-center mt-10 py-10">
+    <section className=" mt-10 py-10">
       <div className="p-4 mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto">
           <div className="text-center ">
@@ -72,64 +72,60 @@ const ProductsSection = () => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 max-w-4xl">
-          {products?.map((product: any) => (
-            <div key={product.id} className="shadow-lg">
-              <div className="">
-                <Link href={`/shop/single-product/${product?.productId}`}>
-                  <div className="w-full h-full">
-                    <Image
-                      width={200}
-                      height={200}
-                      src={
-                        selectedColor?.productId == product?.productId
-                          ? `${fileUrlKey()}/${
-                              product?.productVariations[selectedColor.index]
-                                ?.image
-                            }`
-                          : `${fileUrlKey()}/${product?.featuredImage}`
-                      }
-                      alt={product.productName}
-                      className="h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110"
-                    />
-                    {/* <Image
-                    width={200}
-                    height={200}
-                    src={`${fileUrlKey()}/${product?.featuredImage}`}
+      </div>
+      <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 mx-auto max-w-5xl">
+        {products?.map((product: any) => (
+          <div key={product.id} className="border rounded-lg">
+            <div className="">
+              <Link href={`/shop/single-product/${product?.productId}`}>
+                <div className="w-full h-full">
+                  <Image
+                    width={1000}
+                    height={1000}
+                    src={
+                      selectedColor?.productId == product?.productId
+                        ? `${fileUrlKey()}/${
+                            product?.productVariations[selectedColor.index]
+                              ?.image
+                          }`
+                        : `${fileUrlKey()}/${product?.featuredImage}`
+                    }
                     alt={product.productName}
-                    className=" h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110"
-                  /> */}
-                  </div>
-                  <div className="px-4 py-2">
-                    <h2 className="text-base font-bold text-black ">
-                      {product?.productName}
-                    </h2>
-                    <p className="text-base pt-1 font-bold text-primary">
-                      <span>${product?.productPrice?.toFixed(2)}</span>
-                    </p>
-                  </div>
-                </Link>
-                <div className="px-4 pb-2">
-                  {product?.productVariations?.map(
-                    (variation: any, index: number) => (
-                      <button
-                        onClick={() =>
-                          setSelectedColor({
-                            productId: product.productId,
-                            index,
-                          })
-                        }
-                        style={{
-                          backgroundColor: `${variation?.color?.code}`,
-                        }}
-                        key={variation?.variantId}
-                        className={`w-6 h-6 rounded-full mr-2`}
-                      ></button>
-                    )
-                  )}
+                    className="h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110 rounded-t-lg"
+                  />
                 </div>
+                <div className="py-2 px-2">
+                  <h2 className="text-xl font-bold text-black ">
+                    {product?.productName}
+                  </h2>
+                  <p className="pt-1 font-medium flex justify-between text-lg">
+                    <span>Price</span>
+                    <span>${product?.productPrice?.toFixed(2)}</span>
+                  </p>
+                  <p className="line-clamp-2">{product?.productDescription}</p>
+                </div>
+              </Link>
+              <div className="pb-2 px-2">
+                {product?.productVariations?.map(
+                  (variation: any, index: number) => (
+                    <button
+                      // onClick={() =>
+                      //   setSelectedColor({
+                      //     productId: product.productId,
+                      //     index,
+                      //   })
+                      // }
+                      style={{
+                        backgroundColor: `${variation?.color?.code}`,
+                      }}
+                      key={variation?.variantId}
+                      className={`w-6 h-6 rounded-full mr-2`}
+                    ></button>
+                  )
+                )}
+              </div>
 
-                {/* <div className="absolute flex flex-col top-4 right-4">
+              {/* <div className="absolute flex flex-col top-4 right-4">
                     <a href="#" className="flex items-center">
                       <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                         <svg
@@ -168,7 +164,7 @@ const ProductsSection = () => {
                     )}
                   </div> */}
 
-                {/* <Link href={`/shop/single-product/${product?.productId}`}>
+              {/* <Link href={`/shop/single-product/${product?.productId}`}>
                   <h2 className="mb-2 text-xl font-bold text-black  ">
                     {product?.productName}
                   </h2>
@@ -176,10 +172,9 @@ const ProductsSection = () => {
                     <span>${product?.productPrice?.toFixed(2)}</span>
                   </p>
                 </Link> */}
-              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

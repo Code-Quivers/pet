@@ -7,18 +7,6 @@ import sendResponse from '../../../shared/sendResponse';
 import { ProductService } from './products.service';
 import { ProductFilterableFields } from './product.constants';
 
-// !----------------------------------Create New Category---------------------------------------->>>
-// const addProductController = catchAsync(async (req: Request, res: Response) => {
-//   // @ts-ignore
-//   const result = await ProductService.addProduct(req);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Product Added Successfully',
-//     data: result,
-//   });
-// });
 // !----------------------------------Create New Product---------------------------------------->>>
 const addProductsController = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.createProduct(req);
@@ -88,6 +76,17 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllVariant = catchAsync(async (req: Request, res: Response) => {
+  const result = await ProductService.getAllVariant();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All variant fetched successfully',
+    data: result,
+  });
+});
+
 const updateProductVariation = catchAsync(async (req: Request, res: Response) => {
   const { variantId } = req.params;
   const result = await ProductService.updateProductVariation(variantId, req);
@@ -120,4 +119,5 @@ export const ProductController = {
   deleteProduct,
   updateProductVariation,
   deleteProductVariant,
+  getAllVariant,
 };

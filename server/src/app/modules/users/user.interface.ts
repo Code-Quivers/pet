@@ -40,10 +40,14 @@ export type IUsersResponse = {
   // userStatus: UserStatus;
 };
 export type IUpdateProfileReq = {
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   mobileNumber?: string;
   address?: string;
   password?: string;
+  newPassword?: string;
+  email?: string;
+  displayContactInfo?: boolean;
 };
 
 export type IUserUpdateReqAndResponse = {

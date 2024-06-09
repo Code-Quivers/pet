@@ -1,13 +1,13 @@
 "use client";
 
-import { useAddMoreStockMutation } from "@/redux/features/barCodeApi";
+import { useCreateQRCodeManuallyMutation } from "@/redux/features/barCodeApi";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { RiAddLine } from "react-icons/ri";
 import {
   Button,
   Form,
-  InputNumber,
+  Input,
   Notification,
   Popover,
   Whisper,
@@ -15,20 +15,14 @@ import {
   useToaster,
 } from "rsuite";
 
-interface VariantStockAddPopOverProps {
-  rowData: any;
-}
-
-const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
-  rowData,
-}) => {
+const BarcodeCreatePopover = ({ variantId }: { variantId: string }) => {
   const triggerRef = useRef<WhisperInstance>(null);
   const open = () => triggerRef.current?.open();
   const close = () => triggerRef.current?.close();
 
   // !
-  type IAddStock = {
-    stock: string;
+  type ICreateQRCode = {
+    code: string;
   };
 
   const {
@@ -36,19 +30,21 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
     handleSubmit,
     formState: { errors },
     reset: formReset,
-  } = useForm<IAddStock>();
+  } = useForm<ICreateQRCode>();
   //
-  const [addMoreStock, { data, isLoading, isSuccess, isError, error, reset }] =
-    useAddMoreStockMutation();
+  const [
+    createQRCodeManually,
+    { data, isLoading, isSuccess, isError, error, reset },
+  ] = useCreateQRCodeManuallyMutation();
 
-  const handleAddStock = async (newStock: IAddStock) => {
-    await addMoreStock({
+  const handleCreateQRCode = async (newData: ICreateQRCode) => {
+    //
+    await createQRCodeManually({
       data: {
-        variantId: rowData?.variantId,
-        stock: parseInt(newStock?.stock),
+        code: "et" + newData?.code,
+        variantId,
       },
     });
-    //
   };
 
   // !
@@ -58,7 +54,7 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
       toaster.push(
         <Notification header="Success" type="success" closable>
           <h4 className="font-semibold xl:text-xl">
-            {data?.message || "Stock Added"}
+            {data?.message || "Successfully Added"}
           </h4>
         </Notification>,
         { placement: "bottomStart", duration: 2000 }
@@ -84,47 +80,52 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
   return (
     <div>
       <Whisper
-        placement="right"
+        // open
+        placement="bottomEnd"
         speaker={
-          <Popover title="Stock">
+          <Popover>
             <div className="!w-[240px]">
-              <form onSubmit={handleSubmit(handleAddStock)}>
-                <div className="!max-w-[220px] mx-auto !h-[110px] space-y-5">
-                  <Controller
-                    name="stock"
-                    control={control}
-                    rules={{
-                      max: {
-                        value: 500,
-                        message: "Stock max 500",
-                      },
-                      required: "Stock is Required",
-                    }}
-                    render={({ field }) => (
-                      <div className="rs-form-control-wrapper">
-                        <div>
-                          <InputNumber
-                            min={1}
-                            // max={500}
-                            {...field}
-                            size="lg"
-                            placeholder="Enter Stock..."
-                          />
+              <div className="mb-5">
+                <h4 className="text-lg font-bold text-center">
+                  Create New QR Code
+                </h4>
+              </div>
+              <form onSubmit={handleSubmit(handleCreateQRCode)}>
+                <div className="!max-w-[300px] mx-auto !h-[140px] space-y-5">
+                  <div className="space-y-3">
+                    <label className="text-md font-semibold">QR Code</label>
+                    <Controller
+                      name="code"
+                      control={control}
+                      rules={{
+                        required: "Code is Required",
+                        min: "000001",
+                        max: "999999",
+                      }}
+                      render={({ field }) => (
+                        <div className="rs-form-control-wrapper">
+                          <div>
+                            <Input
+                              {...field}
+                              size="lg"
+                              placeholder="Enter Unique Code..."
+                            />
+                          </div>
+                          <Form.ErrorMessage
+                            show={
+                              (!!errors?.code && !!errors?.code?.message) ||
+                              false
+                            }
+                            placement="topEnd"
+                          >
+                            <span className="font-semibold">
+                              {errors?.code?.message}
+                            </span>
+                          </Form.ErrorMessage>
                         </div>
-                        <Form.ErrorMessage
-                          show={
-                            (!!errors?.stock && !!errors?.stock?.message) ||
-                            false
-                          }
-                          placement="topEnd"
-                        >
-                          <span className="font-semibold">
-                            {errors?.stock?.message}
-                          </span>
-                        </Form.ErrorMessage>
-                      </div>
-                    )}
-                  />
+                      )}
+                    />
+                  </div>
 
                   {/* button */}
 
@@ -155,15 +156,16 @@ const VariantStockAddPopOver: React.FC<VariantStockAddPopOverProps> = ({
       >
         <button
           onClick={open}
-          className="bg-[#f1f5f9] flex justify-between w-full px-1 rounded-md hover:text-primary hover:bg-[#e2e8f0]"
+          className="bg-[#f1f5f9] flex justify-between w-full px-2 py-2 rounded-md hover:text-primary hover:bg-[#e2e8f0] items-center gap-3"
         >
           <span>
             <RiAddLine size={20} className="" />
           </span>
+          Create QR Code
         </button>
       </Whisper>
     </div>
   );
 };
 
-export default VariantStockAddPopOver;
+export default BarcodeCreatePopover;
