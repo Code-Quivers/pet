@@ -1,9 +1,25 @@
 import Image from "next/image";
 import paypalLogo from "../../../../public/images/checkout/checkout-paypal.svg";
 import { useState } from "react";
+import { useGetClientSecretMutation } from "@/redux/api/features/payment/stripePaymentApi";
+import StripeCheckoutForm from "@/components/paymentGateway/stripe/StripeCheckoutForm";
 
-const PaymentMethod = () => {
+const PaymentMethod = ({cartData}) => {
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [getClientSecret, {data, isLoading, isError}] = useGetClientSecretMutation();
+  const [stripeContent, setStripeContent] = useState("")
+  
+  const getStripeClientSecretOnClick = async ()=>{
+    const data = await getClientSecret({cartData:cartData, amountToPaid:cartData.totalAmount})
+    console.log(data)
+    let clientSecret = ""
+    if(data){
+      const clientSecret = data?.data?.clientSecret;
+      setStripeContent(<StripeCheckoutForm clientSecret={clientSecret}/>)
+    }
+    setPaymentMethod('card');
+
+  }
   return (
     <>
       <div className="mt-5">
@@ -27,7 +43,7 @@ const PaymentMethod = () => {
                       ></label> */}
               <div className="absolute top-1/2 transform -translate-y-1/2 flex gap-3 items-center pl-5">
                 <input
-                  onClick={() => setPaymentMethod("card")}
+                  onClick={getStripeClientSecretOnClick}
                   type="radio"
                   name="paymentMethod"
                   id="card"
@@ -108,8 +124,7 @@ const PaymentMethod = () => {
               }`}
             >
               <p>
-                {` After clicking "Pay with PayPal", you will be redirected
-                        to PayPal to complete your purchase securely.`}
+               {stripeContent}
               </p>
             </div>
           </div>

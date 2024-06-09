@@ -122,24 +122,39 @@ model ProductReview {
 }
 
 model Order {
-  orderId            String      @id @default(uuid())
-  orderStatus        OrderStatus @default(PENDING)
-  email              String
-  firstName          String
-  lastName           String
-  address            String
-  city               String
-  state              String
-  zip                String
-  phone              String
-  paymentInformation Json
-  cartItems          Json[]
+  orderId     String        @id @default(uuid())
+  orderStatus OrderStatus   @default(PENDING)
+  email       String
+  firstName   String
+  lastName    String
+  address     String
+  city        String
+  state       String
+  zip         String
+  phone       String
+  cartItems   Json[]
+
   // productId       String
   // product         Product     @relation(fields: [productId], references: [productId])
   // promoCodeId     String?
   // promoCode       PromoCode?  @relation(fields: [promoCodeId], references: [promoCodeId])
-  createdAt          DateTime    @default(now()) @db.Timestamptz(0)
-  updatedAt          DateTime    @updatedAt @db.Timestamptz(0)
+
+  createdAt   DateTime      @default(now()) @db.Timestamptz(0)
+  updatedAt   DateTime      @updatedAt @db.Timestamptz(0)
+  PaymentInfo PaymentInfo[]
+}
+
+model PaymentInfo {
+  paymentId            String         @id @default(uuid())
+  gateWayTransactionId String
+  gateWay              PaymentGateway
+  totalAmountPaid      Float
+  totalAmountToPaid    Float
+  status               PaymentStatus  @default(PENDING)
+  orderId              String
+  order                Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  createdAt            DateTime       @default(now()) @db.Timestamptz(0)
+  updatedAt            DateTime       @updatedAt @db.Timestamptz(0)
 }
 
 model KidDetails {
@@ -257,6 +272,24 @@ enum UserRoles {
   SUPERADMIN
   ADMIN
   USER
+}
+
+enum PaymentGateway {
+  STRIPE
+  PAYPAL
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+  DISPUTED
+  ON_HOLD
+  EXPIRED
+  PARTIAL_PAYMENT
 }
 
 model Tax {

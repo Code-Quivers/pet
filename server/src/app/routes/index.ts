@@ -13,6 +13,7 @@ import { BlogsRoutes } from '../modules/blogs/blogs.routes';
 import { TaxRoutes } from '../modules/tax/tax.routes';
 import { CommentRoutes } from '../modules/blog-comments/comments.routes';
 import { OrderRoutes } from '../modules/orders/orders.routes';
+import { StripeRoutes } from '../modules/payments/stripe.routes';
 
 const router = express.Router();
 
@@ -72,6 +73,10 @@ const moduleRoutes = [
   {
     path: '/orders',
     route: OrderRoutes,
+  },
+  {
+    path: '/payment-stripe',
+    route: StripeRoutes,
   },
 ];
 
