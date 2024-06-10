@@ -86,7 +86,7 @@ model ProductVariation {
   updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
   barCodes     BarCode[]
 }
-
+//QR Code Model
 model BarCode {
   barcodeId     String            @id @default(uuid())
   code          String            @unique
