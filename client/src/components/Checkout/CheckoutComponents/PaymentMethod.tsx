@@ -6,7 +6,11 @@ import StripeCheckoutForm from "@/components/paymentGateway/stripe/StripeCheckou
 import PaymentMethodStripe from "./PaymentMethodStripe";
 import PaymentMethodPaypal from "./PaymentMethodPaypal";
 
-const PaymentMethod = ({amountToPaid}) => {
+interface PaymentMethodProps {
+  amountToPaid: number;
+}
+
+const PaymentMethod: React.FC<PaymentMethodProps> = ({ amountToPaid }) => {
   const [paymentMethod, setPaymentMethod] = useState("");
 
   return (
@@ -18,11 +22,11 @@ const PaymentMethod = ({amountToPaid}) => {
         </p>
         <section>
           <PaymentMethodStripe
-          setPaymentMethod={setPaymentMethod}
-          paymentMethod={paymentMethod}
-          amountToPaid={amountToPaid}
+            setPaymentMethod={setPaymentMethod}
+            paymentMethod={paymentMethod}
+            amountToPaid={amountToPaid}
           />
-          <PaymentMethodPaypal/>
+          <PaymentMethodPaypal />
         </section>
       </div>
     </>
