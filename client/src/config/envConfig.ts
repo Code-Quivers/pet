@@ -5,10 +5,6 @@ const fileUrlKey = (): string => {
   }
   return "";
 };
-const stripePublishableKey = (): string => {
-  const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-  if (key) {
-    return key;
-  }
-  return "";
+export const stripePublishableKey = (): string => {
+  return process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 };

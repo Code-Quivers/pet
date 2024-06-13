@@ -3,19 +3,28 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripeCheckoutForm from "@/components/paymentGateway/stripe/StripeCheckoutForm";
 import { useGetClientSecretMutation } from "@/redux/api/features/payment/stripePaymentApi";
+import { useSelector } from "react-redux";
+import { stripePublishableKey } from "@/config/envConfig";
 
-const stripePromise = loadStripe("pk_test_51P3kzDBMbxBFdGaf2ImAX1HZlT3qNa2iQMfFrCjCwHEQllcgo92Nr5aFGdpJArxffsEjmUVgn8yCZawyFQbEW0op00XKGrzUfN");
+const stripePromise = loadStripe(stripePublishableKey());
 
+interface PaymentMethodStripeProps {
+  setPaymentMethod: (method: string) => void;
+  paymentMethod: string;
+  amountToPaid: number;
+}
 
-const PaymentMethodStripe = ({
+const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
   setPaymentMethod,
   paymentMethod,
-  cartData,
+  amountToPaid,
 }) => {
-    const [getClientSecret, {data:stripeData, isLoading, isError}] = useGetClientSecretMutation();
-    const [clientSecret, setClientSecret] = useState("");
+  const [getClientSecret, { data: stripeData, isLoading, isError }] =
+    useGetClientSecretMutation();
+  const [clientSecret, setClientSecret] = useState("");
+  const cart = useSelector((state: any) => state.cart.cart);
+  const deliveryInfo = useSelector((state: any) => state.deliveryInfo);
 
-    
   const appearance = {
     theme: "stripe",
   };
@@ -24,13 +33,13 @@ const PaymentMethodStripe = ({
     appearance,
   };
 
-  const handleGetClientSecret = async()=>{
-    const resp = await getClientSecret(cartData)
-    if(resp?.data?.success){
-        setClientSecret(resp.data?.data?.clientSecret)
+  const handleGetClientSecret = async () => {
+    const resp = await getClientSecret({ cart, amountToPaid, deliveryInfo });
+    if (resp?.data?.success) {
+      setClientSecret(resp.data?.data?.clientSecret);
     }
-    setPaymentMethod('card')
-}
+    setPaymentMethod("card");
+  };
 
   return (
     <div>
@@ -69,7 +78,7 @@ const PaymentMethodStripe = ({
       >
         {clientSecret && (
           <Elements options={options} stripe={stripePromise}>
-            <StripeCheckoutForm orderId={'12345hh'} />
+            <StripeCheckoutForm orderId={"12345hh"} />
           </Elements>
         )}
       </div>

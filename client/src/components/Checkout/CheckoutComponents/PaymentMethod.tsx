@@ -6,7 +6,7 @@ import StripeCheckoutForm from "@/components/paymentGateway/stripe/StripeCheckou
 import PaymentMethodStripe from "./PaymentMethodStripe";
 import PaymentMethodPaypal from "./PaymentMethodPaypal";
 
-const PaymentMethod = ({cartData}) => {
+const PaymentMethod = ({amountToPaid}) => {
   const [paymentMethod, setPaymentMethod] = useState("");
 
   return (
@@ -20,7 +20,7 @@ const PaymentMethod = ({cartData}) => {
           <PaymentMethodStripe
           setPaymentMethod={setPaymentMethod}
           paymentMethod={paymentMethod}
-          cartData={cartData}
+          amountToPaid={amountToPaid}
           />
           <PaymentMethodPaypal/>
         </section>
