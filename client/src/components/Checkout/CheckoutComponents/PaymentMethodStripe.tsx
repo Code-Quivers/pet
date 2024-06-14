@@ -22,6 +22,7 @@ const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
   const [getClientSecret, { data: stripeData, isLoading, isError }] =
     useGetClientSecretMutation();
   const [clientSecret, setClientSecret] = useState("");
+  const [orderId, setOrderId] = useState("");
   const cart = useSelector((state: any) => state.cart.cart);
   const deliveryInfo = useSelector((state: any) => state.deliveryInfo);
 
@@ -36,7 +37,9 @@ const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
   const handleGetClientSecret = async () => {
     const resp = await getClientSecret({ cart, amountToPaid, deliveryInfo });
     if (resp?.data?.success) {
+      console.log(resp.data.data);
       setClientSecret(resp.data?.data?.clientSecret);
+      setOrderId(resp.data?.data?.orderId);
     }
     setPaymentMethod("card");
   };
@@ -78,7 +81,7 @@ const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
       >
         {clientSecret && (
           <Elements options={options} stripe={stripePromise}>
-            <StripeCheckoutForm orderId={"12345hh"} />
+            <StripeCheckoutForm orderId={orderId} />
           </Elements>
         )}
       </div>

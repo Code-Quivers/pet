@@ -122,15 +122,15 @@ model ProductReview {
 }
 
 model Order {
-  orderId     String        @id @default(uuid())
-  orderStatus OrderStatus   @default(PENDING)
+  orderId     String      @id @default(uuid())
+  orderStatus OrderStatus @default(PENDING)
   email       String
   firstName   String
   lastName    String
   address     String
   city        String
   state       String
-  zip         String
+  postalCode  String
   phone       String
   cartItems   Json[]
 
@@ -141,20 +141,24 @@ model Order {
 
   createdAt   DateTime      @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime      @updatedAt @db.Timestamptz(0)
-  PaymentInfo PaymentInfo[]
+  PaymentInfo PaymentReport[]
 }
 
-model PaymentInfo {
-  paymentId            String         @id @default(uuid())
-  gateWayTransactionId String
-  gateWay              PaymentGateway
-  totalAmountPaid      Float
-  totalAmountToPaid    Float
-  status               PaymentStatus  @default(PENDING)
-  orderId              String
-  order                Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
-  createdAt            DateTime       @default(now()) @db.Timestamptz(0)
-  updatedAt            DateTime       @updatedAt @db.Timestamptz(0)
+model PaymentReport {
+  paymentId              String         @id @default(uuid())
+  gateWayTransactionId   String
+  gateWay                PaymentGateway
+  totalAmountPaid        Float
+  totalAmountToPaid      Float
+  gateWayFee             Float
+  netAmount              Float
+  gateWayTransactionTime DateTime
+  status                 PaymentStatus  @default(PENDING)
+  currency               String
+  orderId                String
+  order                  Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  createdAt              DateTime       @default(now()) @db.Timestamptz(0)
+  updatedAt              DateTime       @updatedAt @db.Timestamptz(0)
 }
 
 model KidDetails {

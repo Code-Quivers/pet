@@ -264,10 +264,26 @@ monthWiseOrder()
     await prisma.$disconnect();
   });
 
+const createOrder = async (orderData: any) => {
+  const result = await prisma.$transaction(async transactionClient => {
+    const newOrder = await transactionClient.order.create({
+      data: orderData,
+      select: {
+        orderId: true,
+      },
+    });
+    if (!newOrder) {
+      throw new ApiError(400, 'Failed to create order');
+    }
+    return newOrder;
+  });
+  return result;
+};
 export const OrderService = {
   addOrder,
   getOrder,
   updateOrder,
   deleteOrder,
   monthWiseOrder,
+  createOrder,
 };
