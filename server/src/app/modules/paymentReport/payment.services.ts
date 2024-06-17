@@ -12,8 +12,10 @@ class PaymentReportService {
   };
 
   static createPaymentReport = async (paymentReport: any): Promise<any> => {
+    console.log(',,,,,,,,,,,,,,,,,,,,,,,,,,')
+    console.log(paymentReport)
     try {
-      const newPayment = await prisma.paymentReport.create(paymentReport);
+      const newPayment = await prisma.paymentReport.create({data:paymentReport});
 
       if (!newPayment) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create payment!!!');

@@ -13,82 +13,8 @@ import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFiel
 import { format, subMonths } from 'date-fns';
 import { ITaxUpdateRequest } from '../tax/tax.interface';
 
-// modules
-
-// !----------------------------------Create New Event------------------------------------->>>
-const addOrder = async (data: IOrderRequest): Promise<any> => {
-  const cartItems = data.cartItems.map(item => {
-    return {
-      productName: item.productName,
-      productId: item.productId,
-      variantId: item.variantId,
-      price: item.price,
-      quantity: item.quantity,
-      // color: {
-      //   name: item.color.name,
-      //   code: item.color.code,
-      // },
-    };
-  });
-
-  const paymentInfo = {
-    subtotal: data.paymentInformation.subtotal,
-    taxes: data.paymentInformation.taxes,
-    total: data.paymentInformation.total,
-  };
-
-  const orderObj = {
-    firstName: data.firstName,
-    lastName: data.lastName,
-    address: data.address,
-    city: data.city,
-    state: data.state,
-    zip: data.zip,
-    email: data.email,
-    phone: data.phone,
-    orderStatus: data.orderStatus as OrderStatus,
-    paymentInformation: paymentInfo,
-    cartItems: cartItems,
-  };
-
-  const result = await prisma.$transaction(async transactionClient => {
-    const newOrder = await transactionClient.order.create({
-      data: orderObj,
-      select: {
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        cartItems: true,
-      },
-    });
-
-    // Update stock for each variant product
-    // for (const item of cartItems) {
-    //   await transactionClient.productVariation.update({
-    //     where: {
-    //       variantId: item.variantId,
-    //     },
-    //     data: {
-    //       stock: {
-    //         decrement: item.quantity,
-    //       },
-    //     },
-    //   });
-    // }
-
-    return newOrder;
-  });
-
-  if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create !!');
-  }
-
-  return result;
-};
-
-// !----------------------------------get all Event---------------------------------------->>>
-const getOrder = async (filters: IOrderFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<Order[]>> => {
+// !----------------------------------get all order ---------------------------------------->>>
+const getOrders = async (filters: any, options: IPaginationOptions): Promise<any> => {
   // Calculate pagination options
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
@@ -172,32 +98,32 @@ const getOrder = async (filters: IOrderFilterRequest, options: IPaginationOption
   };
 };
 
-// !----------------------------------Update Courier---------------------------------------->>>
-const updateOrder = async (taxId: string, payload: ITaxUpdateRequest): Promise<Tax> => {
+const getOrder = async (orderId: string) => {
+  if (!orderId) throw new ApiError(httpStatus.BAD_REQUEST, 'Order Id is required!!');
+
+  const order = await prisma.order.findUnique({ where: { orderId } });
+
+  if (!order) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Order retrieve failed!!!');
+  }
+  return order;
+};
+
+// !----------------------------------Update order---------------------------------------->>>
+const updateOrder = async (orderId: string, dataToUpdate: any): Promise<any> => {
   const result = await prisma.$transaction(async transactionClient => {
-    const existingTax = await transactionClient.tax.findUnique({
+    const updatedOrder = await transactionClient.order.update({
       where: {
-        taxId,
+        orderId,
       },
+      data: dataToUpdate,
     });
 
-    if (!existingTax) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'tax Not Found!!');
+    if (!updatedOrder) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Order not found or order data update failed!!!');
     }
 
-    const updatedDetails = {
-      state: payload.state,
-      tax: payload.tax ? parseFloat(payload.tax) : undefined,
-    };
-
-    const updatedTax = await transactionClient.tax.update({
-      where: {
-        taxId,
-      },
-      data: updatedDetails,
-    });
-
-    return updatedTax;
+    return updatedOrder;
   });
 
   if (!result) {
@@ -207,14 +133,14 @@ const updateOrder = async (taxId: string, payload: ITaxUpdateRequest): Promise<T
   return result;
 };
 
-const deleteOrder = async (taxId: string): Promise<Tax> => {
-  if (!taxId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'taxId is required');
+const deleteOrder = async (orderId: string): Promise<Order> => {
+  if (!orderId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'orderId is required');
   }
 
-  const result = await prisma.tax.delete({
+  const result = await prisma.order.delete({
     where: {
-      taxId,
+      orderId,
     },
   });
 
@@ -280,7 +206,7 @@ const createOrder = async (orderData: any) => {
   return result;
 };
 export const OrderService = {
-  addOrder,
+  getOrders,
   getOrder,
   updateOrder,
   deleteOrder,

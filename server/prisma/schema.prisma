@@ -153,7 +153,7 @@ model PaymentReport {
   gateWayFee             Float
   netAmount              Float
   gateWayTransactionTime DateTime
-  status                 PaymentStatus  @default(PENDING)
+  status                 String
   currency               String
   orderId                String
   order                  Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
