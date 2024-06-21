@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRetrivePaymentInfoMutation } from "@/redux/api/features/payment/stripePaymentApi";
@@ -6,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-const PropertyPaymentDone = ({ params }) => {
+const PaymentDone = ({ params }) => {
   const orderId = params.orderId;
   const searchParams = useSearchParams();
   const payment_intent = searchParams.get("payment_intent");
@@ -55,4 +54,4 @@ const PropertyPaymentDone = ({ params }) => {
   );
 };
 
-export default PropertyPaymentDone;
+export default PaymentDone;
