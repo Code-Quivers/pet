@@ -21,8 +21,6 @@ import UpdateProductImageUpload from "../forms/UpdateProductImageUpload";
 import { useEffect } from "react";
 
 const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
-  console.log(editData, "editData");
-
   const {
     control,
     handleSubmit,
@@ -52,8 +50,6 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
         : undefined,
       // stock: updatedData?.stock ? parseInt(updatedData?.stock) : undefined,
     };
-
-    console.log(obj, "obj");
 
     const variantData = JSON.stringify(obj);
     formData.append("data", variantData);

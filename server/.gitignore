@@ -8,3 +8,4 @@ logs
 
 
 /prisma/migrations/
+.env.local

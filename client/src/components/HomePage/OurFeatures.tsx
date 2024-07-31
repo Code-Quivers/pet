@@ -47,7 +47,7 @@ const OurFeatures = () => {
                 stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="40"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
@@ -171,7 +171,7 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="30"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
@@ -203,7 +203,7 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="30"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
@@ -235,7 +235,7 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="30"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
@@ -267,7 +267,7 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="30"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"
@@ -299,7 +299,7 @@ const OurFeatures = () => {
               <g
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
+                strokeMiterlimit="10"
                 strokeWidth="30"
                 clipPath="url(#a)"
                 transform="matrix(1.33 0 0 -1.33 0 682.667)"

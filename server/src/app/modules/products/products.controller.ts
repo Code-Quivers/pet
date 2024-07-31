@@ -18,6 +18,18 @@ const addProductsController = catchAsync(async (req: Request, res: Response) => 
     data: result,
   });
 });
+// !-------------------------add more variant on  Product-------------------------->>>
+const addMoreVariants = catchAsync(async (req: Request, res: Response) => {
+  const productId = req.params?.productId;
+  const result = await ProductService.addMoreVariants(req, productId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Variant Added',
+    data: result,
+  });
+});
 
 // !----------------------------------get all Product---------------------------------------->>>
 const getProductsController = catchAsync(async (req: Request, res: Response) => {
@@ -120,4 +132,5 @@ export const ProductController = {
   updateProductVariation,
   deleteProductVariant,
   getAllVariant,
+  addMoreVariants,
 };
