@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, StripeElementsOptionsClientSecret } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripeCheckoutForm from "@/components/paymentGateway/stripe/StripeCheckoutForm";
 import { useGetClientSecretMutation } from "@/redux/api/features/payment/stripePaymentApi";
@@ -26,12 +26,12 @@ const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
   const cart = useSelector((state: any) => state.cart.cart);
   const deliveryInfo = useSelector((state: any) => state.deliveryInfo);
 
-  const appearance = {
-    theme: "stripe",
-  };
-  const options = {
+
+  const options: StripeElementsOptionsClientSecret = {
     clientSecret,
-    appearance,
+    appearance:{
+      theme:'stripe'
+    },
   };
 
   const handleGetClientSecret = async () => {

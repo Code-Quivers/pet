@@ -26,7 +26,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ amountToPaid }) => {
             paymentMethod={paymentMethod}
             amountToPaid={amountToPaid}
           />
-          <PaymentMethodPaypal />
+          <PaymentMethodPaypal
+            setPaymentMethod={setPaymentMethod}
+            paymentMethod={paymentMethod}
+          />
         </section>
       </div>
     </>
