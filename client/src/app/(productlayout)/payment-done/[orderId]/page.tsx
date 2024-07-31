@@ -41,7 +41,7 @@ const PaymentDone = ({ params }) => {
             <p> Have a great day! </p>
             <div className="py-10 text-center">
               <Link
-                href="/property-owner/unit-information"
+                href="/"
                 className="px-12 bg-primary hover:bg-indigo-700 text-white font-semibold py-3"
               >
                 GO BACK
