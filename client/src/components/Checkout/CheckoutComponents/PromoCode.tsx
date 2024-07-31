@@ -2,18 +2,28 @@ import {
   useApplyPromotionalOfferMutation,
   useLazyGetPromoQuery,
 } from "@/redux/api/features/promoCodeApi";
-import { applyPromoCode } from "@/redux/slice/cartSlice";
+import { applyPromoCode, removeFreeProduct } from "@/redux/slice/cartSlice";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
+import { LiaTagSolid } from "react-icons/lia";
 import { useDispatch } from "react-redux";
+import { Loader } from "rsuite";
 
-const PromoCode = ({ cart }: { cart: any }) => {
+const PromoCode = ({
+  cart,
+  appliedPromoCode,
+}: {
+  cart: any;
+  appliedPromoCode: any;
+}) => {
   const dispatch = useDispatch();
   const { control } = useForm();
   const [promoCode, setPromoCode] = useState("");
-  const [promoCodeMessage, setPromoCodeMessage] = useState(false);
-  const [promoCodeApplied, setPromoCodeApplied] = useState("");
+  const [promoCodeMessage, setPromoCodeMessage] = useState<any>(false);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [freeProductVariantId, setFeeProductVariantId] = useState<any>(null);
+  const [promoCodeApplied, setPromoCodeApplied] = useState<string | null>(null);
   const [applyPromotionalOffer, { isLoading }] =
     useApplyPromotionalOfferMutation();
   // console.log(data, "data");
@@ -24,18 +34,32 @@ const PromoCode = ({ cart }: { cart: any }) => {
     quantity: item.quantity,
   }));
 
+  // check if promo code is already applied
+  const isPromoCodeApplied = cart?.find(
+    (item: any) => item.promoCode == promoCode
+  );
+  console.log(isPromoCodeApplied, "isPromoCodeApplied");
+
   const handleApplyPromo = async () => {
     // reset error and promo code
-    setPromoCodeMessage(false);
     setPromoCode("");
+    setPromoCodeMessage(false);
+    setLoader(true);
+    if (promoCode && appliedPromoCode === promoCode) {
+      // setPromoCodeMessage(false);
+      setTimeout(() => {
+        setLoader(false);
+        setPromoCodeMessage("This promo code has already been applied.");
+      }, 2000);
+      // setPromoCodeMessage("This promo code has already been applied.");
+
+      return;
+    }
+
     if (promoCode) {
-      // console.log(cartDataForApi, "cartDataForApi");
       const forBody = {
         cartData: cartDataForApi,
       };
-      // const forBodyJson = JSON.stringify(forBody);
-      console.log(forBody, "forBody.................");
-      console.log(promoCode, "promoCode");
       const result = await applyPromotionalOffer({
         code: promoCode,
         data: forBody,
@@ -43,15 +67,17 @@ const PromoCode = ({ cart }: { cart: any }) => {
       const { data } = result as { data: any };
       // console.log(isLoading, "isLoading");
       if (data?.data?.isValid && data?.data?.product?.variantId) {
-        // setPromoCodeMessage(true);
+        // if (promoCodeApplied) {
+        //   setPromoCodeApplied("");
+        // }
+
         const product = data?.data?.product;
         const freeQuantity = data?.data?.quantity;
-        setPromoCodeApplied(promoCode);
 
         console.log(data?.data, "product........");
         const freeProduct = {
           productId: product?.productId,
-          // productName: product?.productName
+          productName: product?.product?.productName,
           image: product?.image,
           color: {
             code: product?.color?.code,
@@ -61,12 +87,26 @@ const PromoCode = ({ cart }: { cart: any }) => {
           variantId: product?.variantId,
           quantity: freeQuantity,
           offerPrice: 0,
+          promoCode: promoCode,
         };
-        dispatch(applyPromoCode(freeProduct as any));
-      }
 
-      // console.log(data, "data");
-      // console.log(data, "result..........");
+        setTimeout(() => {
+          setLoader(false);
+          dispatch(applyPromoCode(freeProduct as any));
+          // setPromoCodeApplied(promoCode);
+          // console.log(promoCodeApplied, "promoCodeApplied");
+        }, 2000);
+
+        // setFeeProductVariantId({
+        //   variantId: freeProduct?.variantId,
+        //   promoCode: freeProduct?.promoCode,
+        // });
+      } else {
+        setTimeout(() => {
+          setLoader(false);
+          setPromoCodeMessage("Enter a valid promo code.");
+        }, 1000);
+      }
     }
   };
 
@@ -97,23 +137,41 @@ const PromoCode = ({ cart }: { cart: any }) => {
           disabled={promoCode.length === 0}
           className="py-2.5 px-6 rounded-lg bg-[#0495af] text-white font-semibold disabled:bg-gray-200 disabled:text-white disabled:cursor-not-allowed"
         >
-          Apply
+          {loader ? <Loader className=" align-middle px-[13px]" /> : "Apply"}
           {/* {isLoading || isFetching ? "Applying..." : "Apply"} */}
         </button>
       </div>
 
       <div className="h-10">
-        {promoCodeMessage && <p className="h-7">Enter a valid promo code</p>}
-        {promoCodeApplied && (
-          <div className="flex items-center">
-            <span className="bg-gray-200 text-black flex text-sm font-bold px-3 rounded-md">
-              {promoCodeApplied}
+        <p className="h-7 text-sm">{promoCodeMessage && promoCodeMessage}</p>
+
+        {appliedPromoCode && (
+          <div className="flex">
+            <div className="bg-gray-200 gap-1 border border-[#e6e6e6] text-black flex items-center text-sm font-bold px-2 py-1 rounded-[4px]">
+              <LiaTagSolid size={22} />
+              {appliedPromoCode}
               <IoIosClose
-                onClick={() => setPromoCodeApplied("")}
-                size={18}
-                className="ml-1"
+                onClick={() => {
+                  setPromoCodeMessage(false);
+                  setPromoCodeApplied(null);
+                  setTimeout(() => {
+                    const itemToRemove = cart?.find(
+                      (item: any) => item.promoCode === appliedPromoCode
+                    );
+                    if (itemToRemove) {
+                      dispatch(
+                        removeFreeProduct({
+                          variantId: itemToRemove.variantId,
+                          promoCode: itemToRemove.promoCode,
+                        } as any)
+                      );
+                    }
+                  }, 500);
+                }}
+                size={22}
+                className="ml-1 text text-gray-600 hover:text-black cursor-pointer "
               />
-            </span>
+            </div>
           </div>
         )}
       </div>

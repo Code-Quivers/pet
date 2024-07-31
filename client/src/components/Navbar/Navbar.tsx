@@ -39,11 +39,11 @@ const Navbar = () => {
           <div className="flex-1 md:flex md:items-center md:gap-12">
             <Link href="/">
               <Image
-                className="object-cover"
+                className="object-cover max-sm:w-40 "
                 src={logo}
                 width={220}
                 height={220}
-                alt=""
+                alt="logo"
               />
             </Link>
           </div>

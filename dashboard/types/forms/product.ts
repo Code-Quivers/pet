@@ -119,11 +119,15 @@ export type IUpdateTaxSetting = {
 };
 
 export type IUpdateProductVariation = {
-  stock?: string;
+  // stock?: string;
   variantPrice?: string;
   color?: {
     name?: string;
     code?: string;
   };
   image?: FileType;
+  stock?: number;
+};
+export type IAddProductVariation = {
+  productVariants: [];
 };

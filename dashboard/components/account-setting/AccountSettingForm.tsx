@@ -9,12 +9,12 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaPhone, FaUnlock } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
-import { Message, useToaster } from "rsuite";
+import { Form, Message, useToaster } from "rsuite";
 
 type IUpdateAccount = {
   fullName?: string;
-  phoneNumber?: string;
-  addressLine1?: string;
+  mobileNumber?: string;
+  address?: string;
   password?: string;
 };
 
@@ -35,13 +35,15 @@ const AccountSettingForm = () => {
 
   const handleUpdateAccount = async (newInfo: Partial<IUpdateAccount>) => {
     const updatedData: IUpdateAccount = {
-      fullName: newInfo.fullName,
-      phoneNumber: newInfo?.phoneNumber,
-      password: newInfo?.password,
-      addressLine1: newInfo.addressLine1,
+      fullName: newInfo.fullName || undefined,
+      mobileNumber: newInfo?.mobileNumber || undefined,
+      password: newInfo?.password || undefined,
+      address: newInfo.address || undefined,
     };
     await updateMyProfile(updatedData);
   };
+
+  // ! side effect
 
   useEffect(() => {
     if (isSuccess && !isError && !isLoading) {
@@ -128,6 +130,7 @@ const AccountSettingForm = () => {
                       </svg>
                     </span>
                     <input
+                      autoComplete="nope"
                       defaultValue={myProfileRes?.data?.profile?.fullName}
                       {...field}
                       className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -143,13 +146,13 @@ const AccountSettingForm = () => {
             <div className="w-full sm:w-1/2">
               <label
                 className="mb-3 block text-sm font-medium text-black dark:text-white"
-                htmlFor="phoneNumber"
+                htmlFor="mobileNumber"
               >
                 Phone Number
               </label>
 
               <Controller
-                name="phoneNumber"
+                name="mobileNumber"
                 control={control}
                 render={({ field }) => (
                   <div className="relative">
@@ -157,11 +160,12 @@ const AccountSettingForm = () => {
                       <FaPhone color="#8e9bad" />
                     </span>
                     <input
-                      defaultValue={myProfileRes?.data?.profile?.phoneNumber}
+                      autoComplete="nope"
+                      defaultValue={myProfileRes?.data?.profile?.mobileNumber}
                       {...field}
                       className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="text"
-                      id="phoneNumber"
+                      id="mobileNumber"
                     />
                   </div>
                 )}
@@ -225,25 +229,44 @@ const AccountSettingForm = () => {
               <Controller
                 name="password"
                 control={control}
+                rules={{
+                  minLength: {
+                    value: 6,
+                    message: "Min 6 characters are required",
+                  },
+                }}
                 render={({ field }) => (
-                  <div className="relative">
-                    <span className="absolute left-4.5 top-4">
-                      <FaUnlock color="#8e9bad" />
-                    </span>
-                    <input
-                      {...field}
-                      className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark disabled:cursor-not-allowed dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="password"
-                      id="password"
-                      placeholder="*******"
-                    />
+                  <div className="rs-form-control-wrapper">
+                    <div className="relative">
+                      <span className="absolute left-4.5 top-4">
+                        <FaUnlock color="#8e9bad" />
+                      </span>
+                      <input
+                        {...field}
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark disabled:cursor-not-allowed dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        type="password"
+                        id="password"
+                        placeholder="*******"
+                      />
+                    </div>
+                    <Form.ErrorMessage
+                      show={
+                        (!!errors?.password && !!errors?.password?.message) ||
+                        false
+                      }
+                      placement="topEnd"
+                    >
+                      <span className="font-semibold">
+                        {errors?.password?.message}
+                      </span>
+                    </Form.ErrorMessage>
                   </div>
                 )}
               />
             </div>
           </div>
 
-          {/* addressLine1 */}
+          {/* address */}
 
           <div className="w-full ">
             <label
@@ -254,7 +277,7 @@ const AccountSettingForm = () => {
             </label>
 
             <Controller
-              name="addressLine1"
+              name="address"
               control={control}
               render={({ field }: any) => (
                 <div className="relative">
@@ -262,17 +285,21 @@ const AccountSettingForm = () => {
                     <IoLocationSharp color="#8e9bad" />
                   </span>
                   <input
-                    defaultValue={myProfileRes?.data?.profile?.addressLine1}
+                    autoComplete="nope"
+                    aria-autocomplete="none"
+                    defaultValue={myProfileRes?.data?.profile?.address}
                     {...field}
                     className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     type="text"
-                    name="addressLine1"
-                    id="addressLine1"
+                    name="address"
+                    id="address"
                   />
                 </div>
               )}
             />
           </div>
+
+          {/* submit */}
 
           <div className="flex justify-end mt-5 gap-4.5">
             <button

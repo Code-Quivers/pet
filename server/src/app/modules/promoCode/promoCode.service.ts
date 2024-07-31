@@ -220,9 +220,9 @@ const applyPromoCode = async (promoCode: string, cartData: any) => {
   const product = await prisma.productVariation.findFirst({
     where: {
       productId: rewardItemId,
-      stock: {
-        gte: quantityWillGet,
-      },
+      // stock: {
+      //   gte: quantityWillGet,
+      // },
     },
     include: {
       product: {

@@ -39,18 +39,15 @@ export type IUsersResponse = {
   profile: Profile | null;
   // userStatus: UserStatus;
 };
-export type IUpdateProfileReqAndResponse = {
-  fullName?: string;
-  email?: string;
+export type IUpdateProfileReq = {
+  firstName?: string;
+  lastName?: string;
+  mobileNumber?: string;
+  address?: string;
   password?: string;
-  phoneNumber?: string;
-  companyName?: string;
-  addressLine1?: string;
-  addressLine2?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  postalCode?: string;
+  newPassword?: string;
+  email?: string;
+  displayContactInfo?: boolean;
 };
 
 export type IUserUpdateReqAndResponse = {

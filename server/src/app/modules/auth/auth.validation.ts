@@ -3,9 +3,10 @@ import { z } from 'zod';
 
 const createUser = z.object({
   body: z.object({
-    email: z.string().email({ message: 'Invalid email address' }),
-    password: z.string().min(1, { message: 'Password is required' }),
-    fullName: z.string().min(1, { message: 'First name is required' }),
+    email: z.string().email(),
+    password: z.string(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     role: z
       .enum(['USER', 'ADMIN', 'SUPERADMIN'])
       .or(z.string().refine(value => ['USER', 'ADMIN', 'SUPERADMIN'].includes(value)))

@@ -25,22 +25,24 @@ import noImage from "@/public/images/no-image.png";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useGetCategoryQuery } from "@/redux/features/categoryApi";
-import ProductVariantTable from "./ProductVariantTable";
 import Link from "next/link";
 import ProductEditModal from "../modal/ProductEditModal";
 import { RiDeleteBinFill } from "react-icons/ri";
 import ProductDeleteModal from "../modal/ProductDeleteModal";
 
 const AllProductList = () => {
+  const router = useRouter();
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  // Drawer
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [editData, setEditData] = useState(null);
 
+  // for queries
   query["categoryName"] = categoryFilter;
-
-  const router = useRouter();
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -52,20 +54,20 @@ const AllProductList = () => {
     query["searchTerm"] = debouncedTerm;
   }
 
+  // fetching all products
   const {
     data: allProductsList,
     isLoading,
     isFetching,
   } = useGetProductQuery({ ...query });
-  const [editData, setEditData] = useState(null);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  // close modal
+  // fetching all categories
+  const { data: allCategories } = useGetCategoryQuery({});
+
+  // close modal function
   const handleCloseEdit = () => {
     setIsOpenEdit(false);
     setEditData(null);
   };
-  // console.log(allProductsList?.data, "product");
-  const { data: allCategories } = useGetCategoryQuery({});
 
   const categoryFilterForProduct = allCategories?.data?.map(
     (category: any) => ({
@@ -73,13 +75,6 @@ const AllProductList = () => {
       value: category.categoryName,
     })
   );
-
-  // Drawer
-  const [drawerSize, setDrawerSize] = useState();
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState("bottom");
-
-  const [productVariant, setProductVariant] = useState<any[]>([]);
 
   //Delete Modal
 
@@ -98,7 +93,7 @@ const AllProductList = () => {
 
         <p className="font-bold">All products</p>
       </div>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
@@ -146,7 +141,7 @@ const AllProductList = () => {
               onClick={() => {
                 router.push("/products/add-products");
               }}
-              className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
+              className="  px-3 py-2 rounded-xl  flex items-center gap-2 bg-primary text-sm text-white"
             >
               <FaPlus /> Add Product
             </button>
@@ -154,7 +149,7 @@ const AllProductList = () => {
         </div>
 
         {/*  */}
-        <div className="rounded-sm bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm bg-white      ">
           <Table
             bordered={true}
             cellBordered={true}
@@ -223,11 +218,11 @@ const AllProductList = () => {
               <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
                 Product Description
               </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="productDescription"
-              />
+              <Cell style={cellCss} verticalAlign="middle">
+                {(rowData) => (
+                  <p className="line-clamp-3"> {rowData.productDescription}</p>
+                )}
+              </Cell>
             </Column>
 
             {/* category */}
@@ -242,7 +237,7 @@ const AllProductList = () => {
 
             {/* Price */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Price</HeaderCell>
+              <HeaderCell style={headerCss}>Price</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
@@ -276,11 +271,8 @@ const AllProductList = () => {
                 {(rowData: any) => (
                   <div>
                     <Link
+                      className="font-bold text-primary hover:underline-offset-4 hover:underline"
                       href={`/products/variants?productId=${rowData?.productId}`}
-                      // onClick={() => {
-                      //   handleOpen("full");
-                      //   setProductVariant(rowData);
-                      // }}
                     >
                       See Variant
                     </Link>
@@ -343,16 +335,7 @@ const AllProductList = () => {
             </Column>
           </Table>
 
-          <div>
-            <ProductVariantTable
-              productVariant={productVariant}
-              size={drawerSize}
-              open={open}
-              setOpen={setOpen}
-              placement={placement}
-            />
-          </div>
-
+          {/* product delete confirmation modal */}
           <div>
             <ProductDeleteModal
               isOpenDelete={isOpenDelete}
@@ -360,6 +343,8 @@ const AllProductList = () => {
               deleteData={deleteData}
             />
           </div>
+
+          {/* pagination */}
 
           <div style={{ padding: 20 }}>
             <Pagination
@@ -382,7 +367,7 @@ const AllProductList = () => {
           </div>
         </div>
       </div>
-
+      {/* product edit modal */}
       <ProductEditModal
         isOpenEdit={isOpenEdit}
         setIsOpenEdit={setIsOpenEdit}

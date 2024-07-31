@@ -2,7 +2,8 @@
 import CreateKidForm from "@/components/MyProfile/CreateKidProfile/CreateKidForm";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useGetKidProfileQuery } from "@/redux/api/features/kids/kidApi";
-import moment from "moment";
+import { formatDuration } from "@/utils/kids/kidsAgeFormatDuration";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,30 +28,6 @@ const MyPetPage = ({ params }: Props) => {
   } = useGetKidProfileQuery({
     code: params?.code,
   });
-
-  function formatDuration(start: any, end: any) {
-    const duration = moment.duration(moment(end).diff(moment(start)));
-    const years = duration.years();
-    const months = duration.months();
-    const days = duration.days();
-
-    let formattedString = "";
-
-    if (years > 0) {
-      formattedString += `${years} year${years > 1 ? "s" : ""} `;
-    }
-
-    if (months > 0) {
-      formattedString += `${months} month${months > 1 ? "s" : ""} `;
-    }
-
-    if (days > 0 && years === 0 && months === 0) {
-      formattedString += `${days} day${days > 1 ? "s" : ""}`;
-    }
-
-    return formattedString.trim();
-  }
-  const endDate = new Date().toISOString();
 
   return (
     <div className="mx-auto max-w-screen-xl   sm:px-6 lg:px-8">
@@ -151,7 +128,7 @@ const MyPetPage = ({ params }: Props) => {
                   </div>
                   <div>
                     {/* <h2>{moment(kidDetails?.data?.kidAge).fromNow()}</h2> */}
-                    <h2>{formatDuration(kidDetails?.data?.kidAge, endDate)}</h2>
+                    <h2>{formatDuration(kidDetails?.data?.kidAge)}</h2>
                   </div>
                 </div>
 

@@ -15,8 +15,6 @@ const BarcodeDeleteModal = ({
   handleCloseDelete,
   deleteData,
 }: any) => {
-  console.log(deleteData, "deleteData");
-
   const [deleteBarcode, { data, isSuccess, isError, isLoading, error, reset }] =
     useDeleteBarcodeMutation();
 

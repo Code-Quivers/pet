@@ -68,10 +68,14 @@ const getAllBarCodeForPrint = catchAsync(async (req: Request, res: Response) => 
 });
 
 const getSingleVariant = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, BarcodeFilterableFields);
+
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
   const { variantId } = req.params;
   // console.log('variantId', variantId);
 
-  const result = await BarcodeService.getSingleVariant(variantId);
+  const result = await BarcodeService.getSingleVariant(variantId, filters, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -111,7 +115,6 @@ const deleteBarcode = catchAsync(async (req: Request, res: Response) => {
 
 const deleteMultipleBarcode = catchAsync(async (req: Request, res: Response) => {
   const { barcodeIds } = req.body;
-  console.log(barcodeIds, 'barcodeIds');
 
   const result = await BarcodeService.deleteMultipleBarcode(barcodeIds);
 
@@ -119,6 +122,28 @@ const deleteMultipleBarcode = catchAsync(async (req: Request, res: Response) => 
     statusCode: httpStatus.OK,
     success: true,
     message: 'Barcode Deleted successfully',
+    data: result,
+  });
+});
+
+const addBarCode = catchAsync(async (req: Request, res: Response) => {
+  const data = req?.body;
+  const result = await BarcodeService.addBarCode(data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Stock Added Successfully',
+    data: result,
+  });
+});
+// ! create qr code manually
+const createQrCodeManually = catchAsync(async (req: Request, res: Response) => {
+  const data = req?.body;
+  const result = await BarcodeService.createQrCodeManually(data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Qr Code Added Successfully',
     data: result,
   });
 });
@@ -132,4 +157,6 @@ export const BarcodeController = {
   singleBarcodeUpdate,
   deleteBarcode,
   deleteMultipleBarcode,
+  addBarCode,
+  createQrCodeManually,
 };

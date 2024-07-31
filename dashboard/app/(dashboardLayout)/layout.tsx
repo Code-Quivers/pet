@@ -1,30 +1,15 @@
 "use client";
 import Header from "@/components/Header";
+import DashboardLayoutProvider from "@/components/Layouts/DashboardLayoutProvider";
 import Sidebar from "@/components/Sidebar";
-import Loader from "@/components/common/Loader";
-import { isLoggedIn } from "@/helpers/hooks/auth.helpers";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-import "rsuite/dist/rsuite-no-reset.min.css";
+import { useState } from "react";
 
 const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const userLoggedIn = isLoggedIn();
-  const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (!userLoggedIn) {
-      router.push("/auth/signin");
-    }
-    setLoading(false);
-  }, [router, userLoggedIn]);
   return (
     <div>
-      {loading ? (
-        <Loader />
-      ) : (
+      <DashboardLayoutProvider>
         <div className="flex h-screen overflow-hidden">
           {/* <!-- ===== Sidebar Start ===== --> */}
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -46,7 +31,7 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           </div>
           {/* <!-- ===== Content Area End ===== --> */}
         </div>
-      )}
+      </DashboardLayoutProvider>
     </div>
   );
 };

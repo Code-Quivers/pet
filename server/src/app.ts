@@ -7,6 +7,7 @@ import routes from './app/routes';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
 
+const baseURL = '/backend/api/v1';
 const app: Application = express();
 
 // create uploads directory while starting the application
@@ -44,7 +45,6 @@ app.use(
       'http://localhost:3005',
       'http://85.239.232.185:3000',
       'http://85.239.232.185:4000',
-      
     ],
     credentials: true,
     // methods: ['GET', 'POST', 'PATCH', 'DELETE'],
@@ -56,9 +56,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/backend/api/v1', express.static('uploads'));
+app.use(baseURL, express.static('uploads'));
 
-app.use('/backend/api/v1', routes);
+app.use(baseURL, routes);
 
 //global error handler
 app.use(globalErrorHandler);

@@ -36,9 +36,13 @@ const createProduct = async (req: Request): Promise<Product> => {
       variantPrice: variant.variantPrice,
       color: variant.color,
       // size: variant.size,
-      stock: variant.stock,
+      // stock: variant.stock,
     };
   });
+
+  // making stock variant
+  const variantStock = data?.productVariations?.map(({ stock }: IProductVariant) => ({ stock }));
+
   // prisma transaction
   const result = await prisma.$transaction(async transactionClient => {
     const productInfo = {
@@ -64,7 +68,7 @@ const createProduct = async (req: Request): Promise<Product> => {
     //
     const productId = createdProduct.productId;
     //
-    for (const variant of variants) {
+    for (const variant of variantStock) {
       const pv = await transactionClient.productVariation.findFirst({
         where: {
           productId: productId,
@@ -76,7 +80,7 @@ const createProduct = async (req: Request): Promise<Product> => {
         throw new ApiError(httpStatus.NOT_FOUND, 'Product variation not found');
       }
 
-      const codes = Array.from({ length: variant.stock }, () => ({
+      const codes = Array.from({ length: variant?.stock }, () => ({
         code: generateBarCode(),
         variantId: pv.variantId,
       }));
@@ -92,6 +96,77 @@ const createProduct = async (req: Request): Promise<Product> => {
   });
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to create Product, result error');
+  }
+  return result;
+};
+
+// !------------------------- Add More Variant on product ---------------------->>>
+const addMoreVariants = async (req: Request, productId: string): Promise<any> => {
+  const files = req.files as IUploadFile[];
+
+  const productImagesPaths = files?.map(file => {
+    return file.path?.substring(7);
+  });
+
+  const data = req.body as IProductRequest;
+
+  // making variant array with image
+  const variants = data?.productVariations?.map((variant: IProductVariant) => {
+    const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
+    return {
+      productVariant: {
+        image: imagePath,
+        variantPrice: variant.variantPrice,
+        color: variant.color,
+        productId,
+      },
+      otherVariant: {
+        stock: variant.stock,
+      },
+    };
+  });
+  // making variant array with image
+
+  // prisma transaction
+  const result = await prisma.$transaction(async transactionClient => {
+    // adding more  variants on product
+
+    //
+
+    for (const variant of variants) {
+      const createdNewVariant = await transactionClient.productVariation.create({
+        data: variant.productVariant,
+      });
+      if (!createdNewVariant) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Variant Adding failed');
+      }
+
+      // generating new codes
+      const codes = Array.from({ length: variant?.otherVariant?.stock }, () => ({
+        code: generateBarCode(),
+        variantId: createdNewVariant.variantId,
+      }));
+
+      const createdBarCodes = await transactionClient.barCode.createMany({ data: codes });
+
+      if (!createdBarCodes || createdBarCodes.count !== variant.otherVariant.stock) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
+      }
+    }
+    // find latest created
+    const latestData = await transactionClient.productVariation.findMany({
+      where: {
+        productId,
+      },
+      take: variants.length,
+    });
+
+    return latestData;
+
+    //
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to Add Variant, result error');
   }
   return result;
 };
@@ -179,10 +254,17 @@ const getProducts = async (filters: IProductFilterRequest, options: IPaginationO
         select: {
           variantId: true,
           color: true,
-
-          stock: true,
           variantPrice: true,
           image: true,
+          _count: {
+            select: {
+              barCodes: {
+                where: {
+                  barcodeStatus: 'INACTIVE',
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -225,10 +307,17 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
         select: {
           variantId: true,
           color: true,
-
-          stock: true,
           variantPrice: true,
           image: true,
+          _count: {
+            select: {
+              barCodes: {
+                where: {
+                  barcodeStatus: 'INACTIVE',
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -321,6 +410,27 @@ const deleteProduct = async (productId: string): Promise<Product> => {
   return result;
 };
 
+const getAllVariant = async (): Promise<any[]> => {
+  const result = await prisma.productVariation.findMany({
+    select: {
+      variantId: true,
+      color: true,
+      product: {
+        select: {
+          productName: true,
+          productId: true,
+        },
+      },
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product Variation Not Found');
+  }
+
+  return result;
+};
+
 const updateProductVariation = async (variantId: string, req: Request): Promise<ProductVariation> => {
   console.log('variantId', variantId);
 
@@ -393,4 +503,6 @@ export const ProductService = {
   deleteProduct,
   updateProductVariation,
   deleteProductVariant,
+  getAllVariant,
+  addMoreVariants,
 };

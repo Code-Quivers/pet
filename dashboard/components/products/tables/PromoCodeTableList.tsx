@@ -24,6 +24,7 @@ import { RiDeleteBinFill } from "react-icons/ri";
 import { useGetPromoQuery } from "@/redux/features/promoCodeApi";
 import PromoCodeDeleteConfirmationModal from "../modal/PromoCodeDeleteConfirmationModal";
 import PromoCodeEditModal from "../modal/PromoCodeEditModal";
+import moment from "moment";
 
 const PromoCodeTableList = () => {
   const query: Record<string, any> = {};
@@ -74,7 +75,7 @@ const PromoCodeTableList = () => {
 
   return (
     <>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark px-3 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
@@ -112,58 +113,14 @@ const PromoCodeTableList = () => {
             wordWrap="break-word"
             loading={isLoading || isFetching}
             rowHeight={70}
-            headerHeight={50}
+            headerHeight={90}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
             data={allPromo?.data?.data?.promotions}
           >
-            {/*img*/}
-            {/* <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Image</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <Whisper
-                    placement="auto"
-                    speaker={
-                      <Popover>
-                        <div>
-                          <Image
-                            width={270}
-                            height={270}
-                            alt=""
-                            src={
-                              rowData?.clientImage
-                                ? `${fileUrlKey()}/${rowData?.clientImage}`
-                                : noImage
-                            }
-                            className="object-cover"
-                          />
-                        </div>
-                      </Popover>
-                    }
-                  >
-                    <div>
-                      <Image
-                        width={120}
-                        height={120}
-                        alt=""
-                        src={
-                          rowData?.clientImage
-                            ? `${fileUrlKey()}/${rowData?.clientImage}`
-                            : noImage
-                        }
-                        className="object-center  object-cover"
-                      />
-                    </div>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column> */}
-            {/* Item Description */}
-            <Column width={140}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                Promotion Name
-              </HeaderCell>
+            {/*  Promotion Name */}
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Promotion Name</HeaderCell>
               <Cell
                 className="m-2"
                 style={cellCss}
@@ -178,7 +135,7 @@ const PromoCodeTableList = () => {
 
             {/* category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Promo Code</HeaderCell>
+              <HeaderCell style={headerCss}>Code</HeaderCell>
               <Cell
                 style={cellCss}
                 verticalAlign="middle"
@@ -187,22 +144,22 @@ const PromoCodeTableList = () => {
             </Column>
             {/* category */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Promo Type</HeaderCell>
+              <HeaderCell style={headerCss}>Type</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="type" />
             </Column>
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Start Date</HeaderCell>
+              <HeaderCell style={headerCss}>Start</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="startDate">
                 {(rowData: any) => {
-                  return new Date(rowData.startDate).toDateString();
+                  return moment(rowData.startDate)?.format("MM/DD/YYYY");
                 }}
               </Cell>
             </Column>
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>End Date</HeaderCell>
+              <HeaderCell style={headerCss}>End</HeaderCell>
               <Cell style={cellCss} verticalAlign="middle" dataKey="endDate">
                 {(rowData: any) => {
-                  return new Date(rowData.endDate).toDateString();
+                  return moment(rowData.endDate)?.format("MM/DD/YYYY");
                 }}
               </Cell>
             </Column>

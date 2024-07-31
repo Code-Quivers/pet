@@ -13,10 +13,6 @@ router.post('/dashboard-login', AuthController.dashboardLogin);
 
 router.post('/refresh-token', AuthController.refreshToken);
 
-router.post(
-  '/forget-password',
-  // validateRequest(AuthValidation.forgotPassword),
-  AuthController.forgetPassword
-);
+router.post('/forget-password', AuthController.forgetPassword);
 
 export const AuthRoutes = router;

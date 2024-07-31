@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-// import { CartIcon } from "./svgIcons";
+import noImageFound from "../../../public/images/home/no image found.png";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/slice/cartSlice";
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Loader, Message, useToaster } from "rsuite";
 
 const ProductsSection = () => {
-  const { data } = useGetProductQuery({});
+  const { data, isLoading, isFetching } = useGetProductQuery({});
   const products = data?.data;
   const dispatch = useDispatch();
   const toaster = useToaster();
@@ -47,7 +47,7 @@ const ProductsSection = () => {
     }, 1000);
   };
   return (
-    <section className="flex items-center mt-10 py-10">
+    <section className=" mt-10 py-10">
       <div className="p-4 mx-auto max-w-7xl">
         <div className="max-w-xl mx-auto">
           <div className="text-center ">
@@ -72,53 +72,55 @@ const ProductsSection = () => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 max-w-4xl">
-          {products?.map((product: any) => (
-            <div key={product.id} className="shadow-lg">
+      </div>
+      <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 mx-auto max-w-5xl">
+        {isLoading || isFetching ? (
+          <>
+            <div className="h-96 animate-pulse bg-gray-300"></div>
+            <div className="animate-pulse bg-gray-300"></div>
+            <div className="animate-pulse bg-gray-300"></div>
+          </>
+        ) : (
+          products?.map((product: any) => (
+            <div key={product.id} className="border rounded-lg">
               <div className="">
-                <Link href={`/shop/single-product/${product?.productId}`}>
+                <Link href={`/category/single-product/${product?.productId}`}>
                   <div className="w-full h-full">
                     <Image
-                      width={200}
-                      height={200}
+                      width={1000}
+                      height={1000}
                       src={
-                        selectedColor?.productId == product?.productId
-                          ? `${fileUrlKey()}/${
-                              product?.productVariations[selectedColor.index]
-                                ?.image
-                            }`
-                          : `${fileUrlKey()}/${product?.featuredImage}`
+                        product?.featuredImage
+                          ? `${fileUrlKey()}/${product?.featuredImage}`
+                          : noImageFound
                       }
                       alt={product.productName}
-                      className="h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110"
+                      className="h-64 w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110 rounded-t-lg"
                     />
-                    {/* <Image
-                    width={200}
-                    height={200}
-                    src={`${fileUrlKey()}/${product?.featuredImage}`}
-                    alt={product.productName}
-                    className=" h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-all group-hover:scale-110"
-                  /> */}
                   </div>
-                  <div className="px-4 py-2">
-                    <h2 className="text-base font-bold text-black ">
+                  <div className="py-2 px-2">
+                    <h2 className="text-xl font-bold text-black ">
                       {product?.productName}
                     </h2>
-                    <p className="text-base pt-1 font-bold text-primary">
+                    <p className="pt-1 font-medium flex justify-between text-lg">
+                      <span>Price</span>
                       <span>${product?.productPrice?.toFixed(2)}</span>
+                    </p>
+                    <p className="line-clamp-2">
+                      {product?.productDescription}
                     </p>
                   </div>
                 </Link>
-                <div className="px-4 pb-2">
+                <div className="pb-2 px-2">
                   {product?.productVariations?.map(
                     (variation: any, index: number) => (
                       <button
-                        onClick={() =>
-                          setSelectedColor({
-                            productId: product.productId,
-                            index,
-                          })
-                        }
+                        // onClick={() =>
+                        //   setSelectedColor({
+                        //     productId: product.productId,
+                        //     index,
+                        //   })
+                        // }
                         style={{
                           backgroundColor: `${variation?.color?.code}`,
                         }}
@@ -178,8 +180,8 @@ const ProductsSection = () => {
                 </Link> */}
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
     </section>
   );

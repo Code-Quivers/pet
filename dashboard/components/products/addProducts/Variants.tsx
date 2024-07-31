@@ -220,11 +220,11 @@ const Variants = ({ control, basePrice, errors }: any) => {
                       render={({ field }) => (
                         <div className="rs-form-control-wrapper  w-full">
                           <InputNumber
-                            max={100}
+                            max={500}
                             min={1}
                             value={field.value}
                             className="!w-full mt-1"
-                            placeholder="Stock"
+                            placeholder="Stock (Maximum Value 500)"
                             onChange={(value) => {
                               field.onChange(value);
                             }}

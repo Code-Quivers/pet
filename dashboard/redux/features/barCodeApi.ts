@@ -47,6 +47,40 @@ export const barCodeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.tag],
     }),
+    deleteMultipleBarcode: builder.mutation({
+      query: ({ data }: any) => ({
+        url: `${BARCODE_API}/delete-multiple-barcode`,
+        method: "DELETE",
+        data: { barcodeIds: data },
+      }),
+      invalidatesTags: [tagTypes.tag],
+    }),
+    addMoreStock: builder.mutation({
+      query: ({ data }: any) => ({
+        url: `${BARCODE_API}/add-more-barcode-stock`,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: [
+        tagTypes.tag,
+        tagTypes.product,
+        tagTypes.tag,
+        tagTypes.promotionalOffer,
+      ],
+    }),
+    createQRCodeManually: builder.mutation({
+      query: ({ data }: any) => ({
+        url: `${BARCODE_API}/create-qr-code-manually`,
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: [
+        tagTypes.tag,
+        tagTypes.product,
+        tagTypes.tag,
+        tagTypes.promotionalOffer,
+      ],
+    }),
   }),
 });
 
@@ -56,4 +90,7 @@ export const {
   useGetBarcodeForPrintQuery,
   useUpdateBarcodeStatusMutation,
   useDeleteBarcodeMutation,
+  useDeleteMultipleBarcodeMutation,
+  useAddMoreStockMutation,
+  useCreateQRCodeManuallyMutation,
 } = barCodeApi;

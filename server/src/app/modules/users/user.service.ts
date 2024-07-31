@@ -8,9 +8,8 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IUpdateProfileReqAndResponse, IUserFilterRequest, IUsersResponse } from './user.interface';
+import { IUpdateProfileReq, IUserFilterRequest, IUsersResponse } from './user.interface';
 import { userRelationalFields, userRelationalFieldsMapper, userSearchableFields } from './users.constants';
-import { updateMyProfileDataValue } from './user.utils';
 
 // ! getting all users ----------------------------------------------------------------------->>>
 const getAllUserService = async (filters: IUserFilterRequest, options: IPaginationOptions): Promise<IGenericResponse<IUsersResponse[]>> => {
@@ -315,72 +314,97 @@ const getSingleUser = async (userId: string): Promise<IUsersResponse | null> => 
 };
 
 // ! update Profile info -------------------------------------------------------->>>
-const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReqAndResponse) => {
-  // Check if the user exists
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      userId,
-    },
-    select: {
-      password: true,
-      profile: {
-        select: {
-          profileId: true,
-        },
-      },
-    },
-  });
-
-  if (!existingUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Profile not Found !!');
-  }
-
-  const { fullName, addressLine1, addressLine2, city, companyName, country, email, password, phoneNumber, postalCode, state } = payload;
-
-  const updatedUserDetails: any = {
-    email,
-  };
-
-  if (password) {
-    const hashedPassword = await bcrypt.hash(password as string, Number(config.bcrypt_salt_rounds));
-    updatedUserDetails['password'] = hashedPassword;
-  }
-
-  if (updatedUserDetails?.email || updatedUserDetails?.password) {
-    await prisma.user.update({
+const updateMyProfileInfo = async (userId: string, payload: IUpdateProfileReq) => {
+  const { firstName, lastName, email, address, mobileNumber, password, newPassword, displayContactInfo } = payload;
+  const result = await prisma.$transaction(async transactionClient => {
+    // Check if the user exists
+    const existingUser = await transactionClient.user.findUnique({
       where: {
         userId,
       },
-      data: updatedUserDetails,
-    });
-  }
-
-  const updatedDetailsReq = {
-    fullName,
-    addressLine1,
-    addressLine2,
-    city,
-    companyName,
-    country,
-    phoneNumber,
-    postalCode,
-    state,
-  };
-  const updatedDetails: IUpdateProfileReqAndResponse = updateMyProfileDataValue(updatedDetailsReq);
-
-  const result = await prisma.profile.update({
-    where: {
-      profileId: existingUser?.profile?.profileId as string,
-    },
-    data: updatedDetails,
-    include: {
-      user: {
-        select: {
-          email: true,
-          updatedAt: true,
+      select: {
+        password: true,
+        profile: {
+          select: {
+            profileId: true,
+          },
         },
       },
-    },
+    });
+
+    if (!existingUser) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Profile not Found !!');
+    }
+    // if new password
+    if (password && newPassword) {
+      const checkHashedPassword = await bcrypt.compare(password as string, existingUser.password);
+
+      if (!checkHashedPassword) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Current Password is Wrong !');
+      } else {
+        //  updating new password
+        const newHashedPassword = await bcrypt.hash(password as string, Number(config.bcrypt_salt_rounds));
+        await transactionClient.user.update({
+          where: {
+            userId,
+          },
+          data: {
+            password: newHashedPassword,
+          },
+        });
+      }
+    }
+    // if new email
+    if (email) {
+      const isExistEmail = await transactionClient.user.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (isExistEmail) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'This Email already Used !');
+      }
+      // if not
+      else {
+        await transactionClient.user.update({
+          where: {
+            userId,
+          },
+          data: {
+            email,
+          },
+        });
+      }
+    }
+
+    // updating profile details
+    const updatedDetails: IUpdateProfileReq = {
+      firstName,
+      address,
+      lastName,
+      mobileNumber,
+      displayContactInfo,
+    };
+
+    console.log(updatedDetails);
+
+    //
+    const updatedResult = await transactionClient.profile.update({
+      where: {
+        profileId: existingUser?.profile?.profileId as string,
+      },
+      data: updatedDetails,
+      include: {
+        user: {
+          select: {
+            email: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+    return updatedResult;
   });
 
   return result;
