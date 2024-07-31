@@ -84,7 +84,7 @@ export default function CheckoutForm({ orderId }) {
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button
-        className="w-full bg-black text-white py-[18px] rounded-full text-xl font-bold"
+        className="w-full bg-black text-white py-[18px] rounded-full mt-5 text-xl font-bold"
         type="submit"
         disabled={isLoading || !stripe || !elements}
         id="submit"
