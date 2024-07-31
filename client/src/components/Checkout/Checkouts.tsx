@@ -41,6 +41,7 @@ const Checkouts = ({ params }: any) => {
   const {
     control,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm();
   const [stateTaxValue, setStateTaxValue] = useState(0);
@@ -65,11 +66,9 @@ const Checkouts = ({ params }: any) => {
     }
   });
 
-  const handleCheckout = async (data: any) => {};
-
   return (
     <section>
-      <nav className="bg-[#0BD6FA] py-2">
+      <nav className="bg-primary py-2">
         <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4 flex items-center justify-between">
           <Image
             src={logo}
@@ -85,11 +84,9 @@ const Checkouts = ({ params }: any) => {
           )}
         </div>
       </nav>
-      {isClient && payAmount?.checkoutId === params.id ? (
-        <div
-          onSubmit={handleSubmit(handleCheckout)}
-          className="max-w-7xl xl:mx-auto md:mx-10 mx-4"
-        >
+
+      {isClient && payAmount?.checkoutId === params?.id ? (
+        <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4">
           <section className="md:grid md:grid-cols-12 min-h-[200vh]">
             <div className="md:col-span-7 pt-10 md:mr-10">
               {/* Email */}

@@ -3,6 +3,7 @@
 import { HiPlus } from "react-icons/hi";
 import { Form } from "rsuite";
 import { Controller, useFieldArray } from "react-hook-form";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
   const { fields, append, remove } = useFieldArray({
@@ -24,9 +25,9 @@ const MyContacts = ({ control, errors }: { control: any; errors: any }) => {
                 remove(index);
               }}
               type="button"
-              className="text-[#f14e4e]   border px-2 border-red-600 hover:bg-red-600 hover:text-white duration-300 "
+              className="text-[#333] hover:text-red-600 duration-300 "
             >
-              Remove
+              <FaRegTrashCan size={20} />
             </button>
           </div>
           <div className="grid md:grid-cols-4 text-start  gap-3">
