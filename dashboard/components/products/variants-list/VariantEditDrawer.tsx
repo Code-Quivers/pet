@@ -1,24 +1,12 @@
 "use client";
 
-import { IUpdateProduct, IUpdateProductVariation } from "@/types/forms/product";
+import { IUpdateProductVariation } from "@/types/forms/product";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Message,
-  SelectPicker,
-  useToaster,
-} from "rsuite";
-
-import { renderLoading } from "@/components/animation/form/SelectPicker/renderLoading";
-import {
-  useUpdateProductMutation,
-  useUpdateProductVariationMutation,
-} from "@/redux/features/productsApi";
+import { Button, Drawer, Form, Input, Message, useToaster } from "rsuite";
+import { useUpdateProductVariationMutation } from "@/redux/features/productsApi";
 import UpdateProductImageUpload from "../forms/UpdateProductImageUpload";
 import { useEffect } from "react";
+import { CompactPicker, SketchPicker } from "react-color";
 
 const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
   const {
@@ -44,6 +32,7 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
     const obj = {
       color: {
         name: updatedData?.color?.name || editData?.color?.name,
+        code: updatedData?.color?.code || editData?.color?.code,
       },
       variantPrice: updatedData?.variantPrice
         ? parseInt(updatedData?.variantPrice)
@@ -53,19 +42,20 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
 
     const variantData = JSON.stringify(obj);
     formData.append("data", variantData);
-
+    console.log(obj);
     await updateProductVariation({
       data: formData,
       variantId: editData?.variantId,
     });
   };
 
+  // ! side effect
   useEffect(() => {
     if (isSuccess && !isError && !isLoading) {
       toaster.push(
         <Message bordered showIcon type="success" closable>
           <h4 className="font-semibold ">
-            {data?.message || "Successfully Update Successfully"}
+            {data?.message || "Successfully Update"}
           </h4>
         </Message>,
         { placement: "topEnd", duration: 2000 }
@@ -79,7 +69,7 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
           <h4 className="font-semibold ">
             {
               // @ts-ignore
-              error?.message || "Variant Update Failed"
+              error?.message || "Update Failed"
             }
           </h4>
         </Message>,
@@ -141,6 +131,48 @@ const VariantEditDrawer = ({ placement, open, setOpen, editData }: any) => {
                             {errors?.color?.name?.message}
                           </span>
                         </Form.ErrorMessage>
+                      </div>
+                    )}
+                  />
+                </div>
+                {/* Color Code */}
+
+                <div className="space-y-1">
+                  <label className="block font-medium text-black ">
+                    Color Code
+                  </label>
+                  <Controller
+                    control={control}
+                    name="color.code"
+                    render={({ field }) => (
+                      <div className="rs-form-control-wrapper w-full relative">
+                        <Input
+                          value={field.value}
+                          className="border !w-full mt-1"
+                          readOnly
+                        />
+                        <div
+                          style={{
+                            backgroundColor: field?.value
+                              ? field?.value
+                              : editData?.color?.code,
+                          }}
+                          className="absolute top-0 right-0 w-5 h-5 my-2 mr-2 rounded-full"
+                        ></div>
+                        <Form.ErrorMessage
+                          show={!!errors?.color?.code}
+                          placement="topEnd"
+                        >
+                          <span>
+                            {errors?.color?.code?.message || "Required"}
+                          </span>
+                        </Form.ErrorMessage>
+                        <CompactPicker
+                          color={field.value || editData?.color.name}
+                          onChangeComplete={(color: any) => {
+                            field.onChange(color.hex);
+                          }}
+                        />
                       </div>
                     )}
                   />
