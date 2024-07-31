@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SelectPicker, Form } from "rsuite";
 import logo from "../../../public/images/logo/E.T.-Logo.png";
 import { useGetTaxQuery } from "@/redux/api/features/stateTaxApi";
@@ -12,6 +12,7 @@ import { fileUrlKey } from "@/helpers/config/envConfig";
 import { RxValue } from "react-icons/rx";
 import PromoCode from "./CheckoutComponents/PromoCode";
 import PaymentMethod from "./CheckoutComponents/PaymentMethod";
+import { updateDeliveryInfo } from "@/redux/slice/deliveryInfoSlice";
 
 const Checkouts = ({ params }: any) => {
   const { data: stateTax } = useGetTaxQuery({});
@@ -20,6 +21,17 @@ const Checkouts = ({ params }: any) => {
   const cart = useSelector((state: any) => state.cart.cart);
   const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
+  const {
+    email,
+    firstName,
+    lastName,
+    address,
+    city,
+    state,
+    postalCode,
+    phone,
+  } = useSelector((state: any) => state.deliveryInfo);
+  const dispatch = useDispatch();
   console.log(cart, "cart");
   const data = stateTax?.data?.map((item: any) => ({
     label: item.state,
@@ -39,6 +51,10 @@ const Checkouts = ({ params }: any) => {
 
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
+  const handleOnChange = (e: any) => {
+    const { name, value } = e.target;
+    dispatch(updateDeliveryInfo({ field: name, value: value }));
+  };
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -70,7 +86,7 @@ const Checkouts = ({ params }: any) => {
         </div>
       </nav>
       {isClient && payAmount?.checkoutId === params.id ? (
-        <form
+        <div
           onSubmit={handleSubmit(handleCheckout)}
           className="max-w-7xl xl:mx-auto md:mx-10 mx-4"
         >
@@ -83,31 +99,16 @@ const Checkouts = ({ params }: any) => {
                   <label htmlFor="email" className="block mb-1">
                     Email
                   </label>
-                  <Controller
-                    name="email"
-                    control={control}
-                    rules={{ required: "Enter an email" }}
-                    render={({ field }) => (
-                      <div>
-                        <input
-                          {...field}
-                          type="text"
-                          name="email"
-                          id="email"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none bg-chalk border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                            errors?.email &&
-                            errors?.email?.message &&
-                            "border-red-600"
-                          }`}
-                        />
-                        {errors?.email && errors?.email?.message && (
-                          <span className="text-red-600 text-sm font-semibold">
-                            {errors?.email?.message as string}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  />
+                  <div>
+                    <input
+                      onChange={handleOnChange}
+                      value={email}
+                      type="text"
+                      name="email"
+                      id="email"
+                      className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none bg-chalk border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
+                    />
+                  </div>
                 </div>
               </div>
               {/* DELIVERY */}
@@ -119,61 +120,31 @@ const Checkouts = ({ params }: any) => {
                     <label htmlFor="firstName" className="block mb-1">
                       First Name
                     </label>
-                    <Controller
-                      name="firstName"
-                      control={control}
-                      rules={{ required: "Enter a first name" }}
-                      render={({ field }) => (
-                        <div>
-                          <input
-                            {...field}
-                            type="text"
-                            name="firstName"
-                            id="firstName"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                              errors?.firstName &&
-                              errors?.firstName?.message &&
-                              "border-red-600"
-                            }`}
-                          />
-                          {errors?.firstName && errors?.firstName?.message && (
-                            <span className="text-red-600 text-sm font-semibold">
-                              {errors?.firstName?.message as string}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
+                        onChange={handleOnChange}
+                        value={firstName}
+                      />
+                    </div>
                   </div>
                   <div className="w-full">
                     <label htmlFor="lastName" className="block mb-1">
                       Last Name
                     </label>
-                    <Controller
-                      name="lastName"
-                      control={control}
-                      rules={{ required: "Enter a last name" }}
-                      render={({ field }) => (
-                        <div>
-                          <input
-                            {...field}
-                            type="text"
-                            name="lastName"
-                            id="lastName"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                              errors?.lastName &&
-                              errors?.lastName?.message &&
-                              "border-red-600"
-                            }`}
-                          />
-                          {errors?.firstName && errors?.firstName?.message && (
-                            <span className="text-red-600 text-sm font-semibold">
-                              {errors?.lastName?.message as string}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
+                        onChange={handleOnChange}
+                        value={lastName}
+                      />
+                    </div>
                   </div>
                 </div>
                 {/* address */}
@@ -181,31 +152,16 @@ const Checkouts = ({ params }: any) => {
                   <label htmlFor="address" className="block mb-1">
                     Address
                   </label>
-                  <Controller
-                    name="address"
-                    control={control}
-                    rules={{ required: "Enter an address" }}
-                    render={({ field }) => (
-                      <div>
-                        <input
-                          {...field}
-                          type="text"
-                          name="address"
-                          id="address"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                            errors?.address &&
-                            errors?.address?.message &&
-                            "border-red-600"
-                          }`}
-                        />
-                        {errors?.address && errors?.address?.message && (
-                          <span className="text-red-600 text-sm font-semibold">
-                            {errors?.address?.message as string}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      name="address"
+                      id="address"
+                      className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
+                      onChange={handleOnChange}
+                      value={address}
+                    />
+                  </div>
                 </div>
                 {/* city & postcode */}
                 <div className="grid grid-cols-3 gap-3 mt-2">
@@ -213,97 +169,54 @@ const Checkouts = ({ params }: any) => {
                     <label htmlFor="city" className="block mb-1">
                       City
                     </label>
-                    <Controller
-                      name="city"
-                      control={control}
-                      rules={{ required: "Enter a city" }}
-                      render={({ field }) => (
-                        <div>
-                          <input
-                            {...field}
-                            type="text"
-                            name="city"
-                            id="city"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                              errors?.city &&
-                              errors?.city?.message &&
-                              "border-red-600"
-                            }`}
-                          />
-                          {errors?.city && errors?.city?.message && (
-                            <span className="text-red-600 text-sm font-semibold">
-                              {errors?.city?.message as string}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        name="city"
+                        id="city"
+                        className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
+                        onChange={handleOnChange}
+                        value={city}
+                      />
+                    </div>
                   </div>
                   <div className="">
                     <label htmlFor="state" className="block mb-1">
                       State
                     </label>
-                    <Controller
-                      name="state"
-                      control={control}
-                      rules={{ required: "Enter a state" }}
-                      render={({ field }) => (
-                        <div>
-                          <SelectPicker
-                            onChange={(value: any) => {
-                              field.onChange(value);
-                              setStateTaxValue(value);
-                            }}
-                            data={data}
-                            searchable={false}
-                            size="lg"
-                            className={`w-full ${
-                              errors?.state &&
-                              errors?.state?.message &&
-                              "!border-red-600"
-                            }`}
-                            placeholder="State"
-                          />
-                          {errors?.state && errors?.state?.message && (
-                            <span className="text-red-600 text-sm font-semibold">
-                              {errors?.state?.message as string}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    />
+                    <div>
+                      <SelectPicker
+                        onChange={(value: any) => {
+                          dispatch(
+                            updateDeliveryInfo({
+                              field: "state",
+                              value,
+                            })
+                          );
+                        }}
+                        data={data}
+                        searchable={false}
+                        size="lg"
+                        className={`w-full`}
+                        placeholder="State"
+                      />
+                    </div>
                   </div>
                   {/*  postal code */}
                   <div className="">
                     <label htmlFor="postalCode" className="block mb-1">
                       Postal Code
                     </label>
-                    <Controller
-                      name="postalCode"
-                      control={control}
-                      rules={{ required: "Enter a postal code" }}
-                      render={({ field }) => (
-                        <div>
-                          <input
-                            {...field}
-                            type="text"
-                            name="postalCode"
-                            id="postalCode"
-                            className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                              errors?.postalCode &&
-                              errors?.postalCode?.message &&
-                              "border-red-600"
-                            }`}
-                          />
-                          {errors?.postalCode &&
-                            errors?.postalCode?.message && (
-                              <span className="text-red-600 text-sm font-semibold">
-                                {errors?.postalCode?.message as string}
-                              </span>
-                            )}
-                        </div>
-                      )}
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        name="postalCode"
+                        id="postalCode"
+                        className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
+                        onChange={handleOnChange}
+                        value={postalCode}
+                      />
+                    </div>
                   </div>
                 </div>
                 {/* phone */}
@@ -311,35 +224,20 @@ const Checkouts = ({ params }: any) => {
                   <label htmlFor="phone" className="block mb-1">
                     Phone
                   </label>
-                  <Controller
-                    name="phone"
-                    control={control}
-                    rules={{ required: "Enter a phone number" }}
-                    render={({ field }) => (
-                      <div>
-                        <input
-                          {...field}
-                          type="text"
-                          name="phone"
-                          id="phone"
-                          className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm ${
-                            errors?.phone &&
-                            errors?.phone?.message &&
-                            "border-red-600"
-                          }`}
-                        />
-                        {errors?.phone && errors?.phone?.message && (
-                          <span className="text-red-600 text-sm font-semibold">
-                            {errors?.phone?.message as string}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      name="phone"
+                      id="phone"
+                      className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
+                      onChange={handleOnChange}
+                      value={phone}
+                    />
+                  </div>
                 </div>
               </div>
               {/* PAYMENT METHOD */}
-              <PaymentMethod cartData={{cart, totalAmount}} />
+              <PaymentMethod amountToPaid={totalAmount} />
             </div>
 
             <div className="md:col-span-5 md:border-l pt-10 md:pl-10 ">
@@ -394,7 +292,7 @@ const Checkouts = ({ params }: any) => {
               </div>
             </div>
           </section>
-        </form>
+        </div>
       ) : (
         <main className="max-w-6xl mx-auto">
           <section className="grid grid-cols-12 min-h-screen">
