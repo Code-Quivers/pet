@@ -34,8 +34,10 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Profile" (
     "profileId" TEXT NOT NULL,
-    "fullName" TEXT,
+    "firstName" TEXT,
+    "lastName" TEXT,
     "mobileNumber" TEXT,
+    "displayContactInfo" BOOLEAN DEFAULT true,
     "address" TEXT,
     "role" "UserRoles" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -134,7 +136,7 @@ CREATE TABLE "Order" (
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
-    "zip" TEXT NOT NULL,
+    "postalCode" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "cartItems" JSONB[],
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -144,18 +146,22 @@ CREATE TABLE "Order" (
 );
 
 -- CreateTable
-CREATE TABLE "PaymentInfo" (
+CREATE TABLE "PaymentReport" (
     "paymentId" TEXT NOT NULL,
     "gateWayTransactionId" TEXT NOT NULL,
     "gateWay" "PaymentGateway" NOT NULL,
     "totalAmountPaid" DOUBLE PRECISION NOT NULL,
     "totalAmountToPaid" DOUBLE PRECISION NOT NULL,
-    "status" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "gateWayFee" DOUBLE PRECISION NOT NULL,
+    "netAmount" DOUBLE PRECISION NOT NULL,
+    "gateWayTransactionTime" TIMESTAMP(3) NOT NULL,
+    "status" TEXT NOT NULL,
+    "currency" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
     "createdAt" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMPTZ(0) NOT NULL,
 
-    CONSTRAINT "PaymentInfo_pkey" PRIMARY KEY ("paymentId")
+    CONSTRAINT "PaymentReport_pkey" PRIMARY KEY ("paymentId")
 );
 
 -- CreateTable
@@ -304,7 +310,7 @@ ALTER TABLE "ProductReview" ADD CONSTRAINT "ProductReview_productId_fkey" FOREIG
 ALTER TABLE "ProductReview" ADD CONSTRAINT "ProductReview_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PaymentInfo" ADD CONSTRAINT "PaymentInfo_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("orderId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PaymentReport" ADD CONSTRAINT "PaymentReport_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("orderId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "KidDetails" ADD CONSTRAINT "KidDetails_barcodeId_fkey" FOREIGN KEY ("barcodeId") REFERENCES "BarCode"("barcodeId") ON DELETE SET NULL ON UPDATE CASCADE;
