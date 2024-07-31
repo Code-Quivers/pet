@@ -15,6 +15,7 @@ import Image from "next/image";
 import { fileUrlKey, getBaseUrl } from "@/helpers/config/envConfig";
 import TotalControl from "@/components/HomePage/TotalControl";
 import ConnectYourWay from "@/components/HomePage/ConnectYourWay";
+import BackupBuddySpecs from "@/components/HomePage/BackupBuddySpecs";
 
 const CategoryPage = async ({
   params,
@@ -97,7 +98,7 @@ const CategoryPage = async ({
             Tap or Scan. Anytime, Anywhere
           </h2>
           <p className="mb-3 text-xl font-semibold tracking-tight text-gray-500   max-w-4xl leading-8 mx-auto pt-4 pb-2 text-center">
-            Security and connection on their wrist; whether they are across the
+            Security and connection on their wrist, whether they are across the
             street or across the world - an easy tap or scan bridges the gap,
             ensuring you’re there when they need you.
           </p>
@@ -324,6 +325,7 @@ const CategoryPage = async ({
 
         {/*  */}
         <ConnectYourWay />
+        <BackupBuddySpecs />
       </>
     </div>
   );
