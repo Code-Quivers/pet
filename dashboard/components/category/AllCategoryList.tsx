@@ -33,7 +33,6 @@ const AllCategoryList = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [editData, setEditData] = useState<any | null>(null);
   const [isOpenSubModal, setIsOpenSubModal] = useState<boolean>(false);
-  const [subCategories, setSubCategories] = useState<any | null>(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleCloseEditModal = () => setIsOpenEdit(false);
@@ -61,7 +60,7 @@ const AllCategoryList = () => {
 
   return (
     <>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5   sm:px-7.5 xl:pb-1">
         <div className="flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
@@ -99,7 +98,7 @@ const AllCategoryList = () => {
           </div>
         </div>
 
-        <div className="rounded-sm mb-5 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm mb-5 bg-white ">
           <Table
             bordered={true}
             cellBordered={true}
