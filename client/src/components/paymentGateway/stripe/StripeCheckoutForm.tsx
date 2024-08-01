@@ -5,14 +5,18 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
+import { StripePaymentElementOptions } from "@stripe/stripe-js";
 
-export default function CheckoutForm({ orderId }) {
+interface CheckoutFormProps {
+  orderId: string;
+}
+
+const StripeCheckoutForm: React.FC<CheckoutFormProps> = ({ orderId }) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [message, setMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     if (!stripe) {
       return;
@@ -27,7 +31,7 @@ export default function CheckoutForm({ orderId }) {
     }
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent.status) {
+      switch (paymentIntent?.status) {
         case "succeeded":
           setMessage("Payment succeeded!");
           break;
@@ -44,7 +48,7 @@ export default function CheckoutForm({ orderId }) {
     });
   }, [stripe]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -68,7 +72,7 @@ export default function CheckoutForm({ orderId }) {
     // be redirected to an intermediate site first to authorize the payment, then
     // redirected to the `return_url`.
     if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
+      setMessage(error?.message||"Custom error");
     } else {
       setMessage("An unexpected error occurred.");
     }
@@ -76,7 +80,7 @@ export default function CheckoutForm({ orderId }) {
     setIsLoading(false);
   };
 
-  const paymentElementOptions = {
+  const paymentElementOptions: StripePaymentElementOptions = {
     layout: "tabs",
   };
 
@@ -98,4 +102,6 @@ export default function CheckoutForm({ orderId }) {
       {message && <div id="payment-message">{message}</div>}
     </form>
   );
-}
+};
+
+export default StripeCheckoutForm;

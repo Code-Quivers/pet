@@ -7,5 +7,5 @@ dist
 logs
 
 
-/prisma/migrations/
+# /prisma/migrations/
 .env.local

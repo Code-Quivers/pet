@@ -9,11 +9,10 @@ import { OrderController } from './order.controller';
 const router = express.Router();
 
 // ! Create New List ------------------------------->>>
-router.post('/', validateRequest(OrderValidation.addOrder), OrderController.addOrder);
 
 // ! Get all List----------------------------------->>>
 
-router.get('/', OrderController.getOrder);
+// router.get('/', OrderController.getOrder);
 
 router.get('/monthWise', OrderController.monthWiseOrder);
 

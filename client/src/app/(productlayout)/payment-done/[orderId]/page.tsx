@@ -3,9 +3,15 @@
 import { useRetrivePaymentInfoMutation } from "@/redux/api/features/payment/stripePaymentApi";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
-const PaymentDone = ({ params }) => {
+interface PaymentDoneProps {
+  params: {
+    orderId: string;
+  };
+}
+
+const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
   const orderId = params.orderId;
   const searchParams = useSearchParams();
   const payment_intent = searchParams.get("payment_intent");
