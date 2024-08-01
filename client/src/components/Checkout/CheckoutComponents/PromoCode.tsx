@@ -143,7 +143,7 @@ const PromoCode = ({
       </div>
 
       <div className="h-10">
-        <p className="h-7 text-sm">{promoCodeMessage && promoCodeMessage}</p>
+        <p className="h-7 text-sm font-medium text-red-600 mt-1">{promoCodeMessage && promoCodeMessage}</p>
 
         {appliedPromoCode && (
           <div className="flex">
