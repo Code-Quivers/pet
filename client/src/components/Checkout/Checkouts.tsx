@@ -13,6 +13,7 @@ import { RxValue } from "react-icons/rx";
 import PromoCode from "./CheckoutComponents/PromoCode";
 import PaymentMethod from "./CheckoutComponents/PaymentMethod";
 import { updateDeliveryInfo } from "@/redux/slice/deliveryInfoSlice";
+import CheckoutLoader from "./CheckoutLoader";
 
 const Checkouts = ({ params }: any) => {
   const { data: stateTax } = useGetTaxQuery({});
@@ -291,12 +292,7 @@ const Checkouts = ({ params }: any) => {
           </section>
         </div>
       ) : (
-        <main className="max-w-6xl mx-auto">
-          <section className="grid grid-cols-12 min-h-screen">
-            <div className="col-span-7 pt-10 mr-10"></div>
-            <div className="col-span-5 border-l pt-10 pl-10"></div>
-          </section>
-        </main>
+        <CheckoutLoader />
       )}
     </section>
   );
