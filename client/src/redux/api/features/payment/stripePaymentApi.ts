@@ -10,7 +10,16 @@ export const stripePaymentApi = baseApi.injectEndpoints({
         data: JSON.stringify(paymentInfo),
         contentType: "application/json",
       }),
-    //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
+      //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
+    }),
+    updatePaymentIntent: builder.mutation({
+      query: (paymentInfo) => ({
+        url: `/payment-stripe/update-payment-intent`,
+        method: "POST",
+        data: JSON.stringify(paymentInfo),
+        contentType: "application/json",
+      }),
+      //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
     }),
 
     retrivePaymentInfo: builder.mutation({
@@ -56,6 +65,7 @@ export const stripePaymentApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetClientSecretMutation, 
+  useGetClientSecretMutation,
+  useUpdatePaymentIntentMutation,
   useRetrivePaymentInfoMutation,
 } = stripePaymentApi;

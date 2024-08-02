@@ -98,7 +98,7 @@ const getOrders = async (filters: any, options: IPaginationOptions): Promise<any
   };
 };
 
-const getOrder = async (orderId: string, options:any) => {
+const getOrder = async (orderId: string, options: any) => {
   if (!orderId) throw new ApiError(httpStatus.BAD_REQUEST, 'Order Id is required!!');
 
   const order = await prisma.order.findUnique({ where: { orderId } });

@@ -20,25 +20,52 @@ class StripeController {
     console.log(req.body);
     console.log('------------------------------------');
 
-    const { amountToPaid, deliveryInfo, cart } = req.body;
+    const {
+      amountToPaid,
+
+      // deliveryInfo, cart
+    } = req.body;
     console.log(typeof amountToPaid, '-------------------------------->>>>>>>');
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.createPaymentIntent(amountToPaid);
-    const orderData = {
-      ...deliveryInfo,
-      cartItems: cart,
-    };
-    const order = await OrderService.createOrder(orderData);
+    // const orderData = {
+    //   ...deliveryInfo,
+    //   cartItems: cart,
+    // };
+    // const order = await OrderService.createOrder(orderData);
 
     sendResponse(res, {
       statusCode: httpStatusCode,
       success: httpStatusCode === 201 ? true : false,
       message: httpStatusCode === 201 ? StripeController.orderCreationSuccessMessage : StripeController.orderCreationFailedMessage,
-      data: { ...jsonResponse, orderId: order.orderId },
+      data: {
+        ...jsonResponse,
+        //  orderId: order.orderId
+      },
+    });
+  });
+  static updatePaymentIntent = catchAsync(async (req: Request, res: Response) => {
+    const { intentId, amountToPaid } = req.body;
+
+    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.updatePaymentIntent(intentId, amountToPaid);
+    // const orderData = {
+    //   ...deliveryInfo,
+    //   cartItems: cart,
+    // };
+    // const order = await OrderService.createOrder(orderData);
+
+    sendResponse(res, {
+      statusCode: httpStatusCode,
+      success: httpStatusCode === 201 ? true : false,
+      message: httpStatusCode === 201 ? StripeController.orderCreationSuccessMessage : StripeController.orderCreationFailedMessage,
+      data: {
+        ...jsonResponse,
+        //  orderId: order.orderId
+      },
     });
   });
 
   static retriveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
-    console.log('--------->>>>>>>>>>>>>>>>>>>>')
+    console.log('--------->>>>>>>>>>>>>>>>>>>>');
     const { orderId, paymentIntentId } = req.body;
     // const userId = (req.user as IRequestUser).userId;
 
