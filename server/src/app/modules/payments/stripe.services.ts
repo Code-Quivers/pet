@@ -35,6 +35,27 @@ class StripePaymentProcessor {
       }
 
       return {
+        jsonResponse: { clientSecret: paymentIntent.client_secret, intentId: paymentIntent.id },
+        httpStatusCode: 201,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to get client secret from Stripe!!!');
+    }
+  };
+
+  // update intent
+  static updatePaymentIntent = async (intentId: string, amountToPaid: number) => {
+    try {
+      const paymentIntent = await stripe.paymentIntents.update(intentId, {
+        amount: amountToPaid,
+      });
+
+      if (!paymentIntent?.client_secret) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to get client secret from Stripe!!!');
+      }
+
+      return {
         jsonResponse: { clientSecret: paymentIntent.client_secret },
         httpStatusCode: 201,
       };

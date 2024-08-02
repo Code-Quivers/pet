@@ -1,16 +1,13 @@
 import express from 'express';
 
-import validateRequest from '../../middlewares/validateRequest';
-import { OrderValidation } from './orders.validations';
 import { UserRoles } from '@prisma/client';
 import auth from '../../middlewares/auth';
 import { OrderController } from './order.controller';
 
 const router = express.Router();
 
-// ! Create New List ------------------------------->>>
-
-// ! Get all List----------------------------------->>>
+// ! Create New Order ------------------------------->>>
+router.post('/create-order', OrderController.createOrder);
 
 // router.get('/', OrderController.getOrder);
 

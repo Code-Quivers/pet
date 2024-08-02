@@ -2,14 +2,26 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
-import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { OrderService } from './orders.service';
-import { OrderFilterableFields } from './orders.constants';
 
-// !----------------------------------get all Hall---------------------------------------->>>
+// !----------------------------------Create Order---------------------------------------->>>
+const createOrder = catchAsync(async (req: Request, res: Response) => {
+  const { deliveryInfo, cart } = req.body;
+  const orderData = {
+    ...deliveryInfo,
+    cartItems: cart,
+  };
+  const newOrder = await OrderService.createOrder(orderData);
 
-// !----------------------------------Update Slot---------------------------------------->>>
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Order Created !',
+    data: newOrder,
+  });
+});
+// !----------------------------------Update Order---------------------------------------->>>
 const updateOrder = catchAsync(async (req: Request, res: Response) => {
   const { taxId } = req.params;
   const payload = req.body;
@@ -46,8 +58,4 @@ const monthWiseOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const OrderController = {
-  updateOrder,
-  deleteOrder,
-  monthWiseOrder,
-};
+export const OrderController = { createOrder, updateOrder, deleteOrder, monthWiseOrder };
