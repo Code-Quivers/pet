@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -9,18 +10,18 @@ const nextConfig = {
         pathname: "/**",
       },
       {
-        hostname: "http://85.239.232.185",
+        hostname: "85.239.232.185",
         port: "9000",
         protocol: "http",
         pathname: "/**",
       },
       {
-        hostname: "http://etphonehomebands.com",
+        hostname: "etphonehomebands.com",
         protocol: "http",
         pathname: "/**",
       },
       {
-        hostname: "https://etphonehomebands.com",
+        hostname: "etphonehomebands.com",
         protocol: "https",
         pathname: "/**",
       },

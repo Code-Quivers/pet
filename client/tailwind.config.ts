@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        "min-height": "min-height",
+        opacity: "opacity",
+      },
       colors: {
         primary: "#1D9ECD",
         secondary: "#1c1d1d",

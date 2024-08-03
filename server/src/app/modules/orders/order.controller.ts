@@ -2,41 +2,26 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
-import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { OrderService } from './orders.service';
-import { OrderFilterableFields } from './orders.constants';
 
-// !----------------------------------Create New Hall---------------------------------------->>>
-const addOrder = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.addOrder(req.body);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Added Successfully',
-    data: result,
-  });
-});
-
-// !----------------------------------get all Hall---------------------------------------->>>
-const getOrder = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, OrderFilterableFields);
-
-  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-
-  const result = await OrderService.getOrder(filters, options);
+// !----------------------------------Create Order---------------------------------------->>>
+const createOrder = catchAsync(async (req: Request, res: Response) => {
+  const { deliveryInfo, cart } = req.body;
+  const orderData = {
+    ...deliveryInfo,
+    cartItems: cart,
+  };
+  const newOrder = await OrderService.createOrder(orderData);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
-    message: 'fetched successfully',
-    meta: result.meta,
-    data: result.data,
+    message: 'Order Created !',
+    data: newOrder,
   });
 });
-
-// !----------------------------------Update Slot---------------------------------------->>>
+// !----------------------------------Update Order---------------------------------------->>>
 const updateOrder = catchAsync(async (req: Request, res: Response) => {
   const { taxId } = req.params;
   const payload = req.body;
@@ -73,10 +58,4 @@ const monthWiseOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const OrderController = {
-  addOrder,
-  getOrder,
-  updateOrder,
-  deleteOrder,
-  monthWiseOrder,
-};
+export const OrderController = { createOrder, updateOrder, deleteOrder, monthWiseOrder };

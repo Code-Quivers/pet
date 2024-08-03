@@ -1,48 +1,20 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { SelectPicker, Form } from "rsuite";
+import { useSelector } from "react-redux";
 import logo from "../../../public/images/logo/E.T.-Logo.png";
-import { useGetTaxQuery } from "@/redux/api/features/stateTaxApi";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import { fileUrlKey } from "@/helpers/config/envConfig";
-import { RxValue } from "react-icons/rx";
 import PromoCode from "./CheckoutComponents/PromoCode";
-import PaymentMethod from "./CheckoutComponents/PaymentMethod";
-import { updateDeliveryInfo } from "@/redux/slice/deliveryInfoSlice";
+import CheckoutLoader from "./CheckoutLoader";
+import CheckoutDeliveryInfoForm from "./CheckoutForm";
 
 const Checkouts = ({ params }: any) => {
-  const { data: stateTax } = useGetTaxQuery({});
-  // console.log(promo, "promo");
-
   const cart = useSelector((state: any) => state.cart.cart);
   const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
-  const {
-    email,
-    firstName,
-    lastName,
-    address,
-    city,
-    state,
-    postalCode,
-    phone,
-  } = useSelector((state: any) => state.deliveryInfo);
-  const dispatch = useDispatch();
-  console.log(cart, "cart");
-  const data = stateTax?.data?.map((item: any) => ({
-    label: item.state,
-    value: item.tax,
-  }));
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   const [stateTaxValue, setStateTaxValue] = useState(0);
 
   const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
@@ -51,10 +23,7 @@ const Checkouts = ({ params }: any) => {
 
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const handleOnChange = (e: any) => {
-    const { name, value } = e.target;
-    dispatch(updateDeliveryInfo({ field: name, value: value }));
-  };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -64,12 +33,11 @@ const Checkouts = ({ params }: any) => {
       router.push("/");
     }
   });
-
-  const handleCheckout = async (data: any) => {};
+  //
 
   return (
     <section>
-      <nav className="bg-[#0BD6FA] py-2">
+      <nav className="bg-primary py-2">
         <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4 flex items-center justify-between">
           <Image
             src={logo}
@@ -85,161 +53,14 @@ const Checkouts = ({ params }: any) => {
           )}
         </div>
       </nav>
-      {isClient && payAmount?.checkoutId === params.id ? (
-        <div
-          onSubmit={handleSubmit(handleCheckout)}
-          className="max-w-7xl xl:mx-auto md:mx-10 mx-4"
-        >
+      {/*  */}
+      {isClient && payAmount?.checkoutId === params?.id ? (
+        <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4">
           <section className="md:grid md:grid-cols-12 min-h-[200vh]">
             <div className="md:col-span-7 pt-10 md:mr-10">
-              {/* Email */}
-              <div>
-                <h3 className="font-bold text-xl mb-2">CONTACT</h3>
-                <div>
-                  <label htmlFor="email" className="block mb-1">
-                    Email
-                  </label>
-                  <div>
-                    <input
-                      onChange={handleOnChange}
-                      value={email}
-                      type="text"
-                      name="email"
-                      id="email"
-                      className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none bg-chalk border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
-                    />
-                  </div>
-                </div>
-              </div>
-              {/* DELIVERY */}
-              <div>
-                <h3 className="font-bold text-xl mt-5 mb-2">DELIVERY</h3>
-                {/* first & last name */}
-                <div className="flex gap-3 ">
-                  <div className="w-full">
-                    <label htmlFor="firstName" className="block mb-1">
-                      First Name
-                    </label>
-                    <div>
-                      <input
-                        type="text"
-                        name="firstName"
-                        id="firstName"
-                        className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
-                        onChange={handleOnChange}
-                        value={firstName}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <label htmlFor="lastName" className="block mb-1">
-                      Last Name
-                    </label>
-                    <div>
-                      <input
-                        type="text"
-                        name="lastName"
-                        id="lastName"
-                        className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
-                        onChange={handleOnChange}
-                        value={lastName}
-                      />
-                    </div>
-                  </div>
-                </div>
-                {/* address */}
-                <div className="mt-2">
-                  <label htmlFor="address" className="block mb-1">
-                    Address
-                  </label>
-                  <div>
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
-                      onChange={handleOnChange}
-                      value={address}
-                    />
-                  </div>
-                </div>
-                {/* city & postcode */}
-                <div className="grid grid-cols-3 gap-3 mt-2">
-                  <div className="">
-                    <label htmlFor="city" className="block mb-1">
-                      City
-                    </label>
-                    <div>
-                      <input
-                        type="text"
-                        name="city"
-                        id="city"
-                        className={`block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm `}
-                        onChange={handleOnChange}
-                        value={city}
-                      />
-                    </div>
-                  </div>
-                  <div className="">
-                    <label htmlFor="state" className="block mb-1">
-                      State
-                    </label>
-                    <div>
-                      <SelectPicker
-                        onChange={(value: any) => {
-                          dispatch(
-                            updateDeliveryInfo({
-                              field: "state",
-                              value,
-                            })
-                          );
-                        }}
-                        data={data}
-                        searchable={false}
-                        size="lg"
-                        className={`w-full`}
-                        placeholder="State"
-                      />
-                    </div>
-                  </div>
-                  {/*  postal code */}
-                  <div className="">
-                    <label htmlFor="postalCode" className="block mb-1">
-                      Postal Code
-                    </label>
-                    <div>
-                      <input
-                        type="text"
-                        name="postalCode"
-                        id="postalCode"
-                        className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
-                        onChange={handleOnChange}
-                        value={postalCode}
-                      />
-                    </div>
-                  </div>
-                </div>
-                {/* phone */}
-                <div className="mt-2">
-                  <label htmlFor="phone" className="block mb-1">
-                    Phone
-                  </label>
-                  <div>
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      className="block w-full py-2.5 px-4 duration-200 border rounded-lg appearance-none border-zinc-300 placeholder-zinc-300 focus:border-zinc-300 focus:outline-none focus:ring-zinc-300 text-sm"
-                      onChange={handleOnChange}
-                      value={phone}
-                    />
-                  </div>
-                </div>
-              </div>
-              {/* PAYMENT METHOD */}
-              <PaymentMethod amountToPaid={totalAmount} />
+              <CheckoutDeliveryInfoForm totalAmount={totalAmount} />
             </div>
-
+            {/* cart data */}
             <div className="md:col-span-5 md:border-l pt-10 md:pl-10 ">
               {cart?.length > 0 &&
                 cart?.map((item: any, index: number) => (
@@ -294,12 +115,7 @@ const Checkouts = ({ params }: any) => {
           </section>
         </div>
       ) : (
-        <main className="max-w-6xl mx-auto">
-          <section className="grid grid-cols-12 min-h-screen">
-            <div className="col-span-7 pt-10 mr-10"></div>
-            <div className="col-span-5 border-l pt-10 pl-10"></div>
-          </section>
-        </main>
+        <CheckoutLoader />
       )}
     </section>
   );

@@ -8,3 +8,6 @@ const fileUrlKey = (): string => {
 export const stripePublishableKey = (): string => {
   return process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 };
+export const getClientUrl = (): string => {
+  return process.env.NEXT_PUBLIC_CLIENT_URL || "";
+};

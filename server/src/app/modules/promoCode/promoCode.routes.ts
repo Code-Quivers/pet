@@ -10,7 +10,9 @@ router.post('/create', auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeCon
 router.patch('/:promotionId', auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.updatePromotion);
 router.delete('/delete/:promotionId', auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.deletePromotion);
 router.get('/', auth(UserRoles.SUPERADMIN, UserRoles.ADMIN), PromoCodeController.getPromotions);
+
 router.get('/check/:promoCode', PromoCodeController.isExist);
+
 router.post(
   '/apply-promotion-code/:promoCode',
   // auth(UserRoles.USER),

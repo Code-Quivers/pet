@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-// import { CartIcon } from "./svgIcons";
+import noImageFound from "../../../public/images/home/no image found.png";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/slice/cartSlice";
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Loader, Message, useToaster } from "rsuite";
 
 const ProductsSection = () => {
-  const { data } = useGetProductQuery({});
+  const { data, isLoading, isFetching } = useGetProductQuery({});
   const products = data?.data;
   const dispatch = useDispatch();
   const toaster = useToaster();
@@ -74,58 +74,64 @@ const ProductsSection = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:gap-4 sm:gap-4 md:grid-cols-3 mx-auto max-w-5xl">
-        {products?.map((product: any) => (
-          <div key={product.id} className="border rounded-lg">
-            <div className="">
-              <Link href={`/shop/single-product/${product?.productId}`}>
-                <div className="w-full h-full">
-                  <Image
-                    width={1000}
-                    height={1000}
-                    src={
-                      selectedColor?.productId == product?.productId
-                        ? `${fileUrlKey()}/${
-                            product?.productVariations[selectedColor.index]
-                              ?.image
-                          }`
-                        : `${fileUrlKey()}/${product?.featuredImage}`
-                    }
-                    alt={product.productName}
-                    className="h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110 rounded-t-lg"
-                  />
+        {isLoading || isFetching ? (
+          <>
+            <div className="h-96 animate-pulse bg-gray-300"></div>
+            <div className="animate-pulse bg-gray-300"></div>
+            <div className="animate-pulse bg-gray-300"></div>
+          </>
+        ) : (
+          products?.map((product: any) => (
+            <div key={product.id} className="border rounded-lg">
+              <div className="">
+                <Link href={`/category/single-product/${product?.productId}`}>
+                  <div className="w-full h-full">
+                    <Image
+                      width={1000}
+                      height={1000}
+                      src={
+                        product?.featuredImage
+                          ? `${fileUrlKey()}/${product?.featuredImage}`
+                          : noImageFound
+                      }
+                      alt={product.productName}
+                      className="h-64 w-full object-cover opacity-100 group-hover:opacity-0 transition-all group-hover:scale-110 rounded-t-lg"
+                    />
+                  </div>
+                  <div className="py-2 px-2">
+                    <h2 className="text-xl font-bold text-black ">
+                      {product?.productName}
+                    </h2>
+                    <p className="pt-1 font-medium flex justify-between text-lg">
+                      <span>Price</span>
+                      <span>${product?.productPrice?.toFixed(2)}</span>
+                    </p>
+                    <p className="line-clamp-2">
+                      {product?.productDescription}
+                    </p>
+                  </div>
+                </Link>
+                <div className="pb-2 px-2">
+                  {product?.productVariations?.map(
+                    (variation: any, index: number) => (
+                      <button
+                        // onClick={() =>
+                        //   setSelectedColor({
+                        //     productId: product.productId,
+                        //     index,
+                        //   })
+                        // }
+                        style={{
+                          backgroundColor: `${variation?.color?.code}`,
+                        }}
+                        key={variation?.variantId}
+                        className={`w-6 h-6 rounded-full mr-2`}
+                      ></button>
+                    )
+                  )}
                 </div>
-                <div className="py-2 px-2">
-                  <h2 className="text-xl font-bold text-black ">
-                    {product?.productName}
-                  </h2>
-                  <p className="pt-1 font-medium flex justify-between text-lg">
-                    <span>Price</span>
-                    <span>${product?.productPrice?.toFixed(2)}</span>
-                  </p>
-                  <p className="line-clamp-2">{product?.productDescription}</p>
-                </div>
-              </Link>
-              <div className="pb-2 px-2">
-                {product?.productVariations?.map(
-                  (variation: any, index: number) => (
-                    <button
-                      // onClick={() =>
-                      //   setSelectedColor({
-                      //     productId: product.productId,
-                      //     index,
-                      //   })
-                      // }
-                      style={{
-                        backgroundColor: `${variation?.color?.code}`,
-                      }}
-                      key={variation?.variantId}
-                      className={`w-6 h-6 rounded-full mr-2`}
-                    ></button>
-                  )
-                )}
-              </div>
 
-              {/* <div className="absolute flex flex-col top-4 right-4">
+                {/* <div className="absolute flex flex-col top-4 right-4">
                     <a href="#" className="flex items-center">
                       <div className="relative flex items-center justify-center p-3 mb-3 transition-all translate-x-20 bg-white rounded group-hover:translate-x-0 wishlist hover:bg-blue-200    group">
                         <svg
@@ -164,7 +170,7 @@ const ProductsSection = () => {
                     )}
                   </div> */}
 
-              {/* <Link href={`/shop/single-product/${product?.productId}`}>
+                {/* <Link href={`/shop/single-product/${product?.productId}`}>
                   <h2 className="mb-2 text-xl font-bold text-black  ">
                     {product?.productName}
                   </h2>
@@ -172,9 +178,10 @@ const ProductsSection = () => {
                     <span>${product?.productPrice?.toFixed(2)}</span>
                   </p>
                 </Link> */}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

@@ -14,13 +14,13 @@ import { getDateISODateWithoutTimestamp } from '../../../shared/utils';
 // modules
 
 // !----------------------------------Update Courier---------------------------------------->>>
-const updatePromotion = async (promotionId: string, pormotionInfo: any, buyItemGetItemPromotionInfo: any): Promise<Promotion> => {
+const updatePromotion = async (promotionId: string, promotionInfo: any, buyItemGetItemPromotionInfo: any): Promise<Promotion> => {
   const result = await prisma.$transaction(async transactionClient => {
     const dataToUpdate = {
-      ...pormotionInfo,
+      ...promotionInfo,
     };
-    if (pormotionInfo.startDate) dataToUpdate['startDate'] = pormotionInfo.startDate;
-    if (pormotionInfo.endDate) dataToUpdate['endDate'] = pormotionInfo.endDate;
+    if (promotionInfo.startDate) dataToUpdate['startDate'] = promotionInfo.startDate;
+    if (promotionInfo.endDate) dataToUpdate['endDate'] = promotionInfo.endDate;
     if (buyItemGetItemPromotionInfo) {
       dataToUpdate['buyItemGetItemPromotion'] = {
         update: {
@@ -56,6 +56,7 @@ const updateBuyItemGetItemPromotion = async (promotionId: string, infoToUpdate: 
   }
 };
 
+// Create a promotion
 const createPromotion = async (promotionInfo: any, buyItemGetItemPromotion: any): Promise<any> => {
   try {
     const result = await prisma.$transaction(async transactionClient => {
