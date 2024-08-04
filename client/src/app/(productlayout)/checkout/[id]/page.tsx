@@ -1,3 +1,4 @@
+
 import Checkouts from "@/components/Checkout/Checkouts";
 import { Metadata } from "next";
 
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
 const CheckOutPage = ({ params }: any) => {
   return (
     <div>
+
       <Checkouts params={params} />
     </div>
   );

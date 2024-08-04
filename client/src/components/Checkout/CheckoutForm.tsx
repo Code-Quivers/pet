@@ -121,6 +121,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 <PaymentMethodPaypal
                   setPaymentMethod={setPaymentMethod}
                   paymentMethod={paymentMethod}
+                  amount={totalAmount}
                 />
               </div>
               <div>
