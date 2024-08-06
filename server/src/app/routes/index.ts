@@ -15,6 +15,7 @@ import { CommentRoutes } from '../modules/blog-comments/comments.routes';
 import { OrderRoutes } from '../modules/orders/orders.routes';
 import { StripeRoutes } from '../modules/payments/stripe.routes';
 import { PaymentReportRoutes } from '../modules/paymentReport/payment.routes';
+import { PaypalRoutes } from '../modules/payments/paypal.routes';
 
 const router = express.Router();
 
@@ -78,6 +79,10 @@ const moduleRoutes = [
   {
     path: '/payment-stripe',
     route: StripeRoutes,
+  },
+  {
+    path: '/payment-paypal',
+    route: PaypalRoutes,
   },
   {
     path:'/payments',

@@ -7,8 +7,9 @@ import {
 import { getClientUrl } from "@/config/envConfig";
 import { useCreateOrderMutation } from "@/redux/api/features/orders/orderApi";
 import { useFormContext } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useUpdatePaymentIntentMutation } from "@/redux/api/features/payment/stripePaymentApi";
+import { setOrderId } from "@/redux/slice/paymentSlice";
 
 interface StripeCheckoutFormProps {
   setIsStripeLoading: (loading: boolean) => void;
@@ -31,7 +32,13 @@ const StripeCheckoutForm = forwardRef(
       { data: createdOrderData, isLoading: isLoadingCreatingOrder },
     ] = useCreateOrderMutation();
     const { getValues } = useFormContext(); // Access form data
+    const dispatch = useDispatch();
 
+    if (createdOrderData?.data?.orderId) {
+      dispatch(setOrderId(createdOrderData.data.orderId));
+    }
+
+    
     // Function to handle payment confirmation
     const handlePaymentConfirmation = async (orderId: string) => {
       if (!stripe || !elements) {

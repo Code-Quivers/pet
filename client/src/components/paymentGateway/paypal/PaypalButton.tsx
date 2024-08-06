@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useFormContext } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useCreateOrderMutation } from "@/redux/api/features/orders/orderApi";
+import {
+  useCapturePaypalPaymentMutation,
+  useGetPaypalOrderDataMutation,
+} from "@/redux/api/features/payment/paypalPaymentApi";
+import { setOrderId } from "@/redux/slice/paymentSlice";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }) {
@@ -8,35 +16,51 @@ function Message({ content }) {
 
 function PaypalButton({ amount, paymentMethod }) {
   const [message, setMessage] = useState("");
+  const { getValues } = useFormContext();
+  const cart = useSelector((state: any) => state.cart.cart);
+  const { orderId } = useSelector((state: any) => state.paymentInfo);
+  const dispatch = useDispatch();
 
-  const createOrder = async () => {
+  const [
+    createOrder,
+    { data: createdOrderData, isLoading: isLoadingCreatingOrder },
+  ] = useCreateOrderMutation();
+  const [getPaypalOrderData, { data: paypalOrderData }] =
+    useGetPaypalOrderDataMutation();
+  const [capturePaypalPayment, { data: capturedData }] =
+    useCapturePaypalPaymentMutation();
+
+  const handleOrderCreation = async () => {
+    let newOrderId = orderId;
+    const orderData = { ...getValues(), state: "nai" };
+    if (!newOrderId) {
+      const createdOrder = await createOrder({
+        cart,
+        deliveryInfo: orderData,
+      }).unwrap();
+      newOrderId = createdOrder?.data?.orderId || "";
+      dispatch(setOrderId(newOrderId));
+    }
+
+    const newData = {
+      cart: cart,
+      deliveryInfo: orderData,
+      orderId: newOrderId,
+      amount: amount,
+    };
+
     try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // use the "body" param to optionally pass additional order information
-        // like product ids and quantities
-        body: JSON.stringify({
-          cart: [
-            {
-              id: "YOUR_PRODUCT_ID",
-              quantity: "YOUR_PRODUCT_QUANTITY",
-            },
-          ],
-        }),
-      });
+      const reponseData = await getPaypalOrderData(newData).unwrap();
 
-      const orderData = await response.json();
+      console.log("9999999999999999999999999999", reponseData);
 
-      if (orderData.id) {
-        return orderData.id;
+      if (reponseData.id) {
+        return reponseData.id;
       } else {
-        const errorDetail = orderData?.details?.[0];
+        const errorDetail = reponseData?.details?.[0];
         const errorMessage = errorDetail
-          ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-          : JSON.stringify(orderData);
+          ? `${errorDetail.issue} ${errorDetail.description} (${reponseData.debug_id})`
+          : JSON.stringify(reponseData);
 
         throw new Error(errorMessage);
       }
@@ -47,20 +71,12 @@ function PaypalButton({ amount, paymentMethod }) {
   };
 
   const onApprove = async (data, actions) => {
+    const newData = {
+      paypalOrderId: data.orderID,
+      orderId: orderId,
+    };
+    const orderData = await capturePaypalPayment(newData).unwrap();
     try {
-      const response = await fetch(`/api/orders/${data.orderID}/capture`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const orderData = await response.json();
-      // Three cases to handle:
-      //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-      //   (2) Other non-recoverable errors -> Show a failure message
-      //   (3) Successful transaction -> Show confirmation or thank you message
-
       const errorDetail = orderData?.details?.[0];
 
       if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
@@ -99,7 +115,7 @@ function PaypalButton({ amount, paymentMethod }) {
             color: "gold",
             label: "paypal",
           }}
-          createOrder={createOrder}
+          createOrder={handleOrderCreation}
           onApprove={onApprove}
         />
       )}
