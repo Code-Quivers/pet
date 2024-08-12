@@ -172,7 +172,7 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                   <div className="flex items-center justify-center gap-4">
                     <Link
                       onClick={() => setCartOpen(false)}
-                      href="/shop/cart"
+                      href="/cart"
                       className="w-full py-3 text-lg font-bold bg-cyan-500 rounded-full text-gray-50 hover:bg-cyan-600 focus:ring-2 ring-offset-2 ring-cyan-500 text-center"
                     >
                       View Cart

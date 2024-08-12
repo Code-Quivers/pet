@@ -9,9 +9,11 @@ import { fileUrlKey } from "@/helpers/config/envConfig";
 import PromoCode from "./CheckoutComponents/PromoCode";
 import CheckoutLoader from "./CheckoutLoader";
 import CheckoutDeliveryInfoForm from "./CheckoutForm";
+import Link from "next/link";
 
 const Checkouts = ({ params }: any) => {
   const cart = useSelector((state: any) => state.cart.cart);
+  console.log(cart, "cart");
   const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
 
@@ -47,9 +49,9 @@ const Checkouts = ({ params }: any) => {
             className="h-11 w-56"
           />
           {isClient && (
-            <div className="text-white cursor-pointer">
+            <Link href={"/cart"} className="text-white cursor-pointer">
               <HiOutlineShoppingBag size={25} />
-            </div>
+            </Link>
           )}
         </div>
       </nav>
@@ -79,16 +81,22 @@ const Checkouts = ({ params }: any) => {
                     </div>
                     <div className="text-sm w-2/3 space-y-0.5">
                       <p className="font-semibold">
-                        {`${item?.productName} - ${item?.color?.name}`}
+                        {`${item?.productName} - ${
+                          item?.promoCode ? "Free" : item?.color?.name
+                        }`}
                       </p>
                       <p>{`$${item?.price?.toFixed(2)}`}</p>
-                      <p className="flex items-center gap-1">
-                        Color:{" "}
-                        <span
-                          style={{ backgroundColor: item?.color?.code }}
-                          className="w-3 h-3 rounded-full block"
-                        ></span>
-                      </p>
+                      {item?.promoCode ? (
+                        <></>
+                      ) : (
+                        <p className="flex items-center gap-1">
+                          Color:{" "}
+                          <span
+                            style={{ backgroundColor: item?.color?.code }}
+                            className="w-3 h-3 rounded-full block"
+                          ></span>
+                        </p>
+                      )}
                     </div>
                     <div>
                       <p>{`$${item?.totalPrice?.toFixed(2)}`}</p>

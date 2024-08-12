@@ -108,7 +108,7 @@ const MyAccountNavbar = () => {
         </Dropdown>
       </div>
       {/* center */}
-      <div className="text-xl font-bold">ET. HOME</div>
+      <div className="text-xl font-bold">E.T. Phone Home</div>
       {/* right content */}
       {!isLoading && data && (
         <div>

@@ -29,6 +29,8 @@ const MyPetPage = ({ params }: Props) => {
     code: params?.code,
   });
 
+  const fullName = `${kidDetails?.data?.firstName} ${kidDetails?.data?.lastName}`;
+
   return (
     <div className="mx-auto max-w-screen-xl   sm:px-6 lg:px-8">
       {isLoading && (
@@ -122,8 +124,14 @@ const MyPetPage = ({ params }: Props) => {
               <div className="bg-white   -mt-10 rounded-tl-[28px] rounded-tr-[28px] ">
                 <div className="flex flex-col justify-center items-center pt-4 z-20">
                   <div className="md:pt-2">
-                    <h2 className="text-3xl font-bold">
-                      {kidDetails?.data?.firstName} {kidDetails?.data?.lastName}
+                    <h2
+                      className={`font-bold truncate px-5 ${
+                        fullName?.length > 16 ? "text-xl" : "text-3xl"
+                      }`}
+                    >
+                      {/* {kidDetails?.data?.kidName}$ */}
+                      {fullName || "No Name"}
+                      {/* {`${kidDetails?.data?.firstName} ${kidDetails?.data?.lastName}`} */}
                     </h2>
                   </div>
                   <div>
@@ -145,10 +153,10 @@ const MyPetPage = ({ params }: Props) => {
                       kidDetails?.data?.relations?.map(
                         (relation: any, idx: number) => (
                           <>
-                            <p className="col-span-3 py-2">
+                            <p className="col-span-3 py-2 line-clamp-2">
                               {relation?.firstName} {relation?.lastName}
                             </p>
-                            <p className="col-span-3 py-2">
+                            <p className="col-span-3 py-2 line-clamp-1">
                               {relation?.relation}
                             </p>
                             <div className="col-span-2 text-center py-2 flex flex-col justify-center items-center">

@@ -19,6 +19,10 @@ export const cartSlice = createSlice({
       const getPayAmount = getFromLocalStorage("payAmount");
       const existingPayAmount = getPayAmount ? JSON.parse(getPayAmount) : {};
       state.payAmount = existingPayAmount;
+
+      const getPromoCode = getFromLocalStorage("promoCode");
+      const existingPromoCode = getPromoCode ? JSON.parse(getPromoCode) : "";
+      state.promoCode = existingPromoCode;
     },
 
     addToCart: (state: any, action: any) => {
@@ -79,21 +83,8 @@ export const cartSlice = createSlice({
         quantity: action.payload.quantity,
         totalPrice: action.payload.quantity * action.payload.offerPrice,
       });
-
-      // const itemInCart = state.cart.find(
-      //   (item: any) => item.productId === action.payload.productId
-      // );
-      // if (itemInCart) {
-      //   itemInCart.quantity = itemInCart.quantity + action.payload.quantity;
-      //   itemInCart.totalPrice =
-      //     itemInCart?.totalPrice + action?.payload?.offerPrice;
-      // } else {
-      //   state.cart.push({
-      //     ...action.payload,
-      //     quantity: action.payload.quantity,
-      //     totalPrice: action.payload.quantity * action.payload.offerPrice,
-      //   });
-      // }
+      setToLocalStorage("cart", JSON.stringify(state.cart));
+      setToLocalStorage("promoCode", JSON.stringify(state.promoCode));
     },
     removeFreeProduct: (state: any, action: any) => {
       state.promoCode = "";
@@ -106,6 +97,7 @@ export const cartSlice = createSlice({
       );
       state.cart = removeItem;
       setToLocalStorage("cart", JSON.stringify(state.cart));
+      setToLocalStorage("promoCode", JSON.stringify(state.promoCode));
     },
   },
 });
