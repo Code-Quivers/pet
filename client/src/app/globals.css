@@ -75,12 +75,14 @@ body {
 } */
 
 .bg-gradient {
-  background-image: linear-gradient(to right top,
-      #c2f9ff,
-      #9ee2ea,
-      #79cbd5,
-      #50b4c1,
-      #089eae);
+  background-image: linear-gradient(
+    to right top,
+    #c2f9ff,
+    #9ee2ea,
+    #79cbd5,
+    #50b4c1,
+    #089eae
+  );
 }
 
 .removeDownIcon {
@@ -267,7 +269,7 @@ body {
 }
 
 .embla-thumbs__slide--selected .embla-thumbs__slide__number {
-  border: #1D9ECD 1px solid;
+  border: #1d9ecd 1px solid;
   z-index: 9999;
 }
 
@@ -278,11 +280,34 @@ body {
   flex-direction: column-reverse !important;
 } */
 
-
 /* home */
 .homePageBg {
-  background-image: url('../../public/images/homeBg.jpg');
+  background-image: url("../../public/images/homeBg.jpg");
   background-repeat: no-repeat;
   background-position: center;
-
 }
+
+/* rs date picker button */
+.rs-btn-primary {
+  background-color: #3498ff !important;
+}
+
+/* css loader */
+
+/* HTML: <div class="loader"></div> */
+.cartLoader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #1D9ECD;
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}

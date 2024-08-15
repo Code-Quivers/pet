@@ -1,8 +1,8 @@
 const CheckoutLoader = () => {
   return (
-    <main className="max-w-7xl mx-auto">
+    <main className="max-w-7xl xl:mx-auto mx-5">
       <section className="md:grid grid-cols-12 min-h-screen">
-        <div className="col-span-7 pt-10 mr-10">
+        <div className="col-span-7 pt-10 md:mr-10">
           <div>
             <p className="h-5 w-24 bg-gray-200 animate-pulse rounded"></p>
             <p className="h-10 mt-5 bg-gray-200 animate-pulse rounded"></p>
@@ -36,7 +36,25 @@ const CheckoutLoader = () => {
             </div>
           </div>
         </div>
-        <div className="col-span-5 md:border-l pt-10 pl-10"></div>
+        <div className="col-span-5 md:border-l pt-10 md:pl-10">
+          <div>
+            <p className="h-16 bg-gray-200 animate-pulse rounded"></p>
+            <p className="h-16 mt-5 bg-gray-200 animate-pulse rounded"></p>
+            <p className="h-16 mt-5 bg-gray-200 animate-pulse rounded"></p>
+          </div>
+          <div className="mt-10">
+            <ul className="flex justify-between">
+              <li className="h-4 w-20 bg-gray-200 animate-pulse rounded"></li>
+              <li className="h-4 w-20 bg-gray-200 animate-pulse rounded"></li>
+            </ul>
+          </div>
+          <div className="mt-5">
+            <ul className="flex justify-between">
+              <li className="h-4 w-20 bg-gray-200 animate-pulse rounded"></li>
+              <li className="h-4 w-20 bg-gray-200 animate-pulse rounded"></li>
+            </ul>
+          </div>
+        </div>
       </section>
     </main>
   );

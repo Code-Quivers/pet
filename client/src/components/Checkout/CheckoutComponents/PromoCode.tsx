@@ -27,7 +27,7 @@ const PromoCode = ({
   const [applyPromotionalOffer, { isLoading }] =
     useApplyPromotionalOfferMutation();
   // console.log(data, "data");
-  console.log(isLoading, "isLoading");
+
   // console.log(data, "data");
   const cartDataForApi = cart?.map((item: any) => ({
     productId: item.productId,
@@ -46,13 +46,10 @@ const PromoCode = ({
     setPromoCodeMessage(false);
     setLoader(true);
     if (promoCode && appliedPromoCode === promoCode) {
-      // setPromoCodeMessage(false);
       setTimeout(() => {
         setLoader(false);
         setPromoCodeMessage("This promo code has already been applied.");
-      }, 2000);
-      // setPromoCodeMessage("This promo code has already been applied.");
-
+      }, 1000);
       return;
     }
 
@@ -65,16 +62,10 @@ const PromoCode = ({
         data: forBody,
       });
       const { data } = result as { data: any };
-      // console.log(isLoading, "isLoading");
       if (data?.data?.isValid && data?.data?.product?.variantId) {
-        // if (promoCodeApplied) {
-        //   setPromoCodeApplied("");
-        // }
-
         const product = data?.data?.product;
         const freeQuantity = data?.data?.quantity;
 
-        console.log(data?.data, "product........");
         const freeProduct = {
           productId: product?.productId,
           productName: product?.product?.productName,
@@ -93,8 +84,6 @@ const PromoCode = ({
         setTimeout(() => {
           setLoader(false);
           dispatch(applyPromoCode(freeProduct as any));
-          // setPromoCodeApplied(promoCode);
-          // console.log(promoCodeApplied, "promoCodeApplied");
         }, 2000);
 
         // setFeeProductVariantId({
@@ -143,7 +132,9 @@ const PromoCode = ({
       </div>
 
       <div className="h-10">
-        <p className="h-7 text-sm font-medium text-red-600 mt-1">{promoCodeMessage && promoCodeMessage}</p>
+        <p className="h-7 text-sm font-medium text-red-600 mt-1">
+          {promoCodeMessage && promoCodeMessage}
+        </p>
 
         {appliedPromoCode && (
           <div className="flex">
