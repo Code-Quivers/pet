@@ -18,5 +18,12 @@ export default {
     expires_in: process.env.JWT_EXPIRES_IN,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   },
-  stripe_secret_key: process.env.STRIPE_SECRET_KEY || "",
+  stripe_secret_key: process.env.STRIPE_SECRET_KEY || '',
+  paypal: {
+    mode: process.env.PAYPAL_MODE || '',
+    client_id: process.env.CLIENT_ID || '',
+    client_secret: process.env.CLIENT_SECRET || '',
+    return_url: process.env.RETURN_URL || '',
+    cancel_url: process.env.CANCEL_URL || '',
+  },
 };
