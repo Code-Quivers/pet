@@ -13,3 +13,5 @@ router.post('/update-payment-intent', StripeController.updatePaymentIntent);
 router.post('/retrive-payment-info', StripeController.retriveStripePaymentInformation);
 
 export const StripeRoutes = router;
+
+

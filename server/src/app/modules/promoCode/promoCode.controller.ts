@@ -29,8 +29,6 @@ const updatePromotion = catchAsync(async (req: Request, res: Response) => {
   const { promotionId } = req.params;
   const { buyItemGetItemPromotionInfo, ...promotionInfo } = req.body;
 
-  console.log('promotionInfo........................', req.body);
-
   const result = await PromoCodeService.updatePromotion(promotionId, promotionInfo, buyItemGetItemPromotionInfo);
 
   sendResponse(res, {

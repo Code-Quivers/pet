@@ -15,6 +15,7 @@ import { CommentRoutes } from '../modules/blog-comments/comments.routes';
 import { OrderRoutes } from '../modules/orders/orders.routes';
 import { StripeRoutes } from '../modules/payments/stripe.routes';
 import { PaymentReportRoutes } from '../modules/paymentReport/payment.routes';
+import { PaypalRoutes } from '../modules/paypal-payments/paypal.routes';
 
 const router = express.Router();
 
@@ -80,9 +81,13 @@ const moduleRoutes = [
     route: StripeRoutes,
   },
   {
-    path:'/payments',
+    path: '/payments',
     route: PaymentReportRoutes,
-  }
+  },
+  {
+    path: '/paypal',
+    route: PaypalRoutes,
+  },
 ];
 
 moduleRoutes.forEach(route => router.use(route.path, route.route));

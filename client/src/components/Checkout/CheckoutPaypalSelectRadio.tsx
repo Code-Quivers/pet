@@ -9,7 +9,20 @@ const CheckoutPaypalSelectRadio = ({
 }: {
   paymentMethod: string;
   setPaymentMethod: (method: string) => void;
-}) => {
+  }) => {
+  
+  
+  const paymentObj = {
+    item_name: "Test",
+    sku: "Test",
+    price: 100,
+    currency: "USD",
+    quantity: 1,
+    description: "Test",
+  }
+
+  
+  
   return (
     <div
       className={`relative border py-6 cursor-pointer ${
