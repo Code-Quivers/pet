@@ -10,9 +10,18 @@ import { stripePublishableKey } from "@/config/envConfig";
 import PaymentMethodPaypal from "./CheckoutComponents/PaymentMethodPaypal";
 import { loadStripe } from "@stripe/stripe-js";
 import { ICheckoutDeliveryForm } from "@/types/forms/checkoutTypes";
+import { Button } from "rsuite";
+import {
+  useConfirmPaymentMutation,
+  useCreatePaymentMutation,
+} from "@/redux/api/features/paypal/paypalApi";
+import { useRouter } from "next/navigation";
+
 const stripePromise = loadStripe(stripePublishableKey());
 
 const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
+  const router = useRouter();
+
   const [paymentMethod, setPaymentMethod] = useState("card_payment");
   const [isComponentLoading, setIsComponentLoading] = useState<boolean>(true);
   const [isStripeLoading, setIsStripeLoading] = useState<boolean>(false);
@@ -72,6 +81,49 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     }
 
     console.log("Parent form data:", data);
+  };
+
+  const [createPayment, { data, error }] = useCreatePaymentMutation();
+
+  const [confirmPayment] = useConfirmPaymentMutation();
+
+  const handlePaypalPayment = async () => {
+    try {
+      const paymentObj = {
+        price: 100,
+        currency: "USD",
+        quantity: 1,
+      };
+
+      if (error) {
+        console.error("Error creating PayPal payment:", error);
+        return;
+      }
+      const response = await createPayment(paymentObj);
+
+      console.log("response", response);
+
+      if (response && response.data) {
+        // Redirect to the PayPal approval URL
+        window.location.href = response.data?.data?.approvalUrl;
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+      if (response.data?.data?.id) {
+        const confirmData = response.data?.data?.id;
+        console.log("confirmData", confirmData);
+
+        const confirmResponse = await confirmPayment(confirmData);
+
+        console.log("confirmResponse", confirmResponse);
+
+        if ((confirmResponse.data.data = "COMPLETED")) {
+          router.push("/");
+        }
+      }
+    } catch (error) {
+      console.error("Error handling PayPal payment:", error);
+    }
   };
 
   return (
@@ -144,6 +196,9 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
           </div>
         </form>
       </FormProvider>
+      <div>
+        <Button onClick={handlePaypalPayment}>Paypal</Button>
+      </div>
     </div>
   );
 };
