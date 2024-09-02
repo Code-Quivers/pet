@@ -11,7 +11,7 @@ paypal.configure({
   client_secret: config.paypal.client_secret,
 });
 
-// export const createPaypalPayment = async (paymentData: any) => {
+// export const addPaypalPayment = async (paymentData: any) => {
 //   const create_payment_json = {
 //     intent: 'sale',
 //     payer: {
@@ -137,4 +137,5 @@ export const capturePaypalOrder = async (id: string) => {
 export const PaypalService = {
   createPaypalPayment,
   capturePaypalOrder,
+  // addPaypalPayment,
 };
