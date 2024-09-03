@@ -5,8 +5,8 @@ import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const PayPalButton = ({ createPayment, confirmPayment }: any) => {
-  const initialOptions: any = {
-    "client-id":
+  const initialOptions = {
+    clientId:
       "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
     currency: "USD",
     intent: "capture",
@@ -14,14 +14,16 @@ const PayPalButton = ({ createPayment, confirmPayment }: any) => {
   };
 
   return (
-    <PayPalScriptProvider options={initialOptions}>
+    <PayPalScriptProvider
+      options={{
+        clientId:
+          "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
+        currency: "USD",
+        intent: "capture",
+        components: "buttons",
+      }}
+    >
       <PayPalButtons
-        style={{
-          color: "blue",
-          shape: "pill",
-          label: "pay",
-          height: 40,
-        }}
         createOrder={async (data, actions) => {
           // Call your server to set up the transaction
           try {

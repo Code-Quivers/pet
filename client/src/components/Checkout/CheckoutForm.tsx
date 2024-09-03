@@ -19,6 +19,7 @@ import {
 } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
 import PayPalButton from "./CheckoutComponents/PaypalButton";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const stripePromise = loadStripe(stripePublishableKey());
 
@@ -151,10 +152,10 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
             </div>
             <section>
               <div>
-                <CheckoutCardSelectRadio
+                {/* <CheckoutCardSelectRadio
                   paymentMethod={paymentMethod}
                   setPaymentMethod={setPaymentMethod}
-                />
+                /> */}
                 <div
                   className={`transition-all ${
                     paymentMethod === "card_payment"
@@ -175,10 +176,10 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 </div>
               </div>
               <div>
-                <CheckoutPaypalSelectRadio
-                  paymentMethod={paymentMethod}
-                  setPaymentMethod={setPaymentMethod}
-                />
+                {/* <CheckoutPaypalSelectRadio
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+              /> */}
                 <PaymentMethodPaypal
                   setPaymentMethod={setPaymentMethod}
                   paymentMethod={paymentMethod}
@@ -202,26 +203,29 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 )}
               </div>
               <div>
-                {paymentMethod === "paypal" && (
-                  <div className="w-full bg-blue-500 disabled:bg-gray-400 text-white py-[10px] rounded-full mt-5 text-xl font-bold">
-                    <span>
-                      {isComponentLoading ? (
-                        <div className="spinner">Loading</div>
-                      ) : (
-                        <PayPalButton
-                          createPayment={createPayment}
-                          confirmPayment={confirmPayment}
-                        />
-                      )}
-                    </span>
-                  </div>
-                )}
+                {/* {paymentMethod === "paypal" && ( */}
+                <PayPalButton
+                  createPayment={createPayment}
+                  confirmPayment={confirmPayment}
+                />
+                {/* )} */}
+                {/* <PayPalScriptProvider
+                options={{
+                  clientId:
+                    "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
+                  currency: "USD",
+
+                  // intent: "capture",
+                  components: "buttons",
+                }}
+              >
+                <PayPalButtons />
+              </PayPalScriptProvider> */}
               </div>
             </section>
           </div>
         </form>
       </FormProvider>
-      <div></div>
     </div>
   );
 };
