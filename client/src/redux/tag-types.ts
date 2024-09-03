@@ -11,6 +11,7 @@ export enum tagTypes {
   tax = "tax",
   promo = "promo",
   promotionalOffer = "promotionalOffer",
+  paypal = "paypal",
 }
 
 export const tagTypesList = [
@@ -26,4 +27,5 @@ export const tagTypesList = [
   tagTypes.tax,
   tagTypes.promo,
   tagTypes.promotionalOffer,
+  tagTypes.paypal,
 ];

@@ -21,6 +21,7 @@ export default {
   stripe_secret_key: process.env.STRIPE_SECRET_KEY || '',
   paypal: {
     mode: process.env.PAYPAL_MODE || '',
+    paypal_baseUrl: process.env.PAYPAL_BASE_URL || '',
     client_id: process.env.CLIENT_ID || '',
     client_secret: process.env.CLIENT_SECRET || '',
     return_url: process.env.RETURN_URL || '',
