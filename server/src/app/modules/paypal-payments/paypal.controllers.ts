@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import { PaypalService } from './paypal.services';
 import httpStatus from 'http-status';
 import sendResponse from '../../../shared/sendResponse';
+
+
 
 const createPaypalController = catchAsync(async (req: Request, res: Response) => {
   const paymentData = req.body;

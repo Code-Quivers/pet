@@ -11,7 +11,7 @@ paypal.configure({
   client_secret: config.paypal.client_secret,
 });
 
-// export const createPaypalPayment = async (paymentData: any) => {
+// export const addPaypalPayment = async (paymentData: any) => {
 //   const create_payment_json = {
 //     intent: 'sale',
 //     payer: {
@@ -93,8 +93,6 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
 
   const accessToken = await generateAccessTokenForPaypal(config.paypal.paypal_baseUrl, config.paypal.client_id, config.paypal.client_secret);
 
-  console.log('url:', `${config.paypal.paypal_baseUrl}/v2/checkout/orders/${orderID}/capture`);
-
   try {
     const response = await axios.post(
       `${config.paypal.paypal_baseUrl}/v2/checkout/orders/${orderID}/capture`,
@@ -143,4 +141,5 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
 export const PaypalService = {
   createPaypalPayment,
   capturePaypalOrder,
+  // addPaypalPayment,
 };

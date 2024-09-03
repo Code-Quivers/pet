@@ -27,7 +27,7 @@ const CheckoutCardSelectRadio = ({
             htmlFor="card_payment"
             // onClick={() => setPaymentMethod("card_payment")}
           >
-            Card
+            Stripe
           </label>
         </div>
       </div>

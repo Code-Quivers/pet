@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Elements } from "@stripe/react-stripe-js";
@@ -16,6 +18,7 @@ import {
   useCreatePaymentMutation,
 } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
+import PayPalButton from "./CheckoutComponents/PaypalButton";
 
 const stripePromise = loadStripe(stripePublishableKey());
 
@@ -40,7 +43,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     useGetClientSecretMutation();
   console.log("stripe data from intent:", stripeData);
 
-  const options = useMemo(
+  const options: any = useMemo(
     () => ({
       clientSecret,
       appearance: {
@@ -104,11 +107,17 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
       console.log("response", response);
 
       if (response && response.data) {
-        // Redirect to the PayPal approval URL
-        window.location.href = response.data?.data?.approvalUrl;
+        // Open the PayPal approval URL in a new popup window
+        const approvalUrl = response.data?.data?.approvalUrl;
+        if (approvalUrl) {
+          window.open(approvalUrl, "PayPal Approval", "width=800,height=600");
+        } else {
+          console.error("Approval URL not found in the response:", response);
+        }
       } else {
         console.error("Unexpected response structure:", response);
       }
+
       if (response.data?.data?.id) {
         const confirmData = response.data?.data?.id;
         console.log("confirmData", confirmData);
@@ -186,19 +195,33 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                       {isComponentLoading ? (
                         <div className="spinner">Loading</div>
                       ) : (
-                        "Pay now"
+                        "Pay with Stripe"
                       )}
                     </span>
                   </button>
+                )}
+              </div>
+              <div>
+                {paymentMethod === "paypal" && (
+                  <div className="w-full bg-blue-500 disabled:bg-gray-400 text-white py-[10px] rounded-full mt-5 text-xl font-bold">
+                    <span>
+                      {isComponentLoading ? (
+                        <div className="spinner">Loading</div>
+                      ) : (
+                        <PayPalButton
+                          createPayment={createPayment}
+                          confirmPayment={confirmPayment}
+                        />
+                      )}
+                    </span>
+                  </div>
                 )}
               </div>
             </section>
           </div>
         </form>
       </FormProvider>
-      <div>
-        <Button onClick={handlePaypalPayment}>Paypal</Button>
-      </div>
+      <div></div>
     </div>
   );
 };
