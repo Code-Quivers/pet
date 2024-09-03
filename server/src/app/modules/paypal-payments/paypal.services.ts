@@ -3,6 +3,7 @@ import paypal from 'paypal-rest-sdk';
 import config from '../../../config';
 import { generateAccessTokenForPaypal } from './paypal.AccessToken';
 import axios from 'axios';
+import { PaymentGateway } from '@prisma/client';
 
 // Configure PayPal
 paypal.configure({
@@ -80,7 +81,7 @@ export const createPaypalPayment = async (paymentData: any) => {
       },
     });
 
-    console.log('PayPal Payment Response:', response.data);
+    // console.log('PayPal Payment Response:', response.data);
 
     return response.data;
   } catch (error) {
@@ -106,6 +107,7 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
     );
 
     const captureResponse = response.data;
+
     console.log('Capture Response:', captureResponse);
 
     const capturedPaymentInfo = captureResponse.purchase_units[0].payments.captures[0];
@@ -130,6 +132,19 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
     };
 
     console.log('Payment Report:', paymentReport);
+    // return paymentReport;
+
+    const paymentReportObj = {
+      gateWayTransactionId: paymentReport.platformTransactionId,
+      gateWay: PaymentGateway.STRIPE,
+      totalAmountPaid: paymentReport.amountToPay,
+      totalAmountToPaid: paymentReport.amountPaid,
+      gateWayFee: paymentReport.platformFee,
+      netAmount: paymentReport.netAmount,
+      gateWayTransactionTime: paymentReport.transactionCreatedTime,
+      status: paymentReport.paymentStatus,
+      currency: paymentReport.currency,
+    };
 
     return paymentReport;
   } catch (error: any) {
