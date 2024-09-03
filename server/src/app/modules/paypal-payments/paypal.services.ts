@@ -88,12 +88,14 @@ export const createPaypalPayment = async (paymentData: any) => {
   }
 };
 
-export const capturePaypalOrder = async (id: string) => {
+export const capturePaypalOrder = async (orderData: { orderID: string }) => {
+  const { orderID } = orderData;
+
   const accessToken = await generateAccessTokenForPaypal(config.paypal.paypal_baseUrl, config.paypal.client_id, config.paypal.client_secret);
 
   try {
     const response = await axios.post(
-      `${config.paypal.paypal_baseUrl}/v2/checkout/orders/${id}/capture`,
+      `${config.paypal.paypal_baseUrl}/v2/checkout/orders/${orderID}/capture`,
       {},
       {
         headers: {
@@ -124,8 +126,10 @@ export const capturePaypalOrder = async (id: string) => {
       transactionUpdatedTime: capturedPaymentInfo.update_time,
       payerName: `${captureResponse.payer.name.given_name} ${captureResponse.payer.name.surname}`,
       payerEmailAddress: captureResponse.payer.email_address,
-      orderId: id,
+      orderId: orderID,
     };
+
+    console.log('Payment Report:', paymentReport);
 
     return paymentReport;
   } catch (error: any) {

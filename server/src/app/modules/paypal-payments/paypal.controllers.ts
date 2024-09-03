@@ -26,9 +26,9 @@ const createPaypalController = catchAsync(async (req: Request, res: Response) =>
 });
 
 const capturePaypalController = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.body;
-  console.log('id', id);
-  const paymentReport = await PaypalService.capturePaypalOrder(id);
+  const orderID = req.body;
+  console.log('id', req.body);
+  const paymentReport = await PaypalService.capturePaypalOrder(orderID);
   console.log('paymentReport', paymentReport);
 
   sendResponse(res, {
