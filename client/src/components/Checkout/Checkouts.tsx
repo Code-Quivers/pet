@@ -55,10 +55,11 @@ const Checkouts = ({ params }: any) => {
           )}
         </div>
       </nav>
+
       {/*  */}
       {isClient && payAmount?.checkoutId === params?.id ? (
         <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4">
-          <section className="md:grid md:grid-cols-12 min-h-[200vh]">
+          <section className="md:grid md:grid-cols-12  ">
             <div className="md:col-span-7 pt-10 md:mr-10">
               <CheckoutDeliveryInfoForm totalAmount={totalAmount} />
             </div>
