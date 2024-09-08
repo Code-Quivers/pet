@@ -1,18 +1,11 @@
-import React from "react";
-
+"use client";
 import Image from "next/image";
 import paypalLogo from "../../../public/images/checkout/checkout-paypal.svg";
-
 
 const CheckoutPaypalSelectRadio = ({
   paymentMethod,
   setPaymentMethod,
-}: {
-  paymentMethod: string;
-  setPaymentMethod: (method: string) => void;
-}) => {
-
-
+}: any) => {
   return (
     <div
       className={`relative border py-6 cursor-pointer ${
@@ -25,8 +18,8 @@ const CheckoutPaypalSelectRadio = ({
           <input
             onClick={() => setPaymentMethod("paypal")}
             type="radio"
-            name="paymentMethod"
-            id="paypal"
+            // name="paymentMethod"
+            // id="paypal"
             className="w-5 h-5 text-red-500 cursor-pointer"
             checked={paymentMethod == "paypal"}
           />
@@ -48,8 +41,6 @@ const CheckoutPaypalSelectRadio = ({
           />
         </div>
       </div>
-
-    
     </div>
   );
 };
