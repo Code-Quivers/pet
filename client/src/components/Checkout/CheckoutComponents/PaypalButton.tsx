@@ -28,12 +28,11 @@ const PayPalButton = ({
       }}
     >
       <PayPalButtons
-        // className={`${paymentMethod === "paypal" ? "block" : "hidden"}`}
         style={{
-          layout: "vertical", // Use vertical for single button
-          color: "blue", // Customize button color (optional)
-          shape: "pill", // Use rect shape (optional)
-          label: "pay", // Use "checkout" (optional)
+          layout: "vertical",
+          color: "blue",
+          shape: "pill",
+          label: "pay",
         }}
         fundingSource="paypal" // This ensures only PayPal button is shown
         createOrder={async (data, actions) => {
