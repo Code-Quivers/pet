@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Elements } from "@stripe/react-stripe-js";
 import StripeCheckoutForm from "../paymentGateway/stripe/StripeCheckoutForm";
@@ -16,12 +15,13 @@ import {
 } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
 import PayPalButton from "./CheckoutComponents/PaypalCheckout";
+import CheckoutPaypalSelectRadio from "./CheckoutPaypalSelectRadio";
+import CheckoutCardSelectRadio from "./CheckoutCardSelectRadio";
 
 const stripePromise = loadStripe(stripePublishableKey());
 
 const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
   const router = useRouter();
-
   const [paymentMethod, setPaymentMethod] = useState("card_payment");
   const [isComponentLoading, setIsComponentLoading] = useState<boolean>(true);
   const [isStripeLoading, setIsStripeLoading] = useState<boolean>(false);
@@ -103,10 +103,10 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
             </div>
             <section>
               <div>
-                {/* <CheckoutCardSelectRadio
+                <CheckoutCardSelectRadio
                   paymentMethod={paymentMethod}
                   setPaymentMethod={setPaymentMethod}
-                /> */}
+                />
                 <div
                   className={`transition-all ${
                     paymentMethod === "card_payment"
@@ -127,10 +127,10 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 </div>
               </div>
               <div>
-                {/* <CheckoutPaypalSelectRadio
-                paymentMethod={paymentMethod}
-                setPaymentMethod={setPaymentMethod}
-              /> */}
+                <CheckoutPaypalSelectRadio
+                  paymentMethod={paymentMethod}
+                  setPaymentMethod={setPaymentMethod}
+                />
                 <PaymentMethodPaypal
                   setPaymentMethod={setPaymentMethod}
                   paymentMethod={paymentMethod}
@@ -141,7 +141,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                   <button
                     type="submit"
                     disabled={isComponentLoading || isStripeLoading}
-                    className="w-full bg-black disabled:bg-gray-400 text-white py-[10px] rounded-full mt-5 text-xl font-bold"
+                    className="w-full bg-black disabled:bg-gray-400 text-white py-[10px] rounded-full mt-16 text-xl font-bold"
                   >
                     <span>
                       {isComponentLoading ? (
@@ -153,11 +153,125 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                   </button>
                 )}
               </div>
-              <div>
-                <PayPalButton
-                  createPayment={createPayment}
-                  addCapture={addCapture}
-                />
+              <div className="mt-20 mb-28">
+                {paymentMethod === "paypal" && (
+                  <PayPalButton
+                    createPayment={createPayment}
+                    addCapture={addCapture}
+                  />
+                )}
+
+                {/* <div className="mt-20">
+                  {paymentMethod === "paypal" && (
+                    <PayPalScriptProvider
+                      options={{ clientId: "test", components: "buttons" }}
+                    >
+                      <PayPalButtons
+                        className="mt-20"
+                        style={{
+                          layout: "vertical", // Use vertical for single button
+                          color: "blue", // Customize button color (optional)
+                          shape: "pill", // Use rect shape (optional)
+                          label: "pay", // Use "checkout" (optional)
+                        }}
+                        fundingSource="paypal" // This ensures only PayPal button is shown
+                        createOrder={async (data, actions) => {
+                          // Call your server to set up the transaction
+                          try {
+                            const paymentObj = {
+                              price: 100,
+                              currency: "USD",
+                              quantity: 1,
+                            };
+
+                            const response = await createPayment(paymentObj);
+
+                            if (response && response.data) {
+                              // Return PayPal order ID
+                              return response.data?.data?.id;
+                            } else {
+                              console.error(
+                                "Unexpected response structure:",
+                                response
+                              );
+                              throw new Error("Failed to create order");
+                            }
+                          } catch (error) {
+                            console.error(
+                              "Error creating PayPal order:",
+                              error
+                            );
+                            throw error;
+                          }
+                        }}
+                        onApprove={async (data, actions) => {
+                          // Call your server to finalize the transaction
+                          try {
+                            const confirmResponse = await confirmPayment(
+                              data.orderID
+                            );
+
+                            if (confirmResponse && confirmResponse.data) {
+                              const orderData = confirmResponse.data;
+
+                              const errorDetail =
+                                Array.isArray(orderData.details) &&
+                                orderData.details[0];
+
+                              if (
+                                errorDetail &&
+                                errorDetail.issue === "INSTRUMENT_DECLINED"
+                              ) {
+                                return actions.restart();
+                              }
+
+                              if (errorDetail) {
+                                let msg =
+                                  "Sorry, your transaction could not be processed.";
+                                if (errorDetail.description)
+                                  msg += "\n\n" + errorDetail.description;
+                                if (orderData.debug_id)
+                                  msg += " (" + orderData.debug_id + ")";
+                                return alert(msg);
+                              }
+
+                              console.log(
+                                "Capture result",
+                                orderData,
+                                JSON.stringify(orderData, null, 2)
+                              );
+                              const transaction =
+                                orderData.purchase_units[0].payments
+                                  .captures[0];
+                              alert(
+                                "Transaction " +
+                                  transaction.status +
+                                  ": " +
+                                  transaction.id +
+                                  "\n\nSee console for all available details"
+                              );
+
+                              if (transaction.status === "COMPLETED") {
+                                // Use your Next.js router to navigate if required
+                                // router.push("/");
+                              }
+                            } else {
+                              console.error(
+                                "Unexpected response structure:",
+                                confirmResponse
+                              );
+                            }
+                          } catch (error) {
+                            console.error(
+                              "Error confirming PayPal payment:",
+                              error
+                            );
+                          }
+                        }}
+                      />
+                    </PayPalScriptProvider>
+                  )}
+                </div> */}
               </div>
             </section>
           </div>

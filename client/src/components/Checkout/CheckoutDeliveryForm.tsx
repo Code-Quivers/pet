@@ -37,7 +37,7 @@ const CheckoutDeliveryForm = ({
                 message: "Invalid email address",
               },
             }}
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
               <div className="rs-form-control-wrapper">
                 <input
                   {...field}
@@ -47,7 +47,7 @@ const CheckoutDeliveryForm = ({
                   placeholder="Enter Email..."
                 />
                 <Form.ErrorMessage
-                  show={(!!errors?.email && !!errors?.email?.message) || false}
+                  show={error?.message && (error?.message as any)}
                   placement="topEnd"
                 >
                   <span className="font-semibold">

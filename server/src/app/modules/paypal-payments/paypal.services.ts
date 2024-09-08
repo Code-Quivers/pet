@@ -108,11 +108,11 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
 
     const captureResponse = response.data;
 
-    console.log('Capture Response:', captureResponse);
+    // console.log('Capture Response:', captureResponse);
 
     const capturedPaymentInfo = captureResponse.purchase_units[0].payments.captures[0];
 
-    console.log('Captured Payment Info:', capturedPaymentInfo);
+    // console.log('Captured Payment Info:', capturedPaymentInfo);
 
     const paymentReport = {
       paymentStatus: capturedPaymentInfo.status,
@@ -145,6 +145,7 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
       status: paymentReport.paymentStatus,
       currency: paymentReport.currency,
     };
+
 
     return paymentReport;
   } catch (error: any) {
