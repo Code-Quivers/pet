@@ -2,20 +2,21 @@
 "use client";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 
-const PayPalButton = ({
-  createPayment,
-  confirmPayment,
-  paymentMethod,
-}: any) => {
+const PayPalButton = ({ createPayment, addCapture, paymentMethod }: any) => {
+  const { payAmount, cart } = useSelector((state: any) => state.cart);
+
+  console.log("Pay amount", payAmount, cart);
+
   const { getValues, trigger } = useFormContext();
-  const initialOptions = {
-    clientId:
-      "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
-    currency: "USD",
-    intent: "capture",
-    components: "buttons",
-  };
+  // const initialOptions = {
+  //   clientId:
+  //     "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
+  //   currency: "USD",
+  //   intent: "capture",
+  //   components: "buttons",
+  // };
 
   return (
     <PayPalScriptProvider
@@ -35,23 +36,29 @@ const PayPalButton = ({
           label: "pay",
         }}
         fundingSource="paypal" // This ensures only PayPal button is shown
-        createOrder={async (data, actions) => {
+        createOrder={async (data: any, actions: any) => {
+          // Validate form data
           const isValid = await trigger();
           console.log("Is valid", isValid);
           // Access form data
-          const orderData = getValues();
-          console.log("Order data", orderData);
-          // Call your server to set up the transaction
+          const cartDataObj = getValues();
+
+          //Call your server to set up the transaction
+
+          const cartData = {
+            ...cartDataObj,
+            cart: cart,
+          };
 
           if (isValid) {
             try {
-              const paymentObj = {
-                price: 100,
+              const paymentData = {
+                price: payAmount?.subtotal,
                 currency: "USD",
                 quantity: 1,
               };
 
-              const response = await createPayment(paymentObj);
+              const response = await createPayment({ paymentData, cartData });
 
               if (response && response.data) {
                 // Return PayPal order ID
@@ -65,32 +72,18 @@ const PayPalButton = ({
               throw error;
             }
           }
-
-          // try {
-          //   const paymentObj = {
-          //     price: 100,
-          //     currency: "USD",
-          //     quantity: 1,
-          //   };
-
-          //   const response = await createPayment(paymentObj);
-
-          //   if (response && response.data) {
-          //     // Return PayPal order ID
-          //     return response.data?.data?.id;
-          //   } else {
-          //     console.error("Unexpected response structure:", response);
-          //     throw new Error("Failed to create order");
-          //   }
-          // } catch (error) {
-          //   console.error("Error creating PayPal order:", error);
-          //   throw error;
-          // }
         }}
         onApprove={async (data, actions) => {
           // Call your server to finalize the transaction
+
+          const dataObj = {
+            orderID: data.orderID,
+          };
+
+          console.log("Data obj", dataObj);
+
           try {
-            const confirmResponse = await confirmPayment(data.orderID);
+            const confirmResponse = await addCapture(dataObj);
 
             if (confirmResponse && confirmResponse.data) {
               const orderData = confirmResponse.data;

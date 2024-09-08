@@ -14,9 +14,9 @@ import {
   useCreatePaymentMutation,
 } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
-import PayPalButton from "./CheckoutComponents/PaypalCheckout";
 import CheckoutPaypalSelectRadio from "./CheckoutPaypalSelectRadio";
 import CheckoutCardSelectRadio from "./CheckoutCardSelectRadio";
+import PayPalButton from "./CheckoutComponents/PaypalButton";
 
 const stripePromise = loadStripe(stripePublishableKey());
 

@@ -141,22 +141,23 @@ model Order {
 
   createdAt   DateTime      @default(now()) @db.Timestamptz(0)
   updatedAt   DateTime      @updatedAt @db.Timestamptz(0)
-  PaymentInfo PaymentReport[]
+  paymentId   String?      @unique
+  PaymentInfo PaymentReport? @relation(fields: [paymentId], references: [paymentId])
 }
 
 model PaymentReport {
   paymentId              String         @id @default(uuid())
   gateWayTransactionId   String
-  gateWay                PaymentGateway
-  totalAmountPaid        Float
-  totalAmountToPaid      Float
-  gateWayFee             Float
-  netAmount              Float
-  gateWayTransactionTime DateTime
-  status                 String
-  currency               String
+  gateWay                PaymentGateway?
+  totalAmountPaid        Float?
+  totalAmountToPaid      Float?
+  gateWayFee             Float?
+  netAmount              Float?
+  gateWayTransactionTime DateTime?
+  status                 String?
+  currency               String?
   orderId                String
-  order                  Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  order                  Order?    
   createdAt              DateTime       @default(now()) @db.Timestamptz(0)
   updatedAt              DateTime       @updatedAt @db.Timestamptz(0)
 }
