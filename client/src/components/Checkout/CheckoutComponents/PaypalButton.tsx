@@ -1,10 +1,14 @@
 // components/PayPalButton.js
 "use client";
-
-import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useFormContext } from "react-hook-form";
 
-const PayPalButton = ({ createPayment, confirmPayment }: any) => {
+const PayPalButton = ({
+  createPayment,
+  confirmPayment,
+  paymentMethod,
+}: any) => {
+  const { getValues, trigger } = useFormContext();
   const initialOptions = {
     clientId:
       "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
@@ -24,28 +28,65 @@ const PayPalButton = ({ createPayment, confirmPayment }: any) => {
       }}
     >
       <PayPalButtons
+        // className={`${paymentMethod === "paypal" ? "block" : "hidden"}`}
+        style={{
+          layout: "vertical", // Use vertical for single button
+          color: "blue", // Customize button color (optional)
+          shape: "pill", // Use rect shape (optional)
+          label: "pay", // Use "checkout" (optional)
+        }}
+        fundingSource="paypal" // This ensures only PayPal button is shown
         createOrder={async (data, actions) => {
+          const isValid = await trigger();
+          console.log("Is valid", isValid);
+          // Access form data
+          const orderData = getValues();
+          console.log("Order data", orderData);
           // Call your server to set up the transaction
-          try {
-            const paymentObj = {
-              price: 100,
-              currency: "USD",
-              quantity: 1,
-            };
 
-            const response = await createPayment(paymentObj);
+          if (isValid) {
+            try {
+              const paymentObj = {
+                price: 100,
+                currency: "USD",
+                quantity: 1,
+              };
 
-            if (response && response.data) {
-              // Return PayPal order ID
-              return response.data?.data?.id;
-            } else {
-              console.error("Unexpected response structure:", response);
-              throw new Error("Failed to create order");
+              const response = await createPayment(paymentObj);
+
+              if (response && response.data) {
+                // Return PayPal order ID
+                return response.data?.data?.id;
+              } else {
+                console.error("Unexpected response structure:", response);
+                throw new Error("Failed to create order");
+              }
+            } catch (error) {
+              console.error("Error creating PayPal order:", error);
+              throw error;
             }
-          } catch (error) {
-            console.error("Error creating PayPal order:", error);
-            throw error;
           }
+
+          // try {
+          //   const paymentObj = {
+          //     price: 100,
+          //     currency: "USD",
+          //     quantity: 1,
+          //   };
+
+          //   const response = await createPayment(paymentObj);
+
+          //   if (response && response.data) {
+          //     // Return PayPal order ID
+          //     return response.data?.data?.id;
+          //   } else {
+          //     console.error("Unexpected response structure:", response);
+          //     throw new Error("Failed to create order");
+          //   }
+          // } catch (error) {
+          //   console.error("Error creating PayPal order:", error);
+          //   throw error;
+          // }
         }}
         onApprove={async (data, actions) => {
           // Call your server to finalize the transaction
