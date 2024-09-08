@@ -4,21 +4,19 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Elements } from "@stripe/react-stripe-js";
 import StripeCheckoutForm from "../paymentGateway/stripe/StripeCheckoutForm";
 import CheckoutDeliveryForm from "./CheckoutDeliveryForm";
-import CheckoutCardSelectRadio from "./CheckoutCardSelectRadio";
-import CheckoutPaypalSelectRadio from "./CheckoutPaypalSelectRadio";
 import { useGetClientSecretMutation } from "@/redux/api/features/payment/stripePaymentApi";
 import { stripePublishableKey } from "@/config/envConfig";
 import PaymentMethodPaypal from "./CheckoutComponents/PaymentMethodPaypal";
 import { loadStripe } from "@stripe/stripe-js";
 import { ICheckoutDeliveryForm } from "@/types/forms/checkoutTypes";
-import { Button } from "rsuite";
 import {
-  useConfirmPaymentMutation,
+  useAddCaptureMutation,
   useCreatePaymentMutation,
 } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
+import CheckoutPaypalSelectRadio from "./CheckoutPaypalSelectRadio";
+import CheckoutCardSelectRadio from "./CheckoutCardSelectRadio";
 import PayPalButton from "./CheckoutComponents/PaypalButton";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const stripePromise = loadStripe(stripePublishableKey());
 
@@ -85,54 +83,9 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     console.log("Parent form data:", data);
   };
 
-  const [createPayment, { data, error }] = useCreatePaymentMutation();
+  const [createPayment] = useCreatePaymentMutation();
 
-  const [confirmPayment] = useConfirmPaymentMutation();
-
-  const handlePaypalPayment = async () => {
-    try {
-      const paymentObj = {
-        price: 100,
-        currency: "USD",
-        quantity: 1,
-      };
-
-      if (error) {
-        console.error("Error creating PayPal payment:", error);
-        return;
-      }
-      const response = await createPayment(paymentObj);
-
-      console.log("response", response);
-
-      if (response && response.data) {
-        // Open the PayPal approval URL in a new popup window
-        const approvalUrl = response.data?.data?.approvalUrl;
-        if (approvalUrl) {
-          window.open(approvalUrl, "PayPal Approval", "width=800,height=600");
-        } else {
-          console.error("Approval URL not found in the response:", response);
-        }
-      } else {
-        console.error("Unexpected response structure:", response);
-      }
-
-      if (response.data?.data?.id) {
-        const confirmData = response.data?.data?.id;
-        console.log("confirmData", confirmData);
-
-        const confirmResponse = await confirmPayment(confirmData);
-
-        console.log("confirmResponse", confirmResponse);
-
-        if ((confirmResponse.data.data = "COMPLETED")) {
-          router.push("/");
-        }
-      }
-    } catch (error) {
-      console.error("Error handling PayPal payment:", error);
-    }
-  };
+  const [addCapture] = useAddCaptureMutation();
 
   return (
     <div>
@@ -204,7 +157,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 {paymentMethod === "paypal" && (
                   <PayPalButton
                     createPayment={createPayment}
-                    confirmPayment={confirmPayment}
+                    addCapture={addCapture}
                   />
                 )}
 

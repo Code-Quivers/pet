@@ -3,6 +3,8 @@ import paypal from 'paypal-rest-sdk';
 import config from '../../../config';
 import { generateAccessTokenForPaypal } from './paypal.AccessToken';
 import axios from 'axios';
+import { PaymentGateway } from '@prisma/client';
+import prisma from '../../../shared/prisma';
 
 // Configure PayPal
 paypal.configure({
@@ -54,8 +56,44 @@ paypal.configure({
 //   });
 // };
 
-export const createPaypalPayment = async (paymentData: any) => {
+export const createPaypalPayment = async (paymentData: any, cartData: any) => {
+  console.log('Payment Data:', paymentData);
+
   const accessToken = await generateAccessTokenForPaypal(config.paypal.paypal_baseUrl, config.paypal.client_id, config.paypal.client_secret);
+
+  const orderDataObj = {
+    email: cartData?.email,
+    firstName: cartData?.firstName,
+    lastName: cartData?.lastName,
+    address: cartData?.address,
+    city: cartData?.city,
+    state: cartData?.state,
+    postalCode: cartData?.postalCode,
+    phone: cartData?.phone,
+    cartItems: cartData?.cart,
+  };
+
+  // if (
+  //   !orderDataObj.email ||
+  //   !orderDataObj.firstName ||
+  //   !orderDataObj.lastName ||
+  //   !orderDataObj.address ||
+  //   !orderDataObj.city ||
+  //   !orderDataObj.state ||
+  //   !orderDataObj.postalCode ||
+  //   !orderDataObj.phone ||
+  //   !orderDataObj.cart
+  // ) {
+  //   throw new Error('Please provide all required order details');
+  // }
+
+  const createOrder = await prisma.order.create({
+    data: orderDataObj,
+  });
+
+  if (!createOrder) {
+    throw new Error('Failed to create order');
+  }
 
   const createPaymentJson = {
     intent: 'CAPTURE',
@@ -80,7 +118,24 @@ export const createPaypalPayment = async (paymentData: any) => {
       },
     });
 
-    console.log('PayPal Payment Response:', response.data);
+    const paypalPaymentId = response?.data?.id;
+
+    if (!paypalPaymentId) {
+      throw new Error('Failed to create PayPal payment');
+    }
+
+    const paypalDataObject = {
+      orderId: createOrder.orderId,
+      gateWayTransactionId: paypalPaymentId,
+    };
+
+    const paypalResult = await prisma.paymentReport.create({
+      data: paypalDataObject,
+    });
+
+    if (!paypalResult) {
+      throw new Error('Failed to create payment report');
+    }
 
     return response.data;
   } catch (error) {
@@ -106,7 +161,6 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
     );
 
     const captureResponse = response.data;
-    console.log('Capture Response:', captureResponse);
 
     const capturedPaymentInfo = captureResponse.purchase_units[0].payments.captures[0];
 
@@ -130,6 +184,19 @@ export const capturePaypalOrder = async (orderData: { orderID: string }) => {
     };
 
     console.log('Payment Report:', paymentReport);
+    // return paymentReport;
+
+    const paymentReportObj = {
+      gateWayTransactionId: paymentReport.platformTransactionId,
+      gateWay: PaymentGateway.STRIPE,
+      totalAmountPaid: paymentReport.amountToPay,
+      totalAmountToPaid: paymentReport.amountPaid,
+      gateWayFee: paymentReport.platformFee,
+      netAmount: paymentReport.netAmount,
+      gateWayTransactionTime: paymentReport.transactionCreatedTime,
+      status: paymentReport.paymentStatus,
+      currency: paymentReport.currency,
+    };
 
     return paymentReport;
   } catch (error: any) {

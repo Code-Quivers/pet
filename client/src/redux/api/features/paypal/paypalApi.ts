@@ -14,7 +14,7 @@ const PaypalApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.paypal],
     }),
 
-    confirmPayment: builder.mutation({
+    addCapture: builder.mutation({
       query: (data) => ({
         url: `${PAYPAL_API}/capture`,
         method: "POST",
@@ -25,5 +25,4 @@ const PaypalApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreatePaymentMutation, useConfirmPaymentMutation } =
-  PaypalApi;
+export const { useCreatePaymentMutation, useAddCaptureMutation } = PaypalApi;
