@@ -9,3 +9,5 @@ logs
 
 # /prisma/migrations/
 .env.local
+yarn.lock
+bun.lockb
