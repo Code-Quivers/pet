@@ -12,6 +12,7 @@
     "@types/react-color": "^3.0.12",
     "autoprefixer": "10.4.14",
     "axios": "^1.6.7",
+    "caniuse-lite": "^1.0.30001659",
     "chart.js": "^4.4.3",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",

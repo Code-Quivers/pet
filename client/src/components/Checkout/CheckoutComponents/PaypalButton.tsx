@@ -1,13 +1,17 @@
 // components/PayPalButton.js
 "use client";
+import { useCreatePaymentMutation } from "@/redux/api/features/paypal/paypalApi";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-const PayPalButton = ({ createPayment, addCapture, paymentMethod }: any) => {
+const PayPalButton = ({ addCapture }: any) => {
+  const [createPayment] = useCreatePaymentMutation();
+
   const { payAmount, cart } = useSelector((state: any) => state.cart);
 
-  console.log("Pay amount", payAmount, cart);
+  // console.log("Pay amount", payAmount, cart);
 
   const { getValues, trigger } = useFormContext();
   // const initialOptions = {
@@ -17,7 +21,6 @@ const PayPalButton = ({ createPayment, addCapture, paymentMethod }: any) => {
   //   intent: "capture",
   //   components: "buttons",
   // };
-
   return (
     <PayPalScriptProvider
       options={{
@@ -58,11 +61,14 @@ const PayPalButton = ({ createPayment, addCapture, paymentMethod }: any) => {
                 quantity: 1,
               };
 
-              const response = await createPayment({ paymentData, cartData });
+              const response = await createPayment({
+                paymentData,
+                cartData,
+              }).unwrap();
 
-              if (response && response.data) {
+              if (response && response?.data) {
                 // Return PayPal order ID
-                return response.data?.data?.id;
+                return response?.data?.id;
               } else {
                 console.error("Unexpected response structure:", response);
                 throw new Error("Failed to create order");
@@ -75,12 +81,11 @@ const PayPalButton = ({ createPayment, addCapture, paymentMethod }: any) => {
         }}
         onApprove={async (data, actions) => {
           // Call your server to finalize the transaction
-
           const dataObj = {
-            orderID: data.orderID,
+            orderID: data?.orderID,
           };
 
-          console.log("Data obj", dataObj);
+          // console.log("Data obj", dataObj);
 
           try {
             const confirmResponse = await addCapture(dataObj);

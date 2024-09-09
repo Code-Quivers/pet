@@ -1,7 +1,7 @@
 {
   "author": "Code Quivers",
   "dependencies": {
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.15.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/jsonwebtoken": "^9.0.2",
@@ -20,7 +20,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.10",
     "paypal-rest-sdk": "^1.8.1",
-    "prisma": "^5.14.0",
+    "prisma": "^5.15.1",
     "qs": "^6.13.0",
     "stripe": "^15.9.0",
     "winston": "^3.11.0",
