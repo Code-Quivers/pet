@@ -83,8 +83,6 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     console.log("Parent form data:", data);
   };
 
-  const [createPayment] = useCreatePaymentMutation();
-
   const [addCapture] = useAddCaptureMutation();
 
   return (
@@ -155,10 +153,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
               </div>
               <div className="mt-20 mb-28">
                 {paymentMethod === "paypal" && (
-                  <PayPalButton
-                    createPayment={createPayment}
-                    addCapture={addCapture}
-                  />
+                  <PayPalButton addCapture={addCapture} />
                 )}
 
                 {/* <div className="mt-20">

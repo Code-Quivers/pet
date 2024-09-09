@@ -7,17 +7,18 @@ import sendResponse from '../../../shared/sendResponse';
 
 const createPaypalController = catchAsync(async (req: Request, res: Response) => {
   const { paymentData, cartData } = req.body;
+
   const payment = await PaypalService.createPaypalPayment(paymentData, cartData);
 
   // Extract the approval URL for redirecting the user to PayPal
-  const approvalUrl = payment.links.find((link: any) => link.rel === 'approve').href;
+  const approvalUrl = payment?.links?.find((link: any) => link.rel === 'approve').href;
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Payment created successfully!',
     data: {
-      id: payment.id,
+      id: payment?.id,
       approvalUrl,
     },
   });
