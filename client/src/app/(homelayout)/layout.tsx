@@ -1,8 +1,8 @@
+"use client";
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
 import PromoBanner from "@/components/PromoBanner/PromoBanner";
 import Script from "next/script";
-import React from "react";
 
 const layout = ({ children }: any) => {
   return (
