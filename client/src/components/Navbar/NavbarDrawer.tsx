@@ -1,13 +1,14 @@
 import Link from "next/link";
 import React from "react";
-import { Accordion, Drawer, Placeholder } from "rsuite";
+import { Accordion, Drawer } from "rsuite";
 
 const NavbarDrawer = ({ open, setOpen }: any) => {
   return (
     <div>
       <Drawer open={open} onClose={() => setOpen(false)} size={"xs"}>
         <Drawer.Body style={{ paddingLeft: 0, paddingRight: 0 }}>
-          <div className="flex justify-around flex-col">
+          <div className="">
+            {/* contents */}
             <div className="flex flex-col justify-center md:justify-start items-center  md:items-start bg-white gap-6 p-10">
               <Accordion className="!w-full !p-0 !m-0">
                 <Accordion.Panel
@@ -106,47 +107,25 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
                   </div>
                 </Accordion.Panel>
               </Accordion>
-
-              {/* <Link
-              onClick={() => setOpen(false)}
-              className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-              href="#"
-            >
-              {" "}
-              Reviews{" "}
-            </Link>
-            <Link
-              onClick={() => setOpen(false)}
-              className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-              href="#"
-            >
-              {" "}
-              Support{" "}
-            </Link>
-            <Link
-              onClick={() => setOpen(false)}
-              className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-              href="#"
-            >
-              {" "}
-              Blog{" "}
-            </Link> */}
             </div>
-            <div className="mt-24 md:mt-96 mx-auto flex justify-between items-center gap-5">
-              <Link
-                onClick={() => setOpen(false)}
-                href="/sign-in"
-                className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2 hover:border-blue-500 text-black shadow hover:text-gray-100 hover:bg-blue-500"
-              >
-                Sign In
-              </Link>
-              <Link
-                onClick={() => setOpen(false)}
-                href="/sign-up"
-                className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2 hover:border-blue-500 text-black shadow hover:text-gray-100 hover:bg-blue-500"
-              >
-                Sign Up
-              </Link>
+            {/* bottom */}
+            <div className="bg-red-600 relative flex justify-center">
+              <div className="mt-24 md:mt-96 mx-auto fixed bottom-20  flex justify-between items-center gap-5">
+                <Link
+                  onClick={() => setOpen(false)}
+                  href="/sign-in"
+                  className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2  text-black shadow hover:text-gray-100 hover:bg-primary"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  onClick={() => setOpen(false)}
+                  href="/sign-up"
+                  className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2  text-black shadow hover:text-gray-100 hover:bg-primary"
+                >
+                  Sign Up
+                </Link>
+              </div>
             </div>
           </div>
         </Drawer.Body>
@@ -156,3 +135,29 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
 };
 
 export default NavbarDrawer;
+// {
+//   /* <Link
+//               onClick={() => setOpen(false)}
+//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
+//               href="#"
+//             >
+//               {" "}
+//               Reviews{" "}
+//             </Link>
+//             <Link
+//               onClick={() => setOpen(false)}
+//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
+//               href="#"
+//             >
+//               {" "}
+//               Support{" "}
+//             </Link>
+//             <Link
+//               onClick={() => setOpen(false)}
+//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
+//               href="#"
+//             >
+//               {" "}
+//               Blog{" "}
+//             </Link> */
+// }

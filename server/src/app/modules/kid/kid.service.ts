@@ -288,7 +288,28 @@ const getMyAllKids = async (userId: string): Promise<KidDetails[]> => {
       },
     },
     include: {
-      barCode: true,
+      barCode: {
+        select: {
+          variant: {
+            select: {
+              product: {
+                select: {
+                  featuredImage: true,
+                  productName: true,
+                  productPrice: true,
+                  productStatus: true,
+                  category: {
+                    select: {
+                      categoryHref: true,
+                      categoryName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 

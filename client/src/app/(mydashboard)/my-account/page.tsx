@@ -2,7 +2,7 @@ import MyAllKids from "@/components/MyProfile/my-kids/MyAllKids";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "My All Kids | E.T.Phone Home",
+  title: "My Bands | E.T.Phone Home",
 };
 
 const MyKidsPage = () => {

@@ -236,6 +236,7 @@ const CreateKidForm = ({ tag }: { tag: string }) => {
                 <div className="rs-form-control-wrapper ">
                   <DatePicker
                     {...field}
+                    shouldDisableDate={(date) => date > new Date()}
                     size="lg"
                     className="w-full bg-transparent text-sm outline-none rounded-lg "
                     placeholder="DOB"
