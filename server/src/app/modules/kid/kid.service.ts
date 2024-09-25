@@ -148,6 +148,11 @@ const getKid = async (filters: IProductFilterRequest, options: IPaginationOption
     skip,
     include: {
       barCode: true,
+      user: {
+        select: {
+          email: true,
+        },
+      },
     },
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },

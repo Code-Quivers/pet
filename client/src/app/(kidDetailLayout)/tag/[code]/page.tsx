@@ -1,5 +1,6 @@
 "use client";
 import CreateKidForm from "@/components/MyProfile/CreateKidProfile/CreateKidForm";
+import ShareGps from "@/components/tag/ShareGps";
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useGetKidProfileQuery } from "@/redux/api/features/kids/kidApi";
 import { formatDuration } from "@/utils/kids/kidsAgeFormatDuration";
@@ -183,11 +184,12 @@ const MyPetPage = ({ params }: Props) => {
                               </button>
                             </div>
                             <div className="py-2 col-span-2 text-center">
-                              <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
+                              {/* <button className="bg-[#cdf7fece] rounded-md w-9 h-9 transition-all ease-in-out">
                                 <span className="flex justify-center text-primary">
                                   <GrMapLocation size={20} />
                                 </span>
-                              </button>
+                              </button> */}
+                              <ShareGps phoneNumber="4444444" />
                             </div>
                           </>
                         )
