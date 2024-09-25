@@ -4,13 +4,14 @@ import SingleProductSlider from "@/components/ProductPage/ProductSlider/SinglePr
 import Image from "next/image";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { Loader, Tooltip, Whisper } from "rsuite";
+import { Accordion, Loader, Placeholder, Tooltip, Whisper } from "rsuite";
 import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 import { v4 as uuIdv4 } from "uuid";
 import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/CarouselThumbsButton";
 import { addToCart } from "@/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import Cart from "@/components/ProductsPage/Cart/Cart";
+import AllReviews from "@/components/reviews/AllReviews";
 
 const colorLoader = Array.from({ length: 3 }).map((_, index) => (
   <div
@@ -347,6 +348,39 @@ const SingleProductPage = ({ params }: any) => {
                 </div>
               </div>
 
+              {/* productFaq */}
+
+              <section className="mt-8">
+                <Accordion>
+                  <Accordion.Panel header="How it works">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. In,
+                    ullam illo delectus vero sapiente cupiditate vitae. Harum,
+                    veniam dignissimos eligendi dolore minus nam, eum saepe enim
+                    autem consequuntur blanditiis corrupti.
+                  </Accordion.Panel>
+                  <Accordion.Panel header="Kid profile">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Animi, qui? Sit aliquam culpa, hic repellat quia in deserunt
+                    nemo autem aut minima adipisci, ullam eum exercitationem
+                    inventore commodi? Numquam, magnam.
+                  </Accordion.Panel>
+                  <Accordion.Panel header="Tag features">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Inventore velit voluptatibus perferendis sequi harum
+                    provident ex, totam dignissimos, eos excepturi earum
+                    accusantium modi in quibusdam, iste molestiae neque commodi
+                    qui?
+                  </Accordion.Panel>
+                  <Accordion.Panel header="Safety features">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Reprehenderit delectus voluptates minus molestias nesciunt
+                    officiis ratione, facere repellat. Inventore pariatur
+                    obcaecati ex! Qui alias dolores dolore quam minima adipisci
+                    recusandae.
+                  </Accordion.Panel>
+                </Accordion>
+              </section>
+
               {/* Stock */}
               {/* <div className="flex justify-start items-center gap-2 py-6">
               <p className="font-bold text-gray-700   text-lg">Availability:</p>
@@ -371,7 +405,7 @@ const SingleProductPage = ({ params }: any) => {
         </div>
 
         {/* Product description */}
-        <div className="pt-10 md:pt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-10 md:pt-20 max-w-7xl xl:mx-auto mx-6 lg:px-8">
           <span className="text-xl md:text-4xl  font-bold text-gray-700  ">
             Product Description:
           </span>
@@ -379,7 +413,7 @@ const SingleProductPage = ({ params }: any) => {
             {singleProduct?.data?.productDescription}
           </p>
         </div>
-        <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
+        {/* <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
           <h3 className="text-lg font-bold text-[#333]">Reviews(10)</h3>
           <div className="grid md:grid-cols-2 gap-12 mt-6">
             <div>
@@ -463,10 +497,6 @@ const SingleProductPage = ({ params }: any) => {
             </div>
             <div className="">
               <div className="flex items-start">
-                {/* <img
-                  src="https://readymadeui.com/team-2.webp"
-                  className="w-12 h-12 rounded-full border-2 border-white"
-                /> */}
                 <div className="ml-3">
                   <h4 className="text-sm font-bold text-[#333]">John Doe</h4>
                   <div className="flex space-x-1 mt-1">
@@ -528,6 +558,9 @@ const SingleProductPage = ({ params }: any) => {
               </button>
             </div>
           </div>
+        </div> */}
+        <div className="my-5">
+          <AllReviews />
         </div>
         {/* <div className="max-w-xl mx-auto">
         <SingleProductSlider />
