@@ -15,7 +15,7 @@ router.post('/', FileUploadHelper.uploadProductImage.single('file'), (req: Reque
 });
 
 // ! Get all kids----------------------------------->>>
-router.get('/', KidController.getKid);
+router.get('/get-all-kids', KidController.getKid);
 
 router.get('/my-kids', auth(UserRoles.USER), KidController.getMyAllKids);
 

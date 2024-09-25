@@ -486,6 +486,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/*  User Management  */}
               <li>
                 <Link
+                  href="/bands"
+                  className={`group relative flex items-center gap-2 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("bands") && "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                  <MdManageAccounts size={20} />
+                  Band List
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/user-managements"
                   className={`group relative flex items-center gap-2 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("user-managements") &&
