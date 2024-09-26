@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+//Function
 export const InternetDisconnectedMessage = () => {
   const [isOnline, setIsOnline] = useState(true);
 
