@@ -1,5 +1,4 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { tagTypes } from "@/redux/tag-types";
 
 export const stripePaymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,43 +23,13 @@ export const stripePaymentApi = baseApi.injectEndpoints({
 
     retrivePaymentInfo: builder.mutation({
       query: (data) => ({
-        url: `/payment-stripe/retrive-payment-info`,
+        url: `/payment-stripe/retrieve-payment-info`,
         method: "POST",
         data: JSON.stringify(data),
         contentType: "application/json",
       }),
       // invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
     }),
-
-    // retriveTenantPaymentInfo: builder.mutation({
-    //   query: (data) => ({
-    //     url: `/payment-stripe/retrive-tenant-payment-info`,
-    //     method: "POST",
-    //     data: JSON.stringify(data),
-    //     contentType: "application/json",
-    //   }),
-    //   // invalidatesTags: [tagTypes.properties],
-    // }),
-
-    // createConnectedAccount: builder.mutation({
-    //   query: (data) => ({
-    //     url: `/payment-stripe/create-connected-account`,
-    //     method: "POST",
-    //     data: JSON.stringify(data),
-    //     contentType: "application/json",
-    //   }),
-    //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
-    // }),
-
-    // createAccountLink: builder.mutation({
-    //   query: (data) => ({
-    //     url: `/payment-stripe/create-account-link`,
-    //     method: "POST",
-    //     data: JSON.stringify(data),
-    //     contentType: "application/json",
-    //   }),
-    //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
-    // }),
   }),
 });
 
