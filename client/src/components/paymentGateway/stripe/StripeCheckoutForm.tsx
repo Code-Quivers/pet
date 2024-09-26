@@ -1,3 +1,4 @@
+"use client";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import {
   PaymentElement,
@@ -26,10 +27,7 @@ const StripeCheckoutForm = forwardRef(
     const [message, setMessage] = useState<string | null>(null);
     const cart = useSelector((state: any) => state.cart.cart);
     const [updatePaymentIntent, {}] = useUpdatePaymentIntentMutation();
-    const [
-      createOrder,
-      { data: createdOrderData, isLoading: isLoadingCreatingOrder },
-    ] = useCreateOrderMutation();
+    const [createOrder, { data: createdOrderData }] = useCreateOrderMutation();
     const { getValues } = useFormContext(); // Access form data
 
     // Function to handle payment confirmation
@@ -42,6 +40,7 @@ const StripeCheckoutForm = forwardRef(
       try {
         const { error } = await stripe.confirmPayment({
           elements,
+
           confirmParams: {
             return_url: `${getClientUrl()}/payment-done/${orderId}`,
           },

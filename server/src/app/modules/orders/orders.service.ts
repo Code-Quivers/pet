@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Order, OrderStatus, Prisma, Tax } from '@prisma/client';
+import { Order, Prisma } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IGenericResponse } from '../../../interfaces/common';
-import { IOrderFilterRequest, IOrderRequest } from './orders.interface';
 import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFields } from './orders.constants';
 import { format, subMonths } from 'date-fns';
-import { ITaxUpdateRequest } from '../tax/tax.interface';
+import { ICreateNewOrder } from './orders.interface';
 
 // !----------------------------------get all order ---------------------------------------->>>
 const getOrders = async (filters: any, options: IPaginationOptions): Promise<any> => {
@@ -75,6 +73,9 @@ const getOrders = async (filters: any, options: IPaginationOptions): Promise<any
   const result = await prisma.order.findMany({
     where: whereConditions,
     skip,
+    include: {
+      paymentInfo: true,
+    },
     take: limit,
     orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'desc' },
   });
@@ -98,7 +99,7 @@ const getOrders = async (filters: any, options: IPaginationOptions): Promise<any
   };
 };
 
-const getOrder = async (orderId: string, options: any) => {
+const getOrder = async (orderId: string) => {
   if (!orderId) throw new ApiError(httpStatus.BAD_REQUEST, 'Order Id is required!!');
 
   const order = await prisma.order.findUnique({ where: { orderId } });
@@ -110,13 +111,13 @@ const getOrder = async (orderId: string, options: any) => {
 };
 
 // !----------------------------------Update order---------------------------------------->>>
-const updateOrder = async (orderId: string, dataToUpdate: any): Promise<any> => {
+const updateOrder = async (orderId: string): Promise<any> => {
   const result = await prisma.$transaction(async transactionClient => {
     const updatedOrder = await transactionClient.order.update({
       where: {
         orderId,
       },
-      data: dataToUpdate,
+      data: { orderStatus: 'CONFIRMED' },
     });
 
     if (!updatedOrder) {
@@ -190,10 +191,14 @@ monthWiseOrder()
     await prisma.$disconnect();
   });
 
-const createOrder = async (orderData: any) => {
+// ! creating new order data
+const createOrder = async (orderData: ICreateNewOrder) => {
   const result = await prisma.$transaction(async transactionClient => {
     const newOrder = await transactionClient.order.create({
-      data: orderData,
+      data: {
+        deliveryInfo: orderData.deliveryInfo,
+        cartItems: orderData?.cart,
+      },
       select: {
         orderId: true,
       },

@@ -9,7 +9,7 @@ const router = express.Router();
 // ! Create New Order ------------------------------->>>
 router.post('/create-order', OrderController.createOrder);
 
-// router.get('/', OrderController.getOrder);
+router.get('/', OrderController.getAllOrders);
 
 router.get('/monthWise', OrderController.monthWiseOrder);
 

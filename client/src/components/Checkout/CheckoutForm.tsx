@@ -9,10 +9,7 @@ import { stripePublishableKey } from "@/config/envConfig";
 import PaymentMethodPaypal from "./CheckoutComponents/PaymentMethodPaypal";
 import { loadStripe } from "@stripe/stripe-js";
 import { ICheckoutDeliveryForm } from "@/types/forms/checkoutTypes";
-import {
-  useAddCaptureMutation,
-  useCreatePaymentMutation,
-} from "@/redux/api/features/paypal/paypalApi";
+import { useAddCaptureMutation } from "@/redux/api/features/paypal/paypalApi";
 import { useRouter } from "next/navigation";
 import CheckoutPaypalSelectRadio from "./CheckoutPaypalSelectRadio";
 import CheckoutCardSelectRadio from "./CheckoutCardSelectRadio";
@@ -65,12 +62,15 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     if (paymentMethod === "card_payment") {
       handleGetClientSecret();
     }
+   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // -----
 
   const handleSubmitFromParent = async (data: any) => {
     if (childSubmitRef.current) {
-      console.log("Current ref:", childSubmitRef.current); // Check what is logged
+      
+      // @ts-ignore
       const childData = await childSubmitRef.current.handleChildSubmit();
       if (!childData.success) {
         console.error("Child component submission failed:", childData.error);
@@ -151,122 +151,11 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                   </button>
                 )}
               </div>
+              {/* paypal */}
               <div className="mt-20 mb-28">
                 {paymentMethod === "paypal" && (
                   <PayPalButton addCapture={addCapture} />
                 )}
-
-                {/* <div className="mt-20">
-                  {paymentMethod === "paypal" && (
-                    <PayPalScriptProvider
-                      options={{ clientId: "test", components: "buttons" }}
-                    >
-                      <PayPalButtons
-                        className="mt-20"
-                        style={{
-                          layout: "vertical", // Use vertical for single button
-                          color: "blue", // Customize button color (optional)
-                          shape: "pill", // Use rect shape (optional)
-                          label: "pay", // Use "checkout" (optional)
-                        }}
-                        fundingSource="paypal" // This ensures only PayPal button is shown
-                        createOrder={async (data, actions) => {
-                          // Call your server to set up the transaction
-                          try {
-                            const paymentObj = {
-                              price: 100,
-                              currency: "USD",
-                              quantity: 1,
-                            };
-
-                            const response = await createPayment(paymentObj);
-
-                            if (response && response.data) {
-                              // Return PayPal order ID
-                              return response.data?.data?.id;
-                            } else {
-                              console.error(
-                                "Unexpected response structure:",
-                                response
-                              );
-                              throw new Error("Failed to create order");
-                            }
-                          } catch (error) {
-                            console.error(
-                              "Error creating PayPal order:",
-                              error
-                            );
-                            throw error;
-                          }
-                        }}
-                        onApprove={async (data, actions) => {
-                          // Call your server to finalize the transaction
-                          try {
-                            const confirmResponse = await confirmPayment(
-                              data.orderID
-                            );
-
-                            if (confirmResponse && confirmResponse.data) {
-                              const orderData = confirmResponse.data;
-
-                              const errorDetail =
-                                Array.isArray(orderData.details) &&
-                                orderData.details[0];
-
-                              if (
-                                errorDetail &&
-                                errorDetail.issue === "INSTRUMENT_DECLINED"
-                              ) {
-                                return actions.restart();
-                              }
-
-                              if (errorDetail) {
-                                let msg =
-                                  "Sorry, your transaction could not be processed.";
-                                if (errorDetail.description)
-                                  msg += "\n\n" + errorDetail.description;
-                                if (orderData.debug_id)
-                                  msg += " (" + orderData.debug_id + ")";
-                                return alert(msg);
-                              }
-
-                              console.log(
-                                "Capture result",
-                                orderData,
-                                JSON.stringify(orderData, null, 2)
-                              );
-                              const transaction =
-                                orderData.purchase_units[0].payments
-                                  .captures[0];
-                              alert(
-                                "Transaction " +
-                                  transaction.status +
-                                  ": " +
-                                  transaction.id +
-                                  "\n\nSee console for all available details"
-                              );
-
-                              if (transaction.status === "COMPLETED") {
-                                // Use your Next.js router to navigate if required
-                                // router.push("/");
-                              }
-                            } else {
-                              console.error(
-                                "Unexpected response structure:",
-                                confirmResponse
-                              );
-                            }
-                          } catch (error) {
-                            console.error(
-                              "Error confirming PayPal payment:",
-                              error
-                            );
-                          }
-                        }}
-                      />
-                    </PayPalScriptProvider>
-                  )}
-                </div> */}
               </div>
             </section>
           </div>

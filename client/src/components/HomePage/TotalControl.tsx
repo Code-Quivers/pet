@@ -3,7 +3,7 @@ import React from "react";
 
 const TotalControl = () => {
   return (
-    <div className="pt-10 md:pb-20  ">
+    <div className="md:pb-20  ">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full md:w-1/2 md:mb-0 mb-8">
           <div className="relative  md:mr-0 w-full">
@@ -16,13 +16,10 @@ const TotalControl = () => {
             </div>
           </div>
         </div>
-        <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
+        <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center py-6">
           <div className="flex flex-col justify-center items-center px-4">
-            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
-              YOUR PROFILE
-            </span>
             <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl text-center">
-              Total Control. Total Convenience.
+              Your Profile. Total Control. Total Convenience.
             </h2>
             <p className="mb-6 font-medium tracking-wide text-gray-600   md:text-lg text-center">
               Takes only minutes to set up and Contains all the information
