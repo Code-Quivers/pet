@@ -1,6 +1,7 @@
 import { getClientUrl } from "@/helpers/envConfig";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
+import moment from "moment";
 //
 const workbook = new Excel.Workbook();
 
@@ -14,6 +15,8 @@ export const saveExcel = async ({
   columns: any[];
   allBarCodeList: any;
 }) => {
+
+
   try {
     const fileName = "Product File";
 
@@ -29,34 +32,31 @@ export const saveExcel = async ({
       column.alignment = { horizontal: "center" };
     });
 
-    // const rowIndexStart = 2;
-
-    // let rowIndex = rowIndexStart;
-
     checkedBoxData?.length > 0
       ? checkedBoxData?.forEach((singleData: any) => {
           const customRows = {
             productName: singleData.variant.product.productName,
-            variantPrice: singleData.variant.variantPrice,
             productColor: singleData.variant.color.name,
             // productSize: singleData.variant.size
             //   ? singleData.variant.size
             //   : "No Size",
             qrCodeLink: `${getClientUrl()}/tag/${singleData.code}`,
-            tagCode: singleData.code,
+            barcodeStatus: singleData.barcodeStatus,
+            createdAt: moment(singleData.createdAt).format("DD MMMM YYYY"),
           };
           worksheet.addRow(customRows);
         })
       : allBarCodeList?.data?.forEach((singleData: any) => {
           const customRows = {
             productName: singleData.variant.product.productName,
-            variantPrice: singleData.variant.variantPrice,
             productColor: singleData.variant.color.name,
             // productSize: singleData.variant.size
             //   ? singleData.variant.size
             //   : "No Size",
             qrCodeLink: `${getClientUrl()}/tag/${singleData.code}`,
             tagCode: singleData.code,
+            barcodeStatus: singleData.barcodeStatus,
+            createdAt: moment(singleData.createdAt).format("DD MMMM YYYY"),
           };
           worksheet.addRow(customRows);
         });
