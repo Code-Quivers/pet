@@ -18,13 +18,13 @@ interface PaymentMethodStripeProps {
   ref: any;
 }
 
-const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
+const PaymentMethodStripe = ({
   paymentMethod,
   amountToPaid,
   setIsComponentLoading,
   setIsStripeLoading,
   ref,
-}) => {
+}: any) => {
   const [getClientSecret, { data: stripeData, isLoading, isError }] =
     useGetClientSecretMutation();
   const [clientSecret, setClientSecret] = useState("");
@@ -73,7 +73,9 @@ const PaymentMethodStripe: React.FC<PaymentMethodStripeProps> = ({
           <Elements options={options} stripe={stripePromise}>
             <StripeCheckoutForm
               ref={ref}
-              orderId={orderId}
+              // orderId={orderId}
+              amountToPaid={10}
+              intentId=""
               setIsStripeLoading={setIsStripeLoading}
             />
           </Elements>
