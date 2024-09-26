@@ -21,5 +21,6 @@ export const InternetDisconnectedMessage = () => {
     };
   }, []);
 
+  // return null if online
   return !isOnline && <div>zzz</div>;
 };
