@@ -19,17 +19,6 @@ export type IOrderRequest = {
   cartItems: cartItems[];
 };
 
-// type shippingInformation = {
-//   firstName: string;
-//   lastName: string;
-//   address: string;
-//   city: string;
-//   state: string;
-//   postcode: string;
-//   email: string;
-//   phone: string;
-// };
-
 type paymentInformation = {
   subtotal: number;
   taxes: number;
@@ -51,4 +40,34 @@ type cartItems = {
 export type IOrderUpdateRequest = {
   state?: string | undefined;
   tax?: string | undefined;
+};
+
+type IDeliveryInfo = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  phone: string;
+  notes?: string;
+};
+type ICartItems = {
+  categoryId: string;
+  productId: string;
+  productName: string;
+  variantId: string;
+  price: number;
+  color: {
+    name: string;
+    code: string;
+  };
+  image: string;
+  quantity: number;
+  totalPrice: number;
+};
+export type ICreateNewOrder = {
+  deliveryInfo: IDeliveryInfo;
+  cart: ICartItems[];
 };

@@ -65,10 +65,20 @@ class StripePaymentProcessor {
     }
   };
 
-  static retriveStripePaymentInfo = async (paymentIntentId: string) => {
+  static retrieveStripePaymentInfo = async (paymentIntentId: string) => {
     const paymentIntentInfo = await stripe.paymentIntents.retrieve(paymentIntentId);
     if (!paymentIntentInfo) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Payment information retrivation failed!!!');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Payment information retribution failed!!!');
+    }
+    return {
+      jsonResponse: paymentIntentInfo,
+      httpStatusCode: 200,
+    };
+  };
+  static retrieveStripePaymentChargeInfo = async (chargeId: any) => {
+    const paymentIntentInfo = await stripe.charges.retrieve(chargeId);
+    if (!paymentIntentInfo) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Payment Charge information retribution failed!!!');
     }
     return {
       jsonResponse: paymentIntentInfo,
