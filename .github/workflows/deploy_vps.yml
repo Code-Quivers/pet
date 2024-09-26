@@ -1,0 +1,55 @@
+name: Deploy Docker Image
+
+on:
+  workflow_run:
+    workflows: ["Publish Docker Image"]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Ensure Postgres is running
+        run: |
+          if [ $(docker ps -q -f name=postgres) ]; then
+            echo "Postgres is already running";
+          elif [ $(docker ps -a -q -f name=postgres) ]; then
+            echo "Postgres container exists but is stopped, starting it";
+            docker start postgres;
+          else
+            echo "Postgres container does not exist, creating and starting it";
+            docker run -d --name postgres -e POSTGRES_PASSWORD=salimalsazu -e POSTGRES_DB=erp -p 5432:5432 postgres:latest;
+          fi
+
+      # Client deployment
+      - name: Deploy Client
+        run: |
+          docker stop client-container || true
+          docker rm client-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
+          docker run -d -p 3000:3000 --name client-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
+
+      # Server deployment
+      - name: Deploy Server
+        run: |
+          docker stop server-container || true
+          docker rm server-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
+          docker run -d -p 9000:9000 --name server-container --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
+
+      # Dashboard deployment
+      - name: Deploy Dashboard
+        run: |
+          docker stop dashboard-container || true
+          docker rm dashboard-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
+          docker run -d -p 4000:4000 --name dashboard-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
+
+      # Backup Service deployment
+      - name: Deploy Backup Service
+        run: |
+          docker stop backup-service || true
+          docker rm backup-service || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
+          docker run -d --name backup-service --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
