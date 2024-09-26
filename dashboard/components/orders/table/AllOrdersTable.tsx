@@ -152,7 +152,7 @@ const AllOrderList = () => {
                           </div>
                           <div className="flex flex-col justify-start items-start w-46">
                             <p className="text-lg font-bold">
-                              <span>$</span> {order?.paymentInformation?.total}
+                              <span>$</span>  {order?.paymentInfo?.amountPaid}
                             </p>
                             <p className="text-xs">
                               Order Status :{" "}
@@ -356,9 +356,7 @@ const AllOrderList = () => {
                                 Total Grand:{" "}
                                 <span className="text-black font-medium">
                                   ${" "}
-                                  {order?.paymentInformation?.subtotal.toFixed(
-                                    2
-                                  )}
+                                  {order?.paymentInfo?.amountPaid}
                                 </span>
                               </p>
                               <p className="flex justify-between">

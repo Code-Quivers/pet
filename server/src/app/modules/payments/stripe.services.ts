@@ -19,15 +19,14 @@ class StripePaymentProcessor {
   };
 
   private static fixAmountToTwoDecimal = (amount: number) => {
-    // Multiply by 100 in last cause, Stripe receive payment in cents
-    return parseFloat((Math.ceil(amount * 100) / 100).toFixed(2)) * 100;
+    return parseFloat((Math.ceil(amount * 100) / 100).toFixed(2));
   };
 
   static createPaymentIntent = async (amountToPaid: number) => {
     try {
       const paymentIntent = await stripe.paymentIntents.create({
         ...this.intentObject,
-        amount: this.fixAmountToTwoDecimal(amountToPaid),
+        amount: this.getAmountInCentsFromDollar(this.fixAmountToTwoDecimal(amountToPaid)),
       });
 
       if (!paymentIntent?.client_secret) {
@@ -48,7 +47,7 @@ class StripePaymentProcessor {
   static updatePaymentIntent = async (intentId: string, amountToPaid: number) => {
     try {
       const paymentIntent = await stripe.paymentIntents.update(intentId, {
-        amount: amountToPaid,
+        amount: this.getAmountInCentsFromDollar(this.fixAmountToTwoDecimal(amountToPaid)),
       });
 
       if (!paymentIntent?.client_secret) {
@@ -84,6 +83,14 @@ class StripePaymentProcessor {
       jsonResponse: paymentIntentInfo,
       httpStatusCode: 200,
     };
+  };
+  static getAmountInCentsFromDollar = (amount: number): number => {
+    // Multiply by 100 in last cause, Stripe receive payment in cents
+    return amount * 100;
+  };
+  static getAmountInDollarsFromCents = (amount: number): number => {
+    //  by 100 in last cause, Stripe receive payment in cents
+    return amount / 100;
   };
 }
 

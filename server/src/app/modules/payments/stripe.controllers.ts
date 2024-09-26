@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import StripePaymentProcessor from './stripe.services';
@@ -6,6 +7,7 @@ import { OrderService } from '../orders/orders.service';
 import PaymentReportService from '../paymentReport/payment.services';
 import Stripe from 'stripe';
 import config from '../../../config';
+import { errorLogger } from '../../../shared/logger';
 
 /**
  * Controller handling PayPal related operations such as creating and capturing orders.
@@ -67,33 +69,40 @@ class StripeController {
   });
 
   static retrieveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
-    console.log('--------->>>>>>>>>>>>>>>>>>>>');
     const { orderId, paymentIntentId } = req.body;
-
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
     // Retrieve the Payment Intent
-    // const paymentIntent = await StripePaymentProcessor.paymentIntents.retrieve(paymentIntentId);
 
     // Get the latest charge ID from the Payment Intent
     const chargeId = jsonResponse?.latest_charge;
-
+    // eslint-disable-next-line prefer-const
+    let otherData = {
+      netAmount: 0,
+      fee: 0,
+      totalAmount: 0,
+      amountPaid: 0,
+    };
     if (chargeId) {
-      // Retrieve the charge details using the charge ID
       const charge = await StripePaymentProcessor.retrieveStripePaymentChargeInfo(chargeId);
-      console.log('charge', charge);
-      // Retrieve the balance transaction using the balance transaction ID from the charge
+
+      //
       const balanceTransaction = await stripe.balanceTransactions.retrieve(charge.jsonResponse?.balance_transaction as any);
 
-      console.log('balance transcation', balanceTransaction);
       // Extract financial details
-      const netAmount = balanceTransaction.net; // Net amount after Stripe fees
-      const fee = balanceTransaction.fee; // Stripe fee
-      const totalAmount = charge.jsonResponse?.amount; // Total amount for the charge
-      const amountPaid = charge.jsonResponse?.amount_captured; // Amount that was paid
-      console.log('_------------', netAmount, fee, totalAmount, amountPaid, charge);
+      otherData.netAmount = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.net);
+      otherData.fee = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.fee);
+      const totalAmount = StripePaymentProcessor.getAmountInDollarsFromCents(charge.jsonResponse?.amount);
+      const amountPaid = StripePaymentProcessor.getAmountInDollarsFromCents(charge.jsonResponse?.amount_captured);
+
+      otherData.amountPaid = amountPaid;
+      otherData.totalAmount = totalAmount;
+
+      if (amountPaid !== totalAmount) {
+        errorLogger.error(`Stripe payment bug, amount paid is ${amountPaid} & totalAmount ${totalAmount}`);
+      }
     }
 
-    const paymentReport = StripeController.generatePaymentReport(jsonResponse, orderId);
+    const paymentReport = StripeController.generatePaymentReport(otherData, jsonResponse, orderId);
 
     const updatedOrderData = OrderService.updateOrder(orderId);
     // Create payment report in the database
@@ -110,16 +119,17 @@ class StripeController {
   /**
    * Generates a payment report based on PayPal API response data.
    */
-  private static generatePaymentReport(retrievedPaymentInfo: any, orderId: string): any {
-    // Amount devided by 100 cause stripe calculate amount in the cent.
+  private static generatePaymentReport(otherData: any, retrievedPaymentInfo: any, orderId: string): any {
+    // Amount divided by 100 cause stripe calculate amount in the cent.
+
     return {
       gateWay: 'STRIPE',
       status: retrievedPaymentInfo.status,
-      totalAmountToPaid: parseFloat(retrievedPaymentInfo.amount) / 100.0,
-      totalAmountPaid: parseFloat(retrievedPaymentInfo.amount_received) / 100.0,
+      totalAmountToPaid: otherData?.totalAmount,
+      totalAmountPaid: otherData?.amountPaid,
       currency: retrievedPaymentInfo.currency,
-      gateWayFee: parseFloat('0.0'),
-      netAmount: parseFloat('0.0'),
+      gateWayFee: otherData?.fee,
+      netAmount: otherData?.netAmount,
       gateWayTransactionId: retrievedPaymentInfo.id,
       gateWayTransactionTime: new Date(retrievedPaymentInfo.created).toISOString(),
       orderId,
