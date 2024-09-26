@@ -469,9 +469,6 @@ const ProductBarcode = () => {
                                 barCodeStatusChange(eventKey as string, rowData)
                               }
                             >
-                              <Dropdown.Item eventKey={"ACTIVE"}>
-                                ACTIVE
-                              </Dropdown.Item>
                               <Dropdown.Item eventKey={"INACTIVE"}>
                                 INACTIVE
                               </Dropdown.Item>
