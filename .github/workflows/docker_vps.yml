@@ -2,7 +2,7 @@ name: Deploy Docker Image
 
 on:
   workflow_run:
-    workflows: ["Publish Docker Image"] # Ensure this matches exactly with the docker_build.yml's 'name'
+    workflows: ["Publish Docker Image"]
     types: [completed]
 
 jobs:
@@ -10,7 +10,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      # Step to ensure Postgres container is running
       - name: Ensure Postgres is running
         run: |
           if [ $(docker ps -q -f name=postgres) ]; then
@@ -23,66 +22,34 @@ jobs:
             docker run -d --name postgres -e POSTGRES_PASSWORD=salimalsazu -e POSTGRES_DB=erp -p 5432:5432 postgres:latest;
           fi
 
-      # Deploy the Client
-      - name: Stop the old client container
-        run: docker stop client-container || true
+      # Client deployment
+      - name: Deploy Client
+        run: |
+          docker stop client-container || true
+          docker rm client-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
+          docker run -d -p 3000:3000 --name client-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
 
-      - name: Remove the old client container
-        run: docker rm client-container || true
+      # Server deployment
+      - name: Deploy Server
+        run: |
+          docker stop server-container || true
+          docker rm server-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
+          docker run -d -p 9000:9000 --name server-container --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
 
-      - name: Delete the old client image
-        run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest || true
+      # Dashboard deployment
+      - name: Deploy Dashboard
+        run: |
+          docker stop dashboard-container || true
+          docker rm dashboard-container || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
+          docker run -d -p 4000:4000 --name dashboard-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
 
-      - name: Pull the latest client image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
-
-      - name: Run the new client container
-        run: docker run -d -p 3000:3000 --name client-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:client-latest
-
-      # Deploy the Server
-      - name: Stop the old server container
-        run: docker stop server-container || true
-
-      - name: Remove the old server container
-        run: docker rm server-container || true
-
-      - name: Delete the old server image
-        run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest || true
-
-      - name: Pull the latest server image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
-
-      - name: Run the new server container
-        run: docker run -d -p 9000:9000 --name server-container --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:server-latest
-
-      # Deploy the Dashboard
-      - name: Stop the old dashboard container
-        run: docker stop dashboard-container || true
-
-      - name: Remove the old dashboard container
-        run: docker rm dashboard-container || true
-
-      - name: Delete the old dashboard image
-        run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest || true
-
-      - name: Pull the latest dashboard image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
-
-      - name: Run the new dashboard container
-        run: docker run -d -p 4000:4000 --name dashboard-container ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:dashboard-latest
-
-      # Deploy the Backup Service
-      - name: Stop the old backup service container
-        run: docker stop backup-service || true
-
-      - name: Remove the old backup service container
-        run: docker rm backup-service || true
-
-      - name: Delete the old backup service image
-        run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest || true
-
-      - name: Pull the latest backup service image
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
-
-      - name: Run the new backup service container
-        run: docker run -d --name backup-service --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
+      # Backup Service deployment
+      - name: Deploy Backup Service
+        run: |
+          docker stop backup-service || true
+          docker rm backup-service || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
+          docker run -d --name backup-service --link postgres:postgres ${{ secrets.DOCKERHUB_USERNAME }}/kid-app:backup-service-latest
