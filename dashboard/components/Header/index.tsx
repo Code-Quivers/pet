@@ -67,7 +67,7 @@ const Header = (props: {
         <div className="flex items-center justify-end w-full gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* <!-- Dark Mode Toggler --> */}
-            <li className="font-semibold">Version 1.0.0</li>
+            <li className="font-semibold">Version 2.0.0</li>
           </ul>
 
           {/* <!-- User Area --> */}
