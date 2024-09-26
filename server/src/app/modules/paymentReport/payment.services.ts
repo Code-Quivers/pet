@@ -6,8 +6,6 @@ import { IStripePaymentReqData, IPaymentData } from './payment.interfaces';
 
 class PaymentReportService {
   static createPaymentReport = async (paymentReport: IStripePaymentReqData): Promise<any> => {
-    console.log(',,,,,,,,,,,,,,,,,,,,,,,,,,');
-    console.log('paymentReport:', paymentReport);
     const { gateWay, status, totalAmountPaid, totalAmountToPaid, gateWayFee, gateWayTransactionId, ...others } = paymentReport || {};
 
     const paymentData: IPaymentData = {
