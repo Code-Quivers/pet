@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import httpStatus from 'http-status';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
+import { errorLogger } from '../../../shared/logger';
 
 /**
  * Creates a PayPal order for processing payment.
@@ -91,6 +92,55 @@ class StripePaymentProcessor {
   static getAmountInDollarsFromCents = (amount: number): number => {
     //  by 100 in last cause, Stripe receive payment in cents
     return amount / 100;
+  };
+  // generating payment report
+  static generatePaymentReport = async (chargeId: string | any, retrievedPaymentInfo: any, orderId: string): Promise<any> => {
+    const otherData = {
+      netAmount: 0,
+      fee: 0,
+      totalAmount: 0,
+      amountPaid: 0,
+    };
+
+    if (chargeId) {
+      try {
+        // Retrieve Stripe charge info
+        const { jsonResponse: jsonChargeResponse } = await StripePaymentProcessor.retrieveStripePaymentChargeInfo(chargeId);
+        const { balance_transaction, amount, amount_captured } = jsonChargeResponse || {};
+
+        // Retrieve Stripe balance transaction
+        const balanceTransaction = await stripe.balanceTransactions.retrieve(balance_transaction as string);
+
+        // Extract financial details
+        otherData['netAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.net);
+        otherData['fee'] = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.fee);
+        otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount);
+        otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount_captured);
+
+        // Log error if there's a mismatch in amounts
+        if (otherData.amountPaid !== otherData.totalAmount) {
+          errorLogger.error(`Stripe payment mismatch: amount paid (${otherData.amountPaid}) does not match total amount (${otherData.totalAmount}).`);
+        }
+      } catch (error) {
+        errorLogger.error('Error retrieving payment info from Stripe: ', error);
+      }
+    } else {
+      otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount);
+      otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount_received);
+    }
+
+    return {
+      gateWay: 'STRIPE',
+      status: retrievedPaymentInfo.status,
+      totalAmountToPaid: otherData?.totalAmount,
+      totalAmountPaid: otherData?.amountPaid,
+      currency: retrievedPaymentInfo.currency,
+      gateWayFee: otherData?.fee,
+      netAmount: otherData?.netAmount,
+      gateWayTransactionId: retrievedPaymentInfo.id,
+      gateWayTransactionTime: new Date(retrievedPaymentInfo.created).toISOString(),
+      orderId,
+    };
   };
 }
 

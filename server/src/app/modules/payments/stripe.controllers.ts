@@ -5,15 +5,10 @@ import StripePaymentProcessor from './stripe.services';
 import sendResponse from '../../../shared/sendResponse';
 import { OrderService } from '../orders/orders.service';
 import PaymentReportService from '../paymentReport/payment.services';
-import Stripe from 'stripe';
-import config from '../../../config';
-import { errorLogger } from '../../../shared/logger';
 
 /**
  * Controller handling PayPal related operations such as creating and capturing orders.
  */
-
-const stripe = new Stripe(config.stripe_secret_key);
 
 class StripeController {
   private static orderCreationSuccessMessage = 'Order creation successful!!!';
@@ -23,19 +18,9 @@ class StripeController {
    * Handles payment for an order.
    */
   static createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
-    const {
-      amountToPaid,
+    const { amountToPaid } = req.body;
 
-      // deliveryInfo, cart
-    } = req.body;
-
-    // console.log(typeof amountToPaid, '-------------------------------->>>>>>>');
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.createPaymentIntent(amountToPaid);
-    // const orderData = {
-    //   ...deliveryInfo,
-    //   cartItems: cart,
-    // };
-    // const order = await OrderService.createOrder(orderData);
 
     sendResponse(res, {
       statusCode: httpStatusCode,
@@ -70,41 +55,13 @@ class StripeController {
 
   static retrieveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
     const { orderId, paymentIntentId } = req.body;
-    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
     // Retrieve the Payment Intent
-
+    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
+    // updating order details
+    const updatedOrderData = OrderService.updateOrder(orderId);
     // Get the latest charge ID from the Payment Intent
     const chargeId = jsonResponse?.latest_charge;
-    // eslint-disable-next-line prefer-const
-    let otherData = {
-      netAmount: 0,
-      fee: 0,
-      totalAmount: 0,
-      amountPaid: 0,
-    };
-    if (chargeId) {
-      const charge = await StripePaymentProcessor.retrieveStripePaymentChargeInfo(chargeId);
-
-      //
-      const balanceTransaction = await stripe.balanceTransactions.retrieve(charge.jsonResponse?.balance_transaction as any);
-
-      // Extract financial details
-      otherData.netAmount = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.net);
-      otherData.fee = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.fee);
-      const totalAmount = StripePaymentProcessor.getAmountInDollarsFromCents(charge.jsonResponse?.amount);
-      const amountPaid = StripePaymentProcessor.getAmountInDollarsFromCents(charge.jsonResponse?.amount_captured);
-
-      otherData.amountPaid = amountPaid;
-      otherData.totalAmount = totalAmount;
-
-      if (amountPaid !== totalAmount) {
-        errorLogger.error(`Stripe payment bug, amount paid is ${amountPaid} & totalAmount ${totalAmount}`);
-      }
-    }
-
-    const paymentReport = StripeController.generatePaymentReport(otherData, jsonResponse, orderId);
-
-    const updatedOrderData = OrderService.updateOrder(orderId);
+    const paymentReport = await StripePaymentProcessor.generatePaymentReport(chargeId, jsonResponse, orderId);
     // Create payment report in the database
     await PaymentReportService.createPaymentReport(paymentReport);
 
@@ -119,22 +76,6 @@ class StripeController {
   /**
    * Generates a payment report based on PayPal API response data.
    */
-  private static generatePaymentReport(otherData: any, retrievedPaymentInfo: any, orderId: string): any {
-    // Amount divided by 100 cause stripe calculate amount in the cent.
-
-    return {
-      gateWay: 'STRIPE',
-      status: retrievedPaymentInfo.status,
-      totalAmountToPaid: otherData?.totalAmount,
-      totalAmountPaid: otherData?.amountPaid,
-      currency: retrievedPaymentInfo.currency,
-      gateWayFee: otherData?.fee,
-      netAmount: otherData?.netAmount,
-      gateWayTransactionId: retrievedPaymentInfo.id,
-      gateWayTransactionTime: new Date(retrievedPaymentInfo.created).toISOString(),
-      orderId,
-    };
-  }
 }
 
 export default StripeController;
