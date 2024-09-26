@@ -7,7 +7,7 @@ import Script from "next/script";
 const layout = ({ children }: any) => {
   return (
     <div>
-      <Script
+      {/* <Script
         id="tawk"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{
@@ -23,7 +23,7 @@ const layout = ({ children }: any) => {
             })();
           `,
         }}
-      />
+      /> */}
 
       <div>
         <div className="sticky top-0 z-50">

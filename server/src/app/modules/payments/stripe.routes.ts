@@ -1,7 +1,5 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 
-import auth from '../../middlewares/auth';
-import { UserRoles } from '@prisma/client';
 import StripeController from './stripe.controllers';
 
 const router = express.Router();
@@ -10,8 +8,6 @@ const router = express.Router();
 router.post('/create-payment-intent', StripeController.createPaymentIntent);
 router.post('/update-payment-intent', StripeController.updatePaymentIntent);
 
-router.post('/retrive-payment-info', StripeController.retriveStripePaymentInformation);
+router.post('/retrieve-payment-info', StripeController.retrieveStripePaymentInformation);
 
 export const StripeRoutes = router;
-
-

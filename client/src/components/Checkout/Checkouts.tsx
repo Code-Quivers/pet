@@ -13,16 +13,13 @@ import Link from "next/link";
 
 const Checkouts = ({ params }: any) => {
   const cart = useSelector((state: any) => state.cart.cart);
-  console.log(cart, "cart");
   const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
-
   const [stateTaxValue, setStateTaxValue] = useState(0);
-
   const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
   const roundedTaxAmount = Math.round(taxAmount * 100) / 100;
   const totalAmount = payAmount?.subtotal + roundedTaxAmount;
-
+ 
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
@@ -59,12 +56,12 @@ const Checkouts = ({ params }: any) => {
       {/*  */}
       {isClient && payAmount?.checkoutId === params?.id ? (
         <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4">
-          <section className="md:grid md:grid-cols-12  ">
+          <section className="md:grid relative md:grid-cols-12  ">
             <div className="md:col-span-7 pt-10 md:mr-10">
               <CheckoutDeliveryInfoForm totalAmount={totalAmount} />
             </div>
             {/* cart data */}
-            <div className="md:col-span-5 md:border-l pt-10 md:pl-10 ">
+            <div className="md:col-span-5 sticky h-[100vh] top-0 md:border-l pt-10 md:pl-10 ">
               {cart?.length > 0 &&
                 cart?.map((item: any, index: number) => (
                   <div className="flex items-center gap-5 mb-3" key={index}>
@@ -131,34 +128,3 @@ const Checkouts = ({ params }: any) => {
 };
 
 export default Checkouts;
-
-// const orderInformation = {
-//   shippingInformation: {
-//     firstName: "John",
-//     lastName: "Doe",
-//     address: "1234 Main St",
-//     city: "San Francisco",
-//     state: "CA",
-//     postcode: "94111",
-//     email: "rafi11@gh.com",
-//     phone: "1234567890",
-//   },
-//   cartItems: [
-//     {
-//       productName: "Product 1",
-//       productId: "4913483d-ed5a-406c-82a6-2fa4d654af05",
-//       variantId: "4913483d-ed5a-406c-82a6-2fa4d654af05",
-//       price: 100,
-//       quantity: 2,
-//       color: {
-//         name: "Red",
-//         code: "#ff0000",
-//       },
-//     },
-//   ],
-//   paymentInformation: {
-//     subtotal: 200,
-//     taxes: 10,
-//     total: 210,
-//   },
-// };

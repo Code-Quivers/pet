@@ -3,12 +3,16 @@ import catchAsync from '../../../shared/catchAsync';
 import StripePaymentProcessor from './stripe.services';
 import sendResponse from '../../../shared/sendResponse';
 import { OrderService } from '../orders/orders.service';
-import PaymentService from '../paymentReport/payment.services';
 import PaymentReportService from '../paymentReport/payment.services';
+import Stripe from 'stripe';
+import config from '../../../config';
 
 /**
  * Controller handling PayPal related operations such as creating and capturing orders.
  */
+
+const stripe = new Stripe(config.stripe_secret_key);
+
 class StripeController {
   private static orderCreationSuccessMessage = 'Order creation successful!!!';
   private static orderCreationFailedMessage = 'Order creation failed!!!';
@@ -17,15 +21,13 @@ class StripeController {
    * Handles payment for an order.
    */
   static createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
-    console.log(req.body);
-    console.log('------------------------------------');
-
     const {
       amountToPaid,
 
       // deliveryInfo, cart
     } = req.body;
-    console.log(typeof amountToPaid, '-------------------------------->>>>>>>');
+
+    // console.log(typeof amountToPaid, '-------------------------------->>>>>>>');
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.createPaymentIntent(amountToPaid);
     // const orderData = {
     //   ...deliveryInfo,
@@ -64,25 +66,43 @@ class StripeController {
     });
   });
 
-  static retriveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
+  static retrieveStripePaymentInformation = catchAsync(async (req: Request, res: Response) => {
     console.log('--------->>>>>>>>>>>>>>>>>>>>');
     const { orderId, paymentIntentId } = req.body;
-    // const userId = (req.user as IRequestUser).userId;
 
-    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retriveStripePaymentInfo(paymentIntentId);
+    const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
+    // Retrieve the Payment Intent
+    // const paymentIntent = await StripePaymentProcessor.paymentIntents.retrieve(paymentIntentId);
+
+    // Get the latest charge ID from the Payment Intent
+    const chargeId = jsonResponse?.latest_charge;
+
+    if (chargeId) {
+      // Retrieve the charge details using the charge ID
+      const charge = await StripePaymentProcessor.retrieveStripePaymentChargeInfo(chargeId);
+      console.log('charge', charge);
+      // Retrieve the balance transaction using the balance transaction ID from the charge
+      const balanceTransaction = await stripe.balanceTransactions.retrieve(charge.jsonResponse?.balance_transaction as any);
+
+      console.log('balance transcation', balanceTransaction);
+      // Extract financial details
+      const netAmount = balanceTransaction.net; // Net amount after Stripe fees
+      const fee = balanceTransaction.fee; // Stripe fee
+      const totalAmount = charge.jsonResponse?.amount; // Total amount for the charge
+      const amountPaid = charge.jsonResponse?.amount_captured; // Amount that was paid
+      console.log('_------------', netAmount, fee, totalAmount, amountPaid, charge);
+    }
+
     const paymentReport = StripeController.generatePaymentReport(jsonResponse, orderId);
 
+    const updatedOrderData = OrderService.updateOrder(orderId);
     // Create payment report in the database
-    const result = await PaymentReportService.createPaymentReport(paymentReport);
-
-    const dataToUpdate = { orderStatus: 'CONFIRMED' };
-
-    const updatedOrderData = OrderService.updateOrder(orderId, dataToUpdate);
+    await PaymentReportService.createPaymentReport(paymentReport);
 
     sendResponse(res, {
       statusCode: httpStatusCode,
       success: httpStatusCode === 200 ? true : false,
-      message: 'Payment information successfully retrived!!!',
+      message: 'Payment information successfully retrieved!!!',
       data: updatedOrderData,
     });
   });

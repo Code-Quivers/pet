@@ -6,10 +6,10 @@ const ConnectYourWay = () => {
     <div className="py-10 md:pt-20  ">
       <div className="flex flex-col-reverse md:flex-row gap-4">
         <div className="w-full  md:w-1/2 bg-gray-100 flex flex-col justify-center items-center">
-          <div className="flex flex-col justify-center items-center px-4">
-            <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
+          <div className="flex flex-col justify-center items-center px-4 py-6">
+            {/* <span className="inline-block mb-4 text-sm font-semibold leading-none text-red-500 capitalize  ">
               Connect
-            </span>
+            </span> */}
             <h2 className="mb-6 text-3xl font-semibold leading-tight tracking-tight text-gray-900   md:text-5xl text-center">
               Connect Your Way
             </h2>

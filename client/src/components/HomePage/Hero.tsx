@@ -2,18 +2,18 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section className="overflow-hidden  homePageBg bg-cover bg-top bg-no-repeat">
+    <section className="overflow-hidden homePageBg bg-cover bg-top bg-no-repeat">
       <div className="bg-black/25  py-24">
-        <div className=" p-8 md:p-20 lg:px-[10%] ">
-          <div>
-            <p className="mb-4 text-sm font-bold leading-none  text-white ">
-              Connection you can tap into
-            </p>
-            <h2 className="text-4xl font-extrabold text-white md:text-5xl text-left pb-4 md:pb-2">
+        <div className=" p-8 md:p-40 lg:px-[10%] ">
+          <div className="text-center">
+            <h2 className="md:text-6xl font-bold text-white text-3xl pb-2 md:pb-2">
+              Connection you can tap into,
+            </h2>
+            <h2 className="md:text-6xl font-bold text-white text-3xl pb-2 md:pb-2">
               Anytime, Anywhere
             </h2>
 
-            <p className="max-w-lg text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed">
+            <p className="text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed text-center">
               The smallest and easiest safety wearable on the market
             </p>
 
