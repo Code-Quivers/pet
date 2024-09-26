@@ -1,31 +1,19 @@
 "use client";
 import Image from "next/image";
-import { FiEdit } from "react-icons/fi";
-import { LuEye } from "react-icons/lu";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { Pagination, Placeholder, Popover, Whisper } from "rsuite";
-//  import DeleteKidConfirmationModal from "./DeleteKidConfirmationModal";
+import { Pagination, Popover, Whisper } from "rsuite";
 import { useState } from "react";
-//  import { formatDuration } from "@/utils/kids/kidsAgeFormatDuration";
-import { useRouter } from "next/navigation";
-import {
-  FaCheckCircle,
-  FaExternalLinkAlt,
-  FaInfo,
-  FaTimesCircle,
-} from "react-icons/fa";
-import Link from "next/link";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import moment from "moment";
-import { GrLinkNext, GrView } from "react-icons/gr";
-import { fileUrlKey } from "@/helpers/envConfig";
+import { GrView } from "react-icons/gr";
+import { fileUrlKey, getClientUrl } from "@/helpers/envConfig";
 import { useGetAllKidsQuery } from "@/redux/features/bands/bandsApi";
-import { IconButton, Input, InputGroup, Table } from "rsuite";
+import { Input, InputGroup, Table } from "rsuite";
 import { BiSearch } from "react-icons/bi";
 import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { useDebounced } from "@/redux/hook";
 import { formatDuration } from "@/utils/kidsAgeFormatter";
+import ViewBandDetailsModal from "./ViewBandDetailsModal";
 const { Cell, Column, HeaderCell } = Table;
 // !
 const BandsList = () => {
@@ -33,15 +21,6 @@ const BandsList = () => {
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const [open, setOpen] = useState(false);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [editData, setEditData] = useState<any | null>(null);
-  const [isOpenSubModal, setIsOpenSubModal] = useState<boolean>(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleCloseEditModal = () => setIsOpenEdit(false);
-  const handleCloseSubCategoryModal = () => setIsOpenSubModal(false);
   query["limit"] = size;
   query["page"] = page;
   const debouncedTerm = useDebounced({
@@ -55,6 +34,10 @@ const BandsList = () => {
 
   const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetAllKidsQuery({ ...query });
+  //
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [modalData, setModalData] = useState(null);
+  const [editData, setEditData] = useState<any | null>(null);
 
   return (
     <>
@@ -79,20 +62,13 @@ const BandsList = () => {
                     width: 300,
                   }}
                   onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by Category name..."
+                  placeholder="Search here..."
                 />
                 <InputGroup.Addon>
                   <BiSearch />
                 </InputGroup.Addon>
               </InputGroup>
             </div>
-
-            {/* <button
-              onClick={handleOpen}
-              className="  px-3 py-2 rounded-xl shadow-lg flex items-center gap-2 bg-primary text-sm text-white"
-            >
-              <FaPlus /> Add Category
-            </button> */}
           </div>
         </div>
 
@@ -238,10 +214,12 @@ const BandsList = () => {
                       }
                     >
                       <button
-                        className="  hover:text-blue-600"
+                        className="hover:text-blue-600"
                         onClick={() => {
-                          // setIsOpenDelete(true);
-                          // setDeleteData(rowData);
+                          window.open(
+                            `${getClientUrl()}/tag/${rowData?.barCode?.code}`,
+                            "_blank"
+                          );
                         }}
                       >
                         <FaExternalLinkAlt size={22} />
@@ -262,14 +240,14 @@ const BandsList = () => {
                       <button
                         className="  hover:text-green-600 "
                         onClick={() => {
-                          // setIsOpenDelete(true);
-                          // setDeleteData(rowData);
+                          setModalData(rowData);
+                          setIsOpenView(true);
                         }}
                       >
                         <GrView size={22} />
                       </button>
                     </Whisper>
-                    <Whisper
+                    {/* <Whisper
                       placement="topEnd"
                       speaker={
                         <Popover
@@ -289,7 +267,7 @@ const BandsList = () => {
                       >
                         <MdModeEdit size={22} />
                       </button>
-                    </Whisper>
+                    </Whisper> */}
                     {/* Delete */}
                     <Whisper
                       placement="topEnd"
@@ -346,6 +324,13 @@ const BandsList = () => {
           </div>
         </div>
       </div>
+
+      {/* modals */}
+      <ViewBandDetailsModal
+        isOpenView={isOpenView}
+        setIsOpenView={setIsOpenView}
+        modalData={modalData}
+      />
     </>
   );
 };
