@@ -36,6 +36,7 @@ import BarCodeDelete from "../barcode-list/BarCodeDelete";
 import moment from "moment";
 import { saveExcel } from "@/utils/ExportToExcel";
 import { barCodeColumns } from "@/constants/exportColumns.const";
+import { saveCSV } from "@/utils/ExportToCSV";
 
 const ProductBarcode = () => {
   const router = useRouter();
@@ -114,9 +115,11 @@ const ProductBarcode = () => {
     const handleSelect = () => {
       onClose();
     };
+
     return (
       <Popover ref={ref} className={className} style={{ left, top }} full>
         <Dropdown.Menu onSelect={handleSelect}>
+          {/* Export to Excel */}
           <Dropdown.Item
             disabled={!isLoading && !allBarCodeList?.data?.length}
             onClick={() =>
@@ -126,9 +129,24 @@ const ProductBarcode = () => {
                 columns: barCodeColumns,
               })
             }
-            eventKey={4}
+            eventKey={1}
           >
             Export to Excel Sheet
+          </Dropdown.Item>
+
+          {/* Export to CSV */}
+          <Dropdown.Item
+            disabled={!isLoading && !allBarCodeList?.data?.length}
+            onClick={() =>
+              saveCSV({
+                allBarCodeList,
+                checkedBoxData,
+                columns: barCodeColumns,
+              })
+            }
+            eventKey={2}
+          >
+            Export to CSV
           </Dropdown.Item>
         </Dropdown.Menu>
       </Popover>
