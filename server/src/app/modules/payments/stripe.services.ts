@@ -102,6 +102,8 @@ class StripePaymentProcessor {
       amountPaid: 0,
     };
 
+    console.log('chargeId', chargeId);
+
     if (chargeId) {
       try {
         // Retrieve Stripe charge info
