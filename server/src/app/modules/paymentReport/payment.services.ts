@@ -3,9 +3,10 @@ import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { IStripePaymentReqData, IPaymentData } from './payment.interfaces';
+import { OrderService } from '../orders/orders.service';
 
 class PaymentReportService {
-  static createPaymentReport = async (paymentReport: IStripePaymentReqData): Promise<any> => {
+  static createPaymentReport = async (paymentReport: IStripePaymentReqData, orderId: string): Promise<any> => {
     const { gateWay, status, totalAmountPaid, totalAmountToPaid, gateWayFee, gateWayTransactionId, ...others } = paymentReport || {};
 
     const paymentData: IPaymentData = {
@@ -25,6 +26,11 @@ class PaymentReportService {
 
       if (!newPayment) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create payment!!!');
+      }
+
+      if (paymentData.paymentStatus === 'succeeded') {
+        // updating order details
+        await OrderService.updateOrder(orderId);
       }
 
       return {
