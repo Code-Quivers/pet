@@ -26,6 +26,7 @@ import { useGetAllPaymentsQuery } from "@/redux/features/paymentApi";
 import moment from "moment";
 import { RiPaypalFill } from "react-icons/ri";
 import { useGetAllPaymentsReportQuery } from "@/redux/features/paymentReportApi";
+import { FaStripe } from "react-icons/fa";
 
 const PaymentListTable = () => {
   const query: Record<string, any> = {};
@@ -234,6 +235,12 @@ const PaymentListTable = () => {
                     {rowData?.paymentPlatform === "PAYPAL" && (
                       <p className="text-primary mt-1">
                         <RiPaypalFill size={20} />
+                      </p>
+                    )}
+
+                    {rowData?.paymentPlatform === "STRIPE" && (
+                      <p className="text-primary mt-1">
+                        <FaStripe size={20} />
                       </p>
                     )}
                   </div>
