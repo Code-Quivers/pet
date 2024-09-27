@@ -2,11 +2,14 @@
 "use client";
 import { useCreatePaymentMutation } from "@/redux/api/features/paypal/paypalApi";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 const PayPalButton = ({ addCapture, totalAmount }: any) => {
+  const router = useRouter();
+
   const [createPayment] = useCreatePaymentMutation();
 
   const { cart } = useSelector((state: any) => state.cart);
@@ -108,24 +111,13 @@ const PayPalButton = ({ addCapture, totalAmount }: any) => {
                 return alert(msg);
               }
 
-              console.log(
-                "Capture result",
-                orderData,
-                JSON.stringify(orderData, null, 2)
-              );
-              const transaction =
-                orderData.purchase_units[0].payments.captures[0];
-              alert(
-                "Transaction " +
-                  transaction.status +
-                  ": " +
-                  transaction.id +
-                  "\n\nSee console for all available details"
-              );
+              console.log("id", orderData);
 
-              if (transaction.status === "COMPLETED") {
+              if (orderData?.data?.paymentStatus === "COMPLETED") {
                 // Use your Next.js router to navigate if required
-                // router.push("/");
+                router.push(
+                  `/payment-done/${orderData?.data?.platformTransactionId}`
+                );
               }
             } else {
               console.error("Unexpected response structure:", confirmResponse);
