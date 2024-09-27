@@ -163,7 +163,10 @@ const CheckoutForm = ({
               {/* paypal */}
               <div className="mt-20 mb-28">
                 {paymentMethod === "paypal" && (
-                  <PayPalButton addCapture={addCapture} />
+                  <PayPalButton
+                    addCapture={addCapture}
+                    totalAmount={totalAmount}
+                  />
                 )}
               </div>
             </section>
