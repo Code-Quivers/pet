@@ -106,6 +106,7 @@ class StripePaymentProcessor {
       try {
         // Retrieve Stripe charge info
         const { jsonResponse: jsonChargeResponse } = await StripePaymentProcessor.retrieveStripePaymentChargeInfo(chargeId);
+
         const { balance_transaction, amount, amount_captured } = jsonChargeResponse || {};
 
         // Retrieve Stripe balance transaction
@@ -137,8 +138,8 @@ class StripePaymentProcessor {
       currency: retrievedPaymentInfo.currency,
       gateWayFee: otherData?.fee,
       netAmount: otherData?.netAmount,
-      gateWayTransactionId: retrievedPaymentInfo.id,
-      gateWayTransactionTime: new Date(retrievedPaymentInfo.created).toISOString(),
+      paymentPlatformId: retrievedPaymentInfo.id,
+      transactionCreatedTime: new Date(retrievedPaymentInfo.created * 1000).toISOString(),
       orderId,
     };
   };

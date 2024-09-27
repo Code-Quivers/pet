@@ -22,10 +22,22 @@ import { OrderService } from '../orders/orders.service';
 // };
 
 const createPaymentReport = async (paymentReport: IStripePaymentReqData, orderId: string) => {
-  const { gateWay, status, totalAmountPaid, totalAmountToPaid, gateWayFee, gateWayTransactionId, ...others } = paymentReport || {};
+  const { gateWay, status, totalAmountPaid, totalAmountToPaid, gateWayFee, paymentPlatformId, ...others } = paymentReport || {};
+
+  // const get the order data
+  const orderInfo: any = await prisma.order.findUnique({
+    where: {
+      orderId,
+    },
+    select: {
+      deliveryInfo: true,
+    },
+  });
 
   const paymentData = {
-    paymentPlatformId: gateWayTransactionId,
+    payerName: `${orderInfo?.deliveryInfo?.firstName} ${orderInfo?.deliveryInfo?.lastName}`,
+    payerEmailAddress: orderInfo?.deliveryInfo?.email,
+    paymentPlatformId,
     paymentPlatform: gateWay,
     paymentStatus: status,
     amountPaid: totalAmountPaid,
@@ -43,6 +55,7 @@ const createPaymentReport = async (paymentReport: IStripePaymentReqData, orderId
       throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create payment!!!');
     }
 
+    //
     if (paymentData.paymentStatus === 'succeeded') {
       // updating order details
       await OrderService.updateOrder(orderId);
