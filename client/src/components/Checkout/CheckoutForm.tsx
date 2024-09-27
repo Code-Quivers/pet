@@ -17,7 +17,13 @@ import PayPalButton from "./CheckoutComponents/PaypalButton";
 
 const stripePromise = loadStripe(stripePublishableKey());
 
-const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
+const CheckoutForm = ({
+  totalAmount,
+  setStateTaxValue,
+}: {
+  totalAmount: number;
+  setStateTaxValue: any;
+}) => {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("card_payment");
   const [isComponentLoading, setIsComponentLoading] = useState<boolean>(true);
@@ -62,14 +68,13 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     if (paymentMethod === "card_payment") {
       handleGetClientSecret();
     }
-   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // -----
 
   const handleSubmitFromParent = async (data: any) => {
     if (childSubmitRef.current) {
-      
       // @ts-ignore
       const childData = await childSubmitRef.current.handleChildSubmit();
       if (!childData.success) {
@@ -90,7 +95,11 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleSubmitFromParent)}>
           <div>
-            <CheckoutDeliveryForm control={control} errors={errors} />
+            <CheckoutDeliveryForm
+              control={control}
+              errors={errors}
+              setStateTaxValue={setStateTaxValue}
+            />
           </div>
           <div className="mt-5">
             <div>

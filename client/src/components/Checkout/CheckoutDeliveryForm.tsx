@@ -6,15 +6,16 @@ import { Form, SelectPicker } from "rsuite";
 const CheckoutDeliveryForm = ({
   control,
   errors,
+  setStateTaxValue,
 }: {
   control: Control<ICheckoutDeliveryForm>;
   errors: FieldErrors<ICheckoutDeliveryForm>;
+  setStateTaxValue: any;
 }) => {
   const { data: stateTax } = useGetTaxQuery({});
   const data = stateTax?.data?.map((item: any) => ({
     label: item.state,
-    // value: item.tax,
-    value: item.state,
+    value: item.tax,
   }));
   return (
     <div>
@@ -221,7 +222,10 @@ const CheckoutDeliveryForm = ({
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <SelectPicker
-                      onChange={(value: any) => field.onChange(value)}
+                      onChange={(value: any) => {
+                        field.onChange(value);
+                        setStateTaxValue(value);
+                      }}
                       data={data}
                       searchable={false}
                       size="lg"

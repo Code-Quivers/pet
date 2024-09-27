@@ -19,7 +19,7 @@ const Checkouts = ({ params }: any) => {
   const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
   const roundedTaxAmount = Math.round(taxAmount * 100) / 100;
   const totalAmount = payAmount?.subtotal + roundedTaxAmount;
- 
+
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
@@ -58,7 +58,10 @@ const Checkouts = ({ params }: any) => {
         <div className="max-w-7xl xl:mx-auto md:mx-10 mx-4">
           <section className="md:grid relative md:grid-cols-12  ">
             <div className="md:col-span-7 pt-10 md:mr-10">
-              <CheckoutDeliveryInfoForm totalAmount={totalAmount} />
+              <CheckoutDeliveryInfoForm
+                totalAmount={totalAmount}
+                setStateTaxValue={setStateTaxValue}
+              />
             </div>
             {/* cart data */}
             <div className="md:col-span-5 sticky h-[100vh] top-0 md:border-l pt-10 md:pl-10 ">
