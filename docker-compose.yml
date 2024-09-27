@@ -26,7 +26,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - 7000:7000
+      - 9000:9000
     volumes:
       - type: bind
         # source: C:\data\data
@@ -44,6 +44,18 @@ services:
       - server
     ports:
       - 3000:3000
+
+  dashboard:
+    stdin_open: true
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    image: dashboard:latest
+    container_name: dashboard-container
+    depends_on:
+      - server
+    ports:
+      - 4000:4000
 
   backup-service:
     build:
