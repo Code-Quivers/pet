@@ -16,10 +16,11 @@ export type IStripePaymentReqData = {
   currency: string;
   gateWayFee: number;
   netAmount: number;
-  gateWayTransactionId: string;
+  paymentPlatformId: string;
   transactionCreatedTime: string;
   orderId: string;
 };
+
 export type IPaymentData = {
   paymentPlatformId: string;
   gateWayTransactionTime?: string;

@@ -86,7 +86,7 @@ const PaymentListTable = () => {
         </div>
 
         {/*  */}
-        <div className="rounded-sm mb-5 bg-white  shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm mb-5 bg-white  ">
           <Table
             bordered={true}
             cellBordered={true}
