@@ -1,5 +1,12 @@
 import { PaymentGateway } from '@prisma/client';
 
+export type IPaymentFilterRequest = {
+  searchTerm?: string | undefined;
+  paymentPlatformId?: string | undefined;
+  orderId?: string | undefined;
+  payerEmailAddress?: string | undefined;
+};
+
 export type IStripePaymentReqData = {
   //
   gateWay: PaymentGateway;

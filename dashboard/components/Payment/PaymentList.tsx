@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { useGetAllPaymentsQuery } from "@/redux/features/paymentApi";
 import moment from "moment";
 import { RiPaypalFill } from "react-icons/ri";
+import { useGetAllPaymentsReportQuery } from "@/redux/features/paymentReportApi";
 
 const PaymentListTable = () => {
   const query: Record<string, any> = {};
@@ -44,12 +45,12 @@ const PaymentListTable = () => {
   }
 
   const {
-    data: allPayments,
+    data: allPaymentsReport,
     isLoading,
     isFetching,
-  } = useGetAllPaymentsQuery({ ...query });
+  } = useGetAllPaymentsReportQuery({ ...query });
 
-  console.log(allPayments, "allPayments");
+  console.log("allPaymentsReport", allPaymentsReport);
 
   return (
     <>
@@ -57,7 +58,7 @@ const PaymentListTable = () => {
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center   pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              Payment List | {allPayments?.meta?.total}
+              Payment List | {allPaymentsReport?.meta?.total}
             </h2>
           </div>
 
@@ -74,7 +75,7 @@ const PaymentListTable = () => {
                     width: 400,
                   }}
                   onChange={(e) => setSearchTerm(e)}
-                  placeholder="Search by Order No / Transaction id / Platform id and customer email..."
+                  placeholder="Search by Platform Id / Order Id / email..."
                 />
                 <InputGroup.Addon>
                   <BiSearch />
@@ -94,89 +95,81 @@ const PaymentListTable = () => {
             rowHeight={100}
             headerHeight={50}
             rowExpandedHeight={160}
-            shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
-            // autoHeight={true}
-          
+            shouldUpdateScroll={false}
             height={500}
             hover={false}
-            data={allPayments?.data}
+            data={allPaymentsReport?.data?.data}
           >
-            {/* order information */}
+            {/* Payment Platform Id */}
             <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Order Information</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
+              <HeaderCell style={headerCss}>Payment Platform Id</HeaderCell>
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="paymentPlatformId"
+              >
                 {(rowData: any) => (
-                  <div>
-                    <div className="truncate w-[150px]">
-                      <p className="text-bodydark2">Order no:</p>
-                      <Whisper
-                        enterable
-                        trigger="hover"
-                        placement="topStart"
-                        speaker={
-                          <Tooltip>{rowData?.order?.partyOrderId}</Tooltip>
-                        }
-                      >
-                        <span> {rowData?.order.partyOrderId}</span>
-                      </Whisper>
-                    </div>
-                    <div className="truncate w-[150px]">
-                      <p className="text-bodydark2">Platform Id:</p>
-                      <Whisper
-                        enterable
-                        trigger="hover"
-                        placement="topStart"
-                        speaker={<Tooltip>{rowData?.platformOrderId}</Tooltip>}
-                      >
-                        <span> {rowData?.platformOrderId}</span>
-                      </Whisper>
-                    </div>
+                  <div className="truncate w-[150px]">
+                    <Whisper
+                      enterable
+                      trigger="hover"
+                      placement="topStart"
+                      speaker={<Tooltip>{rowData?.paymentPlatformId}</Tooltip>}
+                    >
+                      <span>{rowData?.paymentPlatformId}</span>
+                    </Whisper>
                   </div>
                 )}
               </Cell>
             </Column>
-            {/* Transaction info */}
+
+            <Column flexGrow={1}>
+              <HeaderCell style={headerCss}>Order Id</HeaderCell>
+              <Cell style={cellCss} verticalAlign="middle" dataKey="orderId">
+                {(rowData: any) => (
+                  <div className="truncate w-[150px]">
+                    <Whisper
+                      enterable
+                      trigger="hover"
+                      placement="topStart"
+                      speaker={<Tooltip>{rowData?.orderId}</Tooltip>}
+                    >
+                      <span>{rowData?.orderId}</span>
+                    </Whisper>
+                  </div>
+                )}
+              </Cell>
+            </Column>
+
+            {/* Transaction Info */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Transaction Info</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="transactionCreatedTime"
+              >
                 {(rowData: any) => (
                   <div>
-                    <div className="truncate w-[150px]">
-                      <p className="text-bodydark2">Transaction id:</p>
-                      <Whisper
-                        enterable
-                        trigger="hover"
-                        placement="topStart"
-                        speaker={
-                          <Tooltip>{rowData?.platformTransactionId}</Tooltip>
-                        }
-                      >
-                        <span> {rowData?.platformTransactionId}</span>
-                      </Whisper>
-                    </div>
-                    <div className="truncate w-[150px]">
-                      <p className="text-bodydark2">Payment id:</p>
-                      <Whisper
-                        enterable
-                        trigger="hover"
-                        placement="topStart"
-                        speaker={<Tooltip>{rowData?.platformOrderId}</Tooltip>}
-                      >
-                        <span> {rowData?.platformOrderId}</span>
-                      </Whisper>
-                    </div>
+                    <p className="text-bodydark2">Transaction Time:</p>
+                    <span>
+                      {moment(rowData?.transactionCreatedTime).format(
+                        "ll, HH:mm"
+                      )}
+                    </span>
                   </div>
                 )}
               </Cell>
             </Column>
+
             {/* Payer Info */}
-            <Column flexGrow={1}>
+            <Column flexGrow={2}>
               <HeaderCell style={headerCss}>Payer Info</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
+              <Cell style={cellCss} verticalAlign="middle" dataKey="payerName">
                 {(rowData: any) => (
                   <div>
                     <p>{rowData?.payerName}</p>
-                    <div className="truncate w-[150px]">
+                    <div>
                       <Whisper
                         enterable
                         trigger="hover"
@@ -192,31 +185,15 @@ const PaymentListTable = () => {
                 )}
               </Cell>
             </Column>
-            {/* Customer Info */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Customer Info</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
-                {(rowData: any) => (
-                  <div>
-                    <p>{rowData?.user?.profile?.fullName}</p>
-                    <div className="truncate w-[150px]">
-                      <Whisper
-                        enterable
-                        trigger="hover"
-                        placement="topStart"
-                        speaker={<Tooltip>{rowData?.user?.email}</Tooltip>}
-                      >
-                        <span>{rowData?.user?.email}</span>
-                      </Whisper>
-                    </div>
-                  </div>
-                )}
-              </Cell>
-            </Column>
-            {/* amount info */}
+
+            {/* Amount Info */}
             <Column flexGrow={1}>
               <HeaderCell style={headerCss}>Amount Info</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="amountToPay"
+              >
                 {(rowData: any) => (
                   <div>
                     <p>
@@ -239,30 +216,26 @@ const PaymentListTable = () => {
                 )}
               </Cell>
             </Column>
+
             {/* Payment Status */}
             <Column flexGrow={1.2}>
               <HeaderCell style={headerCss}>Payment Status</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="id">
+              <Cell
+                style={cellCss}
+                verticalAlign="middle"
+                dataKey="paymentStatus"
+              >
                 {(rowData: any) => (
                   <div>
-                    <p>
-                      {/* Time:{" "} */}
-                      {moment(rowData.createdAt)
-                        .locale("de")
-                        .format("ll, HH:mm [Uhr] ")}
-                      <span></span>
+                    <p>{moment(rowData.createdAt).format("ll, HH:mm")}</p>
+                    <p className="text-[#16A34A] font-semibold py-[2px] bg-[#DCFCE7] px-2 rounded-full">
+                      {rowData?.paymentStatus}
                     </p>
-                    <p className="">
-                      <span className="text-[#16A34A] font-semibold py-[2px] bg-[#DCFCE7] marker:[9] px-2 rounded-full">
-                        {rowData?.paymentStatus}
-                      </span>
-                    </p>
-                    {rowData?.platform == "PAYPAL" ? (
+                    {rowData?.paymentPlatform === "PAYPAL" && (
                       <p className="text-primary mt-1">
                         <RiPaypalFill size={20} />
                       </p>
-                    ) : null}
-                    {/* <p>{rowData?.platform} </p> */}
+                    )}
                   </div>
                 )}
               </Cell>
@@ -271,7 +244,7 @@ const PaymentListTable = () => {
 
           <div style={{ padding: 20 }}>
             <Pagination
-              total={allPayments?.meta?.total}
+              total={allPaymentsReport?.data?.meta?.total}
               prev
               next
               first

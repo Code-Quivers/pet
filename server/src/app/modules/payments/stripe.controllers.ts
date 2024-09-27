@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import StripePaymentProcessor from './stripe.services';
 import sendResponse from '../../../shared/sendResponse';
-import PaymentReportService from '../paymentReport/payment.services';
+import { PaymentReportService } from '../paymentReport/payment.services';
 
 /**
  * Controller handling PayPal related operations such as creating and capturing orders.
