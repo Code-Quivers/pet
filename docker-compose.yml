@@ -7,12 +7,13 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: masportal
-      POSTGRES_DB: kid
+      POSTGRES_PASSWORD: salimalsazu
+      POSTGRES_DB: erp
     volumes:
       - type: bind
-        source: /root/volumes/kid/db
-        target: /var/lib/postgresql/db
+        # source: C:\data\db
+        source: /root/volumes/erp/db
+        target: /var/lib/postgresql/data
     restart: unless-stopped
 
   server:
@@ -20,8 +21,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    image: server:latest29
-    
+    image: server:latest
     container_name: server-container
     depends_on:
       - postgres
@@ -29,7 +29,8 @@ services:
       - 9000:9000
     volumes:
       - type: bind
-        source: /root/volumes/kid/data
+        # source: C:\data\data
+        source: /root/volumes/erp/data
         target: /app/uploads
 
   client:
@@ -52,7 +53,19 @@ services:
     image: dashboard:latest
     container_name: dashboard-container
     depends_on:
-      - client
+      - server
     ports:
       - 4000:4000
 
+  backup-service:
+    build:
+      context: ./backup-service
+    container_name: backup-service
+    volumes:
+      - type: bind
+        # source: C:/data/backup
+        source: /var/backups
+        target: /backup
+    depends_on:
+      - postgres
+    restart: unless-stopped

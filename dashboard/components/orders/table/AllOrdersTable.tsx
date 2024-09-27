@@ -2,35 +2,21 @@
 import icons8Edit from "@/public/images/icon/icons8-edit.svg";
 import Image from "next/image";
 import { useGetProductQuery } from "@/redux/features/productsApi";
-import { use, useState } from "react";
+import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
   Accordion,
-  Avatar,
-  Button,
-  ButtonToolbar,
-  Header,
-  IconButton,
   Input,
   InputGroup,
   Loader,
   Pagination,
-  Popover,
   SelectPicker,
-  Stack,
-  Table,
-  Whisper,
 } from "rsuite";
-import { fileUrlKey } from "@/helpers/envConfig";
-import { cellCss, headerCss } from "@/helpers/commonStyles/tableStyles";
-import { MdModeEdit } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 import { useGetAllOrdersQuery } from "@/redux/features/orderApi";
-import { all } from "axios";
 import OrderEditModal from "./OrderEditModal";
 import OrderEditShippingInformation from "./OrderEditShippingInformation";
 import ProductListTable from "./ProductListTable";
-const { Column, HeaderCell, Cell } = Table;
 
 const AllOrderList = () => {
   const query: Record<string, any> = {};
@@ -146,8 +132,8 @@ const AllOrderList = () => {
             </div>
           )}
 
-          {allOrders?.data?.length > 0 ? (
-            allOrders?.data?.map((order: any, index: any) => (
+          {allOrders?.data?.data?.length > 0 ? (
+            allOrders?.data?.data?.map((order: any, index: any) => (
               // Place your code for rendering each order here
               // For example:
               <div key={index}>
@@ -160,13 +146,13 @@ const AllOrderList = () => {
                             <h1 className="text-lg font-bold">
                               Order No : {order?.orderId}
                             </h1>
-                            <p className="text-xs">
+                            <p className="text-sm font-medium">
                               Created: {formatDate(order?.createdAt)}
                             </p>
                           </div>
                           <div className="flex flex-col justify-start items-start w-46">
                             <p className="text-lg font-bold">
-                              <span>$</span> {order?.paymentInformation?.total}
+                              <span>$</span>  {order?.paymentInfo?.amountPaid}
                             </p>
                             <p className="text-xs">
                               Order Status :{" "}
@@ -220,7 +206,7 @@ const AllOrderList = () => {
                         {/* Client Info */}
                         <section className="md:flex gap-3 max-md:space-y-3">
                           {/* shipping information */}
-                          <div className=" w-full p-3 rounded-md border-2 hover:shadow-3 border-[#CBD5E1] hover:shadow-primary/60">
+                          <div className=" w-full p-3 rounded-md border-2  border-[#CBD5E1] ">
                             <div className="flex items-center justify-between">
                               <h1 className="text-xl font-semibold">
                                 Shipping Information
@@ -229,7 +215,7 @@ const AllOrderList = () => {
                                 className="flex gap-[2px] cursor-pointer"
                                 onClick={() => {
                                   shippingEdit("right");
-                                  setShippingInfo(order);
+                                  setShippingInfo(order?.deliveryInfo);
                                 }}
                               >
                                 <Image
@@ -248,60 +234,60 @@ const AllOrderList = () => {
                                 Name:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.firstName}
+                                  {order?.deliveryInfo?.firstName}
                                 </span>
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.lastName}
+                                  {order?.deliveryInfo?.lastName}
                                 </span>
                               </p>
                               <p>
                                 email:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.email}
+                                  {order?.deliveryInfo?.email}
                                 </span>
                               </p>
                               <p>
                                 phone:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.phone}
+                                  {order?.deliveryInfo?.phone}
                                 </span>
                               </p>
                               <p>
                                 Address:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.address}
+                                  {order?.deliveryInfo?.address}
                                 </span>
                               </p>
                               <p>
                                 City:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.city}
+                                  {order?.deliveryInfo?.city}
                                 </span>
                               </p>
                               <p>
                                 State:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.state}
+                                  {order?.deliveryInfo?.state}
                                 </span>
                               </p>
                               <p>
                                 Postal Code:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.zip}
+                                  {order?.deliveryInfo?.postalCode}
                                 </span>
                               </p>
                               <p>
                                 Note:
                                 <span className="font-medium text-black">
                                   {" "}
-                                  {order?.note}
+                                  {order?.deliveryInfo?.note}
                                 </span>
                               </p>
                             </div>
@@ -370,9 +356,7 @@ const AllOrderList = () => {
                                 Total Grand:{" "}
                                 <span className="text-black font-medium">
                                   ${" "}
-                                  {order?.paymentInformation?.subtotal.toFixed(
-                                    2
-                                  )}
+                                  {order?.paymentInfo?.amountPaid}
                                 </span>
                               </p>
                               <p className="flex justify-between">
