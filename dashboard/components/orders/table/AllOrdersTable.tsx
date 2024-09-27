@@ -24,7 +24,7 @@ const AllOrderList = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [orderStatus, setOrderStatus] = useState<string>("");
-
+// 
   query["orderStatus"] = orderStatus;
   query["limit"] = size;
   query["page"] = page;
@@ -38,7 +38,6 @@ const AllOrderList = () => {
   }
 
   //data Format
-
   const formatDate = (dateString: any) => {
     const options: any = {
       day: "numeric",
@@ -83,7 +82,7 @@ const AllOrderList = () => {
 
   return (
     <>
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-sm border border-stroke bg-white shadow-default  ">
         <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:gap-0 p-5">
           <h4 className="text-xl font-semibold text-black dark:text-white">
             All Orders
