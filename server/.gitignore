@@ -8,6 +8,9 @@ logs
 
 
 /prisma/migrations/
-.env.local
+ 
 yarn.lock
 bun.lockb
+# local env files
+.env*.local
+.env
