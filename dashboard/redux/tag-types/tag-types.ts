@@ -15,6 +15,7 @@ export enum tagTypes {
   comments = "comments",
   tax = "tax",
   kids = "kids",
+  report = "report",
 }
 
 export const tagTypesList = [
@@ -34,4 +35,5 @@ export const tagTypesList = [
   tagTypes.comments,
   tagTypes.tax,
   tagTypes.kids,
+  tagTypes.report,
 ];

@@ -1,45 +1,52 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import PaymentReportService from './payment.services';
+import httpStatus from 'http-status';
+import { PaymentReportService } from './payment.services';
+import { PaymentFilterableFields } from './payment.constant';
+import pick from '../../../shared/pick';
+import StripePaymentProcessor from '../payments/stripe.services';
 
-class PaymentReportController {
+const createPaymentController = catchAsync(async (req, res) => {
+  const { orderId, paymentIntentId } = req.body;
 
-  static createPaymentReport = catchAsync(async (req: Request, res: Response) => {
-    const { paymentInfo } = req.body;
-    const { jsonResponse, httpStatusCode } = await PaymentReportService.createPaymentReport(paymentInfo);
+  // Retrieve the Payment Intent
+  const { jsonResponse } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
 
-    sendResponse(res, {
-      statusCode: httpStatusCode,
-      success: true,
-      data: jsonResponse,
-    });
+  // Get the latest charge ID from the Payment Intent
+  const chargeId = jsonResponse?.latest_charge;
+
+  // Generate payment report based on charge ID, payment intent info, and order ID
+  const paymentReport = await StripePaymentProcessor.generatePaymentReport(chargeId, jsonResponse, orderId);
+
+  // Create payment report in the database
+  const paymentRes = await PaymentReportService.createPaymentReport(paymentReport, orderId);
+
+  // Send response back to the client
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Payment information successfully retrieved!!!',
+    data: paymentRes,
   });
+});
 
-  static getPaymentReport = catchAsync(async (req: Request, res: Response) => {
-    const { paymentId } = req.params;
-    const { jsonResponse, httpStatusCode } = await PaymentReportService.getPaymentReport(paymentId);
-    sendResponse(res, {
-      statusCode: httpStatusCode,
-      success: httpStatusCode === 200 ? true : false,
-      message: 'Payment information successfully retrived!!!',
-      data: jsonResponse,
-    });
+const getAllPayment = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, PaymentFilterableFields);
+
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+  const result = await PaymentReportService.getPaymentReports(filters, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Payment get Successfully',
+    data: result,
   });
+});
 
-  static getPaymentReports = catchAsync(async (req: Request, res: Response) => {
-    const { orderId, paymentId } = req.body;
-    // const userId = (req.user as IRequestUser).userId;
-
-    const { jsonResponse, httpStatusCode } = await PaymentReportService.getPaymentReports(paymentId, orderId);
-
-    sendResponse(res, {
-      statusCode: httpStatusCode,
-      success: httpStatusCode === 200 ? true : false,
-      message: 'Payment information successfully retrived!!!',
-      data: jsonResponse,
-    });
-  });
-}
-
-export default PaymentReportController;
+export const PaymentReportController = {
+  getAllPayment,
+  createPaymentController,
+};
