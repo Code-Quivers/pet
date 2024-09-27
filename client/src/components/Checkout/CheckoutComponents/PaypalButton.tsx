@@ -6,10 +6,10 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-const PayPalButton = ({ addCapture }: any) => {
+const PayPalButton = ({ addCapture, totalAmount }: any) => {
   const [createPayment] = useCreatePaymentMutation();
 
-  const { payAmount, cart } = useSelector((state: any) => state.cart);
+  const { cart } = useSelector((state: any) => state.cart);
 
   // console.log("Pay amount", payAmount, cart);
 
@@ -56,7 +56,7 @@ const PayPalButton = ({ addCapture }: any) => {
           if (isValid) {
             try {
               const paymentData = {
-                price: payAmount?.subtotal,
+                price: totalAmount,
                 currency: "USD",
                 quantity: 1,
               };
