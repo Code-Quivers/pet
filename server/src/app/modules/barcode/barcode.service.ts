@@ -277,7 +277,7 @@ const getAllBarCodeForPrint = async (filters: IBarCodeFilterRequest, options: IP
     where: whereConditions,
     skip,
     take: limit,
-    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+    orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'asc' },
   });
 
   // Count total matching orders for pagination
@@ -435,7 +435,7 @@ const getSingleVariant = async (
         },
         skip,
         take: limit,
-        orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { updatedAt: 'desc' },
+        orderBy: options.sortBy && options.sortOrder ? { [options.sortBy]: options.sortOrder } : { createdAt: 'asc' },
         select: {
           barcodeId: true,
           code: true,
