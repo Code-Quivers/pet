@@ -7,7 +7,7 @@ dist
 logs
 
 
-# /prisma/migrations/
+/prisma/migrations/
 .env.local
 yarn.lock
 bun.lockb
