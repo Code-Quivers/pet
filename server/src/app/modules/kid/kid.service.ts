@@ -295,6 +295,7 @@ const getMyAllKids = async (userId: string): Promise<KidDetails[]> => {
     include: {
       barCode: {
         select: {
+          code: true,
           variant: {
             select: {
               product: {
@@ -317,10 +318,6 @@ const getMyAllKids = async (userId: string): Promise<KidDetails[]> => {
       },
     },
   });
-
-  if (!result?.length) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "You haven't added any Kids");
-  }
 
   return result;
 };

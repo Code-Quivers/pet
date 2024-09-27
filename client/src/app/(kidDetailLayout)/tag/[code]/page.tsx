@@ -104,7 +104,7 @@ const MyPetPage = ({ params }: Props) => {
           {kidDetails?.data?.barcodeStatus === "AVAILABLE" ? (
             <CreateKidForm tag={params.code} />
           ) : (
-            <div className="md:max-w-2xl md:mx-auto">
+            <div className="md:max-w-2xl md:mx-auto pb-6">
               <div className="bg-primary px-10 py-[30px] pb-20 md:pb-20 flex justify-center items-center">
                 <div className="bg-white inline-block p-2 rounded-full">
                   <Image
