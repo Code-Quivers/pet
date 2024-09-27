@@ -349,27 +349,17 @@ const AllOrderList = () => {
                         </div>
                         {/* Payment Info */}
                         <div className="px-4">
-                          <div className="flex justify-end">
+                          <div className="flex justify-between">
+                            <div>
+                              <button className="border rounded-full px-2 py-1 ">Download Invoice</button>
+                            </div>
                             <div className="w-1/4">
+                              
                               <p className="flex justify-between">
-                                Total Grand:{" "}
+                                Total Amount Paid:{" "}
                                 <span className="text-black font-medium">
                                   ${" "}
                                   {order?.paymentInfo?.amountPaid}
-                                </span>
-                              </p>
-                              <p className="flex justify-between">
-                                Total Vat:{" "}
-                                <span className="text-black font-medium">
-                                  ${" "}
-                                  {order?.paymentInformation?.taxes.toFixed(2)}
-                                </span>
-                              </p>
-                              <p className="flex justify-between">
-                                Total Gross:{" "}
-                                <span className="text-black font-medium">
-                                  ${" "}
-                                  {order?.paymentInformation?.total.toFixed(2)}
                                 </span>
                               </p>
                             </div>

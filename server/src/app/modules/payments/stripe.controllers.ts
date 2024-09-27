@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import StripePaymentProcessor from './stripe.services';
 import sendResponse from '../../../shared/sendResponse';
-import { OrderService } from '../orders/orders.service';
 import PaymentReportService from '../paymentReport/payment.services';
 
 /**
@@ -57,19 +56,18 @@ class StripeController {
     const { orderId, paymentIntentId } = req.body;
     // Retrieve the Payment Intent
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
-    // updating order details
-    const updatedOrderData = OrderService.updateOrder(orderId);
+
     // Get the latest charge ID from the Payment Intent
     const chargeId = jsonResponse?.latest_charge;
     const paymentReport = await StripePaymentProcessor.generatePaymentReport(chargeId, jsonResponse, orderId);
     // Create payment report in the database
-    await PaymentReportService.createPaymentReport(paymentReport);
+    const paymentRes = await PaymentReportService.createPaymentReport(paymentReport, orderId);
 
     sendResponse(res, {
       statusCode: httpStatusCode,
       success: httpStatusCode === 200 ? true : false,
       message: 'Payment information successfully retrieved!!!',
-      data: updatedOrderData,
+      data: paymentRes,
     });
   });
 
