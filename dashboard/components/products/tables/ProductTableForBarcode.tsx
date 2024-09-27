@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
   Button,
@@ -29,6 +29,7 @@ import {
   useUpdateBarcodeStatusMutation,
 } from "@/redux/features/barCodeApi";
 import { FiEdit2 } from "react-icons/fi";
+import useMediaQuery from "rsuite/useMediaQuery";
 import { RiDeleteBinFill } from "react-icons/ri";
 import BarcodeDeleteModal from "../modal/BarcodeDeleteModal";
 import { barCodeStatus } from "@/helpers/selectPickerVars/ProductSelectVars";
@@ -37,9 +38,14 @@ import moment from "moment";
 import { saveExcel } from "@/utils/ExportToExcel";
 import { barCodeColumns } from "@/constants/exportColumns.const";
 import { saveCSV } from "@/utils/ExportToCSV";
+import { GrEdit } from "react-icons/gr";
+import CopyableQRCodeLink from "./CopyableQRCodeLink";
 
 const ProductBarcode = () => {
   const router = useRouter();
+  const triggerRef = useRef<any>(null);
+  const [isMobile] = useMediaQuery("(max-width: 800px)");
+  console.log("isMobile", isMobile);
   const query: Record<string, any> = {};
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
@@ -228,106 +234,102 @@ const ProductBarcode = () => {
   return (
     <>
       <div className="mb-3 flex gap-2 justify-between">
-        <h2 className="text-sm font-semibold ">
-          Barcode List | {allBarCodeList?.meta?.total}
-        </h2>
-        <div>
-          <Whisper
-            placement="bottomEnd"
-            speaker={renderMenu}
-            trigger={["click"]}
-          >
-            <button
-              type="button"
-              className="border w-full flex justify-center items-center gap-2  border-primary py-1  rounded-lg   text-primary font-medium hover:bg-primary/10 duration-300"
+        <h2 className="text-2xl font-semibold ">Barcode List</h2>
+        <div className="flex gap-5">
+          <div>
+            <Whisper
+              placement="bottomEnd"
+              speaker={renderMenu}
+              trigger={["click"]}
             >
-              <span>
-                <LiaFileExportSolid size={25} />
-              </span>
-              <span>Export</span>
-            </button>
-          </Whisper>
+              <button
+                type="button"
+                className="border-slate-400 border w-full flex justify-center items-center gap-2   py-1 rounded px-2 text-slate-600 font-medium hover:bg-slate-200"
+              >
+                <span>
+                  <LiaFileExportSolid size={18} />
+                </span>
+                <span>Export</span>
+              </button>
+            </Whisper>
+          </div>
+          <button
+            onClick={() => {
+              router.push("/products/add-products");
+            }}
+            type="button"
+            className="w-full flex justify-center items-center gap-2 bg-primary py-1 rounded text-white px-2 text-base"
+          >
+            <span>
+              <FaPlus size={14} />
+            </span>
+            <span>Add Product</span>
+          </button>
         </div>
       </div>
 
       <div className="rounded-sm px-2 border border-stroke bg-white pt-6 pb-2.5 shadow-default xl:pb-1">
-        <div className="grid grid-cols-4 items-center mb-5">
-          <div>
-            {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
-              <BarCodeDelete
-                barcodeIds={checkedKeys}
-                cleanSelectedKeys={cleanSelectedKeys}
-              />
-            )}
-          </div>
+        <div className=" mb-5">
+          {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 ? (
+            <div>
+              {barcodeStatus === "INACTIVE" && checkedKeys?.length > 0 && (
+                <BarCodeDelete
+                  barcodeIds={checkedKeys}
+                  cleanSelectedKeys={cleanSelectedKeys}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 grid-cols-2 md:gap-5 gap-2">
+              {/* filters */}
+              <div>
+                <InputGroup inside>
+                  <Input
+                    onChange={(e) => setSearchTerm(e)}
+                    placeholder="Search by barcode..."
+                  />
+                  <InputGroup.Addon>
+                    <BiSearch />
+                  </InputGroup.Addon>
+                </InputGroup>
+              </div>
 
-          {/* filters */}
-          <div>
-            <InputGroup inside>
-              <Input
-                onChange={(e) => setSearchTerm(e)}
-                placeholder="Search by barcode..."
-              />
-              <InputGroup.Addon>
-                <BiSearch />
-              </InputGroup.Addon>
-            </InputGroup>
-          </div>
-
-          {/* status filter */}
-          <div className="w-full">
-            <SelectPicker
-              className="w-full"
-              placeholder="Product Filter By Status"
-              data={barCodeStatus}
-              searchable={false}
-              onChange={(value: any) => {
-                setBarcodeStatus(value);
-              }}
-            />
-          </div>
-          {/* date range */}
-          <div className="w-full">
-            <DateRangePicker
-              className="w-full"
-              // @ts-ignore
-              ranges={predefinedRanges}
-              placement="bottomEnd"
-              onChange={(value: Date[] | null): void => {
-                handleFilterDate(value);
-              }}
-              onClean={() =>
-                setSelectedDate({
-                  startDate: "",
-                  endDate: "",
-                })
-              }
-              style={{ width: "100%" }}
-              size="md"
-              placeholder="Filter By Product Created Date"
-            />
-          </div>
+              {/* status filter */}
+              <div className="w-full">
+                <SelectPicker
+                  className="w-full"
+                  placeholder="Product Filter By Status"
+                  data={barCodeStatus}
+                  searchable={false}
+                  onChange={(value: any) => {
+                    setBarcodeStatus(value);
+                  }}
+                />
+              </div>
+              {/* date range */}
+              <div className="w-full max-md:col-span-2">
+                <DateRangePicker
+                  className="w-full"
+                  // @ts-ignore
+                  ranges={predefinedRanges}
+                  placement="bottomEnd"
+                  onChange={(value: Date[] | null): void => {
+                    handleFilterDate(value);
+                  }}
+                  onClean={() =>
+                    setSelectedDate({
+                      startDate: "",
+                      endDate: "",
+                    })
+                  }
+                  style={{ width: "100%" }}
+                  size="md"
+                  placeholder="Filter By Product Created Date"
+                />
+              </div>
+            </div>
+          )}
           {/*  */}
-        </div>
-        <div className="col-span-2 flex justify-center items-center gap-3">
-          {/* Generate File */}
-
-          <div className="w-full">
-            {/*  add product button */}
-
-            {/* <button
-                onClick={() => {
-                  router.push("/products/add-products");
-                }}
-                type="button"
-                className="w-full flex justify-center items-center gap-2 bg-primary py-1 rounded-lg text-white"
-              >
-                <span>
-                  <FaPlus />
-                </span>
-                <span>Add Product</span>
-              </button> */}
-          </div>
         </div>
 
         {/*  */}
@@ -337,7 +339,7 @@ const ProductBarcode = () => {
             cellBordered={true}
             wordWrap="break-word"
             loading={isLoading || isFetching}
-            rowHeight={70}
+            rowHeight={100}
             headerHeight={50}
             shouldUpdateScroll={false} // Prevent the scrollbar from scrolling to the top after the table
             autoHeight={true}
@@ -369,168 +371,294 @@ const ProductBarcode = () => {
               </Cell>
             </Column>
 
-            {/*img*/}
-            <Column width={70}>
-              <HeaderCell style={headerCss}>Image</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <Whisper
-                    placement="auto"
-                    speaker={
-                      <Popover>
-                        <div>
-                          <Image
-                            width={270}
-                            height={270}
-                            alt=""
-                            src={
-                              rowData?.variant?.image
-                                ? `${fileUrlKey()}/${rowData?.variant?.image}`
-                                : "/images/no-image.png"
-                            }
-                            className="object-cover"
-                          />
+            {/* for mobile */}
+            {isMobile && (
+              <Column flexGrow={1}>
+                <HeaderCell style={headerCss}>Product Name</HeaderCell>
+                <Cell
+                  style={cellCss}
+                  // verticalAlign="middle"
+                  // dataKey="variant.product.productName"
+                >
+                  {(rowData) => {
+                    return (
+                      <>
+                        <div className="w-full">
+                          <div></div>
+
+                          <div className="flex justify-between items-center">
+                            <p>
+                              {rowData?.variant?.product?.productName} -{" "}
+                              {rowData?.variant?.color?.name}
+                            </p>
+                            <p>Price: {rowData?.variant?.variantPrice}</p>
+                          </div>
+                          <div>{<CopyableQRCodeLink rowData={rowData} />}</div>
+                          <div className="flex items-center justify-between gap-3 !w-full">
+                            <div className="w-[80px]">
+                              {rowData.barcodeStatus}{" "}
+                            </div>
+                            <div>
+                              <Whisper
+                                ref={triggerRef}
+                                placement="bottomEnd"
+                                controlId="control-id-with-dropdown"
+                                trigger="click"
+                                speaker={
+                                  <Popover full>
+                                    <Dropdown.Menu
+                                      onSelect={(eventKey) => {
+                                        barCodeStatusChange(
+                                          eventKey as string,
+                                          rowData
+                                        );
+                                        triggerRef.current.close();
+                                      }}
+                                    >
+                                      <Dropdown.Item eventKey={"INACTIVE"}>
+                                        Inactive
+                                      </Dropdown.Item>
+                                      <Dropdown.Item eventKey={"AVAILABLE"}>
+                                        Available
+                                      </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Popover>
+                                }
+                              >
+                                <button className="flex items-center">
+                                  <GrEdit
+                                    size={16}
+                                    className="cursor-pointer hover:text-blue-600"
+                                  />
+                                </button>
+                              </Whisper>
+                            </div>
+                          </div>
                         </div>
-                      </Popover>
-                    }
-                  >
-                    <div>
-                      <Image
-                        width={120}
-                        height={120}
-                        alt=""
-                        src={
-                          rowData?.variant?.image
-                            ? `${fileUrlKey()}/${rowData?.variant?.image}`
-                            : "/images/no-image.png"
-                        }
-                        className="object-center  object-cover"
-                      />
-                    </div>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column>
-            {/* product name */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Product Name</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="variant.product.productName"
-              />
-            </Column>
+                      </>
+                    );
+                  }}
+                </Cell>
+              </Column>
+            )}
 
-            {/* category */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>Variant Price</HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="variant.variantPrice"
-              />
-            </Column>
-            {/* product short summary */}
-            <Column flexGrow={1} minWidth={105}>
-              <HeaderCell style={{ ...headerCss, whiteSpace: "break-spaces" }}>
-                ProductColor
-              </HeaderCell>
-              <Cell
-                style={cellCss}
-                verticalAlign="middle"
-                dataKey="variant.color.name"
-              />
-            </Column>
-
-            {/* Barcode */}
-            <Column flexGrow={3}>
-              <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" dataKey="code">
-                {(rowData) => `${getClientUrl()}/tag/${rowData.code}`}
-              </Cell>
-            </Column>
-
-            {/* Barcode */}
-            <Column flexGrow={1}>
-              <HeaderCell style={headerCss}>QR Code Status</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle">
-                {(rowData) => (
-                  <div className="flex items-center justify-between   gap-3 !w-full">
-                    <div className="w-[80px]">{rowData.barcodeStatus} </div>
-                    <div>
-                      <Whisper
-                        placement="bottomStart"
-                        controlId="control-id-with-dropdown"
-                        trigger="click"
-                        speaker={
-                          <Popover full>
-                            <Dropdown.Menu
-                              onSelect={(eventKey) =>
-                                barCodeStatusChange(eventKey as string, rowData)
-                              }
-                            >
-                              <Dropdown.Item eventKey={"INACTIVE"}>
-                                INACTIVE
-                              </Dropdown.Item>
-                              <Dropdown.Item eventKey={"AVAILABLE"}>
-                                AVAILABLE
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Popover>
-                        }
+            {isMobile && (
+              <Column width={60}>
+                <HeaderCell style={headerCss}>Action</HeaderCell>
+                <Cell style={cellCss} verticalAlign="middle" align="center">
+                  {(rowData: any) => (
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className=" font-semibold rounded-full !py-1.5 "
+                          arrow={false}
+                        >
+                          Delete
+                        </Popover>
+                      }
+                    >
+                      <button
+                        className="hover:text-[#eb0712db] "
+                        onClick={() => {
+                          setIsOpenDelete(true);
+                          setDeleteData(rowData);
+                        }}
                       >
-                        <Button>
-                          <FiEdit2 />
-                        </Button>
-                      </Whisper>
+                        <RiDeleteBinFill size={20} />
+                      </button>
+                    </Whisper>
+                  )}
+                </Cell>
+              </Column>
+            )}
+
+            {/*img*/}
+            {!isMobile && (
+              <Column width={70}>
+                <HeaderCell style={headerCss}>Image</HeaderCell>
+                <Cell style={cellCss} verticalAlign="middle">
+                  {(rowData) => (
+                    <Whisper
+                      placement="auto"
+                      speaker={
+                        <Popover>
+                          <div>
+                            <Image
+                              width={270}
+                              height={270}
+                              alt=""
+                              src={
+                                rowData?.variant?.image
+                                  ? `${fileUrlKey()}/${rowData?.variant?.image}`
+                                  : "/images/no-image.png"
+                              }
+                              className="object-cover"
+                            />
+                          </div>
+                        </Popover>
+                      }
+                    >
+                      <div>
+                        <Image
+                          width={120}
+                          height={120}
+                          alt=""
+                          src={
+                            rowData?.variant?.image
+                              ? `${fileUrlKey()}/${rowData?.variant?.image}`
+                              : "/images/no-image.png"
+                          }
+                          className="object-center  object-cover"
+                        />
+                      </div>
+                    </Whisper>
+                  )}
+                </Cell>
+              </Column>
+            )}
+
+            {/* product name */}
+            {!isMobile && (
+              <Column flexGrow={1}>
+                <HeaderCell style={headerCss}>Product Name</HeaderCell>
+                <Cell
+                  style={cellCss}
+                  verticalAlign="middle"
+                  dataKey="variant.product.productName"
+                />
+              </Column>
+            )}
+
+            {/* variantPrice */}
+            {!isMobile && (
+              <Column flexGrow={0.5}>
+                <HeaderCell style={headerCss}>Variant Price</HeaderCell>
+                <Cell
+                  style={cellCss}
+                  verticalAlign="middle"
+                  dataKey="variant.variantPrice"
+                />
+              </Column>
+            )}
+            {/* ProductColor */}
+            {!isMobile && (
+              <Column flexGrow={0.5}>
+                <HeaderCell
+                  style={{ ...headerCss, whiteSpace: "break-spaces" }}
+                >
+                  Product Color
+                </HeaderCell>
+                <Cell
+                  style={cellCss}
+                  verticalAlign="middle"
+                  dataKey="variant.color.name"
+                />
+              </Column>
+            )}
+
+            {/* Barcode no*/}
+            {!isMobile && (
+              <Column flexGrow={2}>
+                <HeaderCell style={headerCss}>QR Code Link</HeaderCell>
+                <Cell style={cellCss} verticalAlign="middle" dataKey="code">
+                  {(rowData) => <CopyableQRCodeLink rowData={rowData} />}
+                </Cell>
+              </Column>
+            )}
+
+            {/* Barcode */}
+            {!isMobile && (
+              <Column flexGrow={1.3}>
+                <HeaderCell style={headerCss}>QR Code Status</HeaderCell>
+                <Cell style={cellCss} verticalAlign="middle">
+                  {(rowData) => (
+                    <div className="flex items-center gap-5 !w-full">
+                      <div>{rowData.barcodeStatus} </div>
+                      <div>
+                        <Whisper
+                          placement="bottomEnd"
+                          controlId="control-id-with-dropdown"
+                          trigger="click"
+                          speaker={
+                            <Popover full>
+                              <Dropdown.Menu
+                                onSelect={(eventKey) =>
+                                  barCodeStatusChange(
+                                    eventKey as string,
+                                    rowData
+                                  )
+                                }
+                              >
+                                <Dropdown.Item eventKey={"INACTIVE"}>
+                                  INACTIVE
+                                </Dropdown.Item>
+                                <Dropdown.Item eventKey={"AVAILABLE"}>
+                                  AVAILABLE
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Popover>
+                          }
+                        >
+                          <button className="flex items-center">
+                            <GrEdit
+                              size={16}
+                              className="cursor-pointer hover:text-blue-600"
+                            />
+                          </button>
+                        </Whisper>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Cell>
-            </Column>
+                  )}
+                </Cell>
+              </Column>
+            )}
 
             {/* Created At */}
-            <Column width={115}>
-              <HeaderCell style={headerCss}>Created</HeaderCell>
-              <Cell
-                // style={cellCss}
-                verticalAlign="middle"
-                dataKey="variant.size"
-              >
-                {(rowData) => ` ${moment(rowData.createdAt).format("ll")}`}
-              </Cell>
-            </Column>
+            {!isMobile && (
+              <Column width={115}>
+                <HeaderCell style={headerCss}>Created</HeaderCell>
+                <Cell
+                  // style={cellCss}
+                  verticalAlign="middle"
+                  dataKey="variant.size"
+                >
+                  {(rowData) => ` ${moment(rowData.createdAt).format("ll")}`}
+                </Cell>
+              </Column>
+            )}
 
             {/* Action */}
-
-            <Column width={70}>
-              <HeaderCell style={headerCss}>Action</HeaderCell>
-              <Cell style={cellCss} verticalAlign="middle" align="center">
-                {(rowData: any) => (
-                  <Whisper
-                    placement="topEnd"
-                    speaker={
-                      <Popover
-                        className=" font-semibold rounded-full !py-1.5 "
-                        arrow={false}
-                      >
-                        Delete
-                      </Popover>
-                    }
-                  >
-                    <button
-                      className="  hover:text-[#eb0712db] "
-                      onClick={() => {
-                        setIsOpenDelete(true);
-                        setDeleteData(rowData);
-                      }}
+            {!isMobile && (
+              <Column width={70}>
+                <HeaderCell style={headerCss}>Action</HeaderCell>
+                <Cell style={cellCss} verticalAlign="middle" align="center">
+                  {(rowData: any) => (
+                    <Whisper
+                      placement="topEnd"
+                      speaker={
+                        <Popover
+                          className=" font-semibold rounded-full !py-1.5 "
+                          arrow={false}
+                        >
+                          Delete
+                        </Popover>
+                      }
                     >
-                      <RiDeleteBinFill size={20} />
-                    </button>
-                  </Whisper>
-                )}
-              </Cell>
-            </Column>
+                      <button
+                        className="  hover:text-[#eb0712db] "
+                        onClick={() => {
+                          setIsOpenDelete(true);
+                          setDeleteData(rowData);
+                        }}
+                      >
+                        <RiDeleteBinFill size={20} />
+                      </button>
+                    </Whisper>
+                  )}
+                </Cell>
+              </Column>
+            )}
           </Table>
 
           <div>
@@ -546,13 +674,18 @@ const ProductBarcode = () => {
               total={allBarCodeList?.meta?.total}
               prev
               next
-              first
-              last
+              first={isMobile ? false : true}
+              last={isMobile ? false : true}
               ellipsis
               boundaryLinks
-              maxButtons={5}
-              size="md"
-              layout={["total", "-", "limit", "|", "pager", "skip"]}
+              maxButtons={isMobile ? 2 : 5}
+              size={isMobile ? "xs" : "md"}
+              layout={
+                isMobile
+                  ? ["total", "-", "limit", "|", "pager"]
+                  : ["total", "-", "limit", "|", "pager", "skip"]
+              }
+              // layout={["total", "-", "limit", "|", "pager", "skip"]}
               limitOptions={[10, 20, 30, 50, 100, 150, 200, 500]}
               limit={size}
               onChangeLimit={(limitChange) => setSize(limitChange)}
