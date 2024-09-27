@@ -184,12 +184,12 @@ const monthWiseOrder = async (): Promise<any> => {
   return formattedResult;
 };
 
-monthWiseOrder()
-  .then(() => console.log('data'))
-  .catch(error => console.error('Error:', error))
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// monthWiseOrder()
+//   .then(() => console.log(''))
+//   .catch(error => console.error('Error:', error))
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
 
 // ! creating new order data
 const createOrder = async (orderData: ICreateNewOrder) => {
