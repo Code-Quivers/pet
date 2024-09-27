@@ -2,7 +2,7 @@ name: Publish Docker Images
 
 on:
   push:
-    branches: ["salim"]
+    branches: ["release-9.0.0"]
 
 jobs:
   build:
