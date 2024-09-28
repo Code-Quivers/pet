@@ -46,7 +46,24 @@ const getAllPayment = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+const getSinglePaymentReport = catchAsync(async (req: Request, res: Response) => {
+  const { paymentPlatformId } = req.params;
+
+  const paymentReport = await PaymentReportService.getSinglePaymentReport(paymentPlatformId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Payment Report get Successfully',
+    data: paymentReport,
+  });
+
+})
+
+
 export const PaymentReportController = {
   getAllPayment,
   createPaymentController,
+  getSinglePaymentReport
 };

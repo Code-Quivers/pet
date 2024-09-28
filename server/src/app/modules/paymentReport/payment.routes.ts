@@ -9,6 +9,6 @@ const router = express.Router();
 // Stripe payment request route
 router.get('/', auth(UserRoles.SUPERADMIN), PaymentReportController.getAllPayment);
 
-// router.get('/:paymentId', PaymentReportController.getPaymentReport);
+router.get('/:paymentPlatformId',  PaymentReportController.getSinglePaymentReport);
 
 export const PaymentReportRoutes = router;
