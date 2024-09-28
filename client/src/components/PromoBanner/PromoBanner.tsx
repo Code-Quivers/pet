@@ -1,15 +1,22 @@
+import { useGetAdvertisementQuery } from "@/redux/api/features/adApi";
 import Link from "next/link";
 import React from "react";
 import Marquee from "react-fast-marquee";
 import { LuDot } from "react-icons/lu";
 
 const PromoBanner = () => {
+
+  const {data: showAdvertisement, isLoading} = useGetAdvertisementQuery({})
+
+  const activeAds = showAdvertisement?.data?.filter((ad: any) => ad.isActive === true);
+
   return (
     <div className="">
-      <div className="bg-gray-950">
+      {
+        activeAds && activeAds.length > 0 && <div className="bg-gray-950">
         <div className=" py-1">
           <Marquee className="text-white" autoFill pauseOnHover>
-            <div>
+            {/* <div>
               <p className="ml-3 md:text-center font-medium text-white">
                 Buy a<span className="font-semibold"> Backup Buddy</span> and
                 use code
@@ -20,7 +27,24 @@ const PromoBanner = () => {
                 </Link>
                 <LuDot size={25} className="inline mx-10" />
               </p>
-            </div>
+            </div> */}
+
+<div>
+  {isLoading ? (
+    <p className="ml-3 md:text-center font-medium text-white">Loading Advertisement</p>
+  ) : (
+    activeAds.map((ad: any) => (
+      <p key={ad.adId} className="ml-3 md:text-center font-medium text-white">
+        {ad.adDetails}
+        <Link href={"/"} className="underline text-white ml-3">
+          Buy Now
+        </Link>
+        <LuDot size={25} className="inline mx-10" />
+      </p>
+    ))
+  )}
+</div>
+
           </Marquee>
           {/* <div className="md:flex sm:justify-center sm:items-center md:gap-3 text-xs sm:text-base">
             <div>
@@ -45,6 +69,7 @@ const PromoBanner = () => {
           </div> */}
         </div>
       </div>
+      }
     </div>
   );
 };

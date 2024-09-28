@@ -1,0 +1,10 @@
+model Advertisement {
+    adId      String   @id @default(uuid())
+    adTitle   String
+    adDetails String
+    startDate DateTime
+    endDate   DateTime
+    isActive Boolean @default(false)
+    createdAt DateTime @default(now()) @db.Timestamptz(0)
+    updatedAt DateTime @updatedAt @db.Timestamptz(0)
+}

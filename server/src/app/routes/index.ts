@@ -16,6 +16,7 @@ import { OrderRoutes } from '../modules/orders/orders.routes';
 import { StripeRoutes } from '../modules/payments/stripe.routes';
 import { PaymentReportRoutes } from '../modules/paymentReport/payment.routes';
 import { PaypalRoutes } from '../modules/paypal-payments/paypal.routes';
+import { AdRoutes } from '../modules/advertisement/ad.route';
 
 const router = express.Router();
 
@@ -67,6 +68,10 @@ const moduleRoutes = [
   {
     path: '/tax',
     route: TaxRoutes,
+  },
+  {
+    path: '/advertisement',
+    route: AdRoutes,
   },
   {
     path: '/comments',

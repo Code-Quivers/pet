@@ -67,6 +67,23 @@ export type ICreateProductPromo = {
   buyItemGetItemPromotion: buyItemGetItemPromotion;
 };
 
+export type IAdDetails = {
+  adTitle: string;
+  adDetails: string;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+};
+
+
+export type IEditAdDetails = {
+  adTitle?: string;
+  adDetails?: string;
+  startDate?: Date;
+  endDate?: Date;
+  isActive?: boolean;
+}
+
 type buyItemGetItemPromotion = {
   requiredItemId: string;
   requiredQuantity: number;

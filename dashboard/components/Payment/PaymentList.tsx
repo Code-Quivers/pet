@@ -51,6 +51,7 @@ const PaymentListTable = () => {
     isFetching,
   } = useGetAllPaymentsReportQuery({ ...query });
 
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default  sm:px-7.5 xl:pb-1">
@@ -238,9 +239,9 @@ const PaymentListTable = () => {
                       <p>{moment(rowData.createdAt).format("lll")}</p>
                     </div>
                     <div>
-                      <p className="text-[#16A34A] font-semibold py-[2px] bg-[#DCFCE7] px-2  text-center rounded-full">
-                        {rowData?.paymentStatus}
-                      </p>
+                    <p className="text-[#16A34A] uppercase font-semibold py-[2px] bg-[#DCFCE7] px-2 text-center rounded-full">
+  {rowData?.paymentStatus === "succeeded" || rowData?.paymentStatus === "COMPLETED" ? "succeeded" : rowData?.paymentStatus}
+</p>
                     </div>
                     <div className=" ">
                       {rowData?.paymentPlatform === "PAYPAL" && (
