@@ -176,47 +176,37 @@ const SingleProductPage = ({ params }: any) => {
                       <span className="text-bold">{selectColorName}</span>
                     </p>
                   )}
-                  <div className="flex items-center mt-2">
+                  <div className="flex items-center mt-2 flex-wrap gap-3">
                     {/* color variants */}
                     {isLoading && isFetching
                       ? colorLoader
                       : productColor?.map((color: any, index: number) => (
-                          <Whisper
+                          <button
+                            onClick={() => {
+                              colorVariantsHandler(index, color);
+                            }}
                             key={index}
-                            placement="top"
-                            controlId={`control-id-hover-${index}`}
-                            trigger="hover"
-                            speaker={<Tooltip>{color?.name}</Tooltip>}
+                            className={`px-7 py-1.5 border ${
+                              selectedColorIndex == index
+                                ? "border-2 border-primary"
+                                : ""
+                            } rounded-full flex items-center gap-3 text-lg`}
                           >
-                            <button
+                            <span
+                              style={{
+                                backgroundColor: `${color?.code}`,
+                              }}
+                              className="w-4 h-4 rounded-full inline-block"
+                            ></span>
+                            {color?.name}
+                          </button>
+                        ))}
+                  </div>
+                </div>
+
+                {/* <button
                               onClick={() => {
                                 colorVariantsHandler(index, color);
-                                // setSelectedColorIndex(index);
-                                // setSelectColorName(color?.name);
-                                // setColorName(color?.name);
-                                // setProductForCart({
-                                //   categoryId: singleProduct?.data?.categoryId,
-                                //   productId: singleProduct?.data?.productId,
-                                //   productName: singleProduct?.data?.productName,
-                                //   variantId:
-                                //     singleProduct?.data?.productVariations?.[
-                                //       index
-                                //     ].variantId,
-                                //   price:
-                                //     singleProduct?.data?.productVariations?.[
-                                //       index
-                                //     ].variantPrice,
-                                //   color: {
-                                //     name: singleProduct?.data
-                                //       ?.productVariations?.[index].color?.name,
-                                //     code: singleProduct?.data
-                                //       ?.productVariations?.[index].color?.code,
-                                //   },
-                                //   image:
-                                //     singleProduct?.data?.productVariations?.[
-                                //       index
-                                //     ].image,
-                                // });
                               }}
                               style={{
                                 backgroundColor: `${color?.code}`,
@@ -226,11 +216,7 @@ const SingleProductPage = ({ params }: any) => {
                                   ? "border-[3px] border-gray-600"
                                   : ""
                               } `}
-                            ></button>
-                          </Whisper>
-                        ))}
-                  </div>
-                </div>
+                            ></button> */}
 
                 {/* product size */}
                 {/* {productSize && productSize?.length > 0 && (
