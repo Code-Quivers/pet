@@ -9,7 +9,7 @@ const BackupBuddySpecs = () => {
     <section className="p-4">
       <div>
         <Accordion>
-          <Panel header="Backup Buddy Full Specifications" eventKey="1">
+          <Panel header="Backup Buddy Specs" eventKey="1">
             <div className="flex items-start mb-6">
               {/* Image */}
               <div className="w-1/2 flex justify-center items-center">
@@ -49,7 +49,7 @@ const BackupBuddySpecs = () => {
               <div>
                 <ul>
                   <li>
-                    Operating ambient temperature: -13 to 158 F (-25 to 70 C)
+                    Operating ambient temperature -13 to 158 F (-25 to 70 C)
                   </li>{" "}
                   <li>NFC Microchip Data Retention Time: 10 years</li>{" "}
                   <li>Read Range: 0.5 inch (12 mm)</li>
