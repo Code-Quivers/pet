@@ -97,9 +97,10 @@ const PaymentListTable = () => {
             headerHeight={50}
             rowExpandedHeight={160}
             shouldUpdateScroll={false}
-            height={500}
+            minHeight={500}
             hover={false}
             data={allPaymentsReport?.data?.data}
+            autoHeight={true}
           >
             {/* Payment Platform Id */}
             <Column flexGrow={1}>
@@ -199,19 +200,19 @@ const PaymentListTable = () => {
                   <div>
                     <p>
                       <span className="text-bodydark2">Pay: </span>
-                      {rowData?.amountToPay} €
+                      {rowData?.amountToPay} $
                     </p>
                     <p>
                       <span className="text-bodydark2">Paid: </span>
-                      {rowData?.amountPaid} €
+                      {rowData?.amountPaid} $
                     </p>
                     <p>
                       <span className="text-bodydark2">Fee: </span>
-                      {rowData?.platformFee} €
+                      {rowData?.platformFee} $
                     </p>
                     <p>
                       <span className="text-bodydark2">Net: </span>
-                      {rowData?.netAmount} €
+                      {rowData?.netAmount} $
                     </p>
                   </div>
                 )}
