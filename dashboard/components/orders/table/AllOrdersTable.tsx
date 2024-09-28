@@ -1,7 +1,6 @@
 "use client";
 import icons8Edit from "@/public/images/icon/icons8-edit.svg";
 import Image from "next/image";
-import { useGetProductQuery } from "@/redux/features/productsApi";
 import { useState } from "react";
 import { useDebounced } from "@/redux/hook";
 import {
@@ -24,7 +23,7 @@ const AllOrderList = () => {
   const [size, setSize] = useState<number>(10);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [orderStatus, setOrderStatus] = useState<string>("");
-// 
+  //
   query["orderStatus"] = orderStatus;
   query["limit"] = size;
   query["page"] = page;
@@ -54,16 +53,12 @@ const AllOrderList = () => {
 
   const { data: allOrders, isLoading } = useGetAllOrdersQuery(query);
 
-  const orderStatusFilter = [
-    "PENDING",
-    "CONFIRMED",
-    "CANCELED",
-    "REJECTED",
-    "DELIVERED",
-  ].map((item) => ({ label: item, value: item }));
+  const orderStatusFilter = ["PENDING", "CONFIRMED", "REJECTED"].map(
+    (item) => ({ label: item, value: item })
+  );
 
   // Status Modal Open and Close
-
+  const [editData, setEditStatusData] = useState(null);
   const [open, setOpen] = useState<any>(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -122,16 +117,25 @@ const AllOrderList = () => {
             </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 gap-3 p-2">
+        <div className="">
           {isLoading && (
-            <div className="flex justify-center items-center">
-              {" "}
-              <Loader size="md" content="Loading..." />
+            <div className="flex justify-center items-center min-h-[50vh]">
+              <Loader size="lg" content="Loading..." />
             </div>
           )}
+          {/* if no data */}
 
-          {allOrders?.data?.data?.length > 0 ? (
+          {!isLoading &&
+            // @ts-ignore
+            !allOrders?.data?.data?.length && (
+              <div className="flex justify-center items-center min-h-[50vh]">
+                <h1>No Orders Found</h1>
+              </div>
+            )}
+        </div>
+        <div className="px-3 space-y-2">
+          {allOrders?.data?.data?.length &&
+            !isLoading &&
             allOrders?.data?.data?.map((order: any, index: any) => (
               // Place your code for rendering each order here
               // For example:
@@ -151,7 +155,8 @@ const AllOrderList = () => {
                           </div>
                           <div className="flex flex-col justify-start items-start w-46">
                             <p className="text-lg font-bold">
-                              <span>$</span>  {order?.paymentInfo?.amountPaid}
+                              <span>$</span>{" "}
+                              {order?.paymentInfo?.amountPaid ?? 0}
                             </p>
                             <p className="text-xs">
                               Order Status :{" "}
@@ -165,13 +170,7 @@ const AllOrderList = () => {
                                 } ${
                                   order?.orderStatus === "REJECTED" &&
                                   "text-danger px-2 py-1 bg-[#FEE2E2] font-semibold rounded-full"
-                                } ${
-                                  order?.orderStatus === "CANCELED" &&
-                                  "text-[#475569] px-2 py-1 bg-[#CBD5E1] font-semibold rounded-full"
-                                } ${
-                                  order?.orderStatus === "DELIVERED" &&
-                                  "text-[#0284C7] px-2 py-1 bg-[#BAE6FD] font-semibold rounded-full"
-                                }`}
+                                }  `}
                               >
                                 {order?.orderStatus}
                               </span>
@@ -182,10 +181,13 @@ const AllOrderList = () => {
                     >
                       <div className="">
                         <div>
-                          <div className="mb-5">
+                          <div className="mb-3">
                             <button
                               className="text-primary flex gap-[2px] items-center font-semibold"
-                              onClick={handleOpen}
+                              onClick={() => {
+                                handleOpen();
+                                setEditStatusData(order);
+                              }}
                             >
                               <Image
                                 src={icons8Edit}
@@ -195,17 +197,12 @@ const AllOrderList = () => {
                               />
                               Edit Status
                             </button>
-                            <OrderEditModal
-                              open={open}
-                              order={order}
-                              handleClose={handleClose}
-                            />
                           </div>
                         </div>
                         {/* Client Info */}
                         <section className="md:flex gap-3 max-md:space-y-3">
                           {/* shipping information */}
-                          <div className=" w-full p-3 rounded-md border-2  border-[#CBD5E1] ">
+                          <div className=" w-full p-3 rounded-lg border border-[#CBD5E1] ">
                             <div className="flex items-center justify-between">
                               <h1 className="text-xl font-semibold">
                                 Shipping Information
@@ -293,73 +290,73 @@ const AllOrderList = () => {
                           </div>
                         </section>
                         {/* Delivery & Product */}
-                        <div className=" border-[#CBD5E1] border-2 shadow-2 rounded-md my-4">
-                          <div className="flex flex-col gap-1">
-                            <div className="grid grid-cols-1 gap-2 !bg-gray-50">
-                              <div className="px-4 sm:px-6 lg:px-8">
-                                <div className="flex flex-col">
-                                  <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                    <div className="inline-block min-w-full py-2 align-middle">
-                                      <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-                                        <table className="min-w-full divide-y divide-gray-300">
-                                          <thead className="bg-gray-50">
-                                            <tr>
-                                              <th
-                                                scope="col"
-                                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
-                                              >
-                                                Product Name
-                                              </th>
-                                              <th
-                                                scope="col"
-                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                              >
-                                                Quantity
-                                              </th>
-                                              <th
-                                                scope="col"
-                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                              >
-                                                Price
-                                              </th>
-                                              <th
-                                                scope="col"
-                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                              >
-                                                Total Price
-                                              </th>
-                                            </tr>
-                                          </thead>
-                                          {order?.cartItems?.map(
-                                            (product: any, index: any) => (
-                                              <ProductListTable
-                                                key={index}
-                                                product={product}
-                                              />
-                                            )
-                                          )}
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <div className=" border-[#CBD5E1] border  overflow-hidden rounded-lg my-3 mb-5">
+                          {/* <div className="flex flex-col gap-1"> */}
+                          {/* <div className="grid grid-cols-1 gap-2 !bg-gray-50"> */}
+                          {/* <div className="px-4 sm:px-6 lg:px-8"> */}
+                          {/* <div className="flex flex-col"> */}
+                          {/* <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8"> */}
+                          {/* <div className="inline-block min-w-full py-2 align-middle"> */}
+
+                          <table className="min-w-full overflow-x-auto divide-y divide-slate-300">
+                            <thead className="bg-gray !rounded-xl  ">
+                              <tr>
+                                <th
+                                  scope="col"
+                                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                                >
+                                  Product Name
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                >
+                                  Quantity
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                >
+                                  Price
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                >
+                                  Total Price
+                                </th>
+                              </tr>
+                            </thead>
+                            {order?.cartItems?.map(
+                              (product: any, index: any) => (
+                                <ProductListTable
+                                  key={index}
+                                  product={product}
+                                />
+                              )
+                            )}
+                          </table>
+
+                          {/* </div> */}
+                          {/* </div> */}
+                          {/* </div> */}
+                          {/* </div> */}
+                          {/* </div> */}
+                          {/* </div> */}
                         </div>
                         {/* Payment Info */}
                         <div className="px-4">
                           <div className="flex justify-between">
                             <div>
-                              <button className="border rounded-full px-2 py-1 ">Download Invoice</button>
+                              <button className="border rounded-full px-2 py-1 ">
+                                Download Invoice
+                              </button>
                             </div>
                             <div className="w-1/4">
-                              
-                              <p className="flex justify-between">
+                              <p className="flex justify-end gap-5 items-center">
                                 Total Amount Paid:{" "}
-                                <span className="text-black font-medium">
-                                  ${" "}
-                                  {order?.paymentInfo?.amountPaid}
+                                <span className="text-black font-bold">
+                                  $ {order?.paymentInfo?.amountPaid}
                                 </span>
                               </p>
                             </div>
@@ -370,14 +367,15 @@ const AllOrderList = () => {
                   </Accordion>
                 }
               </div>
-            ))
-          ) : (
-            <div className="flex justify-center items-center">
-              <h1>No Orders Found</h1>
-            </div>
-          )}
+            ))}
         </div>
 
+        {/* edit status */}
+        <OrderEditModal
+          open={open}
+          order={editData}
+          handleClose={handleClose}
+        />
         <div>
           <OrderEditShippingInformation
             placement={placement}

@@ -51,15 +51,13 @@ const PaymentListTable = () => {
     isFetching,
   } = useGetAllPaymentsReportQuery({ ...query });
 
-  console.log("allPaymentsReport", allPaymentsReport);
-
   return (
     <>
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default  sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center   pb-2 mb-5">
           <div>
             <h2 className="text-lg font-semibold ">
-              Payment List | {allPaymentsReport?.meta?.total}
+              Payment List | {allPaymentsReport?.data?.meta?.total ?? 0}
             </h2>
           </div>
 
@@ -101,6 +99,7 @@ const PaymentListTable = () => {
             hover={false}
             data={allPaymentsReport?.data?.data}
             autoHeight={true}
+            className="focus-within:!outline-none"
           >
             {/* Payment Platform Id */}
             <Column flexGrow={1}>
@@ -154,10 +153,8 @@ const PaymentListTable = () => {
                 {(rowData: any) => (
                   <div>
                     <p className="text-bodydark2">Transaction Time:</p>
-                    <span>
-                      {moment(rowData?.transactionCreatedTime).format(
-                        "ll, HH:mm"
-                      )}
+                    <span className="text-[11px] font-semibold">
+                      {moment(rowData?.transactionCreatedTime).format("lll")}
                     </span>
                   </div>
                 )}
@@ -198,21 +195,29 @@ const PaymentListTable = () => {
               >
                 {(rowData: any) => (
                   <div>
-                    <p>
-                      <span className="text-bodydark2">Pay: </span>
-                      {rowData?.amountToPay} $
+                    <p className="grid grid-cols-5">
+                      <span className="text-bodydark2 col-span-2">To Pay:</span>
+                      <span className="col-span-3 flex justify-end font-semibold ">
+                        {rowData?.amountToPay} $
+                      </span>
                     </p>
-                    <p>
-                      <span className="text-bodydark2">Paid: </span>
-                      {rowData?.amountPaid} $
+                    <p className="grid grid-cols-5">
+                      <span className="text-bodydark2 col-span-2">Fee: </span>
+                      <span className="col-span-3 flex justify-end ">
+                        {rowData?.platformFee} $
+                      </span>
                     </p>
-                    <p>
-                      <span className="text-bodydark2">Fee: </span>
-                      {rowData?.platformFee} $
-                    </p>
-                    <p>
-                      <span className="text-bodydark2">Net: </span>
-                      {rowData?.netAmount} $
+                    <p className="grid grid-cols-5">
+                      <span className="text-bodydark2 col-span-2">Net: </span>
+                      <span className="col-span-3 flex justify-end ">
+                        {rowData?.netAmount} $
+                      </span>
+                    </p>{" "}
+                    <p className="grid grid-cols-5">
+                      <span className="text-bodydark2 col-span-2">Paid: </span>
+                      <span className="col-span-3 flex justify-end ">
+                        {rowData?.amountPaid} $
+                      </span>
                     </p>
                   </div>
                 )}
@@ -228,22 +233,28 @@ const PaymentListTable = () => {
                 dataKey="paymentStatus"
               >
                 {(rowData: any) => (
-                  <div>
-                    <p>{moment(rowData.createdAt).format("ll, HH:mm")}</p>
-                    <p className="text-[#16A34A] font-semibold py-[2px] bg-[#DCFCE7] px-2 rounded-full">
-                      {rowData?.paymentStatus}
-                    </p>
-                    {rowData?.paymentPlatform === "PAYPAL" && (
-                      <p className="text-primary mt-1">
-                        <RiPaypalFill size={20} />
+                  <div className="flex flex-col justify-center items-center space-y-1">
+                    <div>
+                      <p>{moment(rowData.createdAt).format("lll")}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#16A34A] font-semibold py-[2px] bg-[#DCFCE7] px-2  text-center rounded-full">
+                        {rowData?.paymentStatus}
                       </p>
-                    )}
+                    </div>
+                    <div className=" ">
+                      {rowData?.paymentPlatform === "PAYPAL" && (
+                        <p className="text-primary ">
+                          <RiPaypalFill size={30} />
+                        </p>
+                      )}
 
-                    {rowData?.paymentPlatform === "STRIPE" && (
-                      <p className="text-primary mt-1">
-                        <FaStripe size={20} />
-                      </p>
-                    )}
+                      {rowData?.paymentPlatform === "STRIPE" && (
+                        <p className="text-primary px-2 ">
+                          <FaStripe size={30} />
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
               </Cell>
