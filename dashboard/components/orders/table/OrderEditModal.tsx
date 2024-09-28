@@ -6,8 +6,8 @@ const OrderEditModal = ({ open, handleClose, order }: any) => {
   const orderStatusOptions = [
     "PENDING",
     "CONFIRMED",
-    "CANCELED",
-    "DELIVERED",
+    // "CANCELED",
+    // "DELIVERED",
     "REJECTED",
   ].map((status) => ({
     label: status,
