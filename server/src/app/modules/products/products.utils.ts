@@ -52,19 +52,24 @@ export const ProductValidation = async (data: IProductRequest) => {
 
 // export const productCodeGenerator: string = generateRandomCode();
 
-const existingCodes: number[] = []; // Array to store existing codes
-
-export const generateBarCode = (): string => {
-  const min = 100000;
-  const max = 999999;
-  let code: number;
+export const generateBarCode = async (): Promise<string> => {
+  let code: string;
+  let exists: boolean;
 
   do {
-    code = Math.floor(Math.random() * (max - min + 1)) + min;
-  } while (existingCodes.includes(code)); // Check if the code already exists
+    const timestamp = Date.now().toString().slice(-4); // Get the last 5 digits of the timestamp
+    const randomComponent = Math.floor(Math.random() * 100000)
+      .toString()
+      .padStart(5, '0'); // Generate a 5-digit random number
+    code = 'et' + timestamp + randomComponent; // Combine timestamp and random component
 
-  existingCodes.push(code); // Add the new code to the array of existing codes
+    // Check if the code exists in the database using findUnique
+    const existingCode = await prisma.barCode.findUnique({
+      where: { code }, // Adjust this to match your schema
+    });
 
-  const truncatedCode = code.toString().slice(-6); // Extract last 8 digits of the code
-  return 'et' + truncatedCode; // Prepend "et" and append timestamp
+    exists = existingCode !== null; // If findUnique returns something, the code exists
+  } while (exists); // Repeat until a unique code is found
+
+  return code;
 };
