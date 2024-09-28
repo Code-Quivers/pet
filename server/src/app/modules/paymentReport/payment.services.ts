@@ -152,4 +152,24 @@ const getPaymentReports = async (filters: IPaymentFilterRequest, options: IPagin
   };
 };
 
-export const PaymentReportService = { getPaymentReports, createPaymentReport };
+
+const getSinglePaymentReport = async (paymentPlatformId: string): Promise<PaymentReport> => {
+  const paymentReport = await prisma.paymentReport.findUnique({
+    where: {
+      paymentPlatformId,
+    },
+    include:{
+      order: true,
+    }
+  });
+
+  if (!paymentReport) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Payment Report not found');
+  }
+
+  return paymentReport;
+} 
+
+
+
+export const PaymentReportService = { getPaymentReports, createPaymentReport, getSinglePaymentReport };
