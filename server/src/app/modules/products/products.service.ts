@@ -28,20 +28,6 @@ const createProduct = async (req: Request): Promise<Product> => {
 
   const data = req.body as IProductRequest;
   //
-  // making variant array with image
-  const variants = data?.productVariations?.map((variant: IProductVariant) => {
-    const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
-    return {
-      image: imagePath,
-      variantPrice: variant.variantPrice,
-      color: variant.color,
-      // size: variant.size,
-      // stock: variant.stock,
-    };
-  });
-
-  // making stock variant
-  const variantStock = data?.productVariations?.map(({ stock }: IProductVariant) => ({ stock }));
 
   // prisma transaction
   const result = await prisma.$transaction(async transactionClient => {
@@ -52,9 +38,6 @@ const createProduct = async (req: Request): Promise<Product> => {
       productImage: productImagesPaths,
       categoryId: data.categoryId,
       featuredImage: featuredImage?.path?.substring(7) as string,
-      productVariations: {
-        create: variants,
-      },
     };
 
     // creating product with variants
@@ -65,32 +48,49 @@ const createProduct = async (req: Request): Promise<Product> => {
     if (!createdProduct) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Product creation failed');
     }
+
+    // making variant array with image
+    const variants = data?.productVariations?.map((variant: IProductVariant) => {
+      const imagePath = productImagesPaths.find((path: string) => path?.includes(variant?.id)) || '';
+      return {
+        image: imagePath,
+        variantPrice: variant.variantPrice,
+        color: variant.color,
+        productId: createdProduct?.productId,
+        stock: variant?.stock,
+      };
+    });
+
     //
-    const productId = createdProduct.productId;
-    //
-    for (const variant of variantStock) {
-      const pv = await transactionClient.productVariation.findFirst({
-        where: {
-          productId: productId,
-          // size: variant.size,
-        },
-      });
+    // creating product variant and bar Code
+    await Promise.all(
+      variants?.map(async singleData => {
+        const { stock, ...others } = singleData || {};
 
-      if (!pv) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Product variation not found');
-      }
+        // Create the variant
+        const createdVariants = await transactionClient.productVariation.create({
+          data: others,
+        });
 
-      const codes = Array.from({ length: variant?.stock }, () => ({
-        code: generateBarCode(),
-        variantId: pv.variantId,
-      }));
+        // Generate barcode for the current variant
+        const codes = await Promise.all(
+          Array.from({ length: stock }, async () => ({
+            code: await generateBarCode(),
+            variantId: createdVariants?.variantId,
+          }))
+        );
 
-      const createdBarCodes = await transactionClient.barCode.createMany({ data: codes });
+        // Insert the barcode into the database
+        const createdBarCodes = await transactionClient.barCode.createMany({
+          data: codes,
+        });
 
-      if (!createdBarCodes || createdBarCodes.count !== variant.stock) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
-      }
-    }
+        // Check if the correct number of barcode were created
+        if (!createdBarCodes || createdBarCodes.count !== stock) {
+          throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create barcode');
+        }
+      })
+    );
 
     return createdProduct;
   });
@@ -141,11 +141,13 @@ const addMoreVariants = async (req: Request, productId: string): Promise<any> =>
         throw new ApiError(httpStatus.BAD_REQUEST, 'Variant Adding failed');
       }
 
-      // generating new codes
-      const codes = Array.from({ length: variant?.otherVariant?.stock }, () => ({
-        code: generateBarCode(),
-        variantId: createdNewVariant.variantId,
-      }));
+      // Generate barcodes for the current variant
+      const codes = await Promise.all(
+        Array.from({ length: variant?.otherVariant?.stock }, async () => ({
+          code: await generateBarCode(),
+          variantId: createdNewVariant?.variantId,
+        }))
+      );
 
       const createdBarCodes = await transactionClient.barCode.createMany({ data: codes });
 
