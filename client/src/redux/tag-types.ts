@@ -1,3 +1,4 @@
+import { Advertisement } from '@prisma/client';
 export enum tagTypes {
   user = "user",
   category = "category",
@@ -12,6 +13,7 @@ export enum tagTypes {
   promo = "promo",
   promotionalOffer = "promotionalOffer",
   paypal = "paypal",
+  advertisement = "advertisement",
 }
 
 export const tagTypesList = [
@@ -28,4 +30,5 @@ export const tagTypesList = [
   tagTypes.promo,
   tagTypes.promotionalOffer,
   tagTypes.paypal,
+  tagTypes.advertisement,
 ];

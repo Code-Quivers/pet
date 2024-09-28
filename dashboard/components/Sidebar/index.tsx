@@ -264,6 +264,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Add Promo Code
                             </Link>
                           </li>
+                          <li>
+                            <Link
+                              href="/products/ad"
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out 
+                              hover:text-white ${
+                                pathname === "/products/ad" &&
+                                "text-white"
+                              } `}
+                            >
+                              Ad Section
+                            </Link>
+                          </li>
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
