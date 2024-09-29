@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { fileUrlKey } from "@/helpers/config/envConfig";
@@ -17,25 +18,30 @@ interface PaymentDoneProps {
 const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
   const searchParams = useSearchParams();
   const payment_intent = searchParams.get("payment_intent");
-  let paymentId;
-  if (payment_intent) {
-    paymentId = payment_intent;
-  } else if (params.orderId) {
-    paymentId = params.orderId;
-  }
-  const orderId = paymentId;
-  console.log(orderId, "orderId");
+  const orderId = params.orderId;
 
   // const payment_intent_client_secret = searchParams.get("payment_intent_client_secret");
   const [retrievePaymentInfo, { data, isLoading, isError }] =
     useRetrivePaymentInfoMutation();
+
   useEffect(() => {
     if (orderId && payment_intent) {
       retrievePaymentInfo({ orderId, paymentIntentId: payment_intent });
     }
   }, [orderId, payment_intent]);
 
-  const { data: order } = useGetSinglePaymentReportQuery(orderId as any);
+
+  let paymentId;
+  if (payment_intent) {
+    paymentId = payment_intent;
+  } else if (orderId) {
+    paymentId = orderId;
+  }
+  const invoiceId = paymentId;
+  // const orderId = paymentId;
+  console.log(invoiceId, "orderId");
+
+  const { data: order } = useGetSinglePaymentReportQuery(invoiceId as any);
   console.log(order, "orderData");
   const detailsOrder = order?.data;
   const { order: orderData } = detailsOrder || {};
