@@ -1,6 +1,7 @@
 "use client";
 
 import { useRetrivePaymentInfoMutation } from "@/redux/api/features/payment/stripePaymentApi";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -25,38 +26,118 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
   }, [orderId, payment_intent]);
 
   return (
-    <section className="max-w-6xl max-lg:px-3 pb-20 mx-auto mb-5 mt-6 lg:mt-8 2xl:mx-auto lg:px-5 2xl:px-0 ">
-      <div>
-        <div className="p-6  md:mx-auto">
-          <svg
-            viewBox="0 0 24 24"
-            className="text-green-600 w-16 h-16 mx-auto my-6"
-          >
-            <path
-              fill="currentColor"
-              d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-            ></path>
-          </svg>
-          <div className="text-center">
-            <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
-              Payment Done!
-            </h3>
-            <p className="text-gray-600 my-2">
-              Thank you for completing your secure online payment.
+    <div className="bg-[#F4F5FA] min-h-screen pt-10">
+      <main className="max-w-4xl mx-auto">
+        <div className=" bg-white p-10 rounded">
+          <h1 className="font-bold text-3xl">Your Order Confirmed</h1>
+          <div>
+            <h4 className="font-semibold ">Hello Rafi,</h4>
+            <p>
+              Your order has been confirmed. You will receive an email with your
+              order details.
             </p>
-            <p> Have a great day! </p>
-            <div className="py-10 text-center">
-              <Link
-                href="/"
-                className="px-12 bg-primary hover:bg-indigo-700 text-white font-semibold py-3"
-              >
-                GO BACK
-              </Link>
+          </div>
+          <div className="flex justify-between flex-wrap border-y py-3 border-gray-200">
+            <div>
+              <p className="font-medium text-gray-500">Order Date</p>
+              <p className="font-semibold">12 Jan, 2024</p>
+            </div>
+            <div>
+              <p>Order No</p>
+              <p>NO6382768366</p>
+            </div>
+            <div>
+              <p>Payment</p>
+              <p>Paypal</p>
+            </div>
+            <div>
+              <p>Shipping Address</p>
+              <div>
+                <p>600 Montogo st</p>
+                <p>San Francisco, CA 94103</p>
+              </div>
             </div>
           </div>
+
+          <section>
+            <div className="grid grid-cols-12 border-b py-4">
+              <Image src="" alt="" className="col-span-2" />
+              <div className="col-span-8">
+                <h1>Mens sports cap</h1>
+                <p>Quantity: 1</p>
+                <p>Color: Dark blue</p>
+              </div>
+              <p className="col-span-2 text-right">
+                {(20).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </p>
+            </div>
+            {/* <div className="grid grid-cols-12 border-b py-4">
+              <Image src="" alt="" className="col-span-2" />
+              <div className="col-span-8">
+                <h1>Mens sports cap</h1>
+                <p>Quantity: 1</p>
+                <p>Color: Dark blue</p>
+              </div>
+              <p className="col-span-2 text-right">
+                {(20).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </p>
+            </div> */}
+           
+          </section>
+          <section className="grid grid-cols-2">
+            <div></div>
+            <div>
+              <div className="flex justify-between py-1">
+                <p>Subtotal</p>
+                <p>
+                  {(60).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+              </div>
+              <div className="flex justify-between py-1">
+                <p>Shipping</p>
+                <p>
+                  {(5).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+              </div>
+              <div className="flex justify-between py-1">
+                <p>Tax</p>
+                <p>
+                  {(5).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+              </div>
+              <div className="flex justify-between py-1">
+                <p>Total</p>
+                <p>
+                  {(70).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <footer>
+            
+          </footer>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
 };
 
