@@ -15,9 +15,17 @@ interface PaymentDoneProps {
 }
 
 const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
-  const orderId = params.orderId;
   const searchParams = useSearchParams();
   const payment_intent = searchParams.get("payment_intent");
+  let paymentId;
+  if (payment_intent) {
+    paymentId = payment_intent;
+  } else if (params.orderId) {
+    paymentId = params.orderId;
+  }
+  const orderId = paymentId;
+  console.log(orderId, "orderId");
+
   // const payment_intent_client_secret = searchParams.get("payment_intent_client_secret");
   const [retrievePaymentInfo, { data, isLoading, isError }] =
     useRetrivePaymentInfoMutation();
@@ -28,7 +36,7 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
   }, [orderId, payment_intent]);
 
   const { data: order } = useGetSinglePaymentReportQuery(orderId as any);
-  // console.log(order, "orderData");
+  console.log(order, "orderData");
   const detailsOrder = order?.data;
   const { order: orderData } = detailsOrder || {};
 
@@ -36,7 +44,9 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
     <div className="bg-[#F4F5FA] min-h-screen pt-10">
       <main className="max-w-4xl mx-auto">
         <div className=" bg-white p-10 rounded">
-          <h1 className="font-bold sm:text-3xl text-lg">Your Order Confirmed</h1>
+          <h1 className="font-bold sm:text-3xl text-lg">
+            Your Order Confirmed
+          </h1>
           <div>
             <h4 className="font-semibold ">Hello Rafi,</h4>
             <p>
