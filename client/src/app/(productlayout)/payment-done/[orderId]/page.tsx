@@ -1,6 +1,8 @@
 "use client";
 
+import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useRetrivePaymentInfoMutation } from "@/redux/api/features/payment/stripePaymentApi";
+import { useGetSinglePaymentReportQuery } from "@/redux/api/features/paymentReportApi";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -25,11 +27,16 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
     }
   }, [orderId, payment_intent]);
 
+  const { data: order } = useGetSinglePaymentReportQuery(orderId as any);
+  // console.log(order, "orderData");
+  const detailsOrder = order?.data;
+  const { order: orderData } = detailsOrder || {};
+
   return (
     <div className="bg-[#F4F5FA] min-h-screen pt-10">
       <main className="max-w-4xl mx-auto">
         <div className=" bg-white p-10 rounded">
-          <h1 className="font-bold text-3xl">Your Order Confirmed</h1>
+          <h1 className="font-bold sm:text-3xl text-lg">Your Order Confirmed</h1>
           <div>
             <h4 className="font-semibold ">Hello Rafi,</h4>
             <p>
@@ -37,21 +44,21 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
               order details.
             </p>
           </div>
-          <div className="flex justify-between flex-wrap border-y py-3 border-gray-200">
+          <div className="grid grid-cols-2 gap-4 border-y py-3 border-gray-200">
             <div>
-              <p className="font-medium text-gray-500">Order Date</p>
-              <p className="font-semibold">12 Jan, 2024</p>
+              <p className="font-medium text-gray-500 text-xs">Order Date</p>
+              <p className="font-semibold text-xs">12 Jan, 2024</p>
             </div>
             <div>
-              <p>Order No</p>
-              <p>NO6382768366</p>
+              <p className="text-xs">Order No</p>
+              <p className="text-xs">NO6382768366</p>
             </div>
             <div>
-              <p>Payment</p>
-              <p>Paypal</p>
+              <p className="text-xs">Payment</p>
+              <p className="text-xs">Paypal</p>
             </div>
-            <div>
-              <p>Shipping Address</p>
+            <div className="text-xs">
+              {/* <p>Shipping Address</p> */}
               <div>
                 <p>600 Montogo st</p>
                 <p>San Francisco, CA 94103</p>
@@ -60,20 +67,41 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
           </div>
 
           <section>
-            <div className="grid grid-cols-12 border-b py-4">
-              <Image src="" alt="" className="col-span-2" />
-              <div className="col-span-8">
-                <h1>Mens sports cap</h1>
-                <p>Quantity: 1</p>
-                <p>Color: Dark blue</p>
+            {orderData?.cartItems?.map((item: any, index: number) => (
+              <div
+                key={index}
+                className="grid sm:grid-cols-12 grid-cols-2 border-b py-4"
+              >
+                <Image
+                  src={`${fileUrlKey()}/${item?.image}`}
+                  width={500}
+                  height={500}
+                  alt=""
+                  className="sm:col-span-2 w-20 h-20 rounded"
+                />
+                <div className="sm:col-span-8">
+                  <h1>{item?.productName}</h1>
+                  <p className="hidden sm:block">Quantity: {item?.quantity}</p>
+                  <div className="sm:hidden">
+                    <p>Quantity: {item?.quantity}</p>
+                    <p>
+                      {item?.totalPrice?.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </p>
+                  </div>
+                  <p>Color: {item?.color?.name}</p>
+                </div>
+                <p className="sm:col-span-2 text-right hidden sm:block">
+                  {item?.totalPrice?.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
               </div>
-              <p className="col-span-2 text-right">
-                {(20).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}
-              </p>
-            </div>
+            ))}
+
             {/* <div className="grid grid-cols-12 border-b py-4">
               <Image src="" alt="" className="col-span-2" />
               <div className="col-span-8">
@@ -88,7 +116,6 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
                 })}
               </p>
             </div> */}
-           
           </section>
           <section className="grid grid-cols-2">
             <div></div>
@@ -132,9 +159,7 @@ const PaymentDone: React.FC<PaymentDoneProps> = ({ params }) => {
             </div>
           </section>
 
-          <footer>
-            
-          </footer>
+          <footer></footer>
         </div>
       </main>
     </div>
