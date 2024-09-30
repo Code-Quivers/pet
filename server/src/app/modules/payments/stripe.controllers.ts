@@ -57,11 +57,10 @@ class StripeController {
     // Retrieve the Payment Intent
     const { jsonResponse, httpStatusCode } = await StripePaymentProcessor.retrieveStripePaymentInfo(paymentIntentId);
 
-    console.log('jsonResponse', jsonResponse);
-
     // Get the latest charge ID from the Payment Intent
     const chargeId = jsonResponse?.latest_charge;
     const paymentReport = await StripePaymentProcessor.generatePaymentReport(chargeId, jsonResponse, orderId);
+
     // Create payment report in the database
     const paymentRes = await PaymentReportService.createPaymentReport(paymentReport, orderId);
 

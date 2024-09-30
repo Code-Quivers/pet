@@ -21,14 +21,14 @@ export const stripePaymentApi = baseApi.injectEndpoints({
       //   invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
     }),
 
-    retrivePaymentInfo: builder.mutation({
+    retrievePaymentInfo: builder.mutation({
       query: (data) => ({
         url: `/payment-stripe/retrieve-payment-info`,
         method: "POST",
         data: JSON.stringify(data),
         contentType: "application/json",
       }),
-      // invalidatesTags: [tagTypes.properties, tagTypes.propertyOwner],
+      // invalidatesTags: [tagTypes.payment_done, tagTypes.report],
     }),
   }),
 });
@@ -36,5 +36,5 @@ export const stripePaymentApi = baseApi.injectEndpoints({
 export const {
   useGetClientSecretMutation,
   useUpdatePaymentIntentMutation,
-  useRetrivePaymentInfoMutation,
+  useRetrievePaymentInfoMutation,
 } = stripePaymentApi;

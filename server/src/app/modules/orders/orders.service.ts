@@ -196,7 +196,7 @@ const createOrder = async (orderData: ICreateNewOrder) => {
   const result = await prisma.$transaction(async transactionClient => {
     const newOrder = await transactionClient.order.create({
       data: {
-        deliveryInfo: orderData.deliveryInfo,
+        deliveryInfo: orderData?.deliveryInfo,
         cartItems: orderData?.cart,
       },
       select: {
