@@ -1,7 +1,5 @@
-
 import { tagTypes } from "@/redux/tag-types";
 import { baseApi } from "../baseApi";
-
 
 const REPORT_API = "/payments";
 
@@ -12,12 +10,14 @@ export const paymentReportApi = baseApi.injectEndpoints({
         url: `${REPORT_API}/${paymentPlatformId}`,
         method: "GET",
       }),
-      providesTags: [tagTypes.report, tagTypes.paypal, tagTypes.orders],
+      providesTags: [
+        tagTypes.report,
+        tagTypes.paypal,
+        tagTypes.orders,
+        tagTypes.payment_done,
+      ],
     }),
-
   }),
 });
 
-export const {
-    useGetSinglePaymentReportQuery,
-} = paymentReportApi;
+export const { useGetSinglePaymentReportQuery } = paymentReportApi;

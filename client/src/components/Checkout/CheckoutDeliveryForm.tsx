@@ -38,9 +38,11 @@ const CheckoutDeliveryForm = ({
                 message: "Invalid email address",
               },
             }}
+            defaultValue="shafinur512@gmail.com"
             render={({ field, fieldState: { error } }) => (
               <div className="rs-form-control-wrapper">
                 <input
+                  defaultValue="shafinur512@gmail.com"
                   {...field}
                   name="email"
                   type="text"
@@ -74,6 +76,7 @@ const CheckoutDeliveryForm = ({
               <Controller
                 name="firstName"
                 control={control}
+                defaultValue="Shafinur"
                 rules={{
                   required: "First Name is Required",
                 }}
@@ -81,6 +84,7 @@ const CheckoutDeliveryForm = ({
                   <div className="rs-form-control-wrapper">
                     <input
                       {...field}
+                      defaultValue="Shafinur"
                       name="firstName"
                       type="text"
                       className={`w-full py-3 px-4 duration-200 border rounded-lg border-zinc-300 placeholder-zinc-300 text-sm `}
@@ -106,6 +110,7 @@ const CheckoutDeliveryForm = ({
                 Last Name
               </label>
               <Controller
+                defaultValue="Islam"
                 name="lastName"
                 control={control}
                 rules={{
@@ -114,6 +119,7 @@ const CheckoutDeliveryForm = ({
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <input
+                      defaultValue="Islam"
                       {...field}
                       name="lastName"
                       type="text"
@@ -144,6 +150,7 @@ const CheckoutDeliveryForm = ({
               </label>
               <Controller
                 name="address"
+                defaultValue="Sirajganj"
                 control={control}
                 rules={{
                   required: "Address is Required",
@@ -152,6 +159,7 @@ const CheckoutDeliveryForm = ({
                   <div className="rs-form-control-wrapper">
                     <input
                       {...field}
+                      defaultValue="Sirajganj"
                       name="address"
                       type="text"
                       className={`w-full py-3 px-4 duration-200 border rounded-lg border-zinc-300 placeholder-zinc-300 text-sm `}
@@ -182,6 +190,7 @@ const CheckoutDeliveryForm = ({
               <Controller
                 name="city"
                 control={control}
+                defaultValue="Sirajganj"
                 rules={{
                   required: "City is Required",
                 }}
@@ -189,6 +198,7 @@ const CheckoutDeliveryForm = ({
                   <div className="rs-form-control-wrapper">
                     <input
                       {...field}
+                      defaultValue="Sirajganj"
                       name="city"
                       type="text"
                       className={`w-full py-2.5 px-4 duration-200 border rounded-lg border-zinc-300 placeholder-zinc-300 text-sm `}
@@ -257,11 +267,13 @@ const CheckoutDeliveryForm = ({
                 rules={{
                   required: "postalCode is Required",
                 }}
+                defaultValue="59345034"
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <input
                       {...field}
-                      name="city"
+                      name="postalCode"
+                      defaultValue="59345034"
                       type="text"
                       className={`w-full py-2.5 px-4 duration-200 border rounded-lg border-zinc-300 placeholder-zinc-300 text-sm `}
                       placeholder="Enter postal code..."
@@ -291,6 +303,7 @@ const CheckoutDeliveryForm = ({
             <Controller
               name="phone"
               control={control}
+              defaultValue="01931016701"
               rules={{
                 required: "Phone is Required",
               }}
@@ -298,7 +311,8 @@ const CheckoutDeliveryForm = ({
                 <div className="rs-form-control-wrapper">
                   <input
                     {...field}
-                    name="city"
+                    name="phone"
+                    defaultValue="01931016701"
                     type="text"
                     className={`w-full py-2.5 px-4 duration-200 border rounded-lg border-zinc-300 placeholder-zinc-300 text-sm `}
                     placeholder="Enter postal code..."

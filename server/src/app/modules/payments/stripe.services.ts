@@ -102,8 +102,6 @@ class StripePaymentProcessor {
       amountPaid: 0,
     };
 
-    console.log('chargeId', chargeId);
-
     if (chargeId) {
       try {
         // Retrieve Stripe charge info
@@ -111,14 +109,15 @@ class StripePaymentProcessor {
 
         const { balance_transaction, amount, amount_captured } = jsonChargeResponse || {};
 
+        otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount_captured);
+        otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount);
+
         // Retrieve Stripe balance transaction
         const balanceTransaction = await stripe.balanceTransactions.retrieve(balance_transaction as string);
 
         // Extract financial details
         otherData['netAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.net);
         otherData['fee'] = StripePaymentProcessor.getAmountInDollarsFromCents(balanceTransaction?.fee);
-        otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount);
-        otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(amount_captured);
 
         // Log error if there's a mismatch in amounts
         if (otherData.amountPaid !== otherData.totalAmount) {
@@ -126,11 +125,15 @@ class StripePaymentProcessor {
         }
       } catch (error) {
         errorLogger.error('Error retrieving payment info from Stripe: ', error);
+        otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount);
+        otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount_received);
       }
     } else {
       otherData['totalAmount'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount);
       otherData['amountPaid'] = StripePaymentProcessor.getAmountInDollarsFromCents(retrievedPaymentInfo?.amount_received);
     }
+
+    // console.log('otherdata', retrievedPaymentInfo);
 
     return {
       gateWay: 'STRIPE',

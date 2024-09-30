@@ -24,8 +24,6 @@ import { OrderService } from '../orders/orders.service';
 const createPaymentReport = async (paymentReport: IStripePaymentReqData, orderId: string) => {
   const { gateWay, status, totalAmountPaid, totalAmountToPaid, gateWayFee, paymentPlatformId, ...others } = paymentReport || {};
 
-  console.log('paymentReport', paymentReport);
-
   // const get the order data
   const orderInfo: any = await prisma.order.findUnique({
     where: {
@@ -48,7 +46,17 @@ const createPaymentReport = async (paymentReport: IStripePaymentReqData, orderId
     ...others,
   };
 
-  console.log('paymentData', paymentData);
+  const isExistPaymentReport = await prisma.paymentReport.findUnique({
+    where: {
+      paymentPlatformId,
+    },
+  });
+
+  if (isExistPaymentReport) {
+    return {
+      message: 'Already Exist Payment Report',
+    };
+  }
 
   try {
     const newPayment = await prisma.paymentReport.create({
@@ -152,15 +160,14 @@ const getPaymentReports = async (filters: IPaymentFilterRequest, options: IPagin
   };
 };
 
-
 const getSinglePaymentReport = async (paymentPlatformId: string): Promise<PaymentReport> => {
   const paymentReport = await prisma.paymentReport.findUnique({
     where: {
       paymentPlatformId,
     },
-    include:{
+    include: {
       order: true,
-    }
+    },
   });
 
   if (!paymentReport) {
@@ -168,8 +175,6 @@ const getSinglePaymentReport = async (paymentPlatformId: string): Promise<Paymen
   }
 
   return paymentReport;
-} 
-
-
+};
 
 export const PaymentReportService = { getPaymentReports, createPaymentReport, getSinglePaymentReport };
