@@ -6,24 +6,33 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { Notification, useToaster } from "rsuite";
 
 const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
   const router = useRouter();
-
+  const toaster = useToaster();
   const [createPayment] = useCreatePaymentMutation();
 
   const { cart } = useSelector((state: any) => state.cart);
 
-  // console.log("Pay amount", payAmount, cart);
-
   const { getValues, trigger } = useFormContext();
-  // const initialOptions = {
-  //   clientId:
-  //     "AQKRyS5-yXyQJSnljgnG4IVPRfgKUOeYzSGVOsSCLMTuO7Rm8NLgYFc2s8r8IYIFvcK6WDpsc2VQQk3G",
-  //   currency: "USD",
-  //   intent: "capture",
-  //   components: "buttons",
-  // };
+
+  const showNotification = (
+    message: string,
+    type: "info" | "success" | "warning" | "error"
+  ) => {
+    toaster.push(
+      <Notification
+        header={type === "error" ? "Error" : "Success"}
+        type={type}
+        closable
+      >
+        <h4 className="font-semibold">{message}</h4>
+      </Notification>,
+      { placement: "bottomStart", duration: 5000 }
+    );
+  };
+
   return (
     <PayPalScriptProvider
       options={{
@@ -45,7 +54,6 @@ const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
         createOrder={async (data: any, actions: any) => {
           // Validate form data
           const isValid = await trigger();
-          console.log("Is valid", isValid);
           // Access form data
           const cartDataObj = getValues();
 
@@ -56,7 +64,7 @@ const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
             cart: cart,
             orderPayAmount,
           };
-          console.log("Cart data", cartData);
+          // console.log("Cart data", cartData);
           if (isValid) {
             try {
               const paymentData = {
@@ -74,10 +82,12 @@ const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
                 // Return PayPal order ID
                 return response?.data?.id;
               } else {
+                showNotification("Unexpected response structure", "error");
                 console.error("Unexpected response structure:", response);
-                throw new Error("Failed to create order");
+                // throw new Error("Failed to create order");
               }
             } catch (error) {
+              showNotification("Error creating PayPal order", "error");
               console.error("Error creating PayPal order:", error);
               throw error;
             }
@@ -109,21 +119,27 @@ const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
                 if (errorDetail.description)
                   msg += "\n\n" + errorDetail.description;
                 if (orderData.debug_id) msg += " (" + orderData.debug_id + ")";
+                showNotification(msg, "error");
+
                 return alert(msg);
               }
 
-              console.log("id", orderData);
+              // console.log("id", orderData);
 
               if (orderData?.data?.paymentStatus === "COMPLETED") {
                 // Use your Next.js router to navigate if required
+                showNotification("Payment Completed", "success");
+
                 router.push(
                   `/payment-done/${orderData?.data?.platformTransactionId}`
                 );
               }
             } else {
+              showNotification("Unexpected response structure", "error");
               console.error("Unexpected response structure:", confirmResponse);
             }
           } catch (error) {
+            showNotification("Error confirming PayPal payment", "error");
             console.error("Error confirming PayPal payment:", error);
           }
         }}

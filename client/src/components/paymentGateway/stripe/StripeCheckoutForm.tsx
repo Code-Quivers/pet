@@ -35,7 +35,7 @@ const StripeCheckoutForm = forwardRef(
     const [updatePaymentIntent, {}] = useUpdatePaymentIntentMutation();
     const [createOrder, { data: createdOrderData }] = useCreateOrderMutation();
     const { getValues } = useFormContext(); // Access form data
-
+    console.log("srv", orderPayAmount);
     // Function to handle payment confirmation
     const handlePaymentConfirmation = async (orderId: string) => {
       if (!stripe || !elements) {

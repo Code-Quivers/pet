@@ -198,8 +198,8 @@ const createOrder = async (orderData: ICreateNewOrder) => {
       data: {
         deliveryInfo: orderData?.deliveryInfo,
         cartItems: orderData?.cart,
-        subTotal: orderData?.subTotal,
-        tax: orderData?.tax,
+        subTotal: orderData?.orderPayAmount?.subtotal,
+        tax: orderData?.orderPayAmount?.tax,
       },
       select: {
         orderId: true,

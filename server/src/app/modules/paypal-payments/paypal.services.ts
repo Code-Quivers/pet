@@ -74,8 +74,8 @@ export const createPaypalPayment = async (paymentData: any, cartData: any) => {
       phone: cartData?.phone,
     },
     cartItems: cartData?.cart,
-    subTotal: cartData?.subTotal,
-    tax: cartData?.tax,
+    subTotal: cartData?.orderPayAmount?.subtotal,
+    tax: cartData?.orderPayAmount?.tax,
   };
 
   const createOrder = await prisma.order.create({
@@ -134,7 +134,6 @@ export const createPaypalPayment = async (paymentData: any, cartData: any) => {
 };
 
 export const capturePaypalOrder = async (orderData: { orderID: string }) => {
-  console.log('sdkalakl', orderData);
   const { orderID } = orderData;
   const accessToken = await generateAccessTokenForPaypal(config.paypal.paypal_baseUrl, config.paypal.client_id, config.paypal.client_secret);
 
