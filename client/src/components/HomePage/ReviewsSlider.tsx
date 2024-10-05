@@ -10,6 +10,7 @@ const RadioLabel = ({ children }: any) => (
 const ReviewsSlider = () => {
   const { data: testimonials } = useGetTestimonialsQuery({});
   console.log("object", testimonials);
+  
   const [shape] = useState("bar");
   return (
     <div className="pt-10 mb-14 ">
