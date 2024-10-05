@@ -74,6 +74,8 @@ export const createPaypalPayment = async (paymentData: any, cartData: any) => {
       phone: cartData?.phone,
     },
     cartItems: cartData?.cart,
+    subTotal: cartData?.subTotal,
+    tax: cartData?.tax,
   };
 
   const createOrder = await prisma.order.create({
