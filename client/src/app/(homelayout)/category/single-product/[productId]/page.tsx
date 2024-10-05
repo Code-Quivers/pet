@@ -9,7 +9,7 @@ import { useGetSingleProductQuery } from "@/redux/api/features/productApi";
 import { v4 as uuIdv4 } from "uuid";
 import { CarouselThumbsButton } from "@/components/ProductPage/ProductSlider/CarouselThumbsButton";
 import { addToCart } from "@/redux/slice/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cart from "@/components/ProductsPage/Cart/Cart";
 import AllReviews from "@/components/reviews/AllReviews";
 
@@ -21,7 +21,7 @@ const colorLoader = Array.from({ length: 3 }).map((_, index) => (
 ));
 const SingleProductPage = ({ params }: any) => {
   const dispatch = useDispatch();
-  console.log(params);
+  // console.log(params);
   const {
     data: singleProduct,
     error,
@@ -31,7 +31,7 @@ const SingleProductPage = ({ params }: any) => {
   } = useGetSingleProductQuery({
     id: params.productId,
   });
-  console.log(singleProduct);
+  // console.log(singleProduct);
   const [quantity, setQuantity] = useState(1);
   const [productForCart, setProductForCart] = useState<any>({
     categoryId: singleProduct?.data?.categoryId,
@@ -46,7 +46,8 @@ const SingleProductPage = ({ params }: any) => {
     image: singleProduct?.data?.productVariations?.[0].image,
   });
   const [start, setStart] = useState<boolean>(false);
-  console.log(productForCart, "productForCart");
+  const cart = useSelector((state: any) => state.cart.cart);
+  console.log(cart, "cart");
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null
   );

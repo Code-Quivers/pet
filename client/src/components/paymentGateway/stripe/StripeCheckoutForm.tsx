@@ -15,11 +15,17 @@ interface StripeCheckoutFormProps {
   setIsStripeLoading: (loading: boolean) => void;
   intentId: string;
   amountToPaid: number;
+  orderPayAmount: any;
 }
 
 const StripeCheckoutForm = forwardRef(
   (
-    { setIsStripeLoading, intentId, amountToPaid }: StripeCheckoutFormProps,
+    {
+      setIsStripeLoading,
+      intentId,
+      amountToPaid,
+      orderPayAmount,
+    }: StripeCheckoutFormProps,
     ref
   ) => {
     const stripe = useStripe();
@@ -84,12 +90,14 @@ const StripeCheckoutForm = forwardRef(
           const createdOrder = await createOrder({
             cart,
             deliveryInfo: orderData,
+            orderPayAmount,
           }).unwrap();
           orderId = createdOrder?.data?.orderId || "";
         } else {
           await createOrder({
             cart,
             deliveryInfo: orderData,
+            orderPayAmount,
           }).unwrap();
         }
         //

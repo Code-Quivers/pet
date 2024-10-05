@@ -145,7 +145,10 @@ const Cart = ({ cartOpen, setCartOpen }: any) => {
                             <div>
                               <div className="flex justify-between">
                                 <p className="font-semibold text-gray-700">
-                                  ${item?.price * item?.quantity}
+                                  {item?.totalPrice?.toLocaleString("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                  })}
                                 </p>
                               </div>
                             </div>

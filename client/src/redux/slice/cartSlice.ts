@@ -49,6 +49,7 @@ export const cartSlice = createSlice({
         (item: any) => item.variantId === action.payload
       );
       itemInCart.quantity++;
+      itemInCart.totalPrice = itemInCart?.quantity * itemInCart?.price;
       setToLocalStorage("cart", JSON.stringify(state.cart));
     },
 
@@ -60,6 +61,7 @@ export const cartSlice = createSlice({
         itemInCart.quantity = 1;
       } else {
         itemInCart.quantity--;
+        itemInCart.totalPrice = itemInCart?.quantity * itemInCart?.price;
       }
       setToLocalStorage("cart", JSON.stringify(state.cart));
     },
@@ -76,6 +78,12 @@ export const cartSlice = createSlice({
       state.payAmount = action.payload;
       setToLocalStorage("payAmount", JSON.stringify(state.payAmount));
     },
+    // addTaxAmount: (state: any, action: any) => {
+    //   state.payAmount = {
+    //     ...state.payAmount,
+    //     tax: action.payload,
+    //   };
+    // },
     applyPromoCode: (state: any, action: any) => {
       state.promoCode = action.payload.promoCode;
       state.cart.push({
@@ -109,6 +117,7 @@ export const {
   removeItem,
   removeFreeProduct,
   addPayAmount,
+  addTaxAmount,
   setCartFromLocalStorage,
 } = cartSlice.actions;
 export default cartSlice.reducer;
