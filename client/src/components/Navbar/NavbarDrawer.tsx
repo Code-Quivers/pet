@@ -1,15 +1,19 @@
 import Link from "next/link";
 import React from "react";
 import { Accordion, Drawer } from "rsuite";
+import NavbarProfileDetails from "./NavbarProfileDetails";
 
 const NavbarDrawer = ({ open, setOpen }: any) => {
   return (
     <div>
       <Drawer open={open} onClose={() => setOpen(false)} size={"xs"}>
-        <Drawer.Body style={{ paddingLeft: 0, paddingRight: 0 }}>
-          <div className="">
+        <Drawer.Body
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+          className="!h-[100vh]"
+        >
+          <div className="flex flex-col justify-between ">
             {/* contents */}
-            <div className="flex flex-col justify-center md:justify-start items-center  md:items-start bg-white gap-6 p-10">
+            <div className="w-full h-[80vh] flex flex-col justify-center md:justify-start items-center  md:items-start gap-6 py-10 !px-2">
               <Accordion className="!w-full !p-0 !m-0">
                 <Accordion.Panel
                   defaultExpanded
@@ -109,23 +113,9 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
               </Accordion>
             </div>
             {/* bottom */}
-            <div className="bg-red-600 relative flex justify-center">
-              <div className="mt-24 md:mt-96 mx-auto fixed bottom-20  flex justify-between items-center gap-5">
-                <Link
-                  onClick={() => setOpen(false)}
-                  href="/sign-in"
-                  className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2  text-black shadow hover:text-gray-100 hover:bg-primary"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  onClick={() => setOpen(false)}
-                  href="/sign-up"
-                  className="inline-flex items-center rounded-full justify-center px-8 py-3  border-primary border-2  text-black shadow hover:text-gray-100 hover:bg-primary"
-                >
-                  Sign Up
-                </Link>
-              </div>
+
+            <div className="w-full sticky ">
+              <NavbarProfileDetails setOpen={setOpen} />
             </div>
           </div>
         </Drawer.Body>
@@ -135,29 +125,3 @@ const NavbarDrawer = ({ open, setOpen }: any) => {
 };
 
 export default NavbarDrawer;
-// {
-//   /* <Link
-//               onClick={() => setOpen(false)}
-//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-//               href="#"
-//             >
-//               {" "}
-//               Reviews{" "}
-//             </Link>
-//             <Link
-//               onClick={() => setOpen(false)}
-//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-//               href="#"
-//             >
-//               {" "}
-//               Support{" "}
-//             </Link>
-//             <Link
-//               onClick={() => setOpen(false)}
-//               className="text-2xl text-gray-900 transition hover:text-gray-900/75"
-//               href="#"
-//             >
-//               {" "}
-//               Blog{" "}
-//             </Link> */
-// }

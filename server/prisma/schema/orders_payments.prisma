@@ -8,8 +8,8 @@ model Order {
   createdAt      DateTime       @default(now()) @db.Timestamptz(0)
   updatedAt      DateTime       @updatedAt @db.Timestamptz(0)
   paymentInfo    PaymentReport?
-  subTotal              Float?    @default(0)
-  tax                   Float?     @default(0)
+  subTotal       Float?         @default(0)
+  tax            Float?         @default(0)
 }
 
 model PaymentReport {
@@ -23,7 +23,7 @@ model PaymentReport {
   platformFee            Float?
   netAmount              Float?
   refundLink             String?
-  payerName              String?   
+  payerName              String?
   payerEmailAddress      String?
   paymentPlatform        PaymentGateway
   transactionCreatedTime DateTime?

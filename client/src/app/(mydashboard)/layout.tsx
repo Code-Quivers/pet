@@ -28,7 +28,7 @@ const MyAccountLayout = ({ children }: any) => {
     );
   }
 
-  if (!!userLoggedIn && !isLoading)
+  if (userLoggedIn && !isLoading)
     return (
       <div className="max-xl:px-4  max-w-3xl mx-auto">
         <div>
