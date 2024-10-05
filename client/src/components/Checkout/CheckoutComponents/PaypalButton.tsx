@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-const PayPalButton = ({ addCapture, totalAmount }: any) => {
+const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
   const router = useRouter();
 
   const [createPayment] = useCreatePaymentMutation();
@@ -54,8 +54,9 @@ const PayPalButton = ({ addCapture, totalAmount }: any) => {
           const cartData = {
             ...cartDataObj,
             cart: cart,
+            orderPayAmount,
           };
-
+          console.log("Cart data", cartData);
           if (isValid) {
             try {
               const paymentData = {

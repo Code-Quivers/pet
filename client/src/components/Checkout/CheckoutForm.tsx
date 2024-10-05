@@ -20,9 +20,11 @@ const stripePromise = loadStripe(stripePublishableKey());
 const CheckoutForm = ({
   totalAmount,
   setStateTaxValue,
+  orderPayAmount,
 }: {
   totalAmount: number;
   setStateTaxValue: any;
+  orderPayAmount: any;
 }) => {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("card_payment");
@@ -128,6 +130,7 @@ const CheckoutForm = ({
                         amountToPaid={totalAmount}
                         ref={childSubmitRef}
                         setIsStripeLoading={setIsStripeLoading}
+                        orderPayAmount={orderPayAmount}
                       />
                     </Elements>
                   )}
@@ -166,6 +169,7 @@ const CheckoutForm = ({
                   <PayPalButton
                     addCapture={addCapture}
                     totalAmount={totalAmount}
+                    orderPayAmount={orderPayAmount}
                   />
                 )}
               </div>

@@ -15,10 +15,15 @@ const Checkouts = ({ params }: any) => {
   const cart = useSelector((state: any) => state.cart.cart);
   const promoCode = useSelector((state: any) => state.cart.promoCode);
   const payAmount = useSelector((state: any) => state.cart.payAmount);
+  console.log("payAmount", payAmount);
   const [stateTaxValue, setStateTaxValue] = useState(0);
   const taxAmount = payAmount?.subtotal * (stateTaxValue / 100);
   const roundedTaxAmount = Math.round(taxAmount * 100) / 100;
   const totalAmount = payAmount?.subtotal + roundedTaxAmount;
+  const orderPayAmount = {
+    subtotal: payAmount?.subtotal,
+    tax: roundedTaxAmount,
+  };
 
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
@@ -61,6 +66,7 @@ const Checkouts = ({ params }: any) => {
               <CheckoutDeliveryInfoForm
                 totalAmount={totalAmount}
                 setStateTaxValue={setStateTaxValue}
+                orderPayAmount={orderPayAmount}
               />
             </div>
             {/* cart data */}

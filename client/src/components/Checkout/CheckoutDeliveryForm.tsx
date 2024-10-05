@@ -232,8 +232,11 @@ const CheckoutDeliveryForm = ({
                 render={({ field }) => (
                   <div className="rs-form-control-wrapper">
                     <SelectPicker
-                      onChange={(value: any) => {
-                        field.onChange(value);
+                      onChange={(value: any, event: any) => {
+                        field.onChange({
+                          state: event.target.textContent as string,
+                          stateTax: value,
+                        });
                         setStateTaxValue(value);
                       }}
                       data={data}
