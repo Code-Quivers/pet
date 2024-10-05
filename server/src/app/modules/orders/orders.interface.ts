@@ -70,4 +70,6 @@ type ICartItems = {
 export type ICreateNewOrder = {
   deliveryInfo: IDeliveryInfo;
   cart: ICartItems[];
+  subTotal: number;
+  tax: number;
 };
