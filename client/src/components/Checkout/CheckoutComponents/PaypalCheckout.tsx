@@ -100,6 +100,9 @@ const PayPalButton = ({ createPayment, addCapture }: any) => {
             console.error("Error confirming PayPal payment:", error);
           }
         }}
+        onCancel={() => {
+          console.log("The payment was cancelled.");
+        }}
       />
     </PayPalScriptProvider>
   );
