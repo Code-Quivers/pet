@@ -55,30 +55,30 @@ const InvoiceSection = ({
                 Your Order Confirmed
               </h1>
               <div className="mt-3 mb-5">
-                <h4 className="font-semibold ">
+                <h4 className="font-semibold">
                   Hello {orderData?.deliveryInfo?.firstName},
                 </h4>
-                <p className="text-sm">
+                <p>
                   Your order has been confirmed. You will receive an email with
                   your order details.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-4 border-y py-3 border-gray-200">
+              <div className="grid grid-cols-2 gap-4 border-t py-3 border-gray-200">
                 <div>
-                  <p className="font-medium text-gray-500 text-xs">
+                  <p className="font-medium text-gray-500 ">
                     Order Date
                   </p>
-                  <p className="font-semibold text-xs">12 Jan, 2024</p>
+                  <p className="font-semibold ">12 Jan, 2024</p>
                 </div>
                 <div>
-                  <p className="text-xs">Order No</p>
-                  <p className="text-xs">{order?.data?.paymentPlatformId}</p>
+                  <p className="">Order No</p>
+                  <p className=" font-semibold">{order?.data?.paymentPlatformId}</p>
                 </div>
                 <div>
-                  <p className="text-xs">Payment</p>
-                  <p className="text-xs">{order?.data?.paymentPlatform}</p>
+                  <p className="">Payment</p>
+                  <p className=" font-semibold">{order?.data?.paymentPlatform}</p>
                 </div>
-                <div className="text-xs">
+                <div className="">
                   {/* <p>Shipping Address</p> */}
                   <div>
                     <p>600 Montogo st</p>
@@ -87,59 +87,54 @@ const InvoiceSection = ({
                 </div>
               </div>
 
+              <header className="grid grid-cols-12 border-y py-2 font-semibold">
+                <h1 className="col-span-6">Item</h1>
+                <h1 className="col-span-2">Quantity</h1>
+                <h1 className="col-span-2">Price</h1>
+                <h1 className="col-span-2 text-right">Amount</h1>
+              </header>
+
               <section>
                 {orderData?.cartItems?.map((item: any, index: number) => (
                   <div
                     key={index}
-                    className="grid grid-cols-12 border-b py-4 gap-3"
+                    className="grid grid-cols-12 border-b py-3 items-center"
                   >
-                    <Image
+                    <div className="col-span-6">
+                      <h1 className="font-bold">{item?.productName}</h1>
+                      <p className="">Color: {item?.color?.name}</p>
+                    </div>
+
+                    <div className="col-span-2">
+                      <p>{item?.quantity}</p>
+                    </div>
+
+                    <div className=" col-span-2">
+                      <p>
+                        {item?.price?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </p>
+                    </div>
+
+                    <div className="col-span-2">
+                      <p className="col-span-3 text-right">
+                        {item?.totalPrice?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </p>
+                    </div>
+                    {/* <Image
                       src={`${fileUrlKey()}/${item?.image}`}
                       width={500}
                       height={500}
                       alt=""
-                      className="col-span-3  rounded"
-                    />
-                    <div className="col-span-7">
-                      <h1 className="font-bold">{item?.productName}</h1>
-                      {/* <p className="hidden sm:block">
-                        Quantity: {item?.quantity}
-                      </p> */}
-                      <div className="text-sm">
-                        <p>Quantity: {item?.quantity}</p>
-                        <p>
-                          Price:{" "}
-                          {item?.price?.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                          })}
-                        </p>
-                      </div>
-                      <p className="text-sm">Color: {item?.color?.name}</p>
-                    </div>
-                    <p className="col-span-2 text-right ">
-                      {item?.totalPrice?.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </p>
+                      className="col-span-3 rounded"
+                    /> */}
                   </div>
                 ))}
-
-                {/* <div className="grid grid-cols-12 border-b py-4">
-              <Image src="" alt="" className="col-span-2" />
-              <div className="col-span-8">
-                <h1>Mens sports cap</h1>
-                <p>Quantity: 1</p>
-                <p>Color: Dark blue</p>
-              </div>
-              <p className="col-span-2 text-right">
-                {(20).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}
-              </p>
-            </div> */}
               </section>
               <section className="grid grid-cols-2">
                 <div></div>
@@ -147,16 +142,7 @@ const InvoiceSection = ({
                   <div className="flex justify-between py-1">
                     <p>Subtotal</p>
                     <p>
-                      {(60).toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </p>
-                  </div>
-                  <div className="flex justify-between py-1">
-                    <p>Shipping</p>
-                    <p>
-                      {(5).toLocaleString("en-US", {
+                      {orderData?.subTotal?.toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}
@@ -165,16 +151,16 @@ const InvoiceSection = ({
                   <div className="flex justify-between py-1">
                     <p>Tax</p>
                     <p>
-                      {(5).toLocaleString("en-US", {
+                      {orderData?.tax?.toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}
                     </p>
                   </div>
-                  <div className="flex justify-between py-1">
+                  <div className="flex justify-between py-1 font-bold">
                     <p>Total</p>
                     <p>
-                      {(70).toLocaleString("en-US", {
+                      {order?.data?.amountPaid?.toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}

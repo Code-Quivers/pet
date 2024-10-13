@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { Notification, useToaster } from "rsuite";
 
 const PayPalButton = ({ addCapture, totalAmount, orderPayAmount }: any) => {
+  console.log(totalAmount, "totalAmount");
   const router = useRouter();
   const toaster = useToaster();
   const [createPayment] = useCreatePaymentMutation();
