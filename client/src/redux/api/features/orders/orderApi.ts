@@ -21,23 +21,7 @@ const orderApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.orders],
     }),
-
-    generateAndDownloadInvoicePdf: builder.mutation<Blob, string>({
-      query: (orderId) => ({
-        url: `${ORDER_API}/invoice/${orderId}`,
-        method: "POST",
-      }),
-      invalidatesTags: [
-        tagTypes.report,
-        tagTypes.orders,
-        tagTypes.payment_done,
-      ],
-    }),
   }),
 });
 
-export const {
-  useCreateOrderMutation,
-  useUpdateOrderMutation,
-  useGenerateAndDownloadInvoicePdfMutation,
-} = orderApi;
+export const { useCreateOrderMutation, useUpdateOrderMutation } = orderApi;
