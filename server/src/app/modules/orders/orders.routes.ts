@@ -13,7 +13,7 @@ router.get('/', OrderController.getAllOrders);
 
 router.get('/monthWise', OrderController.monthWiseOrder);
 
-router.get('/invoice/:orderId', OrderController.getSingleInvoice);
+router.post('/invoice/:orderId', OrderController.getSingleInvoice);
 
 router.patch('/:orderId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), OrderController.updateOrder);
 

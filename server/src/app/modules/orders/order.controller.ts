@@ -38,17 +38,13 @@ const getSingleInvoice = catchAsync(async (req: Request, res: Response) => {
   const { orderId } = req.params;
 
   // Set headers for PDF download
-  res.set('Content-Type', 'application/pdf');
-  res.set('Content-Disposition', `attachment; filename=invoice-${orderId}.pdf`);
-
+  res.set({
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename=invoice-${orderId}.pdf`,
+  });
   const result = await OrderService.getSingleInvoice(orderId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Invoice fetched successfully !',
-    data: result,
-  });
+  res.send(result);
 });
 
 // !----------------------------------Update Order---------------------------------------->>>

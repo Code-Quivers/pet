@@ -4,6 +4,7 @@
 import { fileUrlKey } from "@/helpers/config/envConfig";
 import { useGetSinglePaymentReportQuery } from "@/redux/api/features/paymentReportApi";
 import Image from "next/image";
+import InvoicePdfDownload from "./InvoicePdfDownload";
 
 interface InvoicePageProps {
   paymentIntent: boolean | null;
@@ -27,7 +28,7 @@ const InvoiceSection = ({
   } = useGetSinglePaymentReportQuery(invoiceId, {
     skip: paymentIntent ? !paymentIntent || !isSuccess : false,
   });
-  console.log(order, "order");
+  // console.log(order, "order");
   const orderData = order?.data?.order;
 
   const isLoading = initialLoading || isLoadingInvoice;
@@ -51,9 +52,12 @@ const InvoiceSection = ({
         <>
           <main className="max-w-4xl mx-auto">
             <div className=" bg-white sm:p-10 p-5 rounded min-h-screen">
-              <h1 className="font-bold sm:text-3xl text-xl">
-                Your Order Confirmed
-              </h1>
+              <div className="flex justify-between items-center">
+                <h1 className="font-bold sm:text-3xl text-xl">
+                  Your Order Confirmed
+                </h1>
+                <InvoicePdfDownload orderId={order?.data?.order?.orderId} />
+              </div>
               <div className="mt-3 mb-5">
                 <h4 className="font-semibold">
                   Hello {orderData?.deliveryInfo?.firstName},
@@ -65,18 +69,20 @@ const InvoiceSection = ({
               </div>
               <div className="grid grid-cols-2 gap-4 border-t py-3 border-gray-200">
                 <div>
-                  <p className="font-medium text-gray-500 ">
-                    Order Date
-                  </p>
+                  <p className="font-medium text-gray-500 ">Order Date</p>
                   <p className="font-semibold ">12 Jan, 2024</p>
                 </div>
                 <div>
                   <p className="">Order No</p>
-                  <p className=" font-semibold">{order?.data?.paymentPlatformId}</p>
+                  <p className=" font-semibold">
+                    {order?.data?.paymentPlatformId}
+                  </p>
                 </div>
                 <div>
                   <p className="">Payment</p>
-                  <p className=" font-semibold">{order?.data?.paymentPlatform}</p>
+                  <p className=" font-semibold">
+                    {order?.data?.paymentPlatform}
+                  </p>
                 </div>
                 <div className="">
                   {/* <p>Shipping Address</p> */}
