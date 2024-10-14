@@ -13,6 +13,8 @@ router.get('/', OrderController.getAllOrders);
 
 router.get('/monthWise', OrderController.monthWiseOrder);
 
+router.get('/invoice/:orderId', OrderController.getSingleInvoice);
+
 router.patch('/:orderId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), OrderController.updateOrder);
 
 router.delete('/:orderId', auth(UserRoles.ADMIN, UserRoles.SUPERADMIN), OrderController.deleteOrder);

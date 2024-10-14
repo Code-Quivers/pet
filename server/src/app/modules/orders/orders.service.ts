@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Order, Prisma } from '@prisma/client';
+import { Response } from 'express';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
@@ -10,6 +11,8 @@ import ApiError from '../../../errors/ApiError';
 import { OrderRelationalFields, OrderRelationalFieldsMapper, OrderSearchableFields } from './orders.constants';
 import { format, subMonths } from 'date-fns';
 import { ICreateNewOrder } from './orders.interface';
+import pdf from 'html-pdf';
+import puppeteer from 'puppeteer';
 
 // !----------------------------------get all order ---------------------------------------->>>
 const getOrders = async (filters: any, options: IPaginationOptions): Promise<any> => {
@@ -212,6 +215,58 @@ const createOrder = async (orderData: ICreateNewOrder) => {
   });
   return result;
 };
+
+// ! creating invoice
+
+// Function to generate the PDF from HTML
+const generatePdf = async (html: string): Promise<Buffer> => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+
+  const pdfBuffer = await page.pdf({
+    format: 'A4',
+    printBackground: true,
+    margin: { top: '20px', bottom: '20px', left: '20px', right: '20px' },
+  });
+
+  await browser.close();
+  return Buffer.from(pdfBuffer); // Convert Uint8Array to Buffer and return
+};
+
+// Function to generate HTML for the invoice (you need to implement this based on your order structure)
+const generateHtmlForInvoice = (order: any): string => {
+  // Construct and return the HTML string for the invoice
+  return `
+        <html>
+            <body>
+                <h1>Invoice for Order ID: ${order.orderId}</h1>
+                <!-- Include other order details -->
+            </body>
+        </html>
+    `;
+};
+
+// Service function to get a single invoice and generate a PDF
+const getSingleInvoice = async (orderId: string): Promise<Buffer> => {
+  // Fetch the order from the database
+  const order = await prisma.order.findUnique({
+    where: { orderId },
+    include: { paymentInfo: true },
+  });
+
+  if (!order) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Order retrieve failed!!!');
+  }
+
+  // Construct the raw HTML for the invoice
+  const html = generateHtmlForInvoice(order); // Function to generate HTML based on order data
+
+  console.log('html', html);
+  // Generate and return the PDF buffer
+  return await generatePdf(html);
+};
+
 export const OrderService = {
   getOrders,
   getOrder,
@@ -219,4 +274,5 @@ export const OrderService = {
   deleteOrder,
   monthWiseOrder,
   createOrder,
+  getSingleInvoice,
 };
