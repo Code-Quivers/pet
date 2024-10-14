@@ -33,6 +33,24 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const getSingleInvoice = catchAsync(async (req: Request, res: Response) => {
+  const { orderId } = req.params;
+
+  // Set headers for PDF download
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', `attachment; filename=invoice-${orderId}.pdf`);
+
+  const result = await OrderService.getSingleInvoice(orderId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Invoice fetched successfully !',
+    data: result,
+  });
+});
+
 // !----------------------------------Update Order---------------------------------------->>>
 const updateOrder = catchAsync(async (req: Request, res: Response) => {
   const { taxId } = req.params;
@@ -70,4 +88,4 @@ const monthWiseOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const OrderController = { getAllOrders, createOrder, updateOrder, deleteOrder, monthWiseOrder };
+export const OrderController = { getAllOrders, createOrder, updateOrder, deleteOrder, monthWiseOrder, getSingleInvoice };
