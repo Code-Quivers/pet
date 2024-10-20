@@ -17,6 +17,7 @@ import { StripeRoutes } from '../modules/payments/stripe.routes';
 import { PaymentReportRoutes } from '../modules/paymentReport/payment.routes';
 import { PaypalRoutes } from '../modules/paypal-payments/paypal.routes';
 import { AdRoutes } from '../modules/advertisement/ad.route';
+import { ProductReviewRoutes } from '../modules/productReviews/productReviews.routes';
 
 const router = express.Router();
 
@@ -92,6 +93,10 @@ const moduleRoutes = [
   {
     path: '/paypal',
     route: PaypalRoutes,
+  },
+  {
+    path: '/product-reviews',
+    route: ProductReviewRoutes,
   },
 ];
 

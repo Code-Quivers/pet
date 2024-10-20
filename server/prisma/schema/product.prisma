@@ -1,4 +1,3 @@
-
 // Product Part 
 
 model Category {
@@ -18,17 +17,18 @@ model Product {
   productImage         String[]
   productPrice         Float
   productDescription   String
+  featuredImage        String
   productStatus        ProductStatus             @default(AVAILABLE)
-  categoryId           String?
-  category             Category?                 @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
   createdAt            DateTime                  @default(now()) @db.Timestamptz(0)
   updatedAt            DateTime                  @updatedAt @db.Timestamptz(0)
   productQA            ProductQA[]
-  productReview        ProductReview[]
-  // promoCode          PromoCode?
-  featuredImage        String
+  // relations
+  categoryId           String?
+  category             Category?                 @relation(fields: [categoryId], references: [categoryId], onDelete: SetNull)
+  productReviews       ProductReview[]
   // a many-to-many relationship between products and variations
   productVariations    ProductVariation[]
+  // promoCode          PromoCode?
   requiredInPromotions BuyItemGetItemPromotion[] @relation("RequiredItems")
   rewardedInPromotions BuyItemGetItemPromotion[] @relation("RewardItems")
 }
@@ -48,6 +48,7 @@ model ProductVariation {
   updatedAt    DateTime  @updatedAt @db.Timestamptz(0)
   barCodes     BarCode[]
 }
+
 //QR Code Model
 model BarCode {
   barcodeId     String            @id @default(uuid())
@@ -71,14 +72,21 @@ model ProductQA {
 }
 
 model ProductReview {
-  productReviewId String   @id @default(uuid())
-  review          String
-  rating          Int
-  reviewImage     String
-  productId       String?
-  product         Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
-  userId          String
-  user            User     @relation(fields: [userId], references: [userId])
-  createdAt       DateTime @default(now()) @db.Timestamptz(0)
-  updatedAt       DateTime @updatedAt @db.Timestamptz(0)
+  productReviewId   String   @id @default(uuid())
+  rating            Float
+  reviewDescription String
+  reviewAttachments Json[] // Array of files
+  verifiedPurchase  Boolean  @default(false)
+  productDetails    Json?
+  otherDetails      Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  productId String?
+  product   Product? @relation(fields: [productId], references: [productId], onDelete: SetNull)
+  userId    String?
+  User      User?    @relation(fields: [userId], references: [userId], onDelete: SetNull)
+
+  @@map("product_reviews")
 }

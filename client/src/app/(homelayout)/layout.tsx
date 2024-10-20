@@ -2,7 +2,6 @@
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
 import PromoBanner from "@/components/PromoBanner/PromoBanner";
-import Script from "next/script";
 
 const layout = ({ children }: any) => {
   return (
@@ -12,9 +11,11 @@ const layout = ({ children }: any) => {
           <PromoBanner />
           <Navbar />
         </div>
-        <div>{children}</div>
+        <div className="max-w-screen-2xl mx-auto max-md:px-2 max-2xl:px-10">
+          {children}
+        </div>
         <div className="bg-primary">
-          <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-screen-2xl max-md:px-2 max-2xl:px-10">
             <Footer />
           </div>
         </div>

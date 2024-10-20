@@ -5,17 +5,17 @@ import ReviewSortBy from "./ReviewSortBy";
 
 const AllReviewsPage = () => {
   return (
-    <section className="md:max-w-7xl mx-5 xl:mx-auto ">
+    <section className="">
       {/* section title */}
-      <div className="my-20  max-w-lg lg:mx-auto mx-4">
+      <div className="my-20  max-w-lg mx-auto">
         <h1 className="text-4xl text-center font-semibold">
           Read trusted reviews from our customers
         </h1>
       </div>
 
       {/* total and filter */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between items-start sm:items-center">
+        <div className="flex max-sm:flex-col max-sm:justify-start sm:items-center gap-3">
           <Rate
             content="Shafin"
             color="green"
@@ -38,17 +38,130 @@ const AllReviewsPage = () => {
       </div>
 
       {/*  */}
-      <section className="grid sm:grid-cols-2 gap-5 mt-10">
-        <div className="border rounded-md p-5 shadow">
-          {" "}
-          <Rate color="green" size="xs" defaultValue={5} readOnly />
-          <h1 className="text-2xl font-bold mt-2">Shafin Chowdhury</h1>
-          <p className="my-2">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptates
-            assumenda repellendus pariatur. Ratione beatae tempora pariatur
-            inventore, quod unde accusantium
-          </p>
-          <h6 className="font-medium">Managing Director</h6>
+      <section className="grid sm:grid-cols-2  *:duration-300 *:transition-all *:ease-in-out gap-5 mt-10">
+        <div className="border hover:bg-[#f7f7f7] rounded-md p-3">
+          <div className="grid grid-cols-6 ">
+            <div className="col-span-4">
+              <div className="space-y-3">
+                <div>
+                  {/* author name and date */}
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold">Spencer H.</h4>
+                    <p className="text-xs text-[#c0c0c0]">5/17/2024</p>
+                  </div>{" "}
+                  {/* rating and description */}
+                </div>
+                <div className="space-y-3">
+                  <Rate color="green" size="xs" defaultValue={5} readOnly />
+                  <p className="my-2 text-sm whitespace-pre-wrap">
+                    Bubbles absolutely loves the beach silicone! It keeps the
+                    noise down when he shakes, and is VERY durable. I prefer the
+                    silicone over the apoxy. Will definitely recommend to ALL my
+                    friends and family!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="col-span-2">Image</div>
+          </div>
+          {/* product details */}
+          <div className="flex  border-t mt-3 pt-3">
+            <h2>Image</h2>
+            <h2>Pink</h2>
+          </div>
+        </div>
+        <div className="border rounded-md p-3">
+          <div className="grid grid-cols-6 ">
+            <div className="col-span-4">
+              <div className="space-y-3">
+                <div>
+                  {/* author name and date */}
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold">Spencer H.</h4>
+                    <p className="text-xs text-[#c0c0c0]">5/17/2024</p>
+                  </div>{" "}
+                  {/* rating and description */}
+                </div>
+                <div className="space-y-3">
+                  <Rate color="green" size="xs" defaultValue={5} readOnly />
+                  <p className="my-2 text-sm whitespace-pre-wrap">
+                    Bubbles absolutely loves the beach silicone! It keeps the
+                    noise down when he shakes, and is VERY durable. I prefer the
+                    silicone over the apoxy. Will definitely recommend to ALL my
+                    friends and family!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="col-span-2">Image</div>
+          </div>
+          {/* product details */}
+          <div className="flex  border-t mt-3 pt-3">
+            <h2>Image</h2>
+            <h2>Pink</h2>
+          </div>
+        </div>
+        <div className="border rounded-md p-3">
+          <div className="grid grid-cols-6 ">
+            <div className="col-span-4">
+              <div className="space-y-3">
+                <div>
+                  {/* author name and date */}
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold">Spencer H.</h4>
+                    <p className="text-xs text-[#c0c0c0]">5/17/2024</p>
+                  </div>{" "}
+                  {/* rating and description */}
+                </div>
+                <div className="space-y-3">
+                  <Rate color="green" size="xs" defaultValue={5} readOnly />
+                  <p className="my-2 text-sm whitespace-pre-wrap">
+                    Bubbles absolutely loves the beach silicone! It keeps the
+                    noise down when he shakes, and is VERY durable. I prefer the
+                    silicone over the apoxy. Will definitely recommend to ALL my
+                    friends and family!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="col-span-2">Image</div>
+          </div>
+          {/* product details */}
+          <div className="flex  border-t mt-3 pt-3">
+            <h2>Image</h2>
+            <h2>Pink</h2>
+          </div>
+        </div>
+        <div className="border rounded-md p-3">
+          <div className="grid grid-cols-6 ">
+            <div className="col-span-4">
+              <div className="space-y-3">
+                <div>
+                  {/* author name and date */}
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold">Spencer H.</h4>
+                    <p className="text-xs text-[#c0c0c0]">5/17/2024</p>
+                  </div>{" "}
+                  {/* rating and description */}
+                </div>
+                <div className="space-y-3">
+                  <Rate color="green" size="xs" defaultValue={5} readOnly />
+                  <p className="my-2 text-sm whitespace-pre-wrap">
+                    Bubbles absolutely loves the beach silicone! It keeps the
+                    noise down when he shakes, and is VERY durable. I prefer the
+                    silicone over the apoxy. Will definitely recommend to ALL my
+                    friends and family!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="col-span-2">Image</div>
+          </div>
+          {/* product details */}
+          <div className="flex  border-t mt-3 pt-3">
+            <h2>Image</h2>
+            <h2>Pink</h2>
+          </div>
         </div>
       </section>
     </section>
