@@ -8,7 +8,7 @@ const ProductPage = ({
   };
 }) => {
   return (
-    <div className="mt-20">
+    <div className="mt-20 ">
       <ProductDetails params={params} />
     </div>
   );
