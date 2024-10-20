@@ -30,6 +30,9 @@ if (!fs.existsSync('./uploads/productImg')) {
 if (!fs.existsSync('./uploads/testimonialImg')) {
   fs.mkdirSync('./uploads/testimonialImg');
 }
+if (!fs.existsSync('./uploads/product_reviews')) {
+  fs.mkdirSync('./uploads/product_reviews');
+}
 if (!fs.existsSync('./uploads/blog-images')) {
   fs.mkdirSync('./uploads/blog-images');
 }

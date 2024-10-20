@@ -129,10 +129,10 @@ const ProductDetails = ({ params }: any) => {
   const SLIDE_COUNT = 10;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
   return (
-    <>
+    <section className="">
       <Cart cartOpen={cartOpen} setCartOpen={setCartOpen} />
       <div>
-        <div className="max-w-7xl xl:mx-auto md:mx-10 mx-0 md:mt-5">
+        <div className="md:mt-5">
           <div className="md:grid md:grid-cols-2 gap-10 ">
             {/* product slider */}
             <div className="">
@@ -556,7 +556,7 @@ const ProductDetails = ({ params }: any) => {
           <AllReviewsPage />
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
