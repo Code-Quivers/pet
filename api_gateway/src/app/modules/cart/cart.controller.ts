@@ -5,8 +5,6 @@ const addProductToCart = async (req: Request, res: Response) => {
   try {
     const products = req.body;
 
-    console.log('Incoming request data:', { products });
-
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({ error: 'Invalid products list' });
     }
