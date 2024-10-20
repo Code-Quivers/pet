@@ -24,6 +24,7 @@
     "prisma": "^5.15.1",
     "puppeteer": "^23.5.3",
     "qs": "^6.13.0",
+    "redis": "^4.7.0",
     "stripe": "^15.9.0",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1",
