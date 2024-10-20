@@ -14,10 +14,19 @@ const addProductReview = z.object({
 });
 
 const editProductReview = z.object({
-  clientName: z.string().nonempty().optional(),
-  testimonialTitle: z.string().nonempty().optional(),
-  testimonialDescription: z.string().nonempty().optional(),
-  rating: z.string().optional(),
+  rating: z.number().min(1).max(10).optional(),
+  reviewDescription: z.string().nonempty().optional(),
+  verifiedPurchase: z.boolean().optional(),
+  productId: z.string().optional(),
+  otherDetails: z
+    .object({
+      email: z.string(),
+      phoneNumber: z.string().optional(),
+      fullName: z.string().nonempty(),
+      designation: z.string().optional(),
+    })
+    .optional(),
+  oldFilePaths: z.array(z.string()).optional(),
 });
 
 export const ProductReviewValidation = {
