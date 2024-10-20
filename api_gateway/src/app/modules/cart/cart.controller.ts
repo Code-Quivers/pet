@@ -3,17 +3,16 @@ import { CartService } from './cart.service';
 
 const addProductToCart = async (req: Request, res: Response) => {
   try {
-    const products = req.body; // Expecting the array of products
+    const products = req.body;
 
     console.log('Incoming request data:', { products });
 
-    // Validate input
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({ error: 'Invalid products list' });
     }
 
     //@ts-ignore
-    const sessionId = req.sessionID; // Get session ID
+    const sessionId = req.sessionID;
 
     // Loop through products and add them to the cart
     for (const product of products) {
