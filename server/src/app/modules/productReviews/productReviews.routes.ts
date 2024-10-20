@@ -19,8 +19,8 @@ router.get('/', ProductReviewController.getAllProductReviews);
 // ! update a product review
 router.patch(
   '/update/:productReviewId',
-  auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
-  FileUploadHelper.uploadTestimonialImage.single('file'),
+  // auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  FileUploadHelper.uploadProductReviewImage.array('files'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = ProductReviewValidation.editProductReview.parse(JSON.parse(req.body.data));
     return ProductReviewController.editProductReview(req, res, next);

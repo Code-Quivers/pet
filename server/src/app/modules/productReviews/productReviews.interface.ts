@@ -7,7 +7,7 @@ export type IProductReviewRequest = {
   rating: number;
   reviewDescription: string;
   verifiedPurchase?: boolean;
-  productDetails: IProductReviewProductDetails;
+  productDetails?: IProductReviewProductDetails;
   otherDetails: IProductReviewCustomerDetails;
 };
 type IProductReviewProductDetails = {
@@ -23,10 +23,19 @@ type IProductReviewCustomerDetails = {
 };
 
 export type IProductReviewUpdateRequest = {
-  clientName?: string | undefined;
-  testimonialTitle?: string | undefined;
-  testimonialDescription?: string | undefined;
-  rating?: string | undefined;
-  clientImage?: string | undefined;
-  oldFilePath?: string;
+  rating?: number;
+  reviewDescription?: string;
+  verifiedPurchase?: boolean;
+  productId?: string;
+  productDetails?: IProductReviewProductDetails;
+  otherDetails?: IProductReviewCustomerDetails;
+  oldFilePaths?: string[];
+  reviewAttachments?: IProductReviewAttachMents[];
+};
+
+export type IProductReviewAttachMents = {
+  size: number;
+  fileUrl: string;
+  filename: string;
+  mimetype: string;
 };

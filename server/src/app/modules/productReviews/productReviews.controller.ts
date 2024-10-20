@@ -37,9 +37,9 @@ const getAllProductReviews = catchAsync(async (req: Request, res: Response) => {
 
 // !----------------------------------Update Category---------------------------------------->>>
 const editProductReview = catchAsync(async (req: Request, res: Response) => {
-  const { testimonialId } = req.params;
+  const { productReviewId } = req.params;
   // @ts-ignore
-  const result = await ProductReviewService.editProductReview(testimonialId, req);
+  const result = await ProductReviewService.editProductReview(productReviewId, req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
