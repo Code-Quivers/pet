@@ -27,4 +27,8 @@ export default {
     return_url: process.env.RETURN_URL || '',
     cancel_url: process.env.CANCEL_URL || '',
   },
+  redis: {
+    url: process.env.REDIS_URL,
+    expires_in: process.env.EXPIRES_IN,
+  },
 };
