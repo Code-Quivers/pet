@@ -168,28 +168,78 @@ const getAllProductReviews = async (
 
 // !----------------------------------Update Product Review---------------------------------------->>>
 const editProductReview = async (productReviewId: string, req: Request): Promise<ProductReview> => {
-  const file = req.file as IUploadFile;
-  const filePath = file?.path?.substring(8);
-  const { clientName, testimonialTitle, testimonialDescription, rating, oldFilePath } = req.body as IProductReviewUpdateRequest;
-  const oldFilePaths = 'uploads/' + oldFilePath;
+  const allFiles = req?.files as IUploadFile[];
+
+  const allAttachments = allFiles?.map(single => {
+    return {
+      fileUrl: single?.path?.substring(8),
+      mimetype: single?.mimetype,
+      filename: single?.filename,
+      size: single?.size,
+    };
+  });
+
+  if (!allAttachments?.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Review image is required.');
+  }
+  const isExistReview = await prisma.productReview.findUnique({
+    where: {
+      productReviewId,
+    },
+  });
+  if (!isExistReview?.productReviewId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Review Not Found');
+  }
+  //
+
+  const { oldFilePaths, otherDetails, productId, rating, reviewDescription } = req.body as IProductReviewUpdateRequest;
 
   // Deleting old style Image
-  if (oldFilePath !== undefined && filePath !== undefined) {
-    // @ts-ignore
-    fs.unlink(oldFilePaths, err => {
-      if (err) {
-        errorLogger.error('Error deleting old file');
+  if (oldFilePaths?.length && oldFilePaths?.length > 0) {
+    oldFilePaths?.map(oldFilePath => {
+      if (oldFilePath !== undefined) {
+        const oldPath = `uploads/` + oldFilePath;
+        fs.unlink(oldPath, err => {
+          if (err) {
+            errorLogger.error('Error deleting old file');
+          }
+        });
       }
     });
   }
 
   const updatedDetails: Partial<IProductReviewUpdateRequest> = {
-    clientName,
-    testimonialTitle,
-    testimonialDescription,
+    otherDetails,
     rating,
-    clientImage: filePath,
+    reviewDescription,
+    reviewAttachments: allAttachments,
   };
+
+  //
+  const isExistProduct = await prisma.product.findUnique({
+    where: {
+      productId,
+    },
+    select: {
+      productId: true,
+      featuredImage: true,
+      productName: true,
+      category: {
+        select: {
+          categoryName: true,
+        },
+      },
+    },
+  });
+
+  if (isExistProduct?.productId) {
+    updatedDetails['productId'] = isExistReview?.productId !== isExistProduct?.productId ? isExistProduct?.productId : undefined;
+    updatedDetails['productDetails'] = {
+      productCategoryName: isExistProduct?.category?.categoryName,
+      productImage: isExistProduct?.featuredImage,
+      productName: isExistProduct?.productName,
+    };
+  }
 
   // Updated data from request
   const newData: Partial<IProductReviewUpdateRequest> = { ...updatedDetails };
@@ -207,6 +257,14 @@ const editProductReview = async (productReviewId: string, req: Request): Promise
 const deleteProductReview = async (productReviewId: string): Promise<ProductReview> => {
   if (!productReviewId) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Testimonial Id is required');
+  }
+  const isExistProductReview = await prisma.productReview.findUnique({
+    where: {
+      productReviewId,
+    },
+  });
+  if (!isExistProductReview) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Review Not Found');
   }
 
   const result = await prisma.productReview.delete({
