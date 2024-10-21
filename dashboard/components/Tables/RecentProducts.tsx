@@ -119,23 +119,23 @@ const RecentProducts = () => {
                       </div>
 
                       <div className="flex items-center justify-start p-2.5 xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
+                        <p className="text-black font-medium">
                           {singleProduct?.productName}
                         </p>
                       </div>
 
-                      <div className="  items-center sm:justify-center p-2.5 flex xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
+                      <div className="items-center sm:justify-center p-2.5 flex xl:p-5">
+                        <p className="text-black font-medium">
                           $ {singleProduct?.productPrice}
                         </p>
                       </div>
                       <div className=" items-center sm:justify-center p-2.5 flex xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
+                        <p className="text-black font-medium">
                           {singleProduct?.category?.categoryName}
                         </p>
                       </div>
                       <div className=" items-center sm:justify-center p-2.5 flex xl:p-5">
-                        <p className="text-black dark:text-white font-medium">
+                        <p className="text-black font-medium">
                           {singleProduct?.createdAt
                             ? moment(singleProduct.createdAt).format("LL")
                             : ""}

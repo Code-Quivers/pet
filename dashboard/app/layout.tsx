@@ -1,8 +1,13 @@
 "use client";
 import "./globals.css";
-import "./data-tables-css.css";
 import LayoutProvider from "@/components/providers/LayoutProvider";
 import "rsuite/dist/rsuite-no-reset.min.css";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export default function RootLayout({
   children,
@@ -11,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" translate="no">
-      <body suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className={poppins.className}>
         <main>
           <LayoutProvider>{children}</LayoutProvider>
         </main>

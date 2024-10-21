@@ -3,14 +3,9 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Order Reports | Dashboard",
-  creator: "Developed by CodeQuivers",
 };
 const OrderReportsPage = () => {
-  return (
-    <div>
-      <AllOrderList />
-    </div>
-  );
+  return <div>{/* <AllOrderList /> */}</div>;
 };
 
 export default OrderReportsPage;
