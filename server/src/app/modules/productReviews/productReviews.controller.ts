@@ -50,8 +50,8 @@ const editProductReview = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteProductReview = catchAsync(async (req: Request, res: Response) => {
-  const { testimonialId } = req.params;
-  const result = await ProductReviewService.deleteProductReview(testimonialId);
+  const { productReviewId } = req.params;
+  const result = await ProductReviewService.deleteProductReview(productReviewId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

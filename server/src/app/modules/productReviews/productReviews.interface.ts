@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type IProductReviewFilterRequest = {
   searchTerm?: string | undefined;
 };
@@ -26,11 +28,11 @@ export type IProductReviewUpdateRequest = {
   rating?: number;
   reviewDescription?: string;
   verifiedPurchase?: boolean;
-  productId?: string;
+  productId?: string | any;
   productDetails?: IProductReviewProductDetails;
   otherDetails?: IProductReviewCustomerDetails;
   oldFilePaths?: string[];
-  reviewAttachments?: IProductReviewAttachMents[];
+  reviewAttachments?: any[];
 };
 
 export type IProductReviewAttachMents = {

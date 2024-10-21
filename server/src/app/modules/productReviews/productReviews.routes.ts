@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { ProductReviewController } from './productReviews.controller';
 import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
-import auth from '../../middlewares/auth';
-import { UserRoles } from '@prisma/client';
+// import auth from '../../middlewares/auth';
+// import { UserRoles } from '@prisma/client';
 import { ProductReviewValidation } from './productReviews.validation';
 
 const router = express.Router();
@@ -28,6 +28,10 @@ router.patch(
 );
 
 //! delete a product review
-router.delete('/delete/:productReviewId', auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN), ProductReviewController.deleteProductReview);
+router.delete(
+  '/delete/:productReviewId',
+  // auth(UserRoles.USER, UserRoles.ADMIN, UserRoles.SUPERADMIN),
+  ProductReviewController.deleteProductReview
+);
 
 export const ProductReviewRoutes = router;

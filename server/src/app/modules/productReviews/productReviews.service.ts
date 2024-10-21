@@ -170,7 +170,7 @@ const getAllProductReviews = async (
 const editProductReview = async (productReviewId: string, req: Request): Promise<ProductReview> => {
   const allFiles = req?.files as IUploadFile[];
 
-  const allAttachments = allFiles?.map(single => {
+  const allNewAttachments = allFiles?.map(single => {
     return {
       fileUrl: single?.path?.substring(8),
       mimetype: single?.mimetype,
@@ -179,9 +179,6 @@ const editProductReview = async (productReviewId: string, req: Request): Promise
     };
   });
 
-  if (!allAttachments?.length) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Review image is required.');
-  }
   const isExistReview = await prisma.productReview.findUnique({
     where: {
       productReviewId,
@@ -190,11 +187,12 @@ const editProductReview = async (productReviewId: string, req: Request): Promise
   if (!isExistReview?.productReviewId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Review Not Found');
   }
+
   //
 
   const { oldFilePaths, otherDetails, productId, rating, reviewDescription } = req.body as IProductReviewUpdateRequest;
 
-  // Deleting old style Image
+  // Deleting old review Image
   if (oldFilePaths?.length && oldFilePaths?.length > 0) {
     oldFilePaths?.map(oldFilePath => {
       if (oldFilePath !== undefined) {
@@ -208,37 +206,45 @@ const editProductReview = async (productReviewId: string, req: Request): Promise
     });
   }
 
+  const updatedAttachments = isExistReview?.reviewAttachments
+    ?.filter((oldAttachment: any) => !oldFilePaths?.includes(oldAttachment?.fileUrl))
+    .concat(allNewAttachments);
+
   const updatedDetails: Partial<IProductReviewUpdateRequest> = {
     otherDetails,
     rating,
     reviewDescription,
-    reviewAttachments: allAttachments,
+    reviewAttachments: updatedAttachments,
   };
 
-  //
-  const isExistProduct = await prisma.product.findUnique({
-    where: {
-      productId,
-    },
-    select: {
-      productId: true,
-      featuredImage: true,
-      productName: true,
-      category: {
-        select: {
-          categoryName: true,
+  // if product id is available
+  if (productId) {
+    const isExistProduct = await prisma.product.findUnique({
+      where: {
+        productId,
+      },
+      select: {
+        productId: true,
+        featuredImage: true,
+        productName: true,
+        category: {
+          select: {
+            categoryName: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (isExistProduct?.productId) {
-    updatedDetails['productId'] = isExistReview?.productId !== isExistProduct?.productId ? isExistProduct?.productId : undefined;
-    updatedDetails['productDetails'] = {
-      productCategoryName: isExistProduct?.category?.categoryName,
-      productImage: isExistProduct?.featuredImage,
-      productName: isExistProduct?.productName,
-    };
+    if (isExistProduct?.productId) {
+      if (isExistReview?.productId !== isExistProduct?.productId) {
+        updatedDetails['productId'] = isExistReview?.productId;
+      }
+      updatedDetails['productDetails'] = {
+        productCategoryName: isExistProduct?.category?.categoryName,
+        productImage: isExistProduct?.featuredImage,
+        productName: isExistProduct?.productName,
+      };
+    }
   }
 
   // Updated data from request
@@ -256,7 +262,7 @@ const editProductReview = async (productReviewId: string, req: Request): Promise
 
 const deleteProductReview = async (productReviewId: string): Promise<ProductReview> => {
   if (!productReviewId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Testimonial Id is required');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Review Id is required');
   }
   const isExistProductReview = await prisma.productReview.findUnique({
     where: {
@@ -272,6 +278,25 @@ const deleteProductReview = async (productReviewId: string): Promise<ProductRevi
       productReviewId,
     },
   });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Delete Product Review');
+  }
+
+  // Deleting old style Image
+  if (result?.reviewAttachments?.length && result?.reviewAttachments?.length > 0) {
+    result?.reviewAttachments?.map((oldFile: any) => {
+      const oldPath = `uploads/` + oldFile?.fileUrl;
+      fs.unlink(oldPath, err => {
+        if (err) {
+          errorLogger.error(
+            `Error deleting Attachments of url is : ${oldFile?.fileUrl} & reviewId is : ${isExistProductReview?.productReviewId}`,
+            err
+          );
+        }
+      });
+    });
+  }
 
   return result;
 };
