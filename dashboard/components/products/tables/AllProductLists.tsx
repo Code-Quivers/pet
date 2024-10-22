@@ -84,15 +84,6 @@ const AllProductList = () => {
 
   return (
     <>
-      <div className="flex items-center mb-2 text-sm text-[#2563eb]">
-        <Link href={"/"} className="underline">
-          Dashboard
-        </Link>
-
-        <MdKeyboardArrowRight size={20} className="text-[#9ca3af]" />
-
-        <p className="font-bold">All products</p>
-      </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
         <div className=" flex max-md:flex-col max-md:gap-y-3 md:justify-between md:items-center pb-2 mb-5">
           <div>

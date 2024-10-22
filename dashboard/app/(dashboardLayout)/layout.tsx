@@ -1,4 +1,5 @@
 "use client";
+import DashboardNavbar from "@/components/Header/DashboardNavbar";
 import DashboardLayoutProvider from "@/components/Layouts/DashboardLayoutProvider";
 import MakeSidebar from "@/components/Sidebar/Sidebar";
 
@@ -10,10 +11,13 @@ const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           <MakeSidebar />
         </div>
 
-        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          <main className="">
-            <div className="mx-auto p-4 md:p-6 2xl:p-10">{children}</div>
-          </main>
+        <div className="relative bg-[#f9f9fb] flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          <div className="px-3 2xl:px-5">
+            <div>
+              <DashboardNavbar />
+            </div>
+            <div className="my-5">{children}</div>
+          </div>
         </div>
       </div>
     </DashboardLayoutProvider>

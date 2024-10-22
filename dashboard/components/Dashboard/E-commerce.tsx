@@ -3,13 +3,11 @@ import { useGetAllCountsQuery } from "@/redux/features/allCountApi";
 import CardDataStats from "../CardDataStats";
 import { RiCalendarEventLine } from "react-icons/ri";
 
-import RecentProducts from "../Tables/RecentProducts";
 import ChartSection from "../orders/chart/ChartSection";
+import RecentProducts from "../Tables/RecentProducts";
 
 const ECommerce = () => {
   const { data, isLoading } = useGetAllCountsQuery({});
-
-  console.log("Data -Stat", data);
 
   return (
     <>

@@ -73,6 +73,8 @@ export default function SidebarItem({
          py-2  transition-colors
          ${active ? "text-primary-500 bg-[#f1f1f1]" : "hover:bg-[#f1f1f1]"}
          ${!expanded && "hidden sm:flex"}
+         ${active && subMenu && "border-l-[3px] border-primary"}
+         ${subMenu && !active && "border-l-[3px] border-transparent"}
      `}
           onClick={() => {
             setExpandSubMenu((curr) => expanded && !curr);
@@ -86,7 +88,9 @@ export default function SidebarItem({
           <span
             className={`overflow-hidden text-xs text-start transition-all ${
               expanded ? "ml-2 w-44" : "w-0"
-            }  ${active ? "font-medium" : "font-normal"}`}
+            }  ${active ? "font-semibold" : "font-normal"}
+            ${subMenu && "!font-medium"}
+            `}
           >
             {text}
           </span>
